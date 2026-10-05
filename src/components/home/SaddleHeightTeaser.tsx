@@ -4,40 +4,65 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Slider } from "@/components/ui/Slider";
+import { RangeBar } from "@/components/ui/RangeBar";
+import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
+import { useHomeSaddleWidgetAnalytics } from "@/lib/analytics/useHomeSaddleWidgetAnalytics";
 import type { Locale } from "@/i18n/config";
-import { homeMarketing } from "@/i18n/marketing/home";
+import { homeSaddleWidget } from "@/i18n/marketing/homeSaddleWidget";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { writeHandoffEntry } from "@/lib/handoff/store";
+import { calculateSaddleHeight, getPublicSaddleHeightNextStep } from "../../../shared/reliability/saddleHeight";
 import styles from "./MarketingHome.module.css";
 
-export function saddleTeaserEstimate(inseam: number) {
-  const inseamMm = Math.round(inseam * 10);
-  return { height: Math.round(inseamMm * 0.883), min: Math.round(inseamMm * 0.86), max: Math.round(inseamMm * 0.91) };
-}
+export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?: () => void }) {
+  const [height, setHeight] = useState(175);
+  const { trackHomeSaddleWidgetUsed } = useHomeSaddleWidgetAnalytics(useMarketingEventLogger());
+  const copy = homeSaddleWidget[locale];
+  const result = calculateSaddleHeight({ heightCm: height });
+  const nextStep = getPublicSaddleHeightNextStep({ hasInseam: false, unresolvedLargeWarning: false, result });
+  const value = new Intl.NumberFormat(locale).format(height);
 
-export function SaddleHeightTeaser({ locale }: { locale: Locale }) {
-  const [inseam, setInseam] = useState(84);
-  const copy = homeMarketing[locale].teaser;
-  const estimate = saddleTeaserEstimate(inseam);
-  const value = new Intl.NumberFormat(locale).format(inseam);
+  function used() {
+    trackHomeSaddleWidgetUsed();
+    onUsed?.();
+  }
+
+  function refine() {
+    writeHandoffEntry({
+      field: "heightCm", value: height, unit: "cm", method: "declared",
+      calculator: "saddle-height", touchedAt: Date.now(),
+    });
+    used();
+  }
 
   return <div className={styles.teaser}>
-    <svg className={styles.bike} viewBox="0 0 520 340" fill="none" aria-hidden="true">
-      <g stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="120" cy="240" r="78" /><circle cx="400" cy="240" r="78" />
-        <path d="M120 240L230 250L198 120L120 240M198 122L360 114M230 250L368 150M372 160L400 240M360 112L372 160M198 120L192 98M170 96L224 93M360 112L392 106q26 0 26 24q0 20-18 22" />
-        <circle cx="230" cy="250" r="13" /><path d="M230 250L250 284" />
-      </g>
-      <path d="M214 252L180 100" stroke="#0A7263" strokeWidth="3" strokeDasharray="7 7" />
-    </svg>
     <div className={styles.teaserCard}>
-      <p className={styles.context}>{copy.adjust}</p>
-      <div className={`${styles.teaserHeading} max-sm:!flex-col`}>
-        <div><p className={styles.eyebrow}>{copy.try}</p><h2>{copy.title}</h2></div>
-        <div className={styles.result}><output aria-label={copy.title} aria-live="polite" htmlFor="home-inseam">{estimate.height}<small> mm</small></output><p>{copy.direction}</p></div>
+      <div className={styles.teaserHeading}>
+        <p className={styles.eyebrow}>{copy.try}</p>
+        <h2>{copy.title}</h2>
       </div>
-      <Slider id="home-inseam" label={copy.inseam} tooltip={homeMarketing[locale].tools[7].description} tooltipLabel={copy.inseam} min={55} max={105} step={0.5} value={inseam} valueLabel={value} unit="cm" aria-valuetext={`${value} cm`} onChange={setInseam} />
-      <p className={styles.context}>{copy.context} <span>{estimate.min}–{estimate.max} mm</span>.</p>
-      <Link className={styles.textLink} href={withLocalePrefix("/calculators/saddle-height", locale)}>{copy.refine}<ArrowRight size={18} aria-hidden="true" /></Link>
+      <Slider
+        id="home-height" label={copy.height} tooltip={copy.heightHelp} tooltipLabel={copy.height}
+        min={130} max={220} step={1} value={height} valueLabel={value} unit="cm"
+        aria-valuetext={`${value} cm`} onChange={(nextHeight) => { setHeight(nextHeight); used(); }}
+      />
+      <div className={styles.result}>
+        <output aria-label={copy.title} aria-live="polite" htmlFor="home-height">
+          {result.adviceMm}<small> mm · ±{result.halfWidthMm} mm</small>
+        </output>
+      </div>
+      <RangeBar
+        value={result.adviceMm} low={result.lowerMm} high={result.upperMm}
+        min={result.scaleMinMm} max={result.scaleMaxMm} size="compact" locale={locale}
+      />
+      <p className={styles.context}>{copy.basis}</p>
+      <Link
+        className={styles.primary}
+        href={withLocalePrefix("/calculators/saddle-height", locale) + "#inseam"} onClick={refine}
+      >
+        {copy.refine}<ArrowRight size={18} aria-hidden="true" />
+      </Link>
+      <p className={styles.context}>{copy.nextStep.replace("{mm}", String(nextStep.halfWidthMm))}</p>
     </div>
   </div>;
 }

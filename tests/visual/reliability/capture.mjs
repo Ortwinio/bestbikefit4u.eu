@@ -5,16 +5,20 @@ import { resolve } from "node:path";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import { checkSaddleSeo } from "./seo.mjs";
+import { homeCases, prepareHomeScenario } from "./home.mjs";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
 const output = resolve(root, "plans/reliability/renders");
 const origin = process.argv[2] ?? "http://127.0.0.1:3000";
+const includeHome = process.argv.includes("--home");
+const prefix = includeHome ? "Q5" : "Q3";
 assert(["127.0.0.1", "localhost", "[::1]"].includes(new URL(origin).hostname), "Local server only");
 await mkdir(output, { recursive: true });
 const results = [];
 const seo = await checkSaddleSeo(origin);
 const browser = await chromium.launch({ headless: true });
 const cases = ["quick-height", "quick-inseam", "full-height", "full-ok", "full-check", "full-confirmed", "full-large", "full-override", "handoff"];
+if (includeHome) cases.push(...homeCases);
 
 async function setMeasurement(page, kind, value) {
   const label = kind === "height" ? /(?:je lengte|your height|body height|^lengte$|^height$)/i : /(?:binnenbeen|inseam)/i;
@@ -39,8 +43,23 @@ async function setMeasurement(page, kind, value) {
 try {
   for (const locale of ["nl", "en"]) for (const width of [1440, 390]) for (const state of cases) {
     const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 1000 }, locale, reducedMotion: "reduce", ignoreHTTPSErrors: true });
-    await context.addCookies([{ name: "bf_cookie_consent", value: "essential", url: origin }]);
-    await context.addInitScript(() => localStorage.setItem("bf_cookie_consent", "essential"));
+    if (state !== "home-firstvisit") {
+      await context.addCookies([{ name: "bf_cookie_consent", value: "essential", url: origin }]);
+      await context.addInitScript(() => localStorage.setItem("bf_cookie_consent", "essential"));
+    }
+    await context.addInitScript(() => {
+      window.__reliabilityLayoutShifts = [];
+      if (!PerformanceObserver.supportedEntryTypes.includes("layout-shift")) return;
+      new PerformanceObserver(list => {
+        for (const entry of list.getEntries()) {
+          if (entry.hadRecentInput) continue;
+          window.__reliabilityLayoutShifts.push({ value: entry.value, startTime: entry.startTime,
+            sources: (entry.sources ?? []).map(source => ({ tag: source.node?.tagName,
+              id: source.node?.id, className: source.node?.getAttribute?.("class"),
+              previousRect: source.previousRect, currentRect: source.currentRect })) });
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+    });
     const page = await context.newPage();
     const errors = [];
     const offlineErrors = [];
@@ -66,6 +85,11 @@ try {
       errors.push(text);
     });
     try {
+      const home = state.startsWith("home-");
+      let homeEvidence;
+      if (home) {
+        homeEvidence = await prepareHomeScenario({ page, origin, locale, state, setMeasurement });
+      } else {
       await page.goto(`${origin}/${locale}/calculators/saddle-height`, { waitUntil: "networkidle" });
       const quick = state.startsWith("quick");
       await page.getByRole("button", { name: quick ? /quick fix/i : /volledig advies|full advice/i }).first().click();
@@ -80,6 +104,7 @@ try {
         "Only height and optional inseam may be interactive inputs");
       if (state === "full-check") await page.getByRole("button", { name: /Klopt, ga verder|Correct, continue/i }).waitFor();
       if (state === "full-large") await page.getByRole("button", { name: /Toch gebruiken|Use anyway/i }).waitFor();
+      }
       await page.evaluate(() => document.fonts.ready);
       const range = page.getByRole("img", { name: /Zadelhoogte.*bereik|Saddle height.*range/i }).first();
       await range.waitFor();
@@ -98,7 +123,9 @@ try {
         assert(entries.some(entry => entry.field === "inseamCm" && entry.value === 89 && entry.method === "measured"));
       }
       await page.evaluate(() => window.scrollTo(0, 0));
-      const metrics = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth }));
+      const metrics = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth,
+        layoutShifts: window.__reliabilityLayoutShifts ?? [],
+        layoutShiftTotal: (window.__reliabilityLayoutShifts ?? []).reduce((total, entry) => total + entry.value, 0) }));
       const rangeBottom = await range.evaluate(node => node.getBoundingClientRect().bottom);
       let firstScreen;
       if (state === "quick-height" && width === 390) {
@@ -108,7 +135,7 @@ try {
         assert(rangeBottom <= 844 && practicalTop <= 844 && optionalBottom <= 844,
           `Quick flow extends beyond first screen: ${JSON.stringify(firstScreen)}`);
       }
-      if (!quick && width === 1440) {
+      if (!home && !state.startsWith("quick") && width === 1440) {
         const heightInput = page.getByRole("slider", { name: /je lengte|your height|body height|^lengte$|^height$/i }).first();
         const inputBounds = await heightInput.boundingBox();
         const resultBounds = await range.boundingBox();
@@ -117,21 +144,21 @@ try {
       }
       const axe = await new AxeBuilder({ page }).analyze();
       const violations = axe.violations.map(({ id, impact, nodes }) => ({ id, impact, targets: nodes.map(node => node.target) }));
-      const screenshot = `Q3-${locale}-${state}-${width}.png`;
+      const screenshot = `${prefix}-${locale}-${state}-${width}.png`;
       await page.screenshot({ path: resolve(output, screenshot), fullPage: true, animations: "disabled" });
-      if (state === "quick-height" || state === "full-ok") {
-        await page.screenshot({ path: resolve(output, `Q3-${locale}-${state}-${width}-viewport.png`), animations: "disabled" });
+      if (state === "quick-height" || state === "full-ok" || home) {
+        await page.screenshot({ path: resolve(output, `${prefix}-${locale}-${state}-${width}-viewport.png`), animations: "disabled" });
       }
-      results.push({ locale, width, state, label, screenshot, rangeBottom, firstScreen, metrics, errors, offlineErrors, violations });
+      results.push({ locale, width, state, label, screenshot, rangeBottom, firstScreen, homeEvidence, metrics, errors, offlineErrors, violations });
     } catch (error) {
       results.push({ locale, width, state, error: String(error), errors });
-      await page.screenshot({ path: resolve(output, `Q3-${locale}-${state}-${width}-failure.png`), fullPage: true }).catch(() => {});
+      await page.screenshot({ path: resolve(output, `${prefix}-${locale}-${state}-${width}-failure.png`), fullPage: true }).catch(() => {});
     } finally { await context.close(); }
   }
 } finally {
   await browser.close();
-  await writeFile(resolve(output, "Q3-visual.json"), JSON.stringify({ origin, scope: "Real local production page; necessary-only cookie consent preloaded; external requests blocked; two local Vercel analytics scripts stubbed empty; browser ERR_FAILED from blocked resources excluded; exact loopback:9 Convex CSP errors recorded separately; no authentication or persistence performed.", seo, results }, null, 2));
+  await writeFile(resolve(output, `${prefix}-visual.json`), JSON.stringify({ origin, scope: "Real local production pages; necessary-only cookie consent preloaded; external requests blocked; two local Vercel analytics scripts stubbed empty; browser ERR_FAILED from blocked resources excluded; exact loopback:9 Convex CSP errors recorded separately; no authentication or persistence performed.", seo, results }, null, 2));
 }
 const failures = results.filter(result => result.error || result.errors.length || result.metrics?.overflow || result.violations?.some(item => ["serious", "critical"].includes(item.impact)));
 console.log(JSON.stringify({ captures: results.length, failures, output }, null, 2));
-if (failures.length || results.length !== 36) process.exitCode = 1;
+if (failures.length || results.length !== cases.length * 4) process.exitCode = 1;

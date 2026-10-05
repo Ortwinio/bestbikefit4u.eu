@@ -13,3 +13,9 @@ The two local Vercel analytics script endpoints are fulfilled with empty JavaScr
 Coverage: Dutch and English, 1440×1000 and 390×844, height-only and measured Quick Fix, full calculator without inseam, normal inseam, check warning and confirmation, large warning and override, account handoff link, mobile overflow, browser errors and axe serious/critical findings. SEO checks inspect server HTML for head metadata, canonical/hreflang and structured data.
 
 This checks the visible handoff CTA and local transfer state, not authentication or persisted account values; those remain covered by the handoff unit/contract tests. Rendering the design board is a comparison aid, not an app accessibility gate.
+
+## Q5 homepage extension
+
+After Q4 is complete and the combined candidate is rebuilt, add `--home` to `run-local.mjs` (or `capture.mjs`). This retains all 36 saddle-page scenarios and adds 16 homepage checks: default height 175, changed height 190, the real CTA landing with 190 prefilled in full mode and the inseam slider focused, and first visit with the real cookie banner, for each locale/viewport. Slider, range and CTA must fit above the fold. First-visit contexts do not preload consent and assert the headline and three hero CTAs are visible and not overlapped by the banner. Expected values come from the shared model, so the default uncertainty is ±45 mm rather than a fixed ±49 mm. These 52-case runs use `Q5-` screenshot names and `Q5-visual.json`, preserving Q3 evidence.
+
+A `PerformanceObserver` is installed before navigation. The report records layout-shift values and affected node rectangles, excluding recent-input shifts. `layoutShiftTotal` is the sum observed during the scenario, not a production field CLS claim. Homepage shifts are retained separately before CTA navigation, which creates a new document. Inspect the source nodes to distinguish widget shifts from unrelated page content.

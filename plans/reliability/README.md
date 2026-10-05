@@ -68,3 +68,21 @@ B: public two-step calculator, NL/EN plausibility states, computed next step/ran
 ## Q1 completion — 5 October 2026
 
 C: shared saddle-height model and reusable RangeBar complete;84 focused tests, integrated typecheck and lint pass. Large/compact bar reviewed at390/1440 in light/dark, no overflow, reduced-motion transitions disabled. Contract and rounding clarification in messages/C-model-contract.md; details in [Q1 notes](audit/Q1-notes.md), source-only list in [files-Q1.txt](audit/files-Q1.txt). Account/engine untouched. Final combined release gates remain with A after Q2/Q3 integration. No commits/deploys/env/prod/mail operations.
+
+## Q4 — homepage starting-point widget (owner, 5 Oct) — Codex B, QA by A
+Put a **saddle-height starting widget at the top of the homepage** (NL/EN), in or directly under the hero (above the fold on 1440
+and 390): one height slider (same input as the calculator, default e.g. 175 cm), live result from the shared model
+`shared/reliability/saddleHeight` (estimated inseam): advice in mm, "± 49 mm" and the compact/large `RangeBar`, short line
+"berekend voor een racefiets, op basis van je lengte". Primary CTA **"Verfijn je zadelhoogte"** / **"Refine your saddle height"**
+→ the existing public saddle-height calculator, **full-advice view with the inseam step** focused, carrying the chosen height
+(e.g. `?lengte=`/`?height=` query param or the existing public handoff; validate and clamp the value; no PII). The subtitle can
+reuse the next-step label from the model ("Vul je binnenbeenlengte in → ±23 mm"). Keep the hero's existing message and the other
+primary CTA intact unless they clash; no layout shift (CLS), no new heavy client bundle on the homepage (lazy where possible),
+keyboard/axe clean, analytics event `home_saddle_widget_used` only if the analytics layer has a pattern. Update homepage tests and
+the calculator test for the incoming height. A: add the widget states (default, changed height, CTA landing in the calculator with
+the height prefilled and inseam step active) to the NL/EN 1440/390 sweep and rerun the combined gates. Print `DONE Q4` (B) and
+`DONE Q5` (A, QA + gates).
+
+### Q4 implementation — 5 October
+
+B reworked the existing hero SaddleHeightTeaser (not a second widget), with height-only shared model/RangeBar, localized CTA and existing-session handoff to full advice at #inseam. Height is validated/clamped; no measurements enter URLs/analytics. Consent-aware homepage interaction event added. Hero typography/column sizing supports the upcoming unchanged PR24 h1; home.ts is untouched for lead's rebase. Notes [Q4](audit/Q4-notes.md), source manifest [files-Q4.txt](audit/files-Q4.txt). Focused tests, full lint, frontend and Convex typechecks pass. Prior Q3 combined evidence predates Q4; A's Q5 rerun remains required, including long-heading/cookie-banner visual checks. No commits/deploys.

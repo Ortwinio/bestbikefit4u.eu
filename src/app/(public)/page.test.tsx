@@ -53,6 +53,10 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
 
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   TrackMarketingEventOnView: () => null,
+  useMarketingEventLogger: () => vi.fn(),
+}));
+vi.mock("@/lib/analytics/useHomeSaddleWidgetAnalytics", () => ({
+  useHomeSaddleWidgetAnalytics: () => ({ trackHomeSaddleWidgetUsed: vi.fn() }),
 }));
 
 vi.mock("@/components/public/BikeQuickCheckCard", () => ({
@@ -274,7 +278,8 @@ describe("home page", () => {
     expect(pageText.indexOf("Complete bike fit")).toBeLessThan(
       pageText.indexOf("Create free account")
     );
-    expect(screen.getByRole("slider", { name: "Inseam" })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: "Height" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Refine your saddle height" }).getAttribute("href")).toBe("/en/calculators/saddle-height#inseam");
     expect(screen.getByText("Bike fitting at home").closest("a")?.getAttribute("href")).toBe(
       "/en/bike-fitting"
     );
@@ -290,7 +295,8 @@ describe("home page", () => {
       "/nl/calculators/bike-fit"
     );
     expect(screen.queryByText("Doneer via onze Alpe d'HuZes-pagina")).toBeNull();
-    expect(screen.getByRole("slider", { name: "Binnenbeenlengte" })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: "Lengte" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Verfijn je zadelhoogte" }).getAttribute("href")).toBe("/nl/calculators/saddle-height#inseam");
     expect(
       screen.getByText("Racefiets afstellen").closest("a")?.getAttribute("href")
     ).toBe("/nl/guides/road-bike-fit-guide");

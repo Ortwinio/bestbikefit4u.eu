@@ -8,7 +8,12 @@ import HomePage, { generateMetadata } from "@/app/(public)/page";
 const { requestLocale } = vi.hoisted(() => ({ requestLocale: vi.fn(() => "nl") }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/i18n/request", () => ({ getRequestLocale: requestLocale }));
-vi.mock("@/components/analytics/MarketingEventTracker", () => ({ TrackMarketingEventOnView: () => null }));
+vi.mock("@/components/analytics/MarketingEventTracker", () => ({
+  TrackMarketingEventOnView: () => null, useMarketingEventLogger: () => vi.fn(),
+}));
+vi.mock("@/lib/analytics/useHomeSaddleWidgetAnalytics", () => ({
+  useHomeSaddleWidgetAnalytics: () => ({ trackHomeSaddleWidgetUsed: vi.fn() }),
+}));
 vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   TrackedCtaLink: ({ href, children, className }: { href: string; children: ReactNode; className?: string }) => <a href={href} className={className}>{children}</a>,
 }));
@@ -27,6 +32,9 @@ describe("marketing home", () => {
     expect(document.body.textContent).not.toMatch(/CLAIM|bron\?|Meest populair|Meetduur:|Voorbeeldgegevens/);
     expect(screen.getByText("Begin met je maten. Verfijn op de fiets.")).toBeTruthy();
     expect(screen.getByText("Schuif naar jouw maat")).toBeTruthy();
+    const widgetCta = screen.getByRole("link", { name: "Verfijn je zadelhoogte" });
+    expect(widgetCta.getAttribute("href")).toBe("/nl/calculators/saddle-height#inseam");
+    expect(widgetCta.compareDocumentPosition(screen.getByRole("link", { name: "Start gratis bike fit" })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(document.body.textContent).toContain("Losse meting €13,50 of jaarabonnement €21,50 per jaar");
     expect(screen.getByRole("link", { name: "Bekijk prijzen" }).getAttribute("href")).toBe("/nl/pricing");
     expect(document.querySelector('a[href="/nl/pain/hand-numbness-cycling"]')).toBeTruthy();

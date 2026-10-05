@@ -89,9 +89,12 @@ export default async function HomePage() {
         section="landing"
       />
       <section className={`${styles.container} ${styles.hero}`}>
-        <div className={styles.heroCopy}>
+        <div className={styles.heroHeading}>
           <span className={styles.badge}>{copy.badge}</span>
           <h1>{copy.title}</h1>
+        </div>
+        <SaddleHeightTeaser locale={locale} />
+        <div className={styles.heroCopy}>
           <p>{copy.description}</p>
           <div className={styles.actions}>
             <TrackedCtaLink
@@ -114,7 +117,6 @@ export default async function HomePage() {
             <span>{trust.note}</span>
           </div>
         </div>
-        <SaddleHeightTeaser locale={locale} />
       </section>
 
       <section className={styles.proof}>

@@ -146,6 +146,16 @@ export const logMarketingEvent = mutation({
     }
 
     const pagePath = normalizeRelativePath(args.pagePath, "pagePath");
+    if (args.eventType === "home_saddle_widget_used") {
+      const extraFields = [args.section, args.ctaLabel, args.ctaTargetPath, args.valueCents, args.currency];
+      if (
+        args.sourceTag !== "saddle-height" ||
+        pagePath !== `/${args.locale}` ||
+        extraFields.some((value) => value !== undefined)
+      ) {
+        throw new Error("Home saddle analytics accepts only saddle-height, locale and homepage path");
+      }
+    }
     const isSaddleInteraction = args.eventType === "quick_fix_used" || args.eventType === "inseam_added";
     if (isSaddleInteraction || args.eventType === "calculator_result_view" || args.eventType === "calculator_login_cta_click") {
       const calculator = PUBLIC_CALCULATORS.find((id) => id === args.sourceTag);

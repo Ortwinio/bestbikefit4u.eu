@@ -5,7 +5,7 @@ import { createPreviewCertificate } from "../final-sweep/tls.mjs";
 
 const root = fileURLToPath(new URL("../../../", import.meta.url));
 const certificate = await createPreviewCertificate();
-const port = Number(process.argv[2] ?? 3214);
+const port = Number(process.argv.slice(2).find(argument => /^\d+$/.test(argument)) ?? 3214);
 const env = { ...process.env, NEXT_PUBLIC_SITE_URL: "https://bikefitboost.com",
   NEXT_PUBLIC_CONVEX_URL: "http://127.0.0.1:9", NEXT_PUBLIC_CONVEX_SITE_URL: "http://127.0.0.1:9",
   CONVEX_SITE_URL: "http://127.0.0.1:9", NEXT_TELEMETRY_DISABLED: "1", NODE_EXTRA_CA_CERTS: certificate.certPath };
@@ -21,7 +21,9 @@ try {
       if (String(data).includes("HTTPS server ready")) { clearTimeout(timeout); done(); }
     });
   });
-  const child = spawn(process.execPath, [resolve(root, "tests/visual/reliability/capture.mjs"), `https://127.0.0.1:${port}`],
+  const script = process.argv.includes("--headline-fixture") ? "headline-fixture.mjs" : "capture.mjs";
+  const child = spawn(process.execPath, [resolve(root, `tests/visual/reliability/${script}`), `https://127.0.0.1:${port}`,
+    ...(process.argv.includes("--home") ? ["--home"] : [])],
     { cwd: root, env, stdio: "inherit" });
   process.exitCode = await new Promise((done, reject) => { child.once("exit", code => done(code ?? 1)); child.once("error", reject); });
 } finally {

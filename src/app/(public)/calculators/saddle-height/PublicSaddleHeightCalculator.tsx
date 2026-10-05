@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { calculatePublicSaddleHeight } from "../../../../../shared/reliability/saddleHeight";
 import { Button, Slider } from "@/components/ui";
 import { RangeBar } from "@/components/ui/RangeBar";
@@ -14,6 +14,14 @@ import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
 import type { HandoffField } from "@/lib/handoff/store";
 import styles from "./PublicSaddleHeightCalculator.module.css";
 
+function subscribeLandingChange(listener: () => void) {
+  window.addEventListener("hashchange", listener);
+  return () => window.removeEventListener("hashchange", listener);
+}
+
+const getLandingSnapshot = () => window.location.hash === "#inseam" ? "home" : "other";
+const getServerLandingSnapshot = () => "server";
+
 export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onInseamAdded }: {
   isNl?: boolean;
   mode?: "full" | "quick";
@@ -23,6 +31,8 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   const copy = saddleReliabilityMessages[locale];
   const quick = mode === "quick";
   const handoff = usePublicHandoff("saddle-height");
+  const landing = useSyncExternalStore(subscribeLandingChange, getLandingSnapshot, getServerLandingSnapshot);
+  const homeStart = landing === "home";
   const [heightCm, setHeightCm] = useState(190);
   const [heightKnown, setHeightKnown] = useState(false);
   const [inseamCm, setInseamCm] = useState<number>();
@@ -32,19 +42,23 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   const [prefilledFields, setPrefilledFields] = useState<HandoffField[]>([]);
   const [showInseam, setShowInseam] = useState(false);
   const inseamCard = useRef<HTMLDivElement>(null);
+  const landingFocused = useRef(false);
   const number = new Intl.NumberFormat(isNl ? "nl-NL" : "en-GB", { maximumFractionDigits: 1 });
 
-  if (handoff.ready && !prefilled) {
+  if (handoff.ready && landing !== "server" && !prefilled) {
     setPrefilled(true);
     const fields: HandoffField[] = [];
-    const height = handoff.getPrefill("heightCm");
+    const height = homeStart
+      ? handoff.initialEntries.find((entry) => entry.field === "heightCm")
+      : handoff.getPrefill("heightCm");
     const inseam = handoff.getPrefill("inseamCm");
-    if (typeof height?.value === "number" && height.value >= 130 && height.value <= 220) {
-      setHeightCm(height.value);
+    if (typeof height?.value === "number" && Number.isFinite(height.value)
+      && (homeStart || (height.value >= 130 && height.value <= 220))) {
+      setHeightCm(homeStart ? Math.min(220, Math.max(130, Math.round(height.value))) : height.value);
       setHeightKnown(true);
       fields.push("heightCm");
     }
-    if (typeof inseam?.value === "number" && inseam.method === "measured"
+    if (!homeStart && typeof inseam?.value === "number" && inseam.method === "measured"
       && inseam.value >= 55 && inseam.value <= 105) {
       setInseamCm(inseam.value);
       setShowInseam(true);
@@ -52,6 +66,15 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
     }
     setPrefilledFields(fields);
   }
+
+  useEffect(() => {
+    if (!homeStart || !prefilled || quick || landingFocused.current) return;
+    const slider = inseamCard.current?.querySelector<HTMLElement>('[role="slider"], input[type="range"]');
+    if (!slider) return;
+    landingFocused.current = true;
+    slider.focus({ preventScroll: true });
+    inseamCard.current?.scrollIntoView?.({ block: "center" });
+  }, [homeStart, prefilled, quick]);
 
   const state = calculatePublicSaddleHeight({ heightCm, inseamCm, confirmed, override });
   const result = state.result;
@@ -89,7 +112,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
     setOverride(false);
     setShowInseam(true);
     handoff.remove("inseamCm");
-    inseamCard.current?.querySelector<HTMLElement>('[role="slider"]')?.focus();
+    inseamCard.current?.querySelector<HTMLElement>('[role="slider"], input[type="range"]')?.focus();
   }
 
   function saveMeasurements() {
@@ -99,7 +122,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   }
 
   const measurementCard = (
-    <div ref={inseamCard} className={styles.card}>
+    <div ref={inseamCard} id="inseam" className={styles.card}>
       <h2 className={styles.inputTitle}>{copy.inseamTitle}</h2>
       <Slider label={copy.inseam} min={55} max={105} step={0.5} value={inseamCm ?? 89}
         valueLabel={inseamCm === undefined ? copy.missing : number.format(inseamCm)}
