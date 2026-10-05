@@ -18,7 +18,9 @@ describe("Dutch calculator choices", () => {
 });
 
 it("uses Dutch core stability terminology in fit metadata and structured data", () => {
-  expect(fitPageDetails.nl.saddleDescription).toContain("rompstabiliteit");
+  expect(fitPageDetails.nl.saddleDescription).toContain("je lengte");
+  expect(fitPageDetails.nl.saddleDescription).toContain("gemeten binnenbeen");
+  expect(fitPageDetails.nl.saddleDescription).not.toContain("rompstabiliteit");
   expect(fitPageDetails.nl.saddleSchemaName).toBe("BikeFitBoost Zadelhoogte calculator");
   expect(fitPageDetails.nl.bikeCoreStep).toBe("Vul je lenigheid en rompstabiliteit in.");
   expect(fitPageDetails.en.saddleSchemaName).toBe("BikeFitBoost Saddle Height Calculator");

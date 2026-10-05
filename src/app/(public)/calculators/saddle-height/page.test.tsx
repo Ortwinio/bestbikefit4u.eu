@@ -3,6 +3,10 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SaddleHeightCalculatorPage, { generateMetadata } from "./page";
+import { getDictionary } from "@/i18n/getDictionary";
+import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
+
+const experienceProps = vi.hoisted(() => vi.fn());
 
 let locale: "en" | "nl" = "en";
 
@@ -47,14 +51,11 @@ vi.mock("@/i18n/request", () => ({
   getRequestLocale: () => Promise.resolve(locale),
 }));
 
-vi.mock("@/i18n/metadata", () => ({
-  buildLocaleAlternates: () => ({
-    canonical: `https://bikefitboost.com/${locale}/calculators/saddle-height`,
-  }),
-}));
-
-vi.mock("./SaddleHeightCalculatorForm", () => ({
-  SaddleHeightCalculatorForm: () => <div>Saddle height form</div>,
+vi.mock("./SaddleHeightExperience", () => ({
+  SaddleHeightExperience: (props: unknown) => {
+    experienceProps(props);
+    return <div>Saddle height experience</div>;
+  },
 }));
 
 beforeEach(() => {
@@ -78,19 +79,24 @@ describe("saddle height calculator page", () => {
       const scripts = Array.from(container.querySelectorAll('script[type="application/ld+json"]'));
       const schemas = scripts.flatMap((script) => JSON.parse(script.textContent ?? "null"));
       expect(schemas.map((schema) => schema["@type"])).toEqual(
-        expect.arrayContaining(["WebPage", "BreadcrumbList", "FAQPage"]),
+        expect.arrayContaining(["WebPage", "BreadcrumbList", "FAQPage", "HowTo"]),
       );
       expect(JSON.stringify(schemas)).not.toMatch(/WebApplication|SoftwareApplication/);
       expect(JSON.stringify(schemas)).not.toContain('"aggregateRating"');
       expect(JSON.stringify(schemas)).not.toContain('"AggregateRating"');
       const faqSchemas = schemas.filter((schema) => schema["@type"] === "FAQPage");
       expect(faqSchemas).toHaveLength(1);
+      scripts.forEach((script) => script.remove());
       for (const question of faqSchemas[0].mainEntity) {
         expect(container.textContent).toContain(question.name);
         expect(container.textContent).toContain(question.acceptedAnswer.text);
       }
       expect(container.textContent).toContain(language === "nl" ? "84,5 cm" : "84.5 cm");
-
+      const howTo = schemas.find((schema) => schema["@type"] === "HowTo");
+      expect(howTo.step[0].text).toContain(language === "nl" ? "lichaamslengte" : "height");
+      expect(howTo.step[1].text).toContain(language === "nl" ? "optioneel" : "Optionally");
+      expect(howTo.step[2].text).toContain("95%");
+      expect(JSON.stringify(howTo)).not.toMatch(/fietscategorie|riding goal|flexibility|rompstabiliteit/);
     },
   );
 
@@ -102,7 +108,15 @@ describe("saddle height calculator page", () => {
         `https://bikefitboost.com/${language}/calculators/saddle-height`,
       );
       expect(metadata.description).toBeTruthy();
+      expect(metadata.description).toContain(language === "nl" ? "optioneel" : "optional");
+      expect(metadata.description).toContain("95%");
       expect(metadata.openGraph?.url).toBe(metadata.alternates?.canonical);
+      expect(metadata.openGraph?.description).toBe(metadata.description);
+      expect(metadata.alternates?.languages).toMatchObject({
+        en: "https://bikefitboost.com/en/calculators/saddle-height",
+        nl: "https://bikefitboost.com/nl/calculators/saddle-height",
+        "x-default": "https://bikefitboost.com/en/calculators/saddle-height",
+      });
     }
   });
 
@@ -110,14 +124,45 @@ describe("saddle height calculator page", () => {
     locale = "nl";
     render(await SaddleHeightCalculatorPage());
     expect(screen.getByText("Hoe meet ik mijn binnenbeenlengte voor zadelhoogte?")).toBeTruthy();
-    expect(screen.getByText("Waarom beïnvloedt flexibiliteit het advies?")).toBeTruthy();
+    expect(screen.getByText("Kan ik beginnen zonder mijn binnenbeenlengte?")).toBeTruthy();
+    expect(screen.getByText("Wat betekent het 95%-bereik?")).toBeTruthy();
+  });
+
+  it.each(["en", "nl"] as const)("keeps guidance, safety and uncertainty visible in %s", async (language) => {
+    locale = language;
+    const { container } = render(await SaddleHeightCalculatorPage());
+    container.querySelectorAll("script").forEach((script) => script.remove());
+    const content = container.textContent;
+    expect(content).not.toMatch(
+      /Safe baseline band|Veilige basiszone|conservative test band|conservatieve bandbreedte/,
+    );
+    expect(content).toContain(language === "nl" ? "Een te hoog zadel" : "A saddle that is too high");
+    expect(content).toContain(language === "nl" ? "Een te laag zadel" : "A saddle that is too low");
+    expect(content).toContain(language === "nl" ? "Stop bij pijn of tintelingen" : "Stop if you feel pain or tingling");
+    expect(content).toContain("bikefitter");
+    const guide = screen.getByRole("link", {
+      name: language === "nl" ? "Bekijk de meetgids" : "Read the measurement guide",
+    });
+    expect(guide.getAttribute("href")).toBe(`/${language}/measurement-guide`);
+    expect(guide.classList.contains("inline-flex")).toBe(true);
+    expect(guide.classList.contains("min-h-11")).toBe(true);
+    const answer = getFitAnswer("saddle-height", language);
+    expect(answer.example.inputs.map((row) => row.value)).toEqual([
+      "178 cm", language === "nl" ? "84,5 cm" : "84.5 cm",
+    ]);
+    expect(answer.example.results.map((row) => row.value)).toEqual(["746 mm", "±23 mm", "725–770 mm"]);
+    for (const row of answer.example.results) expect(content).toContain(row.value);
+    expect(experienceProps).toHaveBeenLastCalledWith({
+      isNl: language === "nl",
+      copy: (await getDictionary(language)).saddleHeightCalculator,
+    });
   });
 
   it("keeps the value-first next-step CTAs visible in English", async () => {
     const ui = await SaddleHeightCalculatorPage();
     render(ui);
 
-    expect(screen.getByText("Saddle height form")).toBeTruthy();
+    expect(screen.getByText("Saddle height experience")).toBeTruthy();
     expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit",
     );

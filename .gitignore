@@ -88,3 +88,4 @@ plans/pricing-stripe/renders/
 plans/**/audit/*.log
 plans/seo-crawl-fixes/audit/crawl-*.json
 plans/migratie/audit/domain-migration-*.json
+plans/reliability/renders/

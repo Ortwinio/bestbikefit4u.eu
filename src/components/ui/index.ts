@@ -85,3 +85,4 @@ export { ConfiguratorLayout, type ConfiguratorLayoutProps } from "./Configurator
 export { useAutosave } from "./useAutosave";
 export { AutosaveStatus, AutosaveField, type AutosaveMessages } from "./AutosaveStatus";
 export type { AutosaveState, AutosaveOptions } from "./autosave";
+export { RangeBar, type RangeBarProps } from "./RangeBar";

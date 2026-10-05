@@ -53,7 +53,9 @@ describe.each(pages)("merged public %s page", (calculator, Page) => {
     const handoffLinks = [...container.querySelectorAll("a")]
       .map((link) => link.getAttribute("href"))
       .filter((href) => href?.includes("handoff=1"));
-    expect(handoffLinks).toEqual([`/${locale}/login?src=${calculator}&handoff=1`]);
+    expect(handoffLinks).toEqual(calculator === "saddle-height"
+      ? []
+      : [`/${locale}/login?src=${calculator}&handoff=1`]);
     expect(getAllByRole("slider").length).toBeGreaterThan(0);
     expect(readHandoff().entries).toEqual([]);
   });

@@ -1,0 +1,14 @@
+convex/analytics/mutations.ts
+convex/analytics/homeSaddleEvents.test.ts
+src/app/(public)/calculators/saddle-height/PublicSaddleHeightCalculator.tsx
+src/app/(public)/calculators/saddle-height/HomepageSaddleHandoff.test.tsx
+src/app/(public)/page.tsx
+src/app/(public)/page.test.tsx
+src/components/home/SaddleHeightTeaser.tsx
+src/components/home/SaddleHeightTeaser.test.tsx
+src/components/home/MarketingHome.module.css
+src/components/home/MarketingHome.test.tsx
+src/i18n/marketing/homeSaddleWidget.ts
+src/lib/analytics/marketing.ts
+src/lib/analytics/useHomeSaddleWidgetAnalytics.ts
+src/lib/analytics/useHomeSaddleWidgetAnalytics.test.tsx

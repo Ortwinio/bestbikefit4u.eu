@@ -1,40 +1,58 @@
 /* @vitest-environment jsdom */
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
-import { calculateSaddleHeight } from "../../../convex/lib/fitAlgorithm/calculations";
-import { homeMarketing } from "@/i18n/marketing/home";
-import { SaddleHeightTeaser, saddleTeaserEstimate } from "./SaddleHeightTeaser";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { calculateSaddleHeight } from "../../../shared/reliability/saddleHeight";
+import { homeSaddleWidget } from "@/i18n/marketing/homeSaddleWidget";
+import { writeHandoffEntry } from "@/lib/handoff/store";
+import { SaddleHeightTeaser } from "./SaddleHeightTeaser";
 
-afterEach(cleanup);
+vi.mock("@/lib/handoff/store", () => ({ writeHandoffEntry: vi.fn() }));
+const { trackUsed } = vi.hoisted(() => ({ trackUsed: vi.fn() }));
+vi.mock("@/components/analytics/MarketingEventTracker", () => ({ useMarketingEventLogger: () => vi.fn() }));
+vi.mock("@/lib/analytics/useHomeSaddleWidgetAnalytics", () => ({
+  useHomeSaddleWidgetAnalytics: () => ({ trackHomeSaddleWidgetUsed: trackUsed }),
+}));
 
-describe("home saddle-height teaser", () => {
-  it("matches the actual road/balanced calculation for every allowed slider value", () => {
-    for (let inseam = 55; inseam <= 105; inseam += 0.5) {
-      const actual = calculateSaddleHeight({
-        inputs: { category: "road", ambition: "balanced", heightMm: 1800, inseamMm: inseam * 10, flexibilityScore: 5, coreScore: 5 },
-        flexIndex: 0,
-        coreIndex: 0,
-      });
-      expect(saddleTeaserEstimate(inseam)).toEqual({ height: actual.height, min: actual.range.min, max: actual.range.max });
-    }
+afterEach(() => { cleanup(); vi.clearAllMocks(); });
+
+describe("home saddle-height widget", () => {
+  it.each(["nl", "en"] as const)("renders the shared default estimate and localized %s refinement", (locale) => {
+    render(<SaddleHeightTeaser locale={locale} />);
+    const copy = homeSaddleWidget[locale];
+    expect(screen.getByRole("slider", { name: copy.height }).getAttribute("aria-valuenow")).toBe("175");
+    expect(screen.getByRole("status", { name: copy.title }).textContent).toBe("726 mm · ±45 mm");
+    expect(screen.getByRole("img").getAttribute("aria-label")).toContain("680");
+    expect(screen.getByRole("img").getAttribute("aria-label")).toContain("770");
+    expect(screen.getByRole("link", { name: copy.refine }).getAttribute("href")).toBe(`/${locale}/calculators/saddle-height#inseam`);
+    expect(writeHandoffEntry).not.toHaveBeenCalled();
+    expect(trackUsed).not.toHaveBeenCalled();
   });
 
-  it("updates the estimate and preserves a localized refinement link", () => {
-    render(<SaddleHeightTeaser locale="nl" />);
-    const slider = screen.getByRole("slider", { name: "Binnenbeenlengte" });
-    expect(screen.getByRole("status", { name: "Startpunt voor je zadel" }).textContent).toBe("742 mm");
-    fireEvent.change(slider, { target: { value: "90.5" } });
-    expect(screen.getByRole("status", { name: "Startpunt voor je zadel" }).textContent).toBe("799 mm");
-    expect(slider.getAttribute("aria-valuetext")).toBe("90,5 cm");
-    expect(screen.getByRole("link").getAttribute("href")).toBe("/nl/calculators/saddle-height");
-  });
-
-  it("renders the English labels and identical dictionary structure", () => {
+  it("updates advice, uncertainty and range for every height without saving on change", () => {
     render(<SaddleHeightTeaser locale="en" />);
-    expect(screen.getByRole("slider", { name: "Inseam" })).toBeTruthy();
-    expect(Object.keys(homeMarketing.en)).toEqual(Object.keys(homeMarketing.nl));
-    expect(homeMarketing.en.tools).toHaveLength(homeMarketing.nl.tools.length);
-    expect(screen.getByRole("link").getAttribute("href")).toBe("/en/calculators/saddle-height");
+    const slider = screen.getByRole("slider", { name: "Height" });
+    for (let height = 130; height <= 220; height += 1) {
+      fireEvent.change(slider, { target: { value: String(height) } });
+      const result = calculateSaddleHeight({ heightCm: height });
+      expect(screen.getByRole("status", { name: homeSaddleWidget.en.title }).textContent).toBe(`${result.adviceMm} mm · ±${result.halfWidthMm} mm`);
+      expect(screen.getByRole("img").getAttribute("aria-label")).toBe(`Saddle height ${result.adviceMm} mm, range ${result.lowerMm} to ${result.upperMm} mm`);
+    }
+    expect(writeHandoffEntry).not.toHaveBeenCalled();
+    expect(trackUsed).toHaveBeenCalledTimes(91);
+  });
+
+  it("writes only chosen height on refinement and exposes a body-data-free callback", () => {
+    const onUsed = vi.fn();
+    render(<SaddleHeightTeaser locale="nl" onUsed={onUsed} />);
+    fireEvent.change(screen.getByRole("slider", { name: "Lengte" }), { target: { value: "190" } });
+    expect(onUsed).toHaveBeenCalledExactlyOnceWith();
+    const link = screen.getByRole("link", { name: homeSaddleWidget.nl.refine });
+    link.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(link);
+    expect(writeHandoffEntry).toHaveBeenCalledExactlyOnceWith({ field: "heightCm", value: 190, unit: "cm", method: "declared", calculator: "saddle-height", touchedAt: expect.any(Number) });
+    expect(onUsed).toHaveBeenCalledTimes(2);
+    expect(trackUsed).toHaveBeenCalledTimes(2);
+    expect(Object.keys(homeSaddleWidget.en)).toEqual(Object.keys(homeSaddleWidget.nl));
   });
 });

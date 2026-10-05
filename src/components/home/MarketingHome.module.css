@@ -1,12 +1,13 @@
 .home { --home-background: var(--bbf-papier); --home-foreground: var(--bbf-inkt); --home-text: var(--bbf-tekst); --home-muted: var(--bbf-gedempt); --home-card: var(--bbf-wit); --home-border: var(--bbf-rand); --home-link: var(--bbf-petrol); background: var(--home-background); color: var(--home-foreground); font-family: var(--bbf-font-body); }
 .home h1, .home h2, .home h3, .teaser h2 { font-family: var(--bbf-font-display); font-weight: 800; letter-spacing: -.035em; color: inherit; }
-.home h1 { font-size: clamp(52px, 6.4vw, 92px); line-height: .95; margin: 0; max-width: 540px; }
+.home h1 { font-size: clamp(52px, 5vw, 72px); line-height: 1.02; margin: 0; max-width: 590px; }
 .home h2 { font-size: clamp(34px, 4vw, 56px); line-height: 1.05; margin: 0; }
 .home h3 { font-size: 25px; line-height: 1.15; margin: 20px 0 12px; }
 .home p { line-height: 1.5; }
 .container { width: min(1200px, calc(100% - 48px)); margin-inline: auto; }
-.hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding-block: 72px 80px; }
-.heroCopy { display: flex; flex-direction: column; align-items: flex-start; gap: 26px; min-width: 0; }
+.hero { display: grid; grid-template-columns: 1.1fr 1fr; grid-template-areas: "heading widget" "copy widget"; column-gap: 48px; row-gap: 24px; align-items: center; padding-block: 40px 48px; }
+.heroHeading { grid-area: heading; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; align-self: end; min-width: 0; }
+.heroCopy { grid-area: copy; align-self: start; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; min-width: 0; }
 .heroCopy > p { font-size: 21px; color: var(--home-text); margin: 0; }
 .badge { border-radius: 999px; background: var(--primary-soft); color: var(--home-link); padding: 9px 14px; font-size: 14px; font-weight: 700; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -17,14 +18,13 @@
 .secondary:hover { background: var(--primary-soft); }
 .rating { display: flex; align-items: center; gap: 8px; font-family: var(--bbf-font-body); font-size: 14px; }
 .ratingNumber { font-family: var(--bbf-font-cijfers); }
-.teaser { position: relative; background: var(--bbf-lime); border-radius: 36px; padding: 280px 28px 28px; min-width: 0; }
-.bike { position: absolute; width: 100%; height: 320px; top: 0; left: 0; color: var(--bbf-inkt); }
-.teaserCard { position: relative; background: var(--home-card); border-radius: 24px; padding: 24px; box-shadow: 0 18px 40px color-mix(in srgb, var(--bbf-inkt) 12%, transparent); }
-.teaserHeading { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
-.teaser .teaserHeading h2 { font-size: 25px; line-height: 1.1; margin: 6px 0 20px; }
+.teaser { grid-area: widget; background: var(--bbf-lime); border-radius: 28px; padding: 16px; min-width: 0; }
+.teaserCard { display: flex; flex-direction: column; gap: 14px; background: var(--home-card); border-radius: 20px; padding: 24px; }
+.teaserHeading { display: flex; flex-direction: column; gap: 6px; }
+.teaser .teaserHeading h2 { font-size: 25px; line-height: 1.1; margin: 0; }
 .eyebrow { color: var(--home-link); font-size: 14px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin: 0 0 14px; }
 .teaser .eyebrow { font-size: 12px; margin: 0; }
-.result { text-align: right; flex-shrink: 0; }
+.result { text-align: left; flex-shrink: 0; min-height: 38px; }
 .result output { font: 38px/1 var(--bbf-font-cijfers); }
 .result small { font-size: 17px; color: var(--home-muted); }
 .result p { font-size: 11px; color: var(--home-muted); margin: 6px 0 0; max-width: 145px; }
@@ -74,8 +74,18 @@
 .discoveryGrid a { display: flex; flex-direction: column; justify-content: center; min-height: 44px; color: var(--home-link); margin-block: 12px; }
 .discoveryGrid span { color: var(--home-muted); font-size: 14px; }
 .home a:focus-visible, .home input:focus-visible, .home summary:focus-visible { outline: 3px solid var(--home-link); outline-offset: 5px; }
-@media (max-width: 1100px) { .hero { gap: 32px; } .heroCopy .actions { flex-direction: column; } .toolGrid { grid-template-columns: repeat(2, 1fr); } .teaser { padding-inline: 20px; } .teaserHeading { flex-direction: column; gap: 0; } .result { text-align: left; margin-bottom: 20px; } .result p { max-width: none; } .closing { padding: 36px; } }
-@media (max-width: 760px) { .container { width: calc(100% - 40px); } .hero { grid-template-columns: 1fr; padding-block: 40px 56px; gap: 36px; } .heroCopy { gap: 22px; } .heroCopy > p { font-size: 19px; } .heroCopy .actions { width: 100%; } .badge { font-size: 12px; } .teaser { padding: 230px 16px 16px; border-radius: 28px; } .bike { height: 265px; } .teaserCard { padding: 20px; } .teaserHeading { flex-direction: row; gap: 10px; } .teaser .teaserHeading h2 { font-size: 21px; } .result output { font-size: 32px; } .result p { max-width: 115px; } .proofInner { grid-template-columns: repeat(3, 1fr); gap: 16px; } .stat strong { font-size: 23px; } .stat span { font-size: 12px; } .principle { grid-column: 1 / -1; padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--bbf-gedempt); } .section { padding-block: 64px; } .heading { display: block; margin-bottom: 28px; } .heading > p { max-width: none; } .toolGrid, .painGrid, .steps, .quotes, .report, .closing, .discoveryGrid { grid-template-columns: 1fr; } .toolGrid { gap: 14px; } .tool { padding: 22px; } .tool h3 { margin-top: 16px; } .steps { gap: 24px; margin-top: 36px; } .painGrid { gap: 28px; } .quotes { margin-top: 28px; } .report { gap: 28px; } .report ul { grid-template-columns: 1fr; gap: 16px; } .closing { padding: 28px; gap: 16px; margin-bottom: 48px; } .closing .actions { flex-direction: column; } }
+@media (max-width: 1100px) { .hero { gap: 32px; } .heroCopy .actions { flex-direction: column; } .toolGrid { grid-template-columns: repeat(2, 1fr); } .closing { padding: 36px; } }
+@media (max-width: 760px) { .container { width: calc(100% - 40px); } .hero { grid-template-columns: 1fr; padding-block: 40px 56px; gap: 36px; } .heroCopy { gap: 22px; } .heroCopy > p { font-size: 19px; } .heroCopy .actions { width: 100%; } .badge { font-size: 12px; } .teaser .teaserHeading h2 { font-size: 21px; } .result output { font-size: 32px; } .result p { max-width: 115px; } .proofInner { grid-template-columns: repeat(3, 1fr); gap: 16px; } .stat strong { font-size: 23px; } .stat span { font-size: 12px; } .principle { grid-column: 1 / -1; padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--bbf-gedempt); } .section { padding-block: 64px; } .heading { display: block; margin-bottom: 28px; } .heading > p { max-width: none; } .toolGrid, .painGrid, .steps, .quotes, .report, .closing, .discoveryGrid { grid-template-columns: 1fr; } .toolGrid { gap: 14px; } .tool { padding: 22px; } .tool h3 { margin-top: 16px; } .steps { gap: 24px; margin-top: 36px; } .painGrid { gap: 28px; } .quotes { margin-top: 28px; } .report { gap: 28px; } .report ul { grid-template-columns: 1fr; gap: 16px; } .closing { padding: 28px; gap: 16px; margin-bottom: 48px; } .closing .actions { flex-direction: column; } }
+
+@media (max-width: 760px) {
+  .hero { grid-template-areas: "heading" "widget" "copy"; padding-block: 24px 40px; gap: 20px; }
+  .heroHeading { gap: 12px; }
+  .heroHeading h1 { font-size: clamp(40px, 11vw, 60px); }
+  .teaser { padding: 12px; }
+  .teaserCard { padding: 16px; gap: 12px; }
+  .teaserHeading { flex-direction: column; gap: 6px; }
+  .teaser .primary { min-height: 48px; padding: 10px 12px; font-size: 16px; }
+}
 
 :global(.dark) .home {
   --home-background: var(--bbf-inkt);
