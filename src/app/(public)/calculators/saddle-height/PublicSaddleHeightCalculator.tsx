@@ -11,6 +11,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { saddleReliabilityMessages } from "@/i18n/calculators/saddleReliability";
 import { quickFixMessages } from "@/i18n/calculators/quickFix";
 import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import { clearHomeSaddleStart, hasFreshHomeSaddleStart } from "@/lib/handoff/homeStart";
 import type { HandoffField } from "@/lib/handoff/store";
 import styles from "./PublicSaddleHeightCalculator.module.css";
 
@@ -19,7 +20,7 @@ function subscribeLandingChange(listener: () => void) {
   return () => window.removeEventListener("hashchange", listener);
 }
 
-const getLandingSnapshot = () => window.location.hash === "#inseam" ? "home" : "other";
+const getLandingSnapshot = () => window.location.hash === "#inseam" || hasFreshHomeSaddleStart() ? "home" : "other";
 const getServerLandingSnapshot = () => "server";
 
 export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onInseamAdded }: {
@@ -69,6 +70,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
 
   useEffect(() => {
     if (!homeStart || !prefilled || quick || landingFocused.current) return;
+    clearHomeSaddleStart();
     const slider = inseamCard.current?.querySelector<HTMLElement>('[role="slider"], input[type="range"]');
     if (!slider) return;
     landingFocused.current = true;

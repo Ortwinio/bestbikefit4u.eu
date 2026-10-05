@@ -11,6 +11,7 @@ import type { Locale } from "@/i18n/config";
 import { homeSaddleWidget } from "@/i18n/marketing/homeSaddleWidget";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { writeHandoffEntry } from "@/lib/handoff/store";
+import { markHomeSaddleStart } from "@/lib/handoff/homeStart";
 import { calculateSaddleHeight, getPublicSaddleHeightNextStep } from "../../../shared/reliability/saddleHeight";
 import styles from "./MarketingHome.module.css";
 
@@ -32,6 +33,7 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
       field: "heightCm", value: height, unit: "cm", method: "declared",
       calculator: "saddle-height", touchedAt: Date.now(),
     });
+    markHomeSaddleStart();
     used();
   }
 

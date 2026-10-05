@@ -5,6 +5,7 @@ import { renderToString } from "react-dom/server";
 import { hydrateRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
+import { HOME_SADDLE_START_KEY, markHomeSaddleStart } from "@/lib/handoff/homeStart";
 import { saddleReliabilityMessages } from "@/i18n/calculators/saddleReliability";
 import { quickFixMessages } from "@/i18n/calculators/quickFix";
 import { homeSaddleWidget } from "@/i18n/marketing/homeSaddleWidget";
@@ -133,5 +134,24 @@ describe("homepage saddle starting-point handoff", () => {
       await act(async () => root?.unmount());
       container.remove();
     }
+  });
+
+  // Client-side navigation can render the calculator before "#inseam" is in the URL (seen in production).
+  it("applies the homepage height from the session marker when the hash is not there yet", () => {
+    seedHeight(185);
+    markHomeSaddleStart();
+    window.history.replaceState(null, "", "/en/calculators/saddle-height");
+    render(<SaddleHeightCalculatorForm />);
+    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("185");
+    expect(document.activeElement).toBe(screen.getByRole("slider", { name: "Inseam" }));
+    expect(sessionStorage.getItem(HOME_SADDLE_START_KEY)).toBeNull();
+  });
+
+  it("ignores a stale homepage marker on an ordinary visit", () => {
+    seedHeight(185);
+    sessionStorage.setItem(HOME_SADDLE_START_KEY, String(Date.now() - 120_000));
+    window.history.replaceState(null, "", "/en/calculators/saddle-height");
+    render(<SaddleHeightCalculatorForm />);
+    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("190");
   });
 });
