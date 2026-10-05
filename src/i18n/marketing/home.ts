@@ -15,7 +15,7 @@ type HomeCopy = {
 
 export const homeMarketing: Record<Locale, HomeCopy> = {
   nl: {
-    badge: "Online bikefit · gratis starten, geen account nodig", title: "Haal meer uit elke rit.",
+    badge: "Online bikefit · gratis starten, geen account nodig", title: "A good bikefit boosts your ride",
     description: "Stel je fiets af op jouw lichaam en rijstijl. Vul je maten in en krijg concrete millimeters voor zadel, reach en stuur.",
     start: "Start gratis bike fit", reportLink: "Wat zit in het rapport?",
     toolsEyebrow: "Gratis configurators", toolsTitle: "Kies wat je wilt afstellen", toolsDescription: "Gratis tools die je direct kunt gebruiken, zonder account.",
@@ -46,7 +46,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     teaser: { try: "Probeer het nu", title: "Startpunt voor je zadel", inseam: "Binnenbeenlengte", direction: "trapas → bovenkant zadel", context: "Racefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge:", refine: "Verfijn je zadelhoogte", adjust: "Schuif naar jouw maat" },
   },
   en: {
-    badge: "Online bike fit · start free, no account needed", title: "Get more from every ride.",
+    badge: "Online bike fit · start free, no account needed", title: "A good bikefit boosts your ride",
     description: "Set up your bike for your body and riding style. Enter your measurements and get concrete millimeters for saddle, reach, and handlebars.",
     start: "Start free bike fit", reportLink: "What's in the report?",
     toolsEyebrow: "Free calculators", toolsTitle: "Choose what to adjust", toolsDescription: "Free tools you can use right away, without an account.",
