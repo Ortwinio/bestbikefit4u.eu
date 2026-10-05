@@ -19,7 +19,7 @@ afterEach(() => { cleanup(); requestLocale.mockReturnValue("nl"); });
 describe("marketing home", () => {
   it("retains localized calculator, pain, report, and account destinations without unverified placeholders", async () => {
     render(await HomePage());
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Haal meer uit elke rit.");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("A good bikefit boosts your ride");
     expect(screen.getByRole("link", { name: "Start gratis bike fit" }).getAttribute("href")).toBe("/nl/calculators/bike-fit");
     expect(screen.getByRole("link", { name: /Bandenspanning Voor/ }).getAttribute("href")).toBe("/nl/bandenspanning-calculator");
     expect(screen.getByRole("link", { name: "Maak gratis account" }).getAttribute("href")).toBe("/nl/login");
@@ -35,7 +35,7 @@ describe("marketing home", () => {
   it("serves English copy and retains canonical metadata", async () => {
     requestLocale.mockReturnValue("en");
     render(await HomePage());
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Get more from every ride.");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("A good bikefit boosts your ride");
     expect(screen.getByRole("link", { name: "Start free bike fit" }).getAttribute("href")).toBe("/en/calculators/bike-fit");
     const metadata = await generateMetadata();
     expect(metadata.alternates?.canonical).toBe("https://bikefitboost.com/en");
