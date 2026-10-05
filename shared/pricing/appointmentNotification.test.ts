@@ -36,6 +36,11 @@ describe("dormant personal bikefit notification preparation", () => {
     expect(prepareFitterNotification({ ...input, entitlement: { ...entitlement, ...change } }))
       .toEqual({ status: "not_eligible" });
   });
+  it("prepares a standalone appointment with no invented expiry", () => {
+    expect(prepareFitterNotification({ ...input, entitlement: {
+      ...entitlement, productId: "personal_fit_standalone", expiresAt: 0,
+    } }).status).toBe("ready");
+  });
   it("does not invent a rider email", () => {
     expect(prepareFitterNotification({ ...input, rider: {} })).toEqual({ status: "missing_contact" });
   });

@@ -35,19 +35,6 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   ),
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: () => <div>Campaign CTA</div>,
-}));
-
-vi.mock("@/config/commercial", async () => {
-  const actual = await vi.importActual<object>("@/config/commercial");
-  return {
-    ...actual,
-    isConsumerCampaignActive: () => false,
-    getConsumerCampaignCopy: () => ({ donateCta: "Donate" }),
-  };
-});
-
 vi.mock("@/components/seo/JsonLd", () => ({
   JsonLd: ({ schema }: { schema: object | object[] }) => (
     <script

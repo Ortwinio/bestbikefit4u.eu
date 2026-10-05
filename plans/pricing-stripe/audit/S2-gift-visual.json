@@ -1,0 +1,341 @@
+{
+  "scope": "Isolated production gift components with fixture props, real app CSS and local fonts; no live backend or page-shell coverage.",
+  "results": [
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "give",
+      "screenshot": "S2-gift-nl-give-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "give-exhausted",
+      "screenshot": "S2-gift-nl-give-exhausted-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "give-ineligible",
+      "screenshot": "S2-gift-nl-give-ineligible-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "valid",
+      "screenshot": "S2-gift-nl-valid-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "soon",
+      "screenshot": "S2-gift-nl-soon-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "redeem",
+      "screenshot": "S2-gift-nl-redeem-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "state": "expired",
+      "screenshot": "S2-gift-nl-expired-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "give",
+      "screenshot": "S2-gift-nl-give-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "give-exhausted",
+      "screenshot": "S2-gift-nl-give-exhausted-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "give-ineligible",
+      "screenshot": "S2-gift-nl-give-ineligible-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "valid",
+      "screenshot": "S2-gift-nl-valid-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "soon",
+      "screenshot": "S2-gift-nl-soon-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "redeem",
+      "screenshot": "S2-gift-nl-redeem-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "state": "expired",
+      "screenshot": "S2-gift-nl-expired-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "give",
+      "screenshot": "S2-gift-en-give-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "give-exhausted",
+      "screenshot": "S2-gift-en-give-exhausted-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "give-ineligible",
+      "screenshot": "S2-gift-en-give-ineligible-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "valid",
+      "screenshot": "S2-gift-en-valid-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "soon",
+      "screenshot": "S2-gift-en-soon-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "redeem",
+      "screenshot": "S2-gift-en-redeem-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "expired",
+      "screenshot": "S2-gift-en-expired-1440.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "give",
+      "screenshot": "S2-gift-en-give-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "give-exhausted",
+      "screenshot": "S2-gift-en-give-exhausted-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "give-ineligible",
+      "screenshot": "S2-gift-en-give-ineligible-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "valid",
+      "screenshot": "S2-gift-en-valid-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "soon",
+      "screenshot": "S2-gift-en-soon-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "redeem",
+      "screenshot": "S2-gift-en-redeem-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "expired",
+      "screenshot": "S2-gift-en-expired-390.png",
+      "metrics": {
+        "overflow": false,
+        "smallControls": []
+      },
+      "errors": [],
+      "axe": []
+    }
+  ]
+}

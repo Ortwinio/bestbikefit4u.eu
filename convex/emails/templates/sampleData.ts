@@ -1,7 +1,7 @@
 import { BRAND } from "../../lib/brand";
 import type {
   ResultsSummaryData, FitReportData, WinbackData, ProExplainerData, Day1TipsData, EmailLocale,
-  Day7CheckInData, Day14EvaluationData,
+  Day7CheckInData, Day14EvaluationData, GiftMeasurementData,
 } from "./index";
 
 /** Fixed, fictional preview values from SPEC §7. No sender or real recipient is involved. */
@@ -31,10 +31,16 @@ export function sampleData(locale: EmailLocale) {
     accessEndsAt: Date.UTC(2027, 0, 3), invoiceAttached: true, withdrawalAcknowledged: true,
   };
   const renewal = {
-    ...personal, renewalAt: Date.UTC(2027, 2, 1), daysUntilRenewal: 30, firstYearPriceCents: 2450, bikesAdjusted: 3, reportsCreated: 5,
+    ...personal, renewalAt: Date.UTC(2027, 2, 1), daysUntilRenewal: 30, firstYearPriceCents: 2150, bikesAdjusted: 3, reportsCreated: 5,
     giftsGiven: 2, giftsIncluded: true, cancellationUrl: `${BRAND.siteUrl}/${locale}/settings`,
   };
   return {
+    giftMeasurement: {
+      senderFirstName: "Thomas",
+      message: locale === "nl" ? "Veel plezier met je bikefit!" : "Enjoy your bike fit!",
+      expiresAt: Date.UTC(2026, 10, 4),
+      actionUrl: `${BRAND.siteUrl}/${locale}/gift#token=${"a".repeat(64)}`,
+    } satisfies GiftMeasurementData,
     purchaseConfirmation: purchase,
     subscriptionWelcome: { ...personal, accessEndsAt: Date.UTC(2027, 9, 3) },
     accessExpired: { ...personal, bikeName: "Canyon Endurace" },

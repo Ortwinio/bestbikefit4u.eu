@@ -9,7 +9,7 @@ export const expireEntitlements = internalMutation({
   handler: async (ctx) => {
     const now = Date.now();
     const rows = await ctx.db.query("pricingEntitlements")
-      .withIndex("by_status_expiry", (query) => query.eq("status", "active").lte("expiresAt", now)).take(200);
+      .withIndex("by_status_expiry", (query) => query.eq("status", "active").gt("expiresAt", 0).lte("expiresAt", now)).take(200);
     for (const row of rows) await ctx.db.patch(row._id, { status: "expired" });
     if (rows.length === 200) await ctx.scheduler.runAfter(0, makeFunctionReference<"mutation">("pricing/internal:expireEntitlements"), {});
     return { expired: rows.length, mayHaveMore: rows.length === 200 };

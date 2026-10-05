@@ -19,6 +19,9 @@ import type * as admin_queries from "../admin/queries.js";
 import type * as analytics_mutations from "../analytics/mutations.js";
 import type * as analytics_queries from "../analytics/queries.js";
 import type * as auth from "../auth.js";
+import type * as gifts_mutations from "../gifts/mutations.js";
+import type * as gifts_queries from "../gifts/queries.js";
+import type * as emails_gifts from "../emails/gifts.js";
 import type * as calculatorChain_mutations from "../calculatorChain/mutations.js";
 import type * as calculatorChain_queries from "../calculatorChain/queries.js";
 import type * as calculatorStates_mutations from "../calculatorStates/mutations.js";
@@ -118,6 +121,9 @@ import type * as saddleWidth_mutations from "../saddleWidth/mutations.js";
 import type * as saddleWidth_queries from "../saddleWidth/queries.js";
 import type * as sessions_mutations from "../sessions/mutations.js";
 import type * as sessions_queries from "../sessions/queries.js";
+import type * as stripe_checkout from "../stripe/checkout.js";
+import type * as stripe_queries from "../stripe/queries.js";
+import type * as pricing_gifts from "../pricing/gifts.js";
 import type * as stripe_mapping from "../stripe/mapping.js";
 import type * as stripe_mutations from "../stripe/mutations.js";
 import type * as stripe_webhook from "../stripe/webhook.js";
@@ -138,6 +144,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "gifts/mutations": typeof gifts_mutations;
+  "gifts/queries": typeof gifts_queries;
+  "emails/gifts": typeof emails_gifts;
   "calculatorChain/mutations": typeof calculatorChain_mutations;
   "calculatorChain/queries": typeof calculatorChain_queries;
   "calculatorStates/mutations": typeof calculatorStates_mutations;
@@ -248,6 +257,9 @@ declare const fullApi: ApiFromModules<{
   "saddleWidth/queries": typeof saddleWidth_queries;
   "sessions/mutations": typeof sessions_mutations;
   "sessions/queries": typeof sessions_queries;
+  "stripe/checkout": typeof stripe_checkout;
+  "stripe/queries": typeof stripe_queries;
+  "pricing/gifts": typeof pricing_gifts;
   "stripe/mapping": typeof stripe_mapping;
   "stripe/mutations": typeof stripe_mutations;
   "stripe/webhook": typeof stripe_webhook;

@@ -1,0 +1,7 @@
+# Gift route and grant integration details
+
+B: public CTA goes to localized `/gift`. Tokenless state is supported and instructs opening the personal email link. Give page is localized account `/gifts`; please link it from subscription UI. A owns navigation protection and a narrow login `?gift=1` return selector so authentication returns to `/gift` without ever carrying the token in login URLs. Token is captured from fragment and retained only in session storage through login.
+
+C: backend schema/API proposal is A-backend-contract.md. Please wire gift schema via new module (worker implements schema.ts) when ready; parent will own crons/generated API with your approval. Required atomic helper shape is `grantGiftEntitlement(ctx,{userId,bikeId,giftId,redeemedAt})` returning the single entitlement ID, idempotent on gift ID, enforcing owned bike. Gift source must count for the 6-calendar-month upgrade window. Need precise export path and paid annual product identifiers/period strategy ASAP.
+
+M11: public URL is `${origin}/${locale}/gift#token=${randomToken}` (not a path/query token). Renderer is new `convex/emails/templates/giftMeasurement.ts`. B's shared-email worker owns existing registry/sampleData/preview script: please add export `renderGiftMeasurement`/`GiftMeasurementData`, sampleData `giftMeasurement` with senderFirstName, optional message, expiresAt, and canonical actionUrl with a dummy 64-hex fragment token. Append `giftMeasurement` to preview kinds. No other existing email template edits by A.

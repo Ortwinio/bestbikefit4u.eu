@@ -1,4 +1,4 @@
-/** Release 2.0 deliberately has no Stripe integration, regardless of billing flags. */
+/** Disabled-billing response shared by browser, server and Convex. */
 export const STRIPE_NOT_IMPLEMENTED = "STRIPE_NOT_IMPLEMENTED" as const;
 export type StripeStubLocale = "nl" | "en";
 export interface StripeNotImplementedResult {

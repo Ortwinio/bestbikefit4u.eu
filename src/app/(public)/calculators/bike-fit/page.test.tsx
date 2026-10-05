@@ -5,7 +5,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BikeFitCalculatorPage, { generateMetadata } from "./page";
 
 let locale: "en" | "nl" = "en";
-let campaignActive = true;
 
 vi.mock("server-only", () => ({}));
 
@@ -40,34 +39,6 @@ vi.mock("@/components/seo/JsonLd", () => ({
   ),
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Create account or sign in"}</a>
-      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
-    </div>
-  ),
-}));
-
-vi.mock("@/config/commercial", async () => {
-  const actual = await vi.importActual<typeof import("@/config/commercial")>("@/config/commercial");
-
-  return {
-    ...actual,
-    isConsumerCampaignActive: () => campaignActive,
-  };
-});
-
 vi.mock("@/components/seo/RelatedLinksSection", () => ({
   RelatedLinksSection: () => <section>Related links</section>,
 }));
@@ -88,7 +59,6 @@ vi.mock("./BikeFitCalculatorForm", () => ({
 
 beforeEach(() => {
   locale = "en";
-  campaignActive = true;
 });
 
 afterEach(() => {
@@ -145,7 +115,6 @@ describe("bike fit calculator page", () => {
     "leaves %s signup to the calculator handoff block without a duplicate campaign CTA",
     async (language) => {
       locale = language;
-      campaignActive = false;
       const { container } = render(await BikeFitCalculatorPage());
       expect(screen.getByText("Bike fit form")).toBeTruthy();
       expect(container.querySelector('a[href*="/login"]')).toBeNull();

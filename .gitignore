@@ -84,3 +84,7 @@ plans/rebrand/renders/
 plans/migratie/renders/
 plans/pricing-v3/renders/
 *-server.log
+plans/pricing-stripe/renders/
+plans/**/audit/*.log
+plans/seo-crawl-fixes/audit/crawl-*.json
+plans/migratie/audit/domain-migration-*.json

@@ -1,11 +1,14 @@
 import { v } from "convex/values";
 import { internalMutation } from "../_generated/server";
+import { isStripeBillingEnabled } from "../../src/config/billing";
+import { applyStripeEvent } from "./events";
 import { stripeNotImplemented } from "../../shared/billing/stripeStub";
 
-// Existing internal references stay callable, but cannot mutate billing or access.
+// Public callers cannot invoke this mutation; the HTTP action verifies the signature first.
 export const processWebhookEvent = internalMutation({
   args: { payloadJson: v.string() },
-  handler: async () => stripeNotImplemented(),
+  handler: async (ctx, args) => isStripeBillingEnabled()
+    ? applyStripeEvent(ctx, args.payloadJson) : stripeNotImplemented(),
 });
 
 export const upgradeToPro = internalMutation({

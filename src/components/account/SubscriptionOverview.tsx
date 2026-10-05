@@ -7,7 +7,6 @@ import type { Locale } from "@/i18n/config";
 import { subscriptionCopy } from "@/i18n/account/subscription";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { stripeNotImplemented } from "@/lib/billing/stripeStub";
-import { PRODUCTS } from "../../../shared/pricing/products";
 
 export type SubscriptionOverviewDetails = {
   plan: "free" | "single" | "annual" | "personal";
@@ -17,9 +16,10 @@ export type SubscriptionOverviewDetails = {
   periodPriceCents?: number;
   renewed?: boolean;
   cancelled?: boolean;
-  introEligible?: boolean;
+  upgradeEligible?: boolean;
   enforced?: boolean;
   appointmentAvailable?: boolean;
+  canBuyAppointment?: boolean;
 };
 
 export function SubscriptionOverview({ locale, subscription }: {
@@ -31,6 +31,7 @@ export function SubscriptionOverview({ locale, subscription }: {
   const [confirming, setConfirming] = useState(false);
   const [stubMessage, setStubMessage] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
+  const [cancelConfirmed, setCancelConfirmed] = useState(false);
   const cancelSubscription = async () => {
     setCancelling(true);
     setStubMessage(null);
@@ -45,8 +46,13 @@ export function SubscriptionOverview({ locale, subscription }: {
         body: JSON.stringify({ locale }),
       });
       const result = await response.json();
-      setStubMessage(result.code === "STRIPE_NOT_IMPLEMENTED"
-        ? stripeNotImplemented(locale).message : copy.cancelFailed);
+      if (response.ok && result.cancelled === true) {
+        setCancelConfirmed(true);
+        setConfirming(false);
+      } else {
+        setStubMessage(result.code === "STRIPE_NOT_IMPLEMENTED"
+          ? stripeNotImplemented(locale).message : copy.cancelFailed);
+      }
     } catch {
       setStubMessage(copy.cancelFailed);
     } finally {
@@ -58,8 +64,6 @@ export function SubscriptionOverview({ locale, subscription }: {
       day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Amsterdam",
     }).format(timestamp);
   const annual = subscription?.plan === "annual" || subscription?.plan === "personal";
-  const renewalPrice = subscription?.periodPriceCents === PRODUCTS.annual.priceCents && subscription.renewed === false
-    ? `${copy.renewalPrice} (${copy.renewalDiscount})` : copy.renewalPrice;
   const cancelCopy = subscription?.renewed === undefined ? copy.cancelUnknown :
     subscription.renewed ? copy.cancelRenewed : copy.cancelFirst;
 
@@ -82,11 +86,18 @@ export function SubscriptionOverview({ locale, subscription }: {
                   value={subscription.periodPriceCents === undefined ? undefined : new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", { style: "currency", currency: "EUR" }).format(subscription.periodPriceCents / 100)} />
                 <StatRow label={copy.started} value={date(subscription.startsAt)} />
                 <StatRow label={copy.periodEnd} value={date(subscription.expiresAt)} />
-                {!subscription.cancelled ? <StatRow label={copy.renewal} value={[date(subscription.expiresAt), renewalPrice].filter(Boolean).join(" · ")} /> : null}
+                {!subscription.cancelled && !cancelConfirmed ? <StatRow label={copy.renewal} value={[date(subscription.expiresAt), copy.renewalPrice].filter(Boolean).join(" · ")} /> : null}
               </> : null}
             </dl>
             {subscription.plan === "single" ? <p className="text-muted-foreground">{copy.singleDescription}</p> : null}
-            {annual && !subscription.cancelled ? <>
+            {annual ? <Link
+              className="inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4"
+              href={withLocalePrefix("/gifts", locale)}>
+              {copy.giveGift}
+            </Link> : null}
+            {cancelConfirmed ? <p role="status">{copy.cancelConfirmed}</p> : null}
+            {annual && !subscription.cancelled && !cancelConfirmed ? <>
+              <p className="text-muted-foreground">{copy.gifts}</p>
               <p className="text-muted-foreground">{copy.reminder}</p>
               {subscription.plan === "personal" ? <p className="text-muted-foreground">{copy.personalRenewal}</p> : null}
               <Button variant="outline" disabled={cancelling} aria-expanded={confirming} aria-controls={confirmationId}
@@ -110,9 +121,15 @@ export function SubscriptionOverview({ locale, subscription }: {
               href={withLocalePrefix("/checkout?appointment=1", locale)}>
               {copy.planAppointment}
             </Link> : null}
+            {subscription.canBuyAppointment === true && subscription.appointmentAvailable !== true ? <Link
+              className="inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4"
+              href={withLocalePrefix("/checkout?product=personal_fit_standalone", locale)}>
+              {copy.buyAppointment}
+            </Link> : null}
+            {!annual && subscription.upgradeEligible === true ? <p className="text-muted-foreground">{copy.upgradeEligibility}</p> : null}
             {!annual || subscription.cancelled ? <Link className="inline-flex min-h-11 items-center font-semibold text-primary underline underline-offset-4"
-              href={withLocalePrefix("/pricing", locale)}>
-              {subscription.plan === "single" && subscription.introEligible ? copy.intro : copy.prices}
+              href={withLocalePrefix(!annual && subscription.upgradeEligible === true ? "/checkout?product=annual" : "/pricing", locale)}>
+              {!annual && subscription.upgradeEligible === true ? copy.upgrade : copy.prices}
             </Link> : null}
             <p className="text-xs text-muted-foreground">{copy.vat}</p>
           </>}

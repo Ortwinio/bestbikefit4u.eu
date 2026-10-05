@@ -93,7 +93,7 @@ describe("HeaderAuthActions", () => {
     expect(await screen.findByTestId("user-menu")).toBeTruthy();
   });
 
-  it("renders donate link when campaign is active", () => {
+  it("renders Dutch calculator access without donations", () => {
     useConvexAuthMock.mockReturnValue({ isAuthenticated: false, isLoading: false });
 
     render(
@@ -102,28 +102,6 @@ describe("HeaderAuthActions", () => {
         loginLabel="Inloggen"
         getStartedLabel="Start gratis"
         dashboardLabel="Dashboard"
-        campaignActive={true}
-        donateLabel="Doneer"
-        donationUrl="https://example.com/donate"
-      />
-    );
-
-    const donateLink = screen.getByRole("link", { name: "Doneer" });
-    expect(donateLink.getAttribute("href")).toBe("https://example.com/donate");
-    expect(donateLink.getAttribute("target")).toBe("_blank");
-    expect(screen.queryByRole("link", { name: "Start gratis" })).toBeNull();
-  });
-
-  it("renders start gratis when campaign is not active", () => {
-    useConvexAuthMock.mockReturnValue({ isAuthenticated: false, isLoading: false });
-
-    render(
-      <HeaderAuthActions
-        locale="nl"
-        loginLabel="Inloggen"
-        getStartedLabel="Start gratis"
-        dashboardLabel="Dashboard"
-        campaignActive={false}
       />
     );
 

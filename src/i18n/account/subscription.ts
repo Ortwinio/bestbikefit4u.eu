@@ -1,10 +1,11 @@
-import { PRODUCTS } from "../../../shared/pricing/products";
+import { ANNUAL_GIFT_CREDITS, PRODUCTS, UPGRADE_WINDOW_MONTHS } from "../../../shared/pricing/products";
 
-const entryNl = (PRODUCTS.annual_entry.priceCents / 100).toFixed(2).replace(".", ",");
-const entryEn = (PRODUCTS.annual_entry.priceCents / 100).toFixed(2);
 const renewalNl = (PRODUCTS.annual.renewalPriceCents / 100).toFixed(2).replace(".", ",");
 const renewalEn = (PRODUCTS.annual.renewalPriceCents / 100).toFixed(2);
-const discount = (PRODUCTS.annual.priceCents - PRODUCTS.annual.renewalPriceCents) / 100;
+const upgradeNl = (PRODUCTS.annual_upgrade.priceCents / 100).toFixed(2).replace(".", ",");
+const upgradeEn = (PRODUCTS.annual_upgrade.priceCents / 100).toFixed(2);
+const appointmentNl = (PRODUCTS.personal_fit_standalone.priceCents / 100).toFixed(2).replace(".", ",");
+const appointmentEn = (PRODUCTS.personal_fit_standalone.priceCents / 100).toFixed(2);
 
 export const subscriptionCopy = {
   nl: {
@@ -25,7 +26,11 @@ export const subscriptionCopy = {
     accessUntil: "Toegang tot",
     bike: "Fiets",
     singleDescription: "Eenmalig betaald, er wordt niets verlengd. Daarna blijft je account gratis en blijven je gegevens bewaard.",
-    intro: `Voor hetzelfde bedrag (€${entryNl}) al je fietsen een jaar →`,
+    upgrade: `Upgrade voor €${upgradeNl} het eerste jaar, daarna €${renewalNl} per jaar →`,
+    upgradeEligibility: `Binnen ${UPGRADE_WINDOW_MONTHS} maanden na aankoop van een losse meting of het verzilveren van een cadeaumeting kun je upgraden voor €${upgradeNl} het eerste jaar.`,
+    gifts: `Inclusief ${ANNUAL_GIFT_CREDITS} cadeaumetingen per abonnementsjaar.`,
+    giveGift: "Geef een cadeaumeting",
+    buyAppointment: `Persoonlijke bikefit-afspraak · €${appointmentNl} eenmalig`,
     firstYear: "Eerste jaar",
     renewedYear: "Abonnementsjaar na verlenging",
     period: "Huidige periode",
@@ -33,7 +38,6 @@ export const subscriptionCopy = {
     periodEnd: "Huidige periode loopt tot",
     renewal: "Volgende verlenging",
     renewalPrice: `€${renewalNl}`,
-    renewalDiscount: `€${discount} korting`,
     reminder: "Je krijgt 30 dagen vooraf een herinnering met datum en bedrag.",
     personalRenewal: "Na het eerste jaar verlengt dit als gewoon jaarabonnement, zonder nieuwe persoonlijke bikefit-afspraak.",
     cancel: "Abonnement opzeggen",
@@ -45,6 +49,7 @@ export const subscriptionCopy = {
     keep: "Behoud mijn abonnement",
     notCancelled: "Je abonnement is niet opgezegd. Er is geen terugbetaling uitgevoerd.",
     cancelFailed: "Opzeggen is niet gelukt. Probeer het opnieuw.",
+    cancelConfirmed: "Je opzegging is bevestigd. Je abonnementsgegevens worden bijgewerkt.",
     cancelledDescription: "Er wordt niets meer afgeschreven. Na de einddatum wordt je account gratis. Je gegevens blijven bewaard; betaalde velden worden alleen-lezen.",
     cancelledOpenDescription: "Er wordt niets meer afgeschreven. Na de einddatum wordt je account gratis. Je gegevens blijven bewaard en je hebt momenteel volledige toegang.",
     vat: "Prijzen inclusief btw.",
@@ -67,7 +72,11 @@ export const subscriptionCopy = {
     accessUntil: "Access until",
     bike: "Bike",
     singleDescription: "Paid once, with no automatic renewal. Afterwards your account stays free and your data is saved.",
-    intro: `For the same amount (€${entryEn}), all your bikes for a year →`,
+    upgrade: `Upgrade for €${upgradeEn} for the first year, then €${renewalEn} per year →`,
+    upgradeEligibility: `Upgrade for €${upgradeEn} for the first year within ${UPGRADE_WINDOW_MONTHS} months of buying a single fit or redeeming a gift measurement.`,
+    gifts: `Includes ${ANNUAL_GIFT_CREDITS} gift measurements per subscription year.`,
+    giveGift: "Give a gift measurement",
+    buyAppointment: `Personal bike fit appointment · €${appointmentEn} one-off`,
     firstYear: "First year",
     renewedYear: "Subscription year after renewal",
     period: "Current period",
@@ -75,7 +84,6 @@ export const subscriptionCopy = {
     periodEnd: "Current period ends",
     renewal: "Next renewal",
     renewalPrice: `€${renewalEn}`,
-    renewalDiscount: `€${discount} discount`,
     reminder: "You receive a reminder 30 days in advance with the date and amount.",
     personalRenewal: "After the first year this renews as a regular annual subscription, without another personal bike fit appointment.",
     cancel: "Cancel subscription",
@@ -87,6 +95,7 @@ export const subscriptionCopy = {
     keep: "Keep my subscription",
     notCancelled: "Your subscription has not been cancelled. No refund has been issued.",
     cancelFailed: "Cancellation failed. Please try again.",
+    cancelConfirmed: "Your cancellation is confirmed. Your subscription details are being updated.",
     cancelledDescription: "There will be no further charges. After the end date your account becomes free. Your data is saved; paid fields become read-only.",
     cancelledOpenDescription: "There will be no further charges. After the end date your account becomes free. Your data is saved and you currently have full access.",
     vat: "Prices include VAT.",

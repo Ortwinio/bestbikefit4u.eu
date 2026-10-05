@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Gift } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -65,7 +65,16 @@ export default async function PricingPage() {
       <section className={styles.plans} aria-label={page.eyebrow}>
         {mobileProductOrder.map((productId) => <PricingCard key={productId} locale={locale} productId={productId} href={checkoutHref(productId)} />)}
       </section>
-      <section className={styles.comparison} aria-labelledby="pricing-compare">
+      <section className={styles.gift} aria-labelledby="pricing-gift">
+        <div className={styles.giftIntro}>
+          <span className={styles.giftIcon}><Gift size={24} aria-hidden="true" /></span>
+          <div><h2 id="pricing-gift">{page.gift.title}</h2><p>{page.gift.body}</p></div>
+        </div>
+        <Link className={styles.giftLink} href={withLocalePrefix("/gift", locale)}>
+          {page.gift.cta} <span aria-hidden="true">→</span>
+        </Link>
+      </section>
+      <section className={styles.comparison}>
         <h2 id="pricing-compare">{page.featureCompareTitle}</h2>
         <div className={styles.tableWrap} tabIndex={0} role="region" aria-label={page.featureCompareTitle}>
           <table>

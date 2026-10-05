@@ -128,6 +128,18 @@ describe("generated LLM discovery documents", () => {
 });
 
 
+it("publishes current bilingual prices and eligibility in both machine-readable documents", async () => {
+  for (const full of [false, true]) {
+    const document = await generateLlmsDocument(full);
+    for (const amount of ["€21,50", "€21.50", "€9,50", "€9.50", "€209,50", "€209.50", "€234,50", "€234.50"]) {
+      expect(document).toContain(amount);
+    }
+    expect(document).toContain("2 cadeaumetingen per abonnementsjaar");
+    expect(document).toContain("six months");
+    expect(document).not.toMatch(/€24[,.]50|€19[,.]50|€5 korting|annual_entry|Pro monthly/);
+  }
+});
+
 it("deduplicates shared static/CMS guide nodes and produces deterministic discovery output", async () => {
   const guide = listGuideRewrites()[0];
   cms.guides = [{ slug: guide.slug, path: `/guides/${guide.slug}`, lastUpdatedAt: Date.UTC(2026, 9, 1) }];

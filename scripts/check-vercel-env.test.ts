@@ -22,7 +22,8 @@ describe("Vercel environment preflight", () => {
   });
 
   const flagValues = [undefined, "false", "true"] as const;
-  const flagPairs = flagValues.flatMap((server) => flagValues.map((client) => ({ server, client })));
+  const flagPairs = flagValues.flatMap((server) => flagValues.map((client) => ({ server, client })))
+    .filter(({ server, client }) => server !== "true" || client !== "true");
 
   it.each(flagPairs)("requires no provider integration with billing flags %j", ({ server, client }) => {
     for (const environment of ["production", ""]) {
@@ -43,6 +44,16 @@ describe("Vercel environment preflight", () => {
     const malformed = run({ NEXT_PUBLIC_CONVEX_URL: "not-a-url" });
     expect(malformed.status).toBe(1);
     expect(malformed.stderr).toContain("Invalid URL in NEXT_PUBLIC_CONVEX_URL");
+  });
+
+  it("requires configured prices and key only when enabled", () => {
+    const enabled = { STRIPE_BILLING_ENABLED: "true", NEXT_PUBLIC_STRIPE_BILLING_ENABLED: "true" };
+    expect(run(enabled).status).toBe(1);
+    expect(run(enabled).stderr).toContain("STRIPE_ANNUAL_PRICE_ID");
+    expect(run({ ...enabled, STRIPE_SECRET_KEY: "rk_test_mock", STRIPE_ANNUAL_PRICE_ID: "price_annual",
+      STRIPE_SINGLE_FIT_PRICE_ID: "price_single", STRIPE_PERSONAL_FIT_ADDON_PRICE_ID: "price_addon",
+      STRIPE_PERSONAL_FIT_STANDALONE_PRICE_ID: "price_standalone", STRIPE_UPGRADE_COUPON_ID: "coupon_upgrade",
+    }).status).toBe(0);
   });
 
   it("still rejects a preview pointing at localhost", () => {

@@ -103,6 +103,7 @@ export function renderSubscriptionWelcome(data: SubscriptionWelcomeData, locale:
   }
   const items = list(copy.benefits.map(text => ({ text })));
   email.add(items.html, items.text);
+  email.paragraph(fill(copy.renewal, { renewal: formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale) }));
   email.button(data.actionUrl, copy.button);
   email.paragraph(emailCopy[locale].common.reply, true);
   return email.finish();
@@ -128,9 +129,9 @@ export function renderExpiredOffer(data: UpgradeNudgeData, locale: EmailLocale):
   const items = list(copy.expiry.benefits);
   email.add(items.html, items.text);
   email.section(copy.offer.heading);
-  email.paragraph(copy.offer.intro);
-  email.add(hero({ eyebrow: copy.offer.detail, heading: formatPrice(PRODUCTS.annual_entry.priceCents / 100, locale) }),
-    `${formatPrice(PRODUCTS.annual_entry.priceCents / 100, locale)}\n${copy.offer.detail}`);
+  const amount = formatPrice(PRODUCTS.annual_upgrade.priceCents / 100, locale);
+  email.paragraph(fill(copy.offer.intro, { amount }));
+  email.add(hero({ eyebrow: copy.offer.detail, heading: amount }), `${amount}\n${copy.offer.detail}`);
   email.paragraph(fill(copy.offer.body, { renewal: formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale) }));
   email.button(data.actionUrl, copy.offer.button);
   email.paragraph(copy.offer.after, true);
@@ -142,16 +143,15 @@ export function renderRenewalReminder(data: RenewalReminderData, locale: EmailLo
   const date = data.renewalAt === undefined ? undefined : dateLabel(data.renewalAt, locale);
   const subject = data.renewalAt === undefined ? copy.subjectWithoutDate
     : fill(copy.subject, { date: dateLabel(data.renewalAt, locale, true) });
-  const discount = data.firstYearPriceCents === 2450 && PRODUCTS.annual.renewalPriceCents === 1950
-    ? `${copy.discount} ${copy.discountDetail}` : undefined;
-  const email = mail(locale, subject, copy.preheader, copy.footer);
+  const renewal = formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale);
+  const email = mail(locale, subject, fill(copy.preheader, { renewal }), copy.footer);
   email.heading(subject);
   email.greet(data.firstName, data.daysUntilRenewal === 30 ? copy.intro : copy.introWithoutDate);
   const values = rows([
     ...(date ? [{ label: copy.date, value: date }] : []),
-    { label: copy.price, value: formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale), unit: copy.unit },
-  ], discount);
-  email.add(values.html, [values.text, discount].filter(Boolean).join("\n"));
+    { label: copy.price, value: renewal, unit: copy.unit },
+  ]);
+  email.add(values.html, values.text);
   const metrics = [
     { label: copy.bikes, value: data.bikesAdjusted }, { label: copy.reports, value: data.reportsCreated },
     { label: copy.gifts, value: data.giftsGiven },
@@ -212,18 +212,23 @@ export function renderTransitionAnnouncement(data: TransitionAnnouncementData, l
 /** Annual variants use the actual purchased product, never single-bike confirmation copy. */
 function renderAnnualPurchase(data: PurchaseConfirmationData, locale: EmailLocale): RenderedEmail {
   const copy = pricingEmailCopy[locale];
-  const email = mail(locale, copy.receipt.subject, copy.welcome.preheader, copy.receipt.footer);
+  const appointment = data.productId === "personal_fit_standalone";
+  const email = mail(locale, copy.receipt.subject,
+    appointment ? copy.receipt.appointmentPreheader : copy.welcome.preheader, copy.receipt.footer);
   email.heading(copy.receipt.subject);
   email.greet(data.firstName, copy.receipt.intro);
   const values = rows([
     { label: copy.purchase.product, value: copy.products[data.productId!] },
     ...(data.amountPaid === undefined ? []
       : [{ label: copy.purchase.amount, value: formatPrice(data.amountPaid, locale), unit: copy.purchase.vat }]),
-    ...(data.accessEndsAt === undefined ? []
+    ...(appointment || data.accessEndsAt === undefined ? []
       : [{ label: copy.purchase.until, value: dateLabel(data.accessEndsAt, locale) }]),
   ]);
   email.add(values.html, values.text);
-  email.button(data.actionUrl, copy.purchase.button);
+  if (!appointment) {
+    email.paragraph(fill(copy.welcome.renewal, { renewal: formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale) }));
+  }
+  email.button(data.actionUrl, appointment ? copy.receipt.appointmentButton : copy.purchase.button);
   if (data.invoiceAttached) email.paragraph(copy.purchase.invoice, true);
   if (data.withdrawalAcknowledged) email.paragraph(copy.purchase.withdrawal, true);
   return email.finish();

@@ -46,8 +46,12 @@ loadEnvFile(path.resolve(process.cwd(), ".env"));
 const requiredEnvVars = ["NEXT_PUBLIC_CONVEX_URL"];
 const requiredUrlEnvVars = new Set(["NEXT_PUBLIC_CONVEX_URL"]);
 
-// Release 2.0 always uses an inert Stripe stub, including when billing flags are true.
-// No payment-provider credentials, product IDs or checkout return URL are required.
+if (process.env.STRIPE_BILLING_ENABLED === "true" && process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED === "true") {
+  requiredEnvVars.push(
+    "STRIPE_SECRET_KEY", "STRIPE_ANNUAL_PRICE_ID", "STRIPE_SINGLE_FIT_PRICE_ID",
+    "STRIPE_PERSONAL_FIT_ADDON_PRICE_ID", "STRIPE_PERSONAL_FIT_STANDALONE_PRICE_ID", "STRIPE_UPGRADE_COUPON_ID",
+  );
+}
 
 const errors = [];
 

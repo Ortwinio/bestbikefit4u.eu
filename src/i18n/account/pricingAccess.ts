@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/config";
 
 const pricingAccess = {
   nl: {
-    products: { free: "Gratis", single: "Losse meting", annual: "Jaarabonnement", annual_entry: "Instapjaarabonnement", annual_personal: "Jaarabonnement + persoonlijke bikefit" },
+    products: { free: "Gratis", single: "Losse meting", annual: "Jaarabonnement", annual_upgrade: "Jaarabonnement", annual_personal: "Jaarabonnement + persoonlijke bikefit", personal_fit_standalone: "Persoonlijke bikefit-afspraak" },
     loading: "Toegang laden…",
     basicAccuracy: "Basisnauwkeurigheid",
     refinedAccuracy: "Verfijnde nauwkeurigheid",
@@ -20,7 +20,7 @@ const pricingAccess = {
     annual: "Bekijk het jaarabonnement",
     legacy: "Gemaakt met volledige toegang",
     history: "Bewaar al je sessies en fietsen",
-    historyDetail: "Jaarabonnement €24,50, verlenging €19,50 per jaar.",
+    historyDetail: "Jaarabonnement €21,50 per jaar, inclusief 2 cadeaumetingen per abonnementsjaar.",
     adviceTitle: "Volledig stappenplan voor deze fiets",
     adviceDetail: "Inclusief volgorde, controleplan en bandenspanning. €13,50, 3 maanden toegang. Je adviezen hierboven blijven gratis.",
     selfAssessed: "Zelf ingeschat",
@@ -35,7 +35,7 @@ const pricingAccess = {
     reasons: { femurLengthCm: "Je femurlengte maakt je setback-advies nauwkeuriger.", footLengthCm: "Je voetlengte helpt bij de positie van je schoenplaatjes.", sitBoneWidthMm: "Je zitbotbreedte maakt de zadelkeuze nauwkeuriger.", handSpanCm: "Je handspanne helpt bij de keuze van stuurdikte en remgreepafstand.", flexibilityTestCm: "Een geleide test vervangt je eigen inschatting van je lenigheid door een meting.", coreTestSeconds: "Een geleide test vervangt je eigen inschatting van je rompstabiliteit door een meting." },
   },
   en: {
-    products: { free: "Free", single: "Single fit", annual: "Annual plan", annual_entry: "Entry annual plan", annual_personal: "Annual plan + personal bikefit" },
+    products: { free: "Free", single: "Single fit", annual: "Annual plan", annual_upgrade: "Annual plan", annual_personal: "Annual plan + personal bikefit", personal_fit_standalone: "Personal bike fit appointment" },
     loading: "Loading access…",
     basicAccuracy: "Basic accuracy",
     refinedAccuracy: "Refined accuracy",
@@ -53,7 +53,7 @@ const pricingAccess = {
     annual: "View the annual plan",
     legacy: "Created with full access",
     history: "Keep all your sessions and bikes",
-    historyDetail: "Annual plan €24.50, renewing at €19.50 per year.",
+    historyDetail: "Annual plan €21.50 per year, including 2 gift measurements per subscription year.",
     adviceTitle: "Full adjustment plan for this bike",
     adviceDetail: "Includes adjustment order, validation plan and tyre pressure. €13.50 for 3 months of access. Your advice above stays free.",
     selfAssessed: "Self-assessed",

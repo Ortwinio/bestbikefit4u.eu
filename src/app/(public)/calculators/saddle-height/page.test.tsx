@@ -28,25 +28,6 @@ vi.mock("@/components/analytics/TrackedCtaLink", () => ({
   ),
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Open bike-fit calculator"}</a>
-      <a href={donateHref}>{donateLabel ?? "Continue in dashboard"}</a>
-    </div>
-  ),
-}));
-
 vi.mock("@/components/seo/JsonLd", () => ({
   JsonLd: ({ schema }: { schema: object | object[] }) => (
     <script

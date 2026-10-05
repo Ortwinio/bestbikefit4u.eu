@@ -3,6 +3,13 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
+crons.hourly(
+  "expire gift invitations and remove recipient details",
+  { minuteUTC: 20 },
+  makeFunctionReference<"mutation">("gifts/mutations:expire"),
+  {}
+);
+
 crons.daily(
   "expire pricing entitlements",
   { hourUTC: 0, minuteUTC: 15 },

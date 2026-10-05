@@ -132,7 +132,7 @@ export const nl = {
   },
   upgradeNudge: {
     subject: "Je fit op papier, en voor al je fietsen",
-    preheader: "Jaarabonnement: €24,50 in je eerste jaar, daarna €19,50 per jaar.",
+    preheader: "Jaarabonnement: €21,50 per jaar, inclusief 2 cadeaumetingen per jaar.",
     heading: "Haal meer uit je fit",
     intro: "je fitwaarden staan klaar. Met een jaarabonnement krijg je er dit bij:",
     benefits: [
@@ -150,7 +150,7 @@ export const nl = {
       },
     ],
     cancel: "opzeggen kan altijd",
-    price: "€24,50 in je eerste jaar · daarna €19,50 per jaar · opzeggen kan altijd",
+    price: "€21,50 per jaar · 2 cadeaumetingen per jaar · opzeggen kan altijd",
     button: "Bekijk het jaarabonnement",
   },
   winback: {

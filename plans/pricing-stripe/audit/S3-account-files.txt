@@ -1,0 +1,12 @@
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/components/account/SubscriptionOverview.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/components/account/SubscriptionOverviewConnected.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/components/account/SubscriptionOverview.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/components/account/AccountPlan.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/components/account/AccountPlan.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/i18n/account/subscription.ts
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/i18n/account/pricingAccess.ts
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/i18n/account/reportAccess.ts
+/Users/ortwinverreck/Developer/bikefitboost-pricing/src/app/(dashboard)/settings/page.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-pricing/plans/pricing-stripe/audit/S3-account.md
+/Users/ortwinverreck/Developer/bikefitboost-pricing/plans/pricing-stripe/audit/S3-account-files.txt
+/Users/ortwinverreck/Developer/bikefitboost-pricing/plans/pricing-stripe/messages/S3-account-contract-request.md

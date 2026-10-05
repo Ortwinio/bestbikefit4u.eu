@@ -38,7 +38,7 @@ describe.each(["nl", "en"] as const)("%s release 2.0 pricing", (currentLocale) =
       expect(Number(product.price.slice(1).replace(",", ".")) * 100).toBe(PRODUCTS[productId].priceCents);
     }
     expect(within(cards[0]).getByText(page.products.annual.badge!)).toBeTruthy();
-    expect(cards[0].textContent).toContain(locale === "nl" ? "€19,50" : "€19.50");
+    expect(cards[0].textContent).toContain(locale === "nl" ? "€21,50" : "€21.50");
     expect(cards[2].textContent).toContain("[LOCATIE]");
     expect(cards[2].textContent).toContain("[DUUR AFSPRAAK]");
     expect(screen.queryByRole("button")).toBeNull();
@@ -56,8 +56,11 @@ describe.each(["nl", "en"] as const)("%s release 2.0 pricing", (currentLocale) =
     expect(container.textContent).toContain("[VOORWAARDEN AFSPRAAK — juridisch toetsen]");
     const visible = container.cloneNode(true) as HTMLElement;
     visible.querySelectorAll("script").forEach((script) => script.remove());
-    expect(visible.textContent).not.toMatch(/€9\b|€12[,.]50|\/\s*(?:maand|month)|Trustpilot|Ontwerpstaat|redeem|verzilver/i);
-    expect(visible.textContent?.match(/om weg te geven|to give away/g)).toHaveLength(1);
+    expect(visible.textContent).not.toMatch(/€9(?:\s|$)|€12[,.]50|€24[,.]50|€19[,.]50|\/\s*(?:maand|month)|Trustpilot|Ontwerpstaat/i);
+    expect(visible.textContent).toContain(locale === "nl" ? "2 cadeaumetingen per jaar" : "2 gift measurements per year");
+    expect(screen.getByRole("link", { name: new RegExp(page.gift.cta) }).getAttribute("href")).toBe(`/${locale}/gift`);
+    expect(visible.textContent).toContain(locale === "nl" ? "€9,50" : "€9.50");
+    expect(visible.textContent).toContain(locale === "nl" ? "€209,50" : "€209.50");
   });
 
   it("emits matching offer/FAQ schemas without ratings and localized canonical metadata", async () => {
@@ -67,7 +70,7 @@ describe.each(["nl", "en"] as const)("%s release 2.0 pricing", (currentLocale) =
     const [service, faq] = JSON.parse(serialized);
     expect(serialized).not.toMatch(/aggregateRating|AggregateRating/);
     expect(service["@type"]).toBe("Service");
-    expect(service.offers.map((offer: { price: string }) => offer.price)).toEqual(["13.50", "24.50", "234.50"]);
+    expect(service.offers.map((offer: { price: string }) => offer.price)).toEqual(["13.50", "21.50", "234.50"]);
     for (const offer of service.offers) {
       expect(offer.priceCurrency).toBe("EUR");
       expect(offer.priceSpecification.valueAddedTaxIncluded).toBe(true);

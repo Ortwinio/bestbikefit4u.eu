@@ -30,6 +30,11 @@ describe("retired Strava backend contract", () => {
 
   it("schedules the existing email jobs and pricing expiry without retired integrations", () => {
     expect(JSON.parse((crons as unknown as { export(): string }).export())).toEqual({
+      "expire gift invitations and remove recipient details": {
+        name: "gifts/mutations:expire",
+        args: [{}],
+        schedule: { type: "hourly", minuteUTC: 20 },
+      },
       "expire pricing entitlements": {
         name: "pricing/internal:expireEntitlements",
         args: [{}],

@@ -59,25 +59,6 @@ vi.mock("@/components/public/BikeQuickCheckCard", () => ({
   BikeQuickCheckCard: () => <div>Bike Quick Check</div>,
 }));
 
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
-      <a href={donateHref}>{donateLabel ?? "Donate via our Alpe d'HuZes page"}</a>
-    </div>
-  ),
-}));
-
 vi.mock("@/components/home/HeroBlock", () => ({
   HeroBlock: ({
     fitHref,
@@ -149,22 +130,12 @@ vi.mock("@/components/home/ClosingCtaBand", () => ({
   ClosingCtaBand: ({
     recommendation,
     cta,
-    campaign,
-    campaignActive,
   }: {
     recommendation: { title: string };
     cta: { title: string };
-    campaign: { donationUrl: string; donateCta: string; startFreeCta: string };
-    campaignActive: boolean;
   }) => (
     <section>
       {`${recommendation.title} ${cta.title}`}
-      {campaignActive ? (
-        <>
-          <a href={campaign.donationUrl}>{campaign.donateCta}</a>
-          <a href="/campaign-start">{campaign.startFreeCta}</a>
-        </>
-      ) : null}
     </section>
   ),
 }));
@@ -293,7 +264,7 @@ describe("home page", () => {
       screen.getByText("Create free account").closest("a")?.getAttribute("href")
     ).toBe("/en/login");
     expect(screen.getByText("View pricing").closest("a")?.getAttribute("href")).toBe("/en/pricing");
-    expect(screen.getByText(/Single fit €13.50 or annual plan €24.50/)).toBeTruthy();
+    expect(screen.getByText(/Single fit €13.50 or annual plan €21.50/)).toBeTruthy();
 
     const pageText = container.textContent ?? "";
     expect(pageText.indexOf("your own dimensions")).toBeGreaterThan(-1);

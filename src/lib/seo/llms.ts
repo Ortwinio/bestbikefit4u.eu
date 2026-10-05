@@ -26,6 +26,7 @@ export async function generateLlmsDocument(full: boolean): Promise<string> {
   for (const locale of SUPPORTED_LOCALES) {
     lines.push(`## ${locale === "nl" ? "Nederlands" : "English"}`, "");
     const copy = llmsCopy[locale];
+    lines.push(copy.pages.pricing.summary, "");
     for (const entry of entries.filter(entry => entry.locale === locale)) {
       const { title, answer, method, limits } = entry.content;
       if (!full) {

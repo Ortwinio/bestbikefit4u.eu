@@ -22,13 +22,7 @@ import {
 } from "@/lib/newsletter/signupIntent";
 import { loginHandoffCopy } from "@/i18n/account/loginHandoff";
 import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTracker";
-import { CampaignCtaGroup } from "@/components/campaign/CampaignCtaGroup";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
-import {
-  CONSUMER_CAMPAIGN_CONFIG,
-  getConsumerCampaignCopy,
-  isConsumerCampaignActive,
-} from "@/config/commercial";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
 
@@ -269,14 +263,13 @@ export default function LoginPage() {
   );
   const text = loginCopy[locale];
   const pagePath = withLocalePrefix("/login", locale);
-  const campaignActive = isConsumerCampaignActive();
-  const campaign = getConsumerCampaignCopy(locale);
   const sourceTag = searchParams?.get("src") ?? undefined;
   const isHandoff = searchParams?.get("handoff") === "1";
-  const redirectTo = withLocalePrefix(isHandoff ? "/welcome" : "/dashboard", locale);
+  const isGiftReturn = searchParams?.get("gift") === "1";
+  const redirectTo = withLocalePrefix(isGiftReturn ? "/gift" : isHandoff ? "/welcome" : "/dashboard", locale);
   const Presentation = isHandoff ? LoginHandoffPanel : LoginPresentation;
   const newsletterText = newsletterCopy[locale];
-  const newsletterReturnTo = `${withLocalePrefix("/login", locale)}${isHandoff ? "?handoff=1" : ""}`;
+  const newsletterReturnTo = `${withLocalePrefix("/login", locale)}${isGiftReturn ? "?gift=1" : isHandoff ? "?handoff=1" : ""}`;
   const [newsletterChecked, setNewsletterChecked] = useState(false);
   const [newsletterIntent, setNewsletterIntent] = useState<NewsletterSignupIntent | null>(null);
   const [newsletterLoaded, setNewsletterLoaded] = useState(false);
@@ -831,30 +824,6 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-      {campaignActive && !isHandoff ? (
-        <Card className="gap-0 rounded-3xl border border-border bg-card shadow-none">
-          <CardContent className="space-y-4 px-6 py-6">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-                {campaign.loginTitle}
-              </p>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                {campaign.loginDescription}
-              </p>
-            </div>
-            <CampaignCtaGroup
-              locale={locale}
-              pagePath={pagePath}
-              startHref={withLocalePrefix("/calculators/bike-fit", locale)}
-              startSection="login_campaign_start"
-              donateHref={CONSUMER_CAMPAIGN_CONFIG.donationUrl}
-              donateSection="login_campaign_donate"
-              startLabel={campaign.startFreeCta}
-            />
-            <p className="text-xs text-muted-foreground">{campaign.optionalNote}</p>
-          </CardContent>
-        </Card>
-      ) : null}
     </Presentation>
   );
 }

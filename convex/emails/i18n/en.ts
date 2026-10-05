@@ -133,7 +133,7 @@ export const en = {
   },
   upgradeNudge: {
     subject: "Your fit on paper, and for all your bikes",
-    preheader: "Annual subscription: €24.50 in your first year, then €19.50 per year.",
+    preheader: "Annual subscription: €21.50 per year, including 2 gift measurements per year.",
     heading: "Get more from your fit",
     intro: "your fit numbers are ready. An annual subscription adds:",
     benefits: [
@@ -151,7 +151,7 @@ export const en = {
       },
     ],
     cancel: "cancel any time",
-    price: "€24.50 in your first year · then €19.50 per year · cancel any time",
+    price: "€21.50 per year · 2 gift measurements per year · cancel any time",
     button: "View the annual subscription",
   },
   winback: {

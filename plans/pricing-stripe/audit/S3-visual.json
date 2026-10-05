@@ -1,0 +1,6158 @@
+{
+  "scope": "Real pricing page/cards, CheckoutFlow and SubscriptionOverview; esbuild CSS modules, Tailwind globals, local brand fonts. Isolated framework/analytics adapters and fixture service results. No Next build, live authentication, real checkout, backend, email or external network. Checkout paid props are fixtures, not URL proof.",
+  "capturedAt": "2026-10-04T22:18:28.677Z",
+  "sourceHashes": {
+    "src/app/(public)/pricing/page.tsx": "664030e9b5a0f3b3347651d72598d07a1374832bffb8d44d149902fb1f10490b",
+    "src/app/(public)/pricing/pricing.module.css": "5fa9b29efc412fabfd1658f2e5daf1dd45e69c620d51f6adaf1058f4f891f1d4",
+    "src/components/pricing/PricingCard.tsx": "a067a441ba813033b2a31924413dfc7580f770985550e02a7e8c9c3e75414e12",
+    "src/components/pricing/PricingCard.module.css": "0a1952aa6c4a11b8f9c0e183f1d155831405e97d256c737a0c31e579e64e38a1",
+    "src/components/checkout/CheckoutFlow.tsx": "175ea842a2ce20a4a083fa8319ddc1127c1ac70d1df770d87d05a7fa7825c91d",
+    "src/components/checkout/CheckoutFlow.module.css": "96fd353e92034794cf21f3b1edb0955af0585bd69f7464a345ffdc9d8cb6ebd0",
+    "src/components/account/SubscriptionOverview.tsx": "21e2000224dc1c93ce080fa8b08f8bf34048950dd5524c29e5e621b9787abc34",
+    "src/i18n/marketing/pricing.ts": "8c88893ca2dcc1535ef7a87ad07f5e25ae2cdaa5bbe7b1568ced2a23d5b9a427",
+    "src/i18n/marketing/checkout.ts": "f9a860ab42c424676cc206c5004b390fea604e6078ea0f07b5fa4eaf7e0b31c8",
+    "src/i18n/account/subscription.ts": "f8a82c7d29e8d10ad73e30fdc58ddfa078bff8d29e6a8cbeb688c15b3c46b844",
+    "shared/pricing/products.ts": "917eb6d84f6ae4d941b52194756f2bed4917cf0ba23f43e609f6464c2012befa",
+    "src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
+  },
+  "changedDuringCapture": [],
+  "expectedCaptures": 200,
+  "results": [
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_personal-choose",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_personal-choose-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_personal-failed",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_personal-failed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_personal-paid",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_personal-paid-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription with personal bike fit is active",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_personal-pending",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_personal-pending-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_personal-review",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_personal-review-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-choose",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_upgrade-choose-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-failed",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_upgrade-failed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-paid",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_upgrade-paid-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription is active"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-pending",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_upgrade-pending-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual-choose",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual-choose-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual-failed",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual-failed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual-paid",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual-paid-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription is active"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual-pending",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual-pending-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-annual-review",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "review",
+      "screenshot": "S3-checkout-annual-review-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-auth",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "auth",
+      "screenshot": "S3-checkout-auth-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Where should we send your confirmation?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-billing-off",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "billing-off",
+      "screenshot": "S3-checkout-billing-off-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-code",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "code",
+      "screenshot": "S3-checkout-code-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-sign-in"
+      ],
+      "headings": [
+        "Where should we send your confirmation?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-payment-error",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "payment-error",
+      "screenshot": "S3-checkout-payment-error-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-checkout"
+      ],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-choose",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "choose",
+      "screenshot": "S3-checkout-personal_fit_standalone-choose-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit",
+        "Personal bike fit appointment (standalone)"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-failed",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "failed",
+      "screenshot": "S3-checkout-personal_fit_standalone-failed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your personal bike fit is paid",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-pending",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "pending",
+      "screenshot": "S3-checkout-personal_fit_standalone-pending-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-review",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "review",
+      "screenshot": "S3-checkout-personal_fit_standalone-review-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-single-choose",
+      "surface": "checkout",
+      "product": "single",
+      "state": "choose",
+      "screenshot": "S3-checkout-single-choose-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-single-failed",
+      "surface": "checkout",
+      "product": "single",
+      "state": "failed",
+      "screenshot": "S3-checkout-single-failed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-single-paid",
+      "surface": "checkout",
+      "product": "single",
+      "state": "paid",
+      "screenshot": "S3-checkout-single-paid-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your action plan is ready"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-single-pending",
+      "surface": "checkout",
+      "product": "single",
+      "state": "pending",
+      "screenshot": "S3-checkout-single-pending-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-single-review",
+      "surface": "checkout",
+      "product": "single",
+      "state": "review",
+      "screenshot": "S3-checkout-single-review-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "checkout-standalone-ineligible",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "standalone-ineligible",
+      "screenshot": "S3-checkout-standalone-ineligible-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "pricing-card-annual",
+      "surface": "card",
+      "product": "annual",
+      "screenshot": "S3-pricing-card-annual-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Annual plan"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "pricing-card-annual_personal",
+      "surface": "card",
+      "product": "annual_personal",
+      "screenshot": "S3-pricing-card-annual_personal-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Annual plan + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "pricing-card-single",
+      "surface": "card",
+      "product": "single",
+      "screenshot": "S3-pricing-card-single-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Single measurement"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "A good bike fit, affordable",
+        "Annual plan",
+        "Single measurement",
+        "Annual plan + personal bike fit",
+        "Received a gift?",
+        "Compare what’s included",
+        "What an online fit can and cannot do",
+        "Pricing FAQ",
+        "Try it first. No account needed."
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-annual",
+      "surface": "subscription",
+      "state": "annual",
+      "screenshot": "S3-subscription-annual-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-confirm",
+      "surface": "subscription",
+      "state": "cancel-confirm",
+      "screenshot": "S3-subscription-cancel-confirm-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-confirmed",
+      "surface": "subscription",
+      "state": "cancel-confirmed",
+      "screenshot": "S3-subscription-cancel-confirmed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-error",
+      "surface": "subscription",
+      "state": "cancel-error",
+      "screenshot": "S3-subscription-cancel-error-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-en-1440.png",
+      "errors": [],
+      "expectedConsole": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancel-renewed-confirmed",
+      "surface": "subscription",
+      "state": "cancel-renewed-confirmed",
+      "screenshot": "S3-subscription-cancel-renewed-confirmed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-cancelled",
+      "surface": "subscription",
+      "state": "cancelled",
+      "screenshot": "S3-subscription-cancelled-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-expired-upgrade",
+      "surface": "subscription",
+      "state": "expired-upgrade",
+      "screenshot": "S3-subscription-expired-upgrade-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-free",
+      "surface": "subscription",
+      "state": "free",
+      "screenshot": "S3-subscription-free-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-free-open",
+      "surface": "subscription",
+      "state": "free-open",
+      "screenshot": "S3-subscription-free-open-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-loading",
+      "surface": "subscription",
+      "state": "loading",
+      "screenshot": "S3-subscription-loading-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-personal",
+      "surface": "subscription",
+      "state": "personal",
+      "screenshot": "S3-subscription-personal-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-renewed",
+      "surface": "subscription",
+      "state": "renewed",
+      "screenshot": "S3-subscription-renewed-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-single",
+      "surface": "subscription",
+      "state": "single",
+      "screenshot": "S3-subscription-single-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-unavailable",
+      "surface": "subscription",
+      "state": "unavailable",
+      "screenshot": "S3-subscription-unavailable-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "id": "subscription-upgrade",
+      "surface": "subscription",
+      "state": "upgrade",
+      "screenshot": "S3-subscription-upgrade-en-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_personal-choose",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_personal-choose-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_personal-failed",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_personal-failed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_personal-paid",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_personal-paid-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription with personal bike fit is active",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_personal-pending",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_personal-pending-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_personal-review",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_personal-review-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-choose",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_upgrade-choose-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-failed",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_upgrade-failed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-paid",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_upgrade-paid-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription is active"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-pending",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_upgrade-pending-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual-choose",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual-choose-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual-failed",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual-failed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual-paid",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual-paid-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your annual subscription is active"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual-pending",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual-pending-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-annual-review",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "review",
+      "screenshot": "S3-checkout-annual-review-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-auth",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "auth",
+      "screenshot": "S3-checkout-auth-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Where should we send your confirmation?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-billing-off",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "billing-off",
+      "screenshot": "S3-checkout-billing-off-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-code",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "code",
+      "screenshot": "S3-checkout-code-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-sign-in"
+      ],
+      "headings": [
+        "Where should we send your confirmation?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-payment-error",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "payment-error",
+      "screenshot": "S3-checkout-payment-error-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-checkout"
+      ],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-choose",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "choose",
+      "screenshot": "S3-checkout-personal_fit_standalone-choose-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit",
+        "Personal bike fit appointment (standalone)"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-failed",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "failed",
+      "screenshot": "S3-checkout-personal_fit_standalone-failed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your personal bike fit is paid",
+        "Book your appointment"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-pending",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "pending",
+      "screenshot": "S3-checkout-personal_fit_standalone-pending-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-review",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "review",
+      "screenshot": "S3-checkout-personal_fit_standalone-review-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-single-choose",
+      "surface": "checkout",
+      "product": "single",
+      "state": "choose",
+      "screenshot": "S3-checkout-single-choose-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your fit",
+        "Single fit",
+        "Annual subscription",
+        "Annual subscription + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-single-failed",
+      "surface": "checkout",
+      "product": "single",
+      "state": "failed",
+      "screenshot": "S3-checkout-single-failed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Payment not completed"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-single-paid",
+      "surface": "checkout",
+      "product": "single",
+      "state": "paid",
+      "screenshot": "S3-checkout-single-paid-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your action plan is ready"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-single-pending",
+      "surface": "checkout",
+      "product": "single",
+      "state": "pending",
+      "screenshot": "S3-checkout-single-pending-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Your payment is processing"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-single-review",
+      "surface": "checkout",
+      "product": "single",
+      "state": "review",
+      "screenshot": "S3-checkout-single-review-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "checkout-standalone-ineligible",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "standalone-ineligible",
+      "screenshot": "S3-checkout-standalone-ineligible-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Review and pay"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "pricing-card-annual",
+      "surface": "card",
+      "product": "annual",
+      "screenshot": "S3-pricing-card-annual-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Annual plan"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "pricing-card-annual_personal",
+      "surface": "card",
+      "product": "annual_personal",
+      "screenshot": "S3-pricing-card-annual_personal-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Annual plan + personal bike fit"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "pricing-card-single",
+      "surface": "card",
+      "product": "single",
+      "screenshot": "S3-pricing-card-single-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Choose your measurement",
+        "Single measurement"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "A good bike fit, affordable",
+        "Annual plan",
+        "Single measurement",
+        "Annual plan + personal bike fit",
+        "Received a gift?",
+        "Compare what’s included",
+        "What an online fit can and cannot do",
+        "Pricing FAQ",
+        "Try it first. No account needed."
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-annual",
+      "surface": "subscription",
+      "state": "annual",
+      "screenshot": "S3-subscription-annual-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-confirm",
+      "surface": "subscription",
+      "state": "cancel-confirm",
+      "screenshot": "S3-subscription-cancel-confirm-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-confirmed",
+      "surface": "subscription",
+      "state": "cancel-confirmed",
+      "screenshot": "S3-subscription-cancel-confirmed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-error",
+      "surface": "subscription",
+      "state": "cancel-error",
+      "screenshot": "S3-subscription-cancel-error-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-en-390.png",
+      "errors": [],
+      "expectedConsole": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription",
+        "Cancel your subscription?"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancel-renewed-confirmed",
+      "surface": "subscription",
+      "state": "cancel-renewed-confirmed",
+      "screenshot": "S3-subscription-cancel-renewed-confirmed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"en\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-cancelled",
+      "surface": "subscription",
+      "state": "cancelled",
+      "screenshot": "S3-subscription-cancelled-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-expired-upgrade",
+      "surface": "subscription",
+      "state": "expired-upgrade",
+      "screenshot": "S3-subscription-expired-upgrade-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-free",
+      "surface": "subscription",
+      "state": "free",
+      "screenshot": "S3-subscription-free-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-free-open",
+      "surface": "subscription",
+      "state": "free-open",
+      "screenshot": "S3-subscription-free-open-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-loading",
+      "surface": "subscription",
+      "state": "loading",
+      "screenshot": "S3-subscription-loading-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-personal",
+      "surface": "subscription",
+      "state": "personal",
+      "screenshot": "S3-subscription-personal-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-renewed",
+      "surface": "subscription",
+      "state": "renewed",
+      "screenshot": "S3-subscription-renewed-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-single",
+      "surface": "subscription",
+      "state": "single",
+      "screenshot": "S3-subscription-single-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-unavailable",
+      "surface": "subscription",
+      "state": "unavailable",
+      "screenshot": "S3-subscription-unavailable-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "id": "subscription-upgrade",
+      "surface": "subscription",
+      "state": "upgrade",
+      "screenshot": "S3-subscription-upgrade-en-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Account settings",
+        "Your subscription"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_personal-choose",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_personal-choose-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_personal-failed",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_personal-failed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_personal-paid",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_personal-paid-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement met persoonlijke bikefit is actief",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_personal-pending",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_personal-pending-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_personal-review",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_personal-review-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-choose",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_upgrade-choose-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-failed",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_upgrade-failed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-paid",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_upgrade-paid-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement is actief"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-pending",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_upgrade-pending-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual-choose",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual-choose-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual-failed",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual-failed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual-paid",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual-paid-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement is actief"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual-pending",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual-pending-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-annual-review",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "review",
+      "screenshot": "S3-checkout-annual-review-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-auth",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "auth",
+      "screenshot": "S3-checkout-auth-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Waar sturen we je bevestiging heen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-billing-off",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "billing-off",
+      "screenshot": "S3-checkout-billing-off-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-code",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "code",
+      "screenshot": "S3-checkout-code-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-sign-in"
+      ],
+      "headings": [
+        "Waar sturen we je bevestiging heen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-payment-error",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "payment-error",
+      "screenshot": "S3-checkout-payment-error-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-checkout"
+      ],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-choose",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "choose",
+      "screenshot": "S3-checkout-personal_fit_standalone-choose-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Persoonlijke bikefit-afspraak (los)"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-failed",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "failed",
+      "screenshot": "S3-checkout-personal_fit_standalone-failed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je persoonlijke bikefit is betaald",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-pending",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "pending",
+      "screenshot": "S3-checkout-personal_fit_standalone-pending-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-personal_fit_standalone-review",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "review",
+      "screenshot": "S3-checkout-personal_fit_standalone-review-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-single-choose",
+      "surface": "checkout",
+      "product": "single",
+      "state": "choose",
+      "screenshot": "S3-checkout-single-choose-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-single-failed",
+      "surface": "checkout",
+      "product": "single",
+      "state": "failed",
+      "screenshot": "S3-checkout-single-failed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-single-paid",
+      "surface": "checkout",
+      "product": "single",
+      "state": "paid",
+      "screenshot": "S3-checkout-single-paid-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je stappenplan staat klaar"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-single-pending",
+      "surface": "checkout",
+      "product": "single",
+      "state": "pending",
+      "screenshot": "S3-checkout-single-pending-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-single-review",
+      "surface": "checkout",
+      "product": "single",
+      "state": "review",
+      "screenshot": "S3-checkout-single-review-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "checkout-standalone-ineligible",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "standalone-ineligible",
+      "screenshot": "S3-checkout-standalone-ineligible-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "pricing-card-annual",
+      "surface": "card",
+      "product": "annual",
+      "screenshot": "S3-pricing-card-annual-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Jaarabonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "pricing-card-annual_personal",
+      "surface": "card",
+      "product": "annual_personal",
+      "screenshot": "S3-pricing-card-annual_personal-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "pricing-card-single",
+      "surface": "card",
+      "product": "single",
+      "screenshot": "S3-pricing-card-single-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Een goede bikefit, betaalbaar",
+        "Jaarabonnement",
+        "Losse meting",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Cadeau ontvangen?",
+        "Vergelijk wat erin zit",
+        "Wat een online fit wel en niet doet",
+        "Veelgestelde vragen over prijzen",
+        "Eerst proberen? Geen account nodig."
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-annual",
+      "surface": "subscription",
+      "state": "annual",
+      "screenshot": "S3-subscription-annual-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-confirm",
+      "surface": "subscription",
+      "state": "cancel-confirm",
+      "screenshot": "S3-subscription-cancel-confirm-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-confirmed",
+      "surface": "subscription",
+      "state": "cancel-confirmed",
+      "screenshot": "S3-subscription-cancel-confirmed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-error",
+      "surface": "subscription",
+      "state": "cancel-error",
+      "screenshot": "S3-subscription-cancel-error-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancel-renewed-confirmed",
+      "surface": "subscription",
+      "state": "cancel-renewed-confirmed",
+      "screenshot": "S3-subscription-cancel-renewed-confirmed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-cancelled",
+      "surface": "subscription",
+      "state": "cancelled",
+      "screenshot": "S3-subscription-cancelled-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-expired-upgrade",
+      "surface": "subscription",
+      "state": "expired-upgrade",
+      "screenshot": "S3-subscription-expired-upgrade-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-free",
+      "surface": "subscription",
+      "state": "free",
+      "screenshot": "S3-subscription-free-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-free-open",
+      "surface": "subscription",
+      "state": "free-open",
+      "screenshot": "S3-subscription-free-open-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-loading",
+      "surface": "subscription",
+      "state": "loading",
+      "screenshot": "S3-subscription-loading-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-personal",
+      "surface": "subscription",
+      "state": "personal",
+      "screenshot": "S3-subscription-personal-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-renewed",
+      "surface": "subscription",
+      "state": "renewed",
+      "screenshot": "S3-subscription-renewed-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-single",
+      "surface": "subscription",
+      "state": "single",
+      "screenshot": "S3-subscription-single-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-unavailable",
+      "surface": "subscription",
+      "state": "unavailable",
+      "screenshot": "S3-subscription-unavailable-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 1440,
+      "id": "subscription-upgrade",
+      "surface": "subscription",
+      "state": "upgrade",
+      "screenshot": "S3-subscription-upgrade-nl-1440.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_personal-choose",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_personal-choose-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_personal-failed",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_personal-failed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_personal-paid",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_personal-paid-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement met persoonlijke bikefit is actief",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_personal-pending",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_personal-pending-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_personal-review",
+      "surface": "checkout",
+      "product": "annual_personal",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_personal-review-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-choose",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual_upgrade-choose-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-failed",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual_upgrade-failed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-paid",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual_upgrade-paid-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement is actief"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-pending",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual_upgrade-pending-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual_upgrade-review",
+      "surface": "checkout",
+      "product": "annual_upgrade",
+      "state": "review",
+      "screenshot": "S3-checkout-annual_upgrade-review-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual-choose",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "choose",
+      "screenshot": "S3-checkout-annual-choose-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual-failed",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "failed",
+      "screenshot": "S3-checkout-annual-failed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual-paid",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "paid",
+      "screenshot": "S3-checkout-annual-paid-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je jaarabonnement is actief"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual-pending",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "pending",
+      "screenshot": "S3-checkout-annual-pending-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-annual-review",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "review",
+      "screenshot": "S3-checkout-annual-review-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-auth",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "auth",
+      "screenshot": "S3-checkout-auth-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Waar sturen we je bevestiging heen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-billing-off",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "billing-off",
+      "screenshot": "S3-checkout-billing-off-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-code",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "code",
+      "screenshot": "S3-checkout-code-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-sign-in"
+      ],
+      "headings": [
+        "Waar sturen we je bevestiging heen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-payment-error",
+      "surface": "checkout",
+      "product": "annual",
+      "state": "payment-error",
+      "screenshot": "S3-checkout-payment-error-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [
+        "mock-checkout"
+      ],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-choose",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "choose",
+      "screenshot": "S3-checkout-personal_fit_standalone-choose-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Persoonlijke bikefit-afspraak (los)"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-failed",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "failed",
+      "screenshot": "S3-checkout-personal_fit_standalone-failed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-paid",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "paid",
+      "screenshot": "S3-checkout-personal_fit_standalone-paid-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je persoonlijke bikefit is betaald",
+        "Plan je afspraak"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-pending",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "pending",
+      "screenshot": "S3-checkout-personal_fit_standalone-pending-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-personal_fit_standalone-review",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "review",
+      "screenshot": "S3-checkout-personal_fit_standalone-review-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-single-choose",
+      "surface": "checkout",
+      "product": "single",
+      "state": "choose",
+      "screenshot": "S3-checkout-single-choose-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          },
+          {
+            "tag": "INPUT",
+            "label": "product",
+            "width": 22,
+            "height": 22,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting",
+        "Jaarabonnement",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-single-failed",
+      "surface": "checkout",
+      "product": "single",
+      "state": "failed",
+      "screenshot": "S3-checkout-single-failed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Betaling niet afgerond"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-single-paid",
+      "surface": "checkout",
+      "product": "single",
+      "state": "paid",
+      "screenshot": "S3-checkout-single-paid-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je stappenplan staat klaar"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-single-pending",
+      "surface": "checkout",
+      "product": "single",
+      "state": "pending",
+      "screenshot": "S3-checkout-single-pending-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Je betaling wordt verwerkt"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-single-review",
+      "surface": "checkout",
+      "product": "single",
+      "state": "review",
+      "screenshot": "S3-checkout-single-review-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "checkout-standalone-ineligible",
+      "surface": "checkout",
+      "product": "personal_fit_standalone",
+      "state": "standalone-ineligible",
+      "screenshot": "S3-checkout-standalone-ineligible-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [
+          {
+            "tag": "INPUT",
+            "label": "",
+            "width": 24,
+            "height": 24,
+            "disabled": false
+          }
+        ],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Controleer en betaal"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "pricing-card-annual",
+      "surface": "card",
+      "product": "annual",
+      "screenshot": "S3-pricing-card-annual-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Jaarabonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "pricing-card-annual_personal",
+      "surface": "card",
+      "product": "annual_personal",
+      "screenshot": "S3-pricing-card-annual_personal-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Jaarabonnement + persoonlijke bikefit"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "pricing-card-single",
+      "surface": "card",
+      "product": "single",
+      "screenshot": "S3-pricing-card-single-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Kies je meting",
+        "Losse meting"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "pricing-page",
+      "surface": "pricing",
+      "screenshot": "S3-pricing-page-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Een goede bikefit, betaalbaar",
+        "Jaarabonnement",
+        "Losse meting",
+        "Jaarabonnement + persoonlijke bikefit",
+        "Cadeau ontvangen?",
+        "Vergelijk wat erin zit",
+        "Wat een online fit wel en niet doet",
+        "Veelgestelde vragen over prijzen",
+        "Eerst proberen? Geen account nodig."
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-annual",
+      "surface": "subscription",
+      "state": "annual",
+      "screenshot": "S3-subscription-annual-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-confirm",
+      "surface": "subscription",
+      "state": "cancel-confirm",
+      "screenshot": "S3-subscription-cancel-confirm-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-confirmed",
+      "surface": "subscription",
+      "state": "cancel-confirmed",
+      "screenshot": "S3-subscription-cancel-confirmed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-error",
+      "surface": "subscription",
+      "state": "cancel-error",
+      "screenshot": "S3-subscription-cancel-error-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-off",
+      "surface": "subscription",
+      "state": "cancel-off",
+      "screenshot": "S3-subscription-cancel-off-nl-390.png",
+      "errors": [],
+      "expectedConsole": [
+        "Failed to load resource: the server responded with a status of 501 (Not Implemented)"
+      ],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement",
+        "Abonnement opzeggen?"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancel-renewed-confirmed",
+      "surface": "subscription",
+      "state": "cancel-renewed-confirmed",
+      "screenshot": "S3-subscription-cancel-renewed-confirmed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [
+        {
+          "path": "/api/stripe/cancel",
+          "body": "{\"locale\":\"nl\"}"
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-cancelled",
+      "surface": "subscription",
+      "state": "cancelled",
+      "screenshot": "S3-subscription-cancelled-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-expired-upgrade",
+      "surface": "subscription",
+      "state": "expired-upgrade",
+      "screenshot": "S3-subscription-expired-upgrade-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-free",
+      "surface": "subscription",
+      "state": "free",
+      "screenshot": "S3-subscription-free-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-free-open",
+      "surface": "subscription",
+      "state": "free-open",
+      "screenshot": "S3-subscription-free-open-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-loading",
+      "surface": "subscription",
+      "state": "loading",
+      "screenshot": "S3-subscription-loading-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-personal",
+      "surface": "subscription",
+      "state": "personal",
+      "screenshot": "S3-subscription-personal-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-renewed",
+      "surface": "subscription",
+      "state": "renewed",
+      "screenshot": "S3-subscription-renewed-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-single",
+      "surface": "subscription",
+      "state": "single",
+      "screenshot": "S3-subscription-single-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-unavailable",
+      "surface": "subscription",
+      "state": "unavailable",
+      "screenshot": "S3-subscription-unavailable-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    },
+    {
+      "locale": "nl",
+      "width": 390,
+      "id": "subscription-upgrade",
+      "surface": "subscription",
+      "state": "upgrade",
+      "screenshot": "S3-subscription-upgrade-nl-390.png",
+      "errors": [],
+      "expectedConsole": [],
+      "blockedRequests": [],
+      "mockRequests": [],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "smallControls": [],
+        "rawSmallControls": [],
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": [],
+      "headings": [
+        "Accountinstellingen",
+        "Je abonnement"
+      ]
+    }
+  ]
+}

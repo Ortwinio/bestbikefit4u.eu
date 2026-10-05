@@ -88,7 +88,7 @@ describe("AccountPlan truthfulness", () => {
       ["free", "Free", "Gratis"],
       ["single", "Single fit", "Losse meting"],
       ["annual", "Annual plan", "Jaarabonnement"],
-      ["annual_entry", "Entry annual plan", "Instapjaarabonnement"],
+      ["annual_upgrade", "Annual plan", "Jaarabonnement"],
       ["annual_personal", "Annual plan + personal bikefit", "Jaarabonnement + persoonlijke bikefit"],
     ] satisfies Array<[ProductId, string, string]>)("uses authoritative %s with enforcement OFF and ON", (productId, english, dutch) => {
       locale = language;
@@ -120,13 +120,17 @@ describe("AccountPlan truthfulness", () => {
   });
 
   it.each([
-    ["false", "true", true],
+    [undefined, "true", false],
+    [undefined, "false", true],
+    [undefined, undefined, true],
+    ["false", "true", false],
     ["true", "false", true],
     ["true", "true", false],
-  ])("uses the existing billing helper for server=%s public=%s", (serverFlag, publicFlag, paused) => {
-    vi.stubEnv("STRIPE_BILLING_ENABLED", serverFlag as string);
-    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", publicFlag as string);
+  ] as const)("uses only public billing visibility for server=%s public=%s", (serverFlag, publicFlag, paused) => {
+    vi.stubEnv("STRIPE_BILLING_ENABLED", serverFlag);
+    vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", publicFlag);
     render(<AccountPlan />);
     expect(Boolean(screen.queryByText("Payments are temporarily paused."))).toBe(paused);
+    expect(screen.getByText("Free")).toBeTruthy();
   });
 });

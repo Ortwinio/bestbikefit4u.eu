@@ -12,7 +12,6 @@ const state = vi.hoisted(() => ({
   locale: "en" as Locale,
   search: new URLSearchParams(),
   values: {} as Record<string, unknown>,
-  campaignActive: false,
   query: vi.fn(),
   create: vi.fn(),
   push: vi.fn(),
@@ -36,16 +35,6 @@ vi.mock("@/components/ui", async (importOriginal) => ({
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({ useMarketingEventLogger: () => state.log }));
 vi.mock("@/hooks/useResolvedImageUrl", () => ({ useResolvedImageUrl: (source?: string) => source }));
 vi.mock("@/lib/telemetry", () => ({ reportClientError: state.reportError }));
-vi.mock("@/config/commercial", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@/config/commercial")>(),
-  isConsumerCampaignActive: () => state.campaignActive,
-}));
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({ startHref, donateHref, startLabel }: { startHref: string; donateHref: string; startLabel: string }) => (
-    <div data-testid="campaign"><a href={startHref}>{startLabel}</a><a href={donateHref}>Donate</a></div>
-  ),
-}));
-
 import NewFitSessionPage from "./page";
 
 const completeProfile = {
@@ -64,7 +53,6 @@ beforeEach(() => {
   vi.clearAllMocks();
   state.locale = "en";
   state.search = new URLSearchParams();
-  state.campaignActive = false;
   state.values = {
     "profiles/queries:getMyProfile": completeProfile,
     "bikes/queries:listByUser": [roadBike, gravelBike],
@@ -275,14 +263,14 @@ describe("fit start presentation and preserved session flow", () => {
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  it("tracks one fit view and retains active campaign attribution", async () => {
-    state.campaignActive = true;
+  it("tracks one fit view without expired campaign attribution", async () => {
     state.search = new URLSearchParams("bikeId=road-bike");
     const view = render(<NewFitSessionPage />);
     view.rerender(<NewFitSessionPage />);
     expect(state.log).toHaveBeenCalledExactlyOnceWith({ eventType: "funnel_fit_view", locale: "en", pagePath: "/en/fit", section: "fit_start_page" });
-    expect(screen.getByTestId("campaign")).toBeTruthy();
+    expect(screen.queryByText(/Alpe|Donate/)).toBeNull();
     fireEvent.click(startButton());
-    await waitFor(() => expect(state.log).toHaveBeenCalledWith(expect.objectContaining({ eventType: "free_fit_started_during_campaign", locale: "en", pagePath: "/en/fit", section: "fit_start_page", ctaLabel: expect.any(String) })));
+    await waitFor(() => expect(state.push).toHaveBeenCalledTimes(1));
+    expect(state.log).not.toHaveBeenCalledWith(expect.objectContaining({ eventType: "free_fit_started_during_campaign" }));
   });
 });

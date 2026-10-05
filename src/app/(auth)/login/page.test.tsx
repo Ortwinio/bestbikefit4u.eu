@@ -16,7 +16,6 @@ const newsletterSaveMock = vi.fn();
 let pathname = "/en/login";
 let search = new URLSearchParams("src=pricing_free_cta");
 let authState = { isAuthenticated: false, isLoading: false };
-let campaignActive = true;
 
 it("requests the Dutch login email with a Dutch redirect", async () => {
   pathname = "/nl/login";
@@ -56,36 +55,6 @@ vi.mock("convex/react", () => ({
 
 vi.mock("@/components/analytics/MarketingEventTracker", () => ({
   useMarketingEventLogger: () => logMarketingEventMock,
-}));
-
-vi.mock("@/config/commercial", async () => {
-  const actual = await vi.importActual<typeof import("@/config/commercial")>(
-    "@/config/commercial"
-  );
-
-  return {
-    ...actual,
-    isConsumerCampaignActive: () => campaignActive,
-  };
-});
-
-vi.mock("@/components/campaign/CampaignCtaGroup", () => ({
-  CampaignCtaGroup: ({
-    startHref,
-    donateHref,
-    startLabel,
-    donateLabel,
-  }: {
-    startHref: string;
-    donateHref: string;
-    startLabel?: string;
-    donateLabel?: string;
-  }) => (
-    <div>
-      <a href={startHref}>{startLabel ?? "Start free bike fit"}</a>
-      <a href={donateHref}>{donateLabel ?? "Donate first"}</a>
-    </div>
-  ),
 }));
 
 vi.mock("@base-ui/react/field", () => ({
@@ -158,7 +127,6 @@ beforeEach(() => {
   pathname = "/en/login";
   search = new URLSearchParams("src=pricing_free_cta");
   authState = { isAuthenticated: false, isLoading: false };
-  campaignActive = true;
   pushMock.mockReset();
   signInMock.mockReset();
   logMarketingEventMock.mockReset();
@@ -170,6 +138,29 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
+});
+
+describe("gift login return", () => {
+  it.each(["nl", "en"] as const)("returns authenticated %s recipients to the fixed gift route", async (locale) => {
+    pathname = `/${locale}/login`;
+    search = new URLSearchParams("gift=1&redirect=https://evil.example");
+    authState = { isAuthenticated: true, isLoading: false };
+    render(<LoginPage />);
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith(`/${locale}/gift`));
+  });
+
+  it("passes a token-free localized gift return to email sign-in", async () => {
+    pathname = "/nl/login";
+    search = new URLSearchParams("gift=1");
+    signInMock.mockResolvedValue({ signingIn: false });
+    render(<LoginPage />);
+    const input = screen.getAllByPlaceholderText("jij@example.com")[0];
+    fireEvent.change(input, { target: { value: "recipient@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() => expect(signInMock).toHaveBeenCalledWith("resend", {
+      email: "recipient@example.com", locale: "nl", redirectTo: "/nl/gift",
+    }));
+  });
 });
 
 describe("calculator handoff login", () => {
@@ -258,8 +249,8 @@ describe("login page", () => {
       section: "login_page",
       sourceTag: "pricing_free_cta",
     });
-    expect(screen.getByText("Temporary free access")).toBeTruthy();
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
+    expect(screen.queryByText("Temporary free access")).toBeNull();
+    expect(screen.getByText("Try the calculator without an account").closest("a")?.getAttribute("href")).toBe(
       "/en/calculators/bike-fit"
     );
   });
@@ -308,7 +299,7 @@ describe("login page", () => {
     expect(
       screen.getByText("Hulp nodig? Mail support als je code niet aankomt of je vastloopt.")
     ).toBeTruthy();
-    expect(screen.getByText("Tijdelijk gratis toegang")).toBeTruthy();
+    expect(screen.queryByText("Tijdelijk gratis toegang")).toBeNull();
   });
 
   it("does not start Google sign-in while Convex auth is still loading", () => {
@@ -477,8 +468,7 @@ it("keeps Google locale, source tracking and failure recovery", async () => {
   expect(Reflect.get(window, "__bbfSuppressBeforeUnload")).toBe(false);
 });
 
-it("keeps one page heading and a localized calculator link with the campaign off", () => {
-  campaignActive = false;
+it("keeps one page heading and a localized calculator link without campaign copy", () => {
   pathname = "/nl/login";
   render(<LoginPage />);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);

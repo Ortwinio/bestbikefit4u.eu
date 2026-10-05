@@ -30,6 +30,7 @@ type PricingCopy = {
   freeLink: string;
   freeDetail: string;
   free: string;
+  gift: { title: string; body: string; cta: string };
   products: Record<PricingProductId, PricingProductCopy>;
   featureCompareTitle: string;
   featureLabel: string;
@@ -53,18 +54,19 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
   nl: {
     metadata: {
       title: "Prijzen | BikeFitBoost",
-      description: "Een losse meting voor €13,50 of een jaar al je fietsen afstellen voor €24,50. Met persoonlijke bikefit: €234,50. Inclusief btw.",
+      description: "Een losse meting voor €13,50 of een jaar al je fietsen afstellen voor €21,50. Met persoonlijke bikefit: €234,50. Inclusief btw.",
       keywords: ["bikefit prijzen", "online bikefit prijs", "jaarabonnement bikefit"],
     },
     eyebrow: "Prijzen",
     title: "Een goede bikefit, betaalbaar",
-    subtitle: "Met het jaarabonnement stel je een jaar lang al je fietsen af en vergelijk je ze, voor €24,50. Gaat het om één fiets, dan volstaat een losse meting.",
+    subtitle: "Met het jaarabonnement stel je een jaar lang al je fietsen af en vergelijk je ze, voor €21,50. Gaat het om één fiets, dan volstaat een losse meting.",
     vat: "Alle prijzen inclusief 21% btw. Geen maandabonnement, geen verborgen kosten.",
     vatShort: "incl. 21% btw",
     freePrompt: "Eerst gratis beginnen?",
     freeLink: "Maak een gratis account",
     freeDetail: "en bewaar je profiel en 1 fiets.",
     free: "Gratis",
+    gift: { title: "Cadeau ontvangen?", body: "Verzilver je bikefit binnen een maand voor één fiets. Je betaalt niets.", cta: "Verzilver je cadeau" },
     products: {
       single: {
         name: "Losse meting", description: "Het volledige stappenplan voor één fiets, in de juiste volgorde.",
@@ -74,14 +76,14 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
       },
       annual: {
         name: "Jaarabonnement", description: "Al je fietsen afstellen, vergelijken en een nieuwe fiets beoordelen.",
-        price: productPrice("annual", "nl"), period: "eerste jaar", renewal: "Daarna €19,50 per jaar (€5 korting), altijd online opzegbaar.", badge: "Favoriete keuze",
+        price: productPrice("annual", "nl"), period: "per jaar", renewal: "Verlengt automatisch voor €21,50 per jaar. Altijd online opzegbaar.", badge: "Favoriete keuze",
         facts: [["Looptijd", "12 maanden"], ["Fietsen", "Onbeperkt"]],
-        features: ["12 maanden optimaliseren", "2 losse metingen om weg te geven", "Alles uit de losse meting, voor al je fietsen", "Fits vergelijken en een nieuwe fiets beoordelen", "Klimplanner en volledige geschiedenis"],
+        features: ["12 maanden optimaliseren", "2 cadeaumetingen per jaar", "Alles uit de losse meting, voor al je fietsen", "Fits vergelijken en een nieuwe fiets beoordelen", "Klimplanner en volledige geschiedenis"],
         cta: "Kies het jaarabonnement",
       },
       annual_personal: {
         name: "Jaarabonnement + persoonlijke bikefit", description: "Je online profiel als basis, afgerond bij een fitter.",
-        price: productPrice("annual_personal", "nl"), period: "eerste jaar", renewal: "De afspraak is eenmalig. Daarna verlengt het als jaarabonnement voor €19,50 per jaar.", badge: "Met persoonlijke afspraak",
+        price: productPrice("annual_personal", "nl"), period: "eerste jaar", renewal: "De afspraak is eenmalig. Daarna verlengt het als jaarabonnement voor €21,50 per jaar.", badge: "Met persoonlijke afspraak",
         facts: [["Afspraak", "[DUUR AFSPRAAK]"], ["Locatie", "[LOCATIE]"]],
         features: ["Alles van het jaarabonnement", "Persoonlijke bikefit-afspraak bij een fitter in [LOCATIE]", "Je fitter start met jouw profiel en metingen"],
         cta: "Kies met persoonlijke bikefit",
@@ -111,9 +113,12 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
     faqTitle: "Veelgestelde vragen over prijzen", allQuestions: "Alle vragen →",
     faqs: [
       { q: "Wat is het verschil tussen een losse meting en een jaarabonnement?", a: "Een losse meting geeft je voor één fiets drie maanden het volledige stappenplan, met fit-tabel, controleplan en bandenspanning. Een jaarabonnement geeft dat voor al je fietsen, twaalf maanden lang, plus fits vergelijken, een nieuwe fiets beoordelen en de klimplanner." },
-      { q: "Wat is het jaarabonnement met persoonlijke bikefit?", a: "Je krijgt alles van het jaarabonnement plus één persoonlijke bikefit-afspraak van [DUUR AFSPRAAK] bij een fitter in [LOCATIE]. Je fitter start met jouw profiel en metingen. Na betaling plan je de afspraak zelf via de agenda. Verzetten of annuleren: [VOORWAARDEN AFSPRAAK — juridisch toetsen]. De afspraak is eenmalig: na het eerste jaar (€234,50) verlengt het als gewoon jaarabonnement voor €19,50 per jaar, altijd online opzegbaar." },
+      { q: "Wat is het jaarabonnement met persoonlijke bikefit?", a: "Je krijgt alles van het jaarabonnement plus één persoonlijke bikefit-afspraak van [DUUR AFSPRAAK] bij een fitter in [LOCATIE]. Je fitter start met jouw profiel en metingen. Na betaling plan je de afspraak zelf via de agenda. Verzetten of annuleren: [VOORWAARDEN AFSPRAAK — juridisch toetsen]. De afspraak is eenmalig: na het eerste jaar (€234,50) verlengt het als gewoon jaarabonnement voor €21,50 per jaar, altijd online opzegbaar." },
       { q: "Wat gebeurt er na afloop?", a: "Je gaat terug naar een gratis account. Je gegevens blijven bewaard. Betaalde onderdelen blijven zichtbaar en exporteerbaar, maar zijn alleen-lezen. De PDF van je laatste rapport blijft gratis beschikbaar." },
-      { q: "Hoe zeg ik mijn jaarabonnement op?", a: "Online, met één knop in Instellingen. Je krijgt 30 dagen voor de verlenging een herinnering met de datum en het bedrag (€19,50). In het eerste jaar houd je toegang tot het einde van het jaar. Zeg je op na een verlenging, dan krijg je het resterende deel naar rato terug." },
+      { q: "Hoe zeg ik mijn jaarabonnement op?", a: "Online, met één knop in Instellingen. Je krijgt 30 dagen voor de verlenging een herinnering met de datum en het bedrag (€21,50). In het eerste jaar houd je toegang tot het einde van het jaar. Zeg je op na een verlenging, dan krijg je het resterende deel naar rato terug." },
+      { q: "Hoe werken de cadeaumetingen?", a: "Met een jaarabonnement krijg je 2 cadeaumetingen per abonnementsjaar. De ontvanger heeft één maand om het cadeau te verzilveren voor één fiets en krijgt daarna drie maanden toegang. Je deelt geen profielgegevens." },
+      { q: "Kan ik upgraden na een losse meting of cadeau?", a: "Binnen zes maanden na aankoop van een losse meting of het verzilveren van een cadeau kost je eerste jaarabonnement €9,50. Daarna betaal je €21,50 per jaar. De korting wordt automatisch toegepast als je in aanmerking komt." },
+      { q: "Kan ik alleen een persoonlijke bikefit boeken?", a: "Als je een losse meting hebt gekocht of een jaarabonnement hebt, kun je een persoonlijke bikefit-afspraak kopen voor €209,50. Na betaling kies je Plan je afspraak. Deze afspraak verlengt niet automatisch." },
       { q: "Is de btw inbegrepen?", a: "Ja. Alle prijzen op deze pagina zijn inclusief 21% btw. Je ziet het totaalbedrag altijd voordat je betaalt." },
     ],
     ctaTitle: "Eerst proberen? Geen account nodig.", ctaBody: "De calculators zijn gratis. Beslis daarna of een losse meting of jaarabonnement bij je past.", start: "Start gratis bike fit",
@@ -121,13 +126,14 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
   en: {
     metadata: {
       title: "Pricing | BikeFitBoost",
-      description: "A single measurement for €13.50 or a year of fitting all your bikes for €24.50. With a personal bike fit: €234.50. VAT included.",
+      description: "A single measurement for €13.50 or a year of fitting all your bikes for €21.50. With a personal bike fit: €234.50. VAT included.",
       keywords: ["bike fit pricing", "online bike fit price", "annual bike fit plan"],
     },
     eyebrow: "Pricing", title: "A good bike fit, affordable",
-    subtitle: "With the annual plan, adjust and compare all your bikes for a year for €24.50. For just one bike, a single measurement is enough.",
+    subtitle: "With the annual plan, adjust and compare all your bikes for a year for €21.50. For just one bike, a single measurement is enough.",
     vat: "All prices include 21% VAT. No monthly subscription, no hidden costs.", vatShort: "incl. 21% VAT",
     freePrompt: "Want to start for free?", freeLink: "Create a free account", freeDetail: "and save your profile and 1 bike.", free: "Free",
+    gift: { title: "Received a gift?", body: "Redeem your bike fit within one month for one bike. There is nothing to pay.", cta: "Redeem your gift" },
     products: {
       single: {
         name: "Single measurement", description: "The complete adjustment plan for one bike, in the right order.",
@@ -136,13 +142,13 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
       },
       annual: {
         name: "Annual plan", description: "Adjust and compare all your bikes, and assess a new bike.",
-        price: productPrice("annual", "en"), period: "first year", renewal: "Then €19.50 per year (€5 off), cancel online anytime.", badge: "Favourite choice",
+        price: productPrice("annual", "en"), period: "per year", renewal: "Renews automatically at €21.50 per year. Cancel online anytime.", badge: "Favourite choice",
         facts: [["Access", "12 months"], ["Bikes", "Unlimited"]],
-        features: ["12 months of fine-tuning", "2 single measurements to give away", "Everything in a single measurement, for all your bikes", "Compare fits and assess a new bike", "Climbing planner and full history"], cta: "Choose the annual plan",
+        features: ["12 months of fine-tuning", "2 gift measurements per year", "Everything in a single measurement, for all your bikes", "Compare fits and assess a new bike", "Climbing planner and full history"], cta: "Choose the annual plan",
       },
       annual_personal: {
         name: "Annual plan + personal bike fit", description: "Your online profile as a starting point, completed with a fitter.",
-        price: productPrice("annual_personal", "en"), period: "first year", renewal: "The appointment is one-off. Afterwards, it renews as an annual plan for €19.50 per year.", badge: "With a personal appointment",
+        price: productPrice("annual_personal", "en"), period: "first year", renewal: "The appointment is one-off. Afterwards, it renews as an annual plan for €21.50 per year.", badge: "With a personal appointment",
         facts: [["Appointment", "[DUUR AFSPRAAK]"], ["Location", "[LOCATIE]"]],
         features: ["Everything in the annual plan", "Personal bike fit appointment with a fitter in [LOCATIE]", "Your fitter starts with your profile and measurements"], cta: "Choose a personal bike fit",
       },
@@ -171,9 +177,12 @@ export const pricingCopy: Record<Locale, PricingCopy> = {
     faqTitle: "Pricing FAQ", allQuestions: "All questions →",
     faqs: [
       { q: "What is the difference between a single measurement and an annual plan?", a: "A single measurement gives you the complete adjustment plan for one bike for three months, including the fit table, check plan and tyre pressure. An annual plan covers all your bikes for twelve months, plus fit comparisons, assessing a new bike and the climbing planner." },
-      { q: "What is the annual plan with a personal bike fit?", a: "You get everything in the annual plan plus one personal bike fit appointment of [DUUR AFSPRAAK] with a fitter in [LOCATIE]. Your fitter starts with your profile and measurements. After payment, book your appointment through the calendar. Rescheduling or cancellation: [VOORWAARDEN AFSPRAAK — juridisch toetsen]. The appointment is one-off: after the first year (€234.50), it renews as a regular annual plan for €19.50 per year. Cancel online anytime." },
+      { q: "What is the annual plan with a personal bike fit?", a: "You get everything in the annual plan plus one personal bike fit appointment of [DUUR AFSPRAAK] with a fitter in [LOCATIE]. Your fitter starts with your profile and measurements. After payment, book your appointment through the calendar. Rescheduling or cancellation: [VOORWAARDEN AFSPRAAK — juridisch toetsen]. The appointment is one-off: after the first year (€234.50), it renews as a regular annual plan for €21.50 per year. Cancel online anytime." },
       { q: "What happens when access ends?", a: "You return to a free account. Your data stays saved. Paid sections remain visible and exportable, but become read-only. The PDF of your latest report remains available for free." },
-      { q: "How do I cancel my annual plan?", a: "Online, with one button in Settings. You receive a reminder 30 days before renewal with the date and amount (€19.50). In the first year, you keep access until the end of the year. If you cancel after a renewal, the unused portion is refunded pro rata." },
+      { q: "How do I cancel my annual plan?", a: "Online, with one button in Settings. You receive a reminder 30 days before renewal with the date and amount (€21.50). In the first year, you keep access until the end of the year. If you cancel after a renewal, the unused portion is refunded pro rata." },
+      { q: "How do gift measurements work?", a: "An annual plan includes 2 gift measurements per subscription year. The recipient has one month to redeem a gift for one bike, then gets three months of access. No profile information is shared." },
+      { q: "Can I upgrade after a single measurement or gift?", a: "Within six months of buying a single measurement or redeeming a gift, your first annual plan costs €9.50. It then renews at €21.50 per year. The discount is applied automatically if you are eligible." },
+      { q: "Can I buy just a personal bike fit appointment?", a: "If you have bought a single measurement or have an annual plan, you can buy a personal bike fit appointment for €209.50. After payment, choose Book your appointment. This appointment does not renew automatically." },
       { q: "Is VAT included?", a: "Yes. All prices on this page include 21% VAT. You always see the total before you pay." },
     ],
     ctaTitle: "Try it first. No account needed.", ctaBody: "The calculators are free. Decide afterwards whether a single measurement or annual plan suits you.", start: "Start free bike fit",

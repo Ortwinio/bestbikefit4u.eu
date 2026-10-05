@@ -8,10 +8,11 @@ import { ArrowLeft, Check, LockKeyhole } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { checkoutCopy } from "@/i18n/marketing/checkout";
-import { stripeNotImplemented } from "@/lib/billing/stripeStub";
-import { checkoutPrice, checkoutProductId, readCheckoutSelection, saveCheckoutSelection, type CheckoutPreview, type CheckoutProduct, type CheckoutSelection } from "./checkout-state";
+import { stripeNotImplemented, type StripeNotImplementedResult } from "@/lib/billing/stripeStub";
+import { checkoutPrice, checkoutProductId, parseCheckoutProduct, readCheckoutSelection, saveCheckoutSelection, type CheckoutPreview, type CheckoutProduct, type CheckoutSelection } from "./checkout-state";
 import styles from "./CheckoutFlow.module.css";
 import { AppointmentBlock } from "./AppointmentBlock";
+import type { PaidProductId } from "../../../shared/pricing/products";
 
 export type CheckoutFlowProps = {
   locale: Locale;
@@ -21,20 +22,25 @@ export type CheckoutFlowProps = {
   accountEmail?: string;
   accountId?: string;
   bikes?: { id: string; name: string }[];
-  introEligible?: boolean;
+  upgradeEligible?: boolean;
   preview?: CheckoutPreview;
   agendaUrl?: string;
   appointmentRequested?: boolean;
   appointmentAvailable?: boolean;
+  standaloneEligible?: boolean;
+  paymentStatus?: "pending" | "success" | "failure" | null;
+  paymentReceipt?: { productId: PaidProductId; amountTotalCents: number | null };
+  startCheckout?: (selection: CheckoutSelection) => Promise<void | StripeNotImplementedResult>;
   signIn: (email: string, code: string | undefined, redirectTo: string) => Promise<void>;
 };
 
-export function CheckoutFlow({ locale, initialSelection, authenticated, authLoading = false, accountEmail, accountId, bikes, introEligible = false, preview = null, agendaUrl, appointmentRequested = false, appointmentAvailable = false, signIn }: CheckoutFlowProps) {
+export function CheckoutFlow({ locale, initialSelection, authenticated, authLoading = false, accountEmail, accountId, bikes, upgradeEligible = false, preview = null, agendaUrl, appointmentRequested = false, appointmentAvailable = false, standaloneEligible = false, paymentStatus = null, paymentReceipt, startCheckout, signIn }: CheckoutFlowProps) {
   const text = checkoutCopy[locale];
   const [selection, setSelection] = useState<CheckoutSelection>(initialSelection ?? { product: "annual", bikeId: "" });
-  const [step, setStep] = useState(appointmentRequested ? 1 : 0);
+  const [step, setStep] = useState(appointmentRequested || paymentStatus ? 1 : 0);
   const [previewResult, setResult] = useState(preview);
-  const result = previewResult ?? (authenticated && appointmentRequested && appointmentAvailable ? "appointment" : null);
+  const [retrying, setRetrying] = useState(false);
+  const result = previewResult ?? (authenticated ? (!retrying ? paymentStatus : null) ?? (appointmentRequested && appointmentAvailable ? "appointment" : null) : null);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
@@ -44,12 +50,18 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
-  const product = result === "appointment" ? "personal" : selection.product;
-  const eligible = authenticated && introEligible;
-  const confirmationKey = JSON.stringify([authenticated, accountId, accountEmail, checkoutProductId(product, eligible), checkoutPrice(product, eligible), selection.bikeId]);
+  const product = result === "appointment" ? "personal_fit_standalone" : result && paymentReceipt ? parseCheckoutProduct(paymentReceipt.productId) : selection.product;
+  const isStandalone = product === "personal_fit_standalone";
+  const hasAppointment = product === "personal" || isStandalone;
+  const canBuyStandalone = authenticated && standaloneEligible;
+  const eligible = authenticated && (result && paymentReceipt ? paymentReceipt.productId === "annual_upgrade" : upgradeEligible);
+  const confirmationKey = JSON.stringify([authenticated, accountId, accountEmail, checkoutProductId(product, eligible), checkoutPrice(product, eligible), selection.bikeId, canBuyStandalone]);
   const consent = consentFor === confirmationKey;
-  const priceFor = (plan: CheckoutProduct) => new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", { style: "currency", currency: "EUR" }).format(checkoutPrice(plan, eligible));
-  const benefitsFor = (plan: CheckoutProduct) => plan === "single" ? text.singleBenefits : plan === "personal" ? text.personalBenefits : eligible ? text.introBenefits : text.annualBenefits;
+  const priceFor = (plan: CheckoutProduct) => new Intl.NumberFormat(locale === "nl" ? "nl-NL" : "en-IE", { style: "currency", currency: "EUR" }).format(result && plan === product && paymentReceipt?.amountTotalCents != null ? paymentReceipt.amountTotalCents / 100 : checkoutPrice(plan, eligible));
+  const benefitsFor = (plan: CheckoutProduct) => plan === "personal_fit_standalone" ? text.standaloneBenefits : plan === "single" ? text.singleBenefits : plan === "personal" ? text.personalBenefits : eligible ? text.introBenefits : text.annualBenefits;
+  const priceNote = (plan: CheckoutProduct) => plan === "single" || plan === "personal_fit_standalone" ? text.once : plan === "annual" && !eligible ? text.perYear : text.firstYear;
+  const renews = (plan: CheckoutProduct) => plan === "annual" || plan === "personal";
+  const choices: CheckoutProduct[] = ["single", "annual", "personal", ...(canBuyStandalone || isStandalone ? ["personal_fit_standalone" as const] : [])];
   const bike = bikes?.find(item => item.id === selection.bikeId);
   const price = priceFor(product);
   const activeStep = step === 2 && !authenticated ? 1 : step;
@@ -123,10 +135,23 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
     }
   }
 
-  function pay(event: FormEvent<HTMLFormElement>) {
+  async function pay(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!authenticated || authLoading || !consent || (product === "single" && !bike) || !persist()) return;
-    setMessage(stripeNotImplemented(locale).message);
+    if (busy || !authenticated || authLoading || !consent || (isStandalone && !canBuyStandalone) || (product === "single" && !bike) || !persist()) return;
+    if (!startCheckout) {
+      setMessage(stripeNotImplemented(locale).message);
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const response = await startCheckout(selection);
+      if (response?.code === "STRIPE_NOT_IMPLEMENTED") setMessage(stripeNotImplemented(locale).message);
+    } catch {
+      setError(text.paymentError);
+    } finally {
+      setBusy(false);
+    }
   }
 
   const benefitList = (plan: CheckoutProduct) => <ul className={styles.benefits}>{benefitsFor(plan).map(item => <li key={item}><Check size={19} aria-hidden="true" /><span>{item}</span></li>)}</ul>;
@@ -134,9 +159,9 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
     <details open className={styles.summaryDetails}>
       <summary>{text.choice}: {text[product]} <span className={styles.summaryInlinePrice}>{price} {text.vat}</span></summary>
       {bike && product === "single" && <p>{bike.name}</p>}
-      <p className={styles.summaryPrice}>{price}<small>{product === "single" ? text.once : text.firstYear}</small></p>
+      <p className={styles.summaryPrice}>{price}<small>{priceNote(product)}</small></p>
       {benefitList(product)}
-      {product !== "single" && <p className={styles.renewal}>{product === "personal" ? text.personalRenewal : text.renewal}</p>}
+      {renews(product) && <p className={styles.renewal}>{product === "personal" ? text.personalRenewal : text.renewal}</p>}
       <p className={styles.small}>{text.data}</p>
     </details>
   </aside>;
@@ -156,9 +181,9 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
       {preview && <p className={styles.preview} role="note">{text.preview}</p>}
       {result ? <div className={`${styles.columns} ${result === "success" ? styles.successColumns : ""}`}>
         <section className={result === "success" ? styles.success : styles.panel}>
-          <h1 ref={heading} tabIndex={-1}>{result === "appointment" ? text.planAppointment : result === "failure" ? text.failureTitle : product === "personal" ? text.personalSuccess : product === "annual" ? text.annualSuccess : text.successTitle}</h1>
-          {result === "failure" ? <p>{text.failureLead}</p> : product !== "personal" && <p>{text.successLead}</p>}
-          {result === "failure" ? <button type="button" className={styles.primary} onClick={() => { setResult(null); setStep(authenticated ? 2 : 1); setConsent(false); }}>{text.retry}</button> : product === "personal" ? <>
+          <h1 ref={heading} tabIndex={-1}>{result === "appointment" ? text.planAppointment : result === "pending" ? text.pendingTitle : result === "failure" ? text.failureTitle : isStandalone ? text.standaloneSuccess : product === "personal" ? text.personalSuccess : product === "annual" ? text.annualSuccess : text.successTitle}</h1>
+          {result === "pending" ? <p role="status">{text.pendingLead}</p> : result === "failure" ? <p>{text.failureLead}</p> : !hasAppointment && <p>{text.successLead}</p>}
+          {result === "pending" ? null : result === "failure" ? <button type="button" className={styles.primary} onClick={() => { setResult(null); setRetrying(true); setStep(authenticated ? 2 : 1); setConsent(false); }}>{text.retry}</button> : hasAppointment ? <>
             <AppointmentBlock locale={locale} agendaUrl={agendaUrl} showHeading={result !== "appointment"} />
             <Link className={styles.textLink} href={link("/dashboard")}>{text.openPlan}</Link>
           </> : <Link className={`${styles.primary} ${styles.pinnedAction}`} href={link("/dashboard")}>{text.openPlan}</Link>}
@@ -166,13 +191,15 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
       </div> : activeStep === 0 ? <>
         <div className={styles.intro}><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{text.lead}</p></div>
         <fieldset className={styles.plans}><legend className={styles.srOnly}>{text.choice}</legend>
-          {(["single", "annual", "personal"] as const).map(plan => <label key={plan} className={`${styles.plan} ${plan === "annual" ? styles.featured : ""}`} data-selected={product === plan}>
+          {choices.map(plan => <label key={plan} className={`${styles.plan} ${plan === "annual" ? styles.featured : ""}`} data-selected={product === plan}>
             {plan === "annual" && <span className={styles.badge}>{text.favorite}</span>}
-            <div className={styles.planTop}><h2>{text[plan]}</h2><input type="radio" name="product" value={plan} checked={product === plan} onChange={() => choose({ ...selection, product: plan })} /></div>
-            <div className={styles.price}>{priceFor(plan)}<small>{plan === "single" ? text.once : text.firstYear}</small></div>
-            <p className={styles.meta}>{plan === "single" ? text.singleMeta : plan === "annual" ? text.annualMeta : text.personalMeta}</p>
+            <div className={styles.planTop}><h2>{text[plan]}</h2><input type="radio" name="product" value={plan} checked={product === plan} disabled={busy} onChange={() => choose({ ...selection, product: plan })} /></div>
+            <div className={styles.price}>{priceFor(plan)}<small>{priceNote(plan)}</small></div>
+            <p className={styles.meta}>{plan === "single" ? text.singleMeta : plan === "annual" ? text.annualMeta : plan === "personal" ? text.personalMeta : text.standaloneMeta}</p>
             {benefitList(plan)}
-            {plan !== "single" && <p className={styles.small}>{plan === "personal" ? text.personalRenewal : text.renewal}</p>}
+            {plan === "annual" && eligible && <p className={styles.small}>{text.intro}</p>}
+            {plan === "personal_fit_standalone" && !canBuyStandalone && <p className={styles.small}>{text.standaloneEligibility}</p>}
+            {renews(plan) && <p className={styles.small}>{plan === "personal" ? text.personalRenewal : text.renewal}</p>}
             <span className={styles.pick}>{product === plan ? text.selected : `${text.select} ${text[plan]}`}</span>
           </label>)}
         </fieldset>
@@ -191,15 +218,16 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
             <dl className={styles.rows}>
               <div><dt>{text.product}</dt><dd>{text[product]}{eligible && product === "annual" && <small>{text.intro}</small>}</dd></div>
               {product === "single" && <div><dt><label htmlFor="checkout-bike">{text.bike}</label></dt><dd><select id="checkout-bike" value={bike?.id ?? ""} required onChange={event => choose({ ...selection, bikeId: event.target.value })}><option value="">{bikes ? text.chooseBike : text.loading}</option>{bikes?.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></dd></div>}
-              <div><dt>{text.term}</dt><dd>{product === "single" ? text.singleTerm : text.annualTerm}</dd></div>
-              {product === "personal" && <div><dt>{text.appointment}</dt><dd>{text.appointmentDetails}</dd></div>}
+              {!isStandalone && <div><dt>{text.term}</dt><dd>{product === "single" ? text.singleTerm : text.annualTerm}</dd></div>}
+              {hasAppointment && <div><dt>{text.appointment}</dt><dd>{text.appointmentDetails}</dd></div>}
               <div><dt>{text.total}</dt><dd className={styles.total}>{price}</dd></div>
             </dl>
             {product === "single" && bikes?.length === 0 && <p>{text.noBikes} <Link className={styles.textLink} href={link("/bikes/new")}>{text.addBike}</Link></p>}
-            {product !== "single" && <p className={styles.renewal}>{product === "personal" ? text.personalRenewal : text.renewal}</p>}
-            <label className={styles.consent}><input type="checkbox" required checked={consent} onChange={event => { setConsent(event.target.checked); setMessage(""); }} /><span>{text.withdrawal}</span></label>
-            {product === "personal" && <p className={styles.small}>{text.appointmentTerms}</p>}
-            <div className={styles.actions}><button className={styles.primary} type="submit" disabled={!consent || authLoading || (product === "single" && !bike)}>{text.pay} {price}</button><p className={styles.small}>{text.paymentHint}</p></div>
+            {renews(product) && <p className={styles.renewal}>{product === "personal" ? text.personalRenewal : text.renewal}</p>}
+            {isStandalone && !canBuyStandalone && <p role="status">{text.standaloneEligibility}</p>}
+            <label className={styles.consent}><input type="checkbox" required disabled={busy} checked={consent} onChange={event => { setConsent(event.target.checked); setMessage(""); }} /><span>{text.withdrawal}</span></label>
+            {hasAppointment && <p className={styles.small}>{text.appointmentTerms}</p>}
+            <div className={styles.actions}><button className={styles.primary} type="submit" disabled={busy || !consent || authLoading || (isStandalone && !canBuyStandalone) || (product === "single" && !bike)}>{busy ? text.loading : `${text.pay} ${price}`}</button><p className={styles.small}>{startCheckout ? text.paymentReadyHint : text.paymentHint}</p></div>
           </form>}
         </section>{summary}
       </div>}

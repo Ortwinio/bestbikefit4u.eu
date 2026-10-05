@@ -5,6 +5,7 @@ import { inputProvenanceValidator, adviceProgressValidator } from "./advice/vali
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
+import { giftTables } from "./gifts/schema";
 import {
   MARKETING_EVENT_TYPES,
   type MarketingEventType,
@@ -218,6 +219,7 @@ const guideQuickAnswerValidator = v.object({
 export default defineSchema({
   // Auth tables from @convex-dev/auth
   ...authTables,
+  ...giftTables,
 
   // Users table - extended with app-specific fields
   // Note: The auth library creates a base users table, we extend it
@@ -2335,13 +2337,17 @@ export default defineSchema({
   pricingEntitlements: defineTable({
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),
-    productId: v.union(v.literal("single"), v.literal("annual"), v.literal("annual_entry"), v.literal("annual_personal")),
+    productId: v.union(v.literal("single"), v.literal("annual"), v.literal("annual_entry"), v.literal("annual_upgrade"), v.literal("annual_personal"),
+      v.literal("personal_fit_standalone")),
     status: v.union(v.literal("active"), v.literal("expired"), v.literal("revoked")),
     revokedReason: v.optional(v.union(v.literal("bike_deleted"), v.literal("refunded"), v.literal("admin"))),
     startsAt: v.number(),
     expiresAt: v.number(),
-    source: v.union(v.literal("purchase"), v.literal("transition"), v.literal("legacy_pro")),
+    source: v.union(v.literal("purchase"), v.literal("gift"), v.literal("transition"), v.literal("legacy_pro")),
     grantKey: v.string(),
+    subscriptionId: v.optional(v.string()),
+    customerId: v.optional(v.string()),
+    paymentIntentId: v.optional(v.string()),
     appointmentGranted: v.boolean(),
     appointmentUsedAt: v.optional(v.number()),
     periodPriceCents: v.optional(v.number()),
@@ -2351,6 +2357,8 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_bike", ["bikeId"])
+    .index("by_subscription", ["subscriptionId"])
+    .index("by_payment_intent", ["paymentIntentId"])
     .index("by_grant_key", ["grantKey"])
     .index("by_status_expiry", ["status", "expiresAt"]),
 
@@ -2434,6 +2442,63 @@ export default defineSchema({
     .index("by_subscription", ["subscriptionId"])
     .index("by_user", ["userId"])
     .index("by_occurred_at", ["occurredAt"]),
+
+  stripeCheckouts: defineTable({
+    userId: v.id("users"),
+    bikeId: v.optional(v.id("bikes")),
+    productId: v.string(),
+    locale: v.union(v.literal("nl"), v.literal("en")),
+    status: v.union(v.literal("pending"), v.literal("paid"), v.literal("failed"), v.literal("expired"), v.literal("refunded")),
+    sessionId: v.optional(v.string()),
+    amountTotalCents: v.optional(v.number()),
+    annualPriceId: v.optional(v.string()),
+    customerId: v.optional(v.string()),
+    subscriptionId: v.optional(v.string()),
+    paymentIntentId: v.optional(v.string()),
+    entitlementId: v.optional(v.id("pricingEntitlements")),
+    createdAt: v.number(),
+    lastEventAt: v.optional(v.number()),
+    subscriptionEventAt: v.optional(v.number()),
+    subscriptionCancelled: v.optional(v.boolean()),
+    subscriptionEndedAt: v.optional(v.number()),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_created_at", ["userId", "createdAt"])
+    .index("by_user_status", ["userId", "status"])
+    .index("by_session", ["sessionId"])
+    .index("by_subscription", ["subscriptionId"])
+    .index("by_payment_intent", ["paymentIntentId"]),
+
+  stripeBillingPeriods: defineTable({
+    userId: v.id("users"),
+    entitlementId: v.id("pricingEntitlements"),
+    grantKey: v.string(),
+    invoiceId: v.string(),
+    subscriptionId: v.string(),
+    customerId: v.string(),
+    paymentIntentId: v.optional(v.string()),
+    periodStart: v.number(),
+    periodEnd: v.number(),
+    periodPriceCents: v.number(),
+    renewed: v.boolean(),
+  })
+    .index("by_user_period", ["userId", "periodStart"])
+    .index("by_grant_key", ["grantKey"])
+    .index("by_invoice", ["invoiceId"]),
+
+  stripeInvoicePaymentLinks: defineTable({
+    invoiceId: v.string(),
+    paymentIntentId: v.string(),
+    amountPaid: v.number(),
+    currency: v.string(),
+  }).index("by_invoice", ["invoiceId"]),
+
+  stripePaymentRefunds: defineTable({
+    paymentIntentId: v.string(),
+    fullyRefunded: v.boolean(),
+    amountRefunded: v.number(),
+    updatedAt: v.number(),
+  }).index("by_payment_intent", ["paymentIntentId"]),
 
   stripe_events: defineTable({
     stripeEventId: v.string(),

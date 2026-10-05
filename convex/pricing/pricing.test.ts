@@ -4,6 +4,7 @@ import { beginTransition, continueTransition, expireEntitlements } from "./inter
 import { redeemTransitionOffer } from "./mutations";
 import { getAccess, getSubscription } from "./queries";
 import { grantPurchasedAccess } from "./grants";
+import { grantGiftEntitlement } from "./gifts";
 import type { MutationCtx } from "../_generated/server";
 import type { Id } from "../_generated/dataModel";
 const { auth } = vi.hoisted(() => ({ auth: vi.fn() }));
@@ -29,6 +30,7 @@ function context(rows: Row[]) {
         withIndex: (_name: string, callback: (query: unknown) => unknown) => {
           const index = {
             eq: (field: string, value: unknown) => { selected = selected.filter((entry) => entry[field] === value); return index; },
+            gt: (field: string, value: number) => { selected = selected.filter((entry) => Number(entry[field]) > value); return index; },
             lte: (field: string, value: number) => { selected = selected.filter((entry) => Number(entry[field]) <= value); return index; },
           };
           callback(index); return chain;
@@ -78,9 +80,9 @@ describe("pricing ownership and redemption", () => {
   });
   it("does not expose another user's entitlements and rejects orphan single rights", async () => {
     const ctx = context([row("pricingEntitlements:1", { userId: "users:other" }), row("pricingEntitlements:2", {
-      userId: "users:owner", productId: "single", bikeId: "bikes:missing", status: "active", startsAt: 0, expiresAt: now + 1,
+      userId: "users:owner", productId: "single", bikeId: "bikes:missing", status: "active", source: "purchase", startsAt: now - 1, expiresAt: now + 1,
     })]);
-    expect(await call(getAccess, ctx)).toMatchObject({ fullProfile: false, eligibleForEntry: true });
+    expect(await call(getAccess, ctx)).toMatchObject({ fullProfile: false, eligibleForUpgrade: true });
     expect(await call(getSubscription, ctx)).toMatchObject({ entitlements: [expect.objectContaining({ userId: "users:owner" })] });
   });
   it("expires at most 200 rows, and read-time checks cover the remainder", async () => {
@@ -172,7 +174,7 @@ describe("internal-only purchase grant helper", () => {
     await grantPurchasedAccess(ctx, { ...grantArgs, renewal: true, grantKey: "purchase:renewal" });
     expect(rows.filter((entry) => entry.appointmentGranted)).toHaveLength(1);
     expect(rows.find((entry) => entry._id === id)).toMatchObject({ periodPriceCents: 23450, renewed: false, cancelled: false });
-    expect(rows.at(-1)).toMatchObject({ productId: "annual", appointmentGranted: false, periodPriceCents: 1950, renewed: true, cancelled: false });
+    expect(rows.at(-1)).toMatchObject({ productId: "annual", appointmentGranted: false, periodPriceCents: 2150, renewed: true, cancelled: false });
     expect(ctx.scheduler.runAfter).toHaveBeenCalledTimes(1);
     const schedule = vi.mocked(ctx.scheduler.runAfter).mock.calls[0];
     expect(getFunctionName(schedule[1])).toBe("pricingAppointments/internal:queueFitterNotification");
@@ -180,7 +182,7 @@ describe("internal-only purchase grant helper", () => {
   });
   it("validates entry eligibility and bike ownership", async () => {
     const ctx = context([row("users:owner")]) as unknown as MutationCtx;
-    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_entry" })).rejects.toThrow("ENTRY_NOT_ELIGIBLE");
+    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_upgrade" })).rejects.toThrow("UPGRADE_NOT_ELIGIBLE");
     await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "single", bikeId: "bikes:foreign" as Id<"bikes"> })).rejects.toThrow("Bike not found");
   });
   it("grants a new appointment for each explicit personal purchase, not its renewal", async () => {
@@ -197,10 +199,80 @@ describe("internal-only purchase grant helper", () => {
   });
   it("preserves entry eligibility after deleting the single's bike, but not refund", async () => {
     const prior = row("pricingEntitlements:single", { userId: "users:owner", productId: "single",
-      status: "revoked", revokedReason: "bike_deleted", startsAt: now - 1 });
+      status: "revoked", source: "purchase", revokedReason: "bike_deleted", startsAt: now - 1 });
     const ctx = context([row("users:owner"), prior]) as unknown as MutationCtx;
-    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_entry" })).resolves.toBeTypeOf("string");
+    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_upgrade" })).resolves.toBeTypeOf("string");
     prior.revokedReason = "refunded";
-    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_entry", grantKey: "different" })).rejects.toThrow("ENTRY_NOT_ELIGIBLE");
+    await expect(grantPurchasedAccess(ctx, { ...grantArgs, productId: "annual_upgrade", grantKey: "different" })).rejects.toThrow("UPGRADE_NOT_ELIGIBLE");
+  });
+});
+
+
+describe("Stripe period grants and gift redemption", () => {
+  const userId = "users:owner" as Id<"users">;
+  const bikeId = "bikes:1" as Id<"bikes">;
+  it("uses the verified Stripe period and keeps payment references", async () => {
+    const rows = [row(userId)];
+    await grantPurchasedAccess(context(rows) as unknown as MutationCtx, {
+      userId, productId: "annual", grantKey: "invoice:paid", startsAt: now,
+      periodEnd: now + 1234, subscriptionId: "sub_test", paymentIntentId: "pi_test", customerId: "cus_test",
+    });
+    expect(rows.at(-1)).toMatchObject({ expiresAt: now + 1234, subscriptionId: "sub_test", periodPriceCents: 2150 });
+  });
+  it("standalone is an appointment, not a subscription, and cron does not expire its zero sentinel", async () => {
+    const rows = [row(userId), row("pricingEntitlements:single", {
+      userId, productId: "single", source: "purchase", startsAt: now - 1, status: "expired",
+    })];
+    const ctx = context(rows) as unknown as MutationCtx;
+    const args = { userId, productId: "personal_fit_standalone" as const, grantKey: "payment:1", startsAt: now };
+    await grantPurchasedAccess(ctx, args);
+    expect(rows.at(-1)).toMatchObject({ expiresAt: 0, appointmentGranted: true, periodPriceCents: 20950 });
+    expect(await call(expireEntitlements, ctx)).toMatchObject({ expired: 0 });
+    await expect(grantPurchasedAccess(ctx, { ...args, renewal: true })).rejects.toThrow("PRODUCT_NOT_RECURRING");
+  });
+  it("gift redemption is atomic and idempotent for the same owner and bike", async () => {
+    const rows = [row(userId), row(bikeId, { userId })];
+    const ctx = context(rows) as unknown as MutationCtx;
+    const args = { userId, bikeId, giftId: "gift1", redeemedAt: now };
+    const id = await grantGiftEntitlement(ctx, args);
+    expect(await grantGiftEntitlement(ctx, args)).toBe(id);
+    expect(rows.at(-1)).toMatchObject({ source: "gift", grantKey: "gift:gift1", expiresAt: Date.UTC(2027, 0, 3) });
+    await expect(grantGiftEntitlement(ctx, { ...args, userId: "users:other" as Id<"users"> })).rejects.toThrow("Bike not found");
+    await expect(grantGiftEntitlement(ctx, { ...args, redeemedAt: now + 1 })).rejects.toThrow("GRANT_KEY_CONFLICT");
+  });
+});
+
+
+describe("delayed verified payment grant", () => {
+  it("uses reserved eligibility time while preserving the paid period start", async () => {
+    const userId = "users:owner" as Id<"users">;
+    const purchasedAt = Date.UTC(2026, 0, 3);
+    const eligibilityAt = Date.UTC(2026, 6, 2);
+    const rows = [row(userId), row("pricingEntitlements:single", {
+      userId, productId: "single", source: "purchase", status: "expired", startsAt: purchasedAt,
+    })];
+    const ctx = context(rows) as unknown as MutationCtx;
+    const args = { userId, productId: "annual_upgrade" as const, startsAt: now, grantKey: "invoice:delayed" };
+    await expect(grantPurchasedAccess(ctx, args)).rejects.toThrow("UPGRADE_NOT_ELIGIBLE");
+    const id = await grantPurchasedAccess(ctx, { ...args, eligibilityAt });
+    expect(rows.find((entry) => entry._id === id)).toMatchObject({ startsAt: now, periodPriceCents: 950 });
+    expect(await grantPurchasedAccess(ctx, { ...args, eligibilityAt, paymentIntentId: "pi_late" })).toBe(id);
+    expect(rows.find((entry) => entry._id === id)).toMatchObject({ paymentIntentId: "pi_late" });
+    await expect(grantPurchasedAccess(ctx, { ...args, eligibilityAt, paymentIntentId: "pi_other" }))
+      .rejects.toThrow("GRANT_KEY_CONFLICT");
+  });
+});
+
+
+describe("Stripe second-precision checkout timestamps", () => {
+  it("accepts a reservation within the same second but rejects truly future eligibility", async () => {
+    const userId = "users:owner" as Id<"users">;
+    const bikeId = "bikes:precision" as Id<"bikes">;
+    const rows = [row(userId), row(bikeId, { userId })];
+    const ctx = context(rows) as unknown as MutationCtx;
+    const args = { userId, bikeId, productId: "single" as const, startsAt: now, grantKey: "precision" };
+    await expect(grantPurchasedAccess(ctx, { ...args, eligibilityAt: now + 721 })).resolves.toBeTypeOf("string");
+    await expect(grantPurchasedAccess(ctx, { ...args, grantKey: "future", eligibilityAt: now + 1000 }))
+      .rejects.toThrow("INVALID_ELIGIBILITY_TIME");
   });
 });
