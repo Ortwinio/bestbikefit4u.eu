@@ -1,0 +1,11 @@
+shared/reliability/saddleHeight.ts
+shared/reliability/saddleHeight.test.ts
+src/components/ui/RangeBar.tsx
+src/components/ui/RangeBar.test.tsx
+src/components/ui/index.ts
+plans/reliability/README.md
+plans/reliability/messages/C-model-contract.md
+plans/reliability/messages/C-to-A-B-rounding-confirmed.md
+plans/reliability/messages/C-Q1-complete.md
+plans/reliability/audit/Q1-notes.md
+plans/reliability/audit/files-Q1.txt

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Calculatorsjabloon met bereikbalk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1200px; height: {{h}}px; box-sizing: border-box; padding: 48px 56px; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Gratis calculator · 2 stappen · zonder account</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.03em; color: #0F2420">{{title}}</h1>
+    <p style="margin: 0; font-size: 17px; max-width: 64ch">{{intro}}</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <sc-for list="{{steps}}" as="s" hint-placeholder-count="2">
+        <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+            <h2 style="margin: 0; font-weight: 700; color: #0F2420; font-size: 17px">{{s.title}}</h2>
+            <span style="font-size: 12px; font-weight: 700; color: {{s.statusColor}}">{{s.status}}</span>
+          </div>
+          <sc-for list="{{s.fields}}" as="f" hint-placeholder-count="1">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <sc-if value="{{f.isRange}}" hint-placeholder-val="{{true}}">
+                <div style="display: flex; justify-content: space-between; align-items: baseline">
+                  <label for="{{f.id}}" style="font-size: 15px; font-weight: 600; color: #0F2420">{{f.label}}</label>
+                  <span style="font-family: 'DM Mono', monospace; font-size: 20px; color: {{f.valueColor}}">{{f.valueLabel}}</span>
+                </div>
+                <input id="{{f.id}}" type="range" min="{{f.min}}" max="{{f.max}}" step="{{f.step}}" value="{{f.value}}" onInput="{{f.onInput}}" style="width: 100%; accent-color: #0A7263">
+              </sc-if>
+              <sc-if value="{{f.isChoice}}" hint-placeholder-val="{{false}}">
+                <div style="font-size: 15px; font-weight: 600; color: #0F2420">{{f.label}}</div>
+                <div role="group" aria-label="{{f.label}}" style="display: grid; grid-template-columns: repeat({{f.cols}}, minmax(0, 1fr)); gap: 6px">
+                  <sc-for list="{{f.options}}" as="o" hint-placeholder-count="4">
+                    <button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border-radius: 999px; cursor: pointer; border: 1.5px solid {{o.border}}; background: {{o.bg}}; color: #0F2420; padding: 0 8px">{{o.label}}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{s.hasHint}}" hint-placeholder-val="{{false}}">
+            <p style="margin: 0; font-size: 14px; color: #4A5F5A">{{s.hint}}</p>
+          </sc-if>
+        </section>
+      </sc-for>
+
+      <details style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px 28px; font-size: 15px">
+        <summary style="cursor: pointer; font-weight: 700; color: #0F2420; min-height: 28px">Wat we hier nog niet meenemen</summary>
+        <p style="margin: 10px 0 0">{{notIncluded}}</p>
+      </details>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 18px">
+        <sc-for list="{{results}}" as="r" hint-placeholder-count="1">
+          <div style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid {{r.divider}}">
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start">
+              <div style="display: flex; gap: 12px; align-items: center">
+                <sc-if value="{{r.hasLetter}}" hint-placeholder-val="{{false}}">
+                  <span style="width: 36px; height: 36px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none">{{r.letter}}</span>
+                </sc-if>
+                <div>
+                  <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: {{r.titleSize}}px; color: #0F2420">{{r.title}}</div>
+                  <div style="font-size: 14px; color: #4A5F5A">{{r.what}}</div>
+                </div>
+              </div>
+              <div style="text-align: right">
+                <div style="font-family: 'DM Mono', monospace; font-size: {{r.valueSize}}px; line-height: 1; color: #0F2420">{{r.valueText}}<span style="font-size: 15px; margin-left: 5px">{{r.unit}}</span></div>
+                <div style="font-family: 'DM Mono', monospace; font-size: 14px; color: #0F2420; margin-top: 5px">{{r.pmText}}</div>
+              </div>
+            </div>
+            <sc-if value="{{r.isBar}}" hint-placeholder-val="{{true}}">
+              <dc-import name="Bereikbalk" low="{{r.low}}" high="{{r.high}}" value="{{r.v}}" min="{{r.min}}" max="{{r.max}}" low-label="{{r.lowLabel}}" high-label="{{r.highLabel}}" size="{{r.size}}" dashed="{{r.dashed}}" aria="{{r.aria}}" hint-size="100%,72px"></dc-import>
+            </sc-if>
+            <sc-if value="{{r.isMaat}}" hint-placeholder-val="{{false}}">
+              <dc-import name="Maatbalk" options="{{r.options}}" from="{{r.from}}" to="{{r.to}}" value="{{r.idx}}" aria="{{r.aria}}" hint-size="100%,72px"></dc-import>
+            </sc-if>
+            <sc-if value="{{r.isNote}}" hint-placeholder-val="{{false}}">
+              <div style="font-size: 14px; color: #0F2420; background: #F5F8F3; border-radius: 12px; padding: 10px 14px">{{r.note}}</div>
+            </sc-if>
+            <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: {{r.basis}}</div>
+          </div>
+        </sc-for>
+
+        <div style="display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: #E1F2EE; border-radius: 16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <span style="font-size: 15px; color: #075A4E; font-weight: 600">{{next}}</span>
+        </div>
+
+        <details style="font-size: 15px">
+          <summary style="cursor: pointer; font-weight: 700; color: #0F2420; min-height: 28px">Wat betekent dit bereik?</summary>
+          <p style="margin: 10px 0 0; max-width: 64ch">{{meaning}}</p>
+        </details>
+      </div>
+
+      <div style="background: #0F2420; border-radius: 20px; padding: 22px 26px; display: flex; flex-direction: column; gap: 12px">
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #FFFFFF">Verfijnen na inloggen</div>
+        <sc-for list="{{refine}}" as="x" hint-placeholder-count="3">
+          <div style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; color: #EAF3EF; font-size: 15px">
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; background: {{x.tagBg}}; color: #0F2420">{{x.tier}}</span>
+            <span>{{x.text}}</span>
+            <span style="font-family: 'DM Mono', monospace; color: #CFF26A">{{x.gain}}</span>
+          </div>
+        </sc-for>
+        <a href="#account" style="align-self: flex-start; background: #CFF26A; color: #0F2420; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 11px 20px; text-decoration: none; margin-top: 4px">Bewaar en verfijn gratis</a>
+        <span style="font-size: 13px; color: #B9CCC6">Wat je hier invult nemen we mee; je hoeft niets opnieuw in te vullen.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"calc":{"editor":"enum","options":["bikefit","frame","crank","saddlewidth","speed","climb","ftp","gearing","fuel"],"default":"bikefit"},"$preview":{"width":1200,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { v: {}, done2: false };
+  }
+  fmt(x, dec) { return (dec ? x.toFixed(dec) : String(Math.round(x))).replace('.', ','); }
+  speed(P, m, grade, cda, crr) {
+    const g = 9.81, rho = 1.225, eta = 0.975, th = Math.atan(grade);
+    const need = (v) => (m * g * (crr * Math.cos(th) + Math.sin(th)) * v + 0.5 * rho * cda * v * v * v) / eta;
+    let lo = 0.1, hi = 30;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (need(mid) > P) hi = mid; else lo = mid; }
+    return (lo + hi) / 2;
+  }
+  bar(o) {
+    const d = o.dec || 0;
+    const r = (x) => o.round5 ? Math.round(x / 5) * 5 : x;
+    const low = r(o.value - o.half), high = r(o.value + o.half), span = 1.25 * (o.widest || o.half);
+    return Object.assign({ isBar: true, isMaat: false, isNote: false, size: o.size || 'groot', dashed: false,
+      v: o.value, low, high, min: o.value - span, max: o.value + span,
+      lowLabel: this.fmt(low, d), highLabel: this.fmt(high, d), valueText: this.fmt(o.value, d),
+      pmText: '± ' + this.fmt(o.half, d) + ' ' + o.unit,
+      aria: o.title + ' ' + this.fmt(o.value, d) + ' ' + o.unit + ', bereik ' + this.fmt(low, d) + ' tot ' + this.fmt(high, d) }, o);
+  }
+  configs() {
+    const z = 1.96;
+    const cats = [['road', 'Race'], ['gravel', 'Gravel'], ['mtb', 'MTB'], ['city', 'Stad']];
+    const meaning = 'Je uitkomst hangt af van je invoer en van hoe goed onze formule bij jou past. Samen geeft dat een bereik waarin de juiste waarde in 19 van de 20 gevallen ligt. Betere gegevens maken het smaller.';
+    return {
+      bikefit: {
+        h: 1240, title: 'Bike-fit in vier waarden', intro: 'Je lengte geeft direct een eerste afstelling. Met je binnenbeen en je fiets worden de bereiken smaller.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }] },
+          { title: '2. Binnenbeen en fiets', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 89, unit: 'cm' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }], hint: 'Meet je binnenbeen op blote voeten met een boek tegen de muur.' }
+        ],
+        compute: (v, d) => {
+          const H = v.height * 10, B = d ? v.inseam * 10 : 0.47 * H, sB = d ? 10 : 0.03 * B, cat = d ? v.cat : 'road';
+          const M = { road: 0.883, gravel: 0.88, mtb: 0.875, city: 0.87 }[cat];
+          const sh = Math.round(B * M);
+          const half = (s) => Math.round(z * Math.sqrt(Math.pow(0.883 * s, 2) + Math.pow(0.01 * sh, 2)));
+          const wide = half(0.03 * 0.47 * H);
+          const drop = Math.round(H * { road: 0.051, gravel: 0.035, mtb: 0.015, city: -0.02 }[cat]);
+          const reach = Math.round(H * { road: 0.30, gravel: 0.29, mtb: 0.30, city: 0.25 }[cat]);
+          const basis = d ? 'lengte, binnenbeen 1× gemeten, ' + { road: 'racefiets', gravel: 'gravelfiets', mtb: 'mountainbike', city: 'stadsfiets' }[cat] : 'lengte (binnenbeen geschat), racefiets aangenomen';
+          return {
+            results: [
+              this.bar({ letter: 'A', title: 'Zadelhoogte', what: 'Midden trapas tot bovenkant zadel', value: sh, half: half(sB), widest: wide, unit: 'mm', size: 'compact', round5: true, basis: basis }),
+              this.bar({ letter: 'B', title: 'Zadelterugstand', what: 'Zadelpunt achter de trapas', value: Math.round(0.057 * B), half: d ? 15 : 18, widest: 18, unit: 'mm', size: 'compact', round5: true, basis: 'dijbeen geschat uit lengte' }),
+              this.bar({ letter: 'C', title: 'Stuurdrop', what: 'Hoogteverschil zadel en stuur', value: drop, half: 30, widest: 30, unit: 'mm', size: 'compact', round5: true, basis: 'gemiddelde lenigheid aangenomen' }),
+              this.bar({ letter: 'D', title: 'Reach', what: 'Zadel tot stuur, horizontaal', value: reach, half: d ? 25 : 28, widest: 28, unit: 'mm', size: 'compact', round5: true, basis: 'torso en arm geschat uit lengte' })
+            ],
+            next: d ? 'Bewaar je maten en meet torso en arm → reach ± 15 mm' : 'Vul je binnenbeen in → zadelhoogte ± ' + half(10) + ' mm',
+            refine: [['Account', 'Lenigheid en core in je stuurdrop', '± 20 mm'], ['Account', 'Torso en arm meten voor je reach', '± 15 mm'], ['Account', 'Binnenbeen 3× meten', '± 18 mm'], ['Betaald', 'Houdingsfoto op je eigen fiets', '± 10 mm']],
+            notIncluded: 'Lenigheid, core-stabiliteit, rijdoel en je torso- en armlengte nemen we hier niet mee. Ze verschuiven vooral drop en reach en horen bij je bewaarde profiel. Daarom zijn die bereiken hier nog breed.',
+            meaning: meaning
+          };
+        }
+      },
+      frame: {
+        h: 1040, title: 'Welke framemaat past bij jou?', intro: 'Je lengte geeft de maten die in aanmerking komen. Met je binnenbeen wordt het kleiner.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 185, unit: 'cm' }] },
+          { title: '2. Je binnenbeenlengte', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 87, unit: 'cm' }] }
+        ],
+        compute: (v, d) => {
+          const opts = ['XS', 'S', 'M', 'L', 'XL'];
+          let idx = (v.height - 157) / 10;
+          if (d) idx += (v.inseam / v.height - 0.47) / 0.02 * 0.3;
+          idx = Math.max(0, Math.min(4, idx));
+          const half = d ? 0.6 : 1.0;
+          const from = Math.max(0, idx - half), to = Math.min(4, idx + half);
+          let a = Math.ceil(from - 1e-9), b = Math.floor(to + 1e-9);
+          if (a > b) { a = Math.round(idx); b = a; }
+          const valueText = a === b ? opts[a] : opts[a] + (b - a > 1 ? '–' : ' of ') + opts[b];
+          return {
+            results: [{ isBar: false, isMaat: true, isNote: false, hasLetter: false, title: 'Framemaat', what: 'Maat in de tabel van je merk', valueText: valueText, unit: '', pmText: (b - a + 1) + (b === a ? ' maat' : ' maten'), options: opts.join(','), from: from, to: to, idx: idx, aria: 'Framemaat ' + valueText, basis: d ? 'lengte en binnenbeen, zonder je fiets' : 'alleen je lengte' }],
+            next: d ? 'Kies merk en model in je account → één maat via stack en reach' : 'Vul je binnenbeen in → minder maten',
+            refine: [['Account', 'Merk, model en maat van je fiets (stack en reach)', '1 maat'], ['Account', 'Torso en arm voor de reach-controle', ''], ['Betaald', 'Twee fietsen of maten naast elkaar', 'marge in mm']],
+            notIncluded: 'Maattabellen verschillen per merk. Zonder de geometrie van een concrete fiets (stack en reach) geven we daarom een bereik van maten, geen enkele maat.',
+            meaning: meaning
+          };
+        }
+      },
+      crank: {
+        h: 1040, title: 'Welke cranklengte past bij jou?', intro: 'Cranks gaan per 2,5 mm. Je lengte geeft een eerste keuze, je binnenbeen maakt het preciezer.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }] },
+          { title: '2. Binnenbeen en fiets', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 89, unit: 'cm' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }] }
+        ],
+        compute: (v, d) => {
+          const opts = ['165', '167,5', '170', '172,5', '175', '177,5'];
+          const B = d ? v.inseam * 10 : 0.47 * v.height * 10, sB = d ? 10 : 0.03 * B;
+          let idx = Math.max(0, Math.min(5, (B - 710) / 60));
+          if (d && v.cat === 'mtb' && B >= 820) idx = Math.max(0, idx - 1);
+          const half = z * Math.sqrt(Math.pow(sB / 60, 2) + 0.0625);
+          const from = Math.max(0, idx - half), to = Math.min(5, idx + half);
+          const i = Math.round(idx);
+          let a = Math.ceil(from - 1e-9), b = Math.floor(to + 1e-9);
+          if (a > b) { a = i; b = i; }
+          return {
+            results: [{ isBar: false, isMaat: true, isNote: false, hasLetter: false, title: 'Cranklengte', what: 'In stappen van 2,5 mm', valueText: a === b ? opts[i] : opts[i], unit: 'mm', pmText: a === b ? '1 lengte' : opts[a] + '–' + opts[b] + ' mm', options: '165,167.5,170,172.5,175,177.5', from: from, to: to, idx: idx, aria: 'Cranklengte ' + opts[i] + ' mm, bereik ' + opts[a] + ' tot ' + opts[b] + ' mm', basis: d ? 'binnenbeen 1× gemeten' : 'lengte (binnenbeen geschat)' }],
+            next: d ? 'Meet je dijbeen in je account → één of twee lengtes' : 'Vul je binnenbeen in → smaller bereik',
+            refine: [['Account', 'Dijbeenlengte meten', '1–2 lengtes'], ['Account', 'Rijstijl: hoge cadans of veel klimmen', ''], ['Account', 'Binnenbeen 3× meten', '']],
+            notIncluded: 'Je dijbeenlengte en rijstijl nemen we hier niet mee. Ze bepalen of je aan de korte of de lange kant van het bereik zit.',
+            meaning: meaning
+          };
+        }
+      },
+      saddlewidth: {
+        h: 1040, title: 'Welke zadelbreedte past bij jou?', intro: 'We schatten je zitbotbreedte uit lengte en gewicht. Meet je ze met een stuk karton, dan wordt het bereik drie keer zo smal.',
+        steps: [
+          { title: '1. Schatting', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }, { key: 'weight', label: 'Gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] },
+          { title: '2. Zitbotten meten', two: true, fields: [{ key: 'sit', label: 'Afstand tussen je zitbotten', type: 'range', min: 90, max: 170, step: 1, def: 122, unit: 'mm' }], hint: 'Ga 30 seconden op een stuk golfkarton zitten, voeten op de grond, en meet de afstand tussen de middens van de twee afdrukken.' }
+        ],
+        compute: (v, d) => {
+          const est = 0.06 * v.height * 10 + 0.3 * (v.weight - 75);
+          const sit = d ? v.sit : est;
+          const w = Math.round(sit + 25);
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Zadelbreedte', what: 'Breedte van het zadel', value: w, half: d ? 5 : 15, widest: 15, unit: 'mm', basis: d ? 'zitbotten gemeten met karton' : 'zitbotten geschat uit lengte en gewicht' })],
+            next: d ? 'Bewaar in je account; we houden rekening met je rijhouding' : 'Meet je zitbotten met karton → ± 5 mm',
+            refine: [['Account', 'Rijhouding: hoe verder voorover, hoe smaller', ''], ['Account', 'Zitklachten koppelen aan je zadelkeuze', '']],
+            notIncluded: 'Je rijhouding en eventuele zitklachten nemen we hier niet mee. Een sportieve houding past vaak bij een iets smaller zadel.',
+            meaning: meaning
+          };
+        }
+      },
+      speed: {
+        h: 1040, title: 'Hoe hard ga je met jouw vermogen?', intro: 'Vul je vermogen in. Met je gewicht en fiets rekenen we preciezer; de luchtweerstand blijft het grootste onbekende.',
+        steps: [
+          { title: '1. Je vermogen', fields: [{ key: 'power', label: 'Vermogen', type: 'range', min: 100, max: 400, step: 5, def: 220, unit: 'W' }] },
+          { title: '2. Gewicht en fiets', two: true, fields: [{ key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }] }
+        ],
+        compute: (v, d) => {
+          const cat = d ? v.cat : 'road', m = (d ? v.weight : 75) + 9;
+          const cda = { road: 0.32, gravel: 0.36, mtb: 0.45, city: 0.55 }[cat], crr = { road: 0.004, gravel: 0.006, mtb: 0.009, city: 0.007 }[cat];
+          const kmh = this.speed(v.power, m, 0, cda, crr) * 3.6;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Snelheid op vlak', what: 'Zonder wind, op asfalt', value: kmh, half: kmh * (d ? 0.062 : 0.075), widest: kmh * 0.075, unit: 'km/u', dec: 1, basis: d ? 'standaard houding voor je fietstype' : 'standaardrijder van 75 kg op een racefiets' })],
+            next: d ? 'Kies je eigen fiets en houding in je account → ± ' + this.fmt(kmh * 0.037, 1) + ' km/u' : 'Vul je gewicht en fiets in → ± ' + this.fmt(kmh * 0.062, 1) + ' km/u',
+            refine: [['Account', 'Je eigen fiets, houding en gewicht', '± ' + this.fmt(kmh * 0.037, 1) + ' km/u'], ['Betaald', 'Veldtest luchtweerstand', '± ' + this.fmt(kmh * 0.019, 1) + ' km/u']],
+            notIncluded: 'Je houding op de fiets bepaalt het grootste deel van je luchtweerstand. Die kennen we hier niet, daarom rekenen we met een standaardhouding.',
+            meaning: meaning
+          };
+        }
+      },
+      climb: {
+        h: 1080, title: 'Hoe lang doe je over deze klim?', intro: 'Kies de klim. Met je FTP en gewicht wordt de schatting persoonlijk.',
+        steps: [
+          { title: '1. De klim', fields: [{ key: 'km', label: 'Lengte', type: 'range', min: 2, max: 25, step: 0.5, def: 12, unit: 'km' }, { key: 'grade', label: 'Gemiddelde stijging', type: 'range', min: 3, max: 12, step: 0.5, def: 7, unit: '%' }] },
+          { title: '2. Jouw FTP en gewicht', two: true, fields: [{ key: 'ftp', label: 'FTP', type: 'range', min: 150, max: 400, step: 5, def: 260, unit: 'W' }, { key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const w = d ? v.weight : 75, ftp = d ? v.ftp : 3.0 * 75;
+          const vs = this.speed(0.9 * ftp, w + 9, v.grade / 100, 0.38, 0.004);
+          const min = v.km * 1000 / vs / 60;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Klimtijd', what: 'Op 90% van je FTP', value: min, half: min * (d ? 0.10 : 0.15), widest: min * 0.15, unit: 'min', basis: d ? 'opgegeven FTP en gewicht' : 'gemiddelde rijder: 75 kg, 3,0 W/kg' })],
+            next: d ? 'Bewaar een gemeten FTP in je account → ± ' + this.fmt(min * 0.05, 0) + ' min' : 'Vul je FTP en gewicht in → ± ' + this.fmt(min * 0.10, 0) + ' min',
+            refine: [['Account', 'Gemeten FTP en gewicht uit je profiel', '± 5%'], ['Betaald', 'Geleide FTP-test', '± 3%']],
+            notIncluded: 'Wind, wegdek en je dagvorm nemen we niet mee. Je FTP is meestal een schatting; daarom is het bereik hier nog ruim.',
+            meaning: meaning
+          };
+        }
+      },
+      ftp: {
+        h: 1180, title: 'Wat is je FTP en W/kg?', intro: 'Vul je testvermogen in. Met je gewicht berekenen we je watt per kilo.',
+        steps: [
+          { title: '1. Je test', fields: [{ key: 'method', label: 'Testmethode', type: 'choice', options: [['20', '20 minuten'], ['ramp', 'Ramptest'], ['known', 'Bekend']], def: '20' }, { key: 'watts', label: 'Testvermogen', type: 'range', min: 120, max: 450, step: 5, def: 290, unit: 'W' }] },
+          { title: '2. Je gewicht', two: true, fields: [{ key: 'weight', label: 'Gewicht', type: 'range', min: 45, max: 130, step: 0.5, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const f = { '20': 0.95, ramp: 0.75, known: 1 }[v.method], rel = { '20': 0.06, ramp: 0.10, known: 0.03 }[v.method];
+          const ftp = v.watts * f;
+          const basis = { '20': '20-minutentest × 0,95', ramp: 'ramptest × 0,75', known: 'opgegeven FTP' }[v.method];
+          const res = [this.bar({ hasLetter: false, title: 'FTP', what: 'Vermogen dat je een uur volhoudt', value: ftp, half: ftp * rel, widest: ftp * 0.10, unit: 'W', basis: basis })];
+          if (d) res.push(this.bar({ hasLetter: false, title: 'Watt per kilo', what: 'FTP gedeeld door je gewicht', value: ftp / v.weight, half: ftp / v.weight * rel, widest: ftp / v.weight * 0.10, unit: 'W/kg', dec: 1, basis: basis + ', gewicht ' + this.fmt(v.weight, 1) + ' kg' }));
+          else res.push({ isBar: false, isMaat: false, isNote: true, hasLetter: false, title: 'Watt per kilo', what: 'FTP gedeeld door je gewicht', valueText: '—', unit: '', pmText: '', note: 'Vul je gewicht in om je watt per kilo te zien.', basis: 'nog geen gewicht' });
+          return {
+            results: res,
+            next: d ? 'Doe in je account een geleide FTP-test → ± 3%' : 'Vul je gewicht in → watt per kilo',
+            refine: [['Account', 'Gewicht gewogen en recent', '± 4%'], ['Betaald', 'Geleide test met protocol', '± 3%']],
+            notIncluded: 'De omrekening van een test naar FTP verschilt per persoon. Een ramptest overschat vaak bij sprinters en onderschat bij duurrijders; daarom is dat bereik breder.',
+            meaning: meaning
+          };
+        }
+      },
+      gearing: {
+        h: 1080, title: 'Is je lichtste verzet licht genoeg?', intro: 'Vul je lichtste verzet in. Met je steilste klim en je gewicht zie je met welke cadans je boven komt.',
+        steps: [
+          { title: '1. Je lichtste verzet', fields: [{ key: 'ring', label: 'Kleinste voorblad', type: 'range', min: 28, max: 53, step: 1, def: 34, unit: 'tanden' }, { key: 'cog', label: 'Grootste tandwiel', type: 'range', min: 21, max: 52, step: 1, def: 32, unit: 'tanden' }] },
+          { title: '2. Klim en gewicht', two: true, fields: [{ key: 'grade', label: 'Steilste klim', type: 'range', min: 4, max: 15, step: 0.5, def: 10, unit: '%' }, { key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const grade = d ? v.grade : 10, w = d ? v.weight : 75;
+          const p = 0.85 * 3.0 * w;
+          const vs = this.speed(p, w + 9, grade / 100, 0.38, 0.004);
+          const dev = 2.1 * v.ring / v.cog;
+          const rpm = vs * 60 / dev;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Cadans op de klim', what: 'In je lichtste verzet, op ' + this.fmt(grade, 1) + '%', value: rpm, half: d ? 8 : 10, widest: 10, unit: 'rpm', basis: d ? 'vermogen geschat (3,0 W/kg), gewicht opgegeven' : 'klim van 10%, rijder van 75 kg, 3,0 W/kg' })],
+            next: d ? 'Vul in je account je FTP in → ± 4 rpm' : 'Vul je klim en gewicht in → ± 8 rpm',
+            refine: [['Account', 'FTP en gewicht uit je profiel', '± 4 rpm'], ['Account', 'Je fiets: verzet staat al in je fietsprofiel', '']],
+            notIncluded: 'Je echte klimvermogen kennen we hier niet; we rekenen met 3,0 W/kg. Onder 70 rpm wordt klimmen voor de meeste rijders zwaar.',
+            meaning: meaning
+          };
+        }
+      },
+      fuel: {
+        h: 1140, title: 'Hoeveel drink en eet je onderweg?', intro: 'Vul de duur en inspanning in. Met de temperatuur schatten we je vochtverlies.',
+        steps: [
+          { title: '1. Je rit', fields: [{ key: 'hours', label: 'Duur', type: 'range', min: 1, max: 6, step: 0.5, def: 3, unit: 'uur' }, { key: 'int', label: 'Inspanning', type: 'choice', options: [['easy', 'Rustig'], ['endurance', 'Duur'], ['tempo', 'Tempo'], ['race', 'Wedstrijd']], def: 'endurance' }] },
+          { title: '2. Temperatuur', two: true, fields: [{ key: 'temp', label: 'Temperatuur', type: 'range', min: 5, max: 35, step: 1, def: 22, unit: '°C' }] }
+        ],
+        compute: (v, d) => {
+          const base = { easy: 350, endurance: 500, tempo: 700, race: 900 }[v.int];
+          const t = d ? v.temp : 20;
+          const ml = Math.round(base * Math.max(0.6, 1 + 0.03 * (t - 20)) / 10) * 10;
+          const carbs = v.hours < 1.25 ? '30 g per uur' : v.hours < 2.5 ? '30–60 g per uur' : '60–90 g per uur';
+          return {
+            results: [
+              this.bar({ hasLetter: false, title: 'Vochtverlies', what: 'Per uur, te drinken', value: ml, half: ml * (d ? 0.5 : 0.55), widest: ml * 0.55, unit: 'ml/u', round5: true, basis: d ? 'geschat uit inspanning en temperatuur' : 'inspanning, temperatuur 20 °C aangenomen' }),
+              { isBar: false, isMaat: false, isNote: true, hasLetter: false, title: 'Koolhydraten', what: 'Richtlijn bij deze duur', valueText: carbs.replace(' per uur', ''), unit: '/u', pmText: 'richtlijn', note: 'Dit is een richtlijn, geen meting; daarom staat hier geen bereikbalk.', basis: 'duur van je rit' }
+            ],
+            next: d ? 'Weeg je in je account voor en na een rit → ± 15%' : 'Vul de temperatuur in → preciezer vochtadvies',
+            refine: [['Account', 'Zweettest: wegen voor en na een rit', '± 15%'], ['Account', 'Je eigen ritten en temperatuur onthouden', '']],
+            notIncluded: 'Hoeveel je zweet verschilt sterk per persoon: soms twee keer zoveel als gemiddeld. Zonder zweettest is het bereik daarom breed.',
+            meaning: meaning
+          };
+        }
+      }
+    };
+  }
+  renderVals() {
+    const key = this.props.calc ?? 'bikefit';
+    const all = this.configs();
+    const c = all[key] || all.bikefit;
+    const s = this.state;
+    const v = {};
+    c.steps.forEach((st) => st.fields.forEach((f) => { v[f.key] = s.v[f.key] !== undefined ? s.v[f.key] : f.def; }));
+    const d = s.done2;
+    const out = c.compute(v, d);
+    const steps = c.steps.map((st) => ({
+      title: st.title, hint: st.hint || '', hasHint: !!st.hint,
+      status: st.two ? (d ? 'Ingevuld' : 'Nog niet ingevuld') : 'Ingevuld',
+      statusColor: st.two && !d ? '#4A5F5A' : '#0A7263',
+      fields: st.fields.map((f) => {
+        const val = v[f.key];
+        const touched = !st.two || d;
+        const base = { id: key + '-' + f.key, label: f.label, isRange: f.type === 'range', isChoice: f.type === 'choice' };
+        if (f.type === 'range') return Object.assign(base, { min: f.min, max: f.max, step: f.step, value: val,
+          valueLabel: touched ? this.fmt(val, f.step < 1 ? 1 : 0) + ' ' + f.unit : 'schuif om in te vullen', valueColor: touched ? '#0F2420' : '#4A5F5A',
+          onInput: (e) => this.setState({ v: Object.assign({}, s.v, { [f.key]: Number(e.target.value) }), done2: d || !!st.two }) });
+        return Object.assign(base, { cols: f.options.length, options: f.options.map((o) => ({ label: o[1], pressed: String(val === o[0] && touched),
+          bg: val === o[0] && touched ? '#E6F8A8' : '#FFFFFF', border: val === o[0] && touched ? '#0A7263' : '#B9CCC6',
+          pick: () => this.setState({ v: Object.assign({}, s.v, { [f.key]: o[0] }), done2: d || !!st.two }) })) });
+      })
+    }));
+    const results = out.results.map((r, i) => Object.assign({ hasLetter: !!r.letter, titleSize: r.letter ? 19 : 24, valueSize: r.letter ? 26 : 40,
+      divider: i === out.results.length - 1 ? 'transparent' : '#DCE6E1' }, r));
+    const tagBg = { Account: '#CFF26A', Betaald: '#FFFFFF' };
+    return {
+      h: c.h, title: c.title, intro: c.intro, steps: steps, results: results, next: out.next, meaning: out.meaning, notIncluded: out.notIncluded,
+      refine: out.refine.map((x) => ({ tier: x[0], text: x[1], gain: x[2], tagBg: tagBg[x[0]] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

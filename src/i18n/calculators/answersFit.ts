@@ -5,6 +5,7 @@ const nl = {
     core: "Rompstabiliteit (invoer op 5)", missing: "Extra lichaamsmaten en fietsgeometrie",
     notProvided: "Niet opgegeven; de calculator gebruikt zijn standaardinschattingen",
     saddle: "Zadelhoogte vanaf het midden van de trapas", saddleRange: "Startbereik zadelhoogte",
+    saddleUncertainty: "Onzekerheid (95%)", saddleUncertaintyRange: "95%-onzekerheidsbereik",
     reach: "Afstand van zadel tot stuur", drop: "Hoogteverschil zadel tot stuur", crank: "Cranklengte",
     frame: "Globale framemaat", quickSaddle: "Snelle inschatting zadelhoogte",
   },
@@ -21,13 +22,19 @@ const nl = {
         "Zadel en stuur tegelijk verplaatsen, zodat je niet merkt welke wijziging helpt."],
     },
     "saddle-height": {
-      answer: "Je binnenbeen is het vertrekpunt voor je zadelhoogte. De calculator geeft een startwaarde " +
-        "en een bereik om rustig te testen. Meet vanaf het midden van de trapas tot de bovenkant van het zadel.",
-      method: "De berekening vermenigvuldigt je binnenbeen met een factor voor je fietstype. Daarna volgen " +
-        "kleine correcties voor rijdoel, lenigheid en rompstabiliteit. De uitkomst wordt afgerond op millimeters.",
-      limits: "Een rekenwaarde bewijst niet dat een hoogte voor jou comfortabel is. Je schoenen, pedalen en " +
-        "beweging op de fiets worden hier niet gemeten. Test een kleine wijziging voordat je verder afstelt.",
-      mistakes: ["Met schoenen aan je binnenbeen meten.", "Zadelhoogte vanaf de grond meten in plaats van vanaf de trapas.",
+      answer: "Je lengte geeft direct een eerste zadelhoogte-advies voor een racefiets. " +
+        "Voeg optioneel je gemeten binnenbeen toe voor een meestal smaller onzekerheidsbereik. " +
+        "Meet de zadelhoogte vanaf het midden van de trapas langs de zitbuis tot de bovenkant van het zadel.",
+      method: "Zonder meting schatten we je binnenbeen als 0,47 × je lengte. Het advies is binnenbeen × 0,883. " +
+        "Het 95%-bereik combineert meetonzekerheid met spreiding van de formule; " +
+        "de grenzen worden afgerond op 5 mm. " +
+        "Fietstype, rijdoel, lenigheid en core-stabiliteit worden hier niet uitgevraagd.",
+      limits: "Het bereik beschrijft onzekerheid volgens het rekenmodel en is geen veilige afstelzone. " +
+        "Schoenen, pedalen en je beweging op de fiets worden niet gemeten. " +
+        "Controleer een afwijkende binnenbeenmeting; een open melding houdt het bereik breed. " +
+        "Test kleine aanpassingen en stop bij pijn of tintelingen.",
+      mistakes: ["Met schoenen aan je binnenbeen meten.",
+        "Zadelhoogte vanaf de grond meten in plaats van vanaf de trapas.",
         "Een schatting invoeren alsof je die zorgvuldig hebt gemeten."],
     },
     "frame-size": {
@@ -62,6 +69,7 @@ const en: FitAnswerCopy = {
     core: "Core stability (input out of 5)", missing: "Additional body measurements and frame geometry",
     notProvided: "Not supplied; the calculator uses its default estimates",
     saddle: "Saddle height from the bottom bracket centre", saddleRange: "Starting saddle-height range",
+    saddleUncertainty: "Uncertainty (95%)", saddleUncertaintyRange: "95% uncertainty range",
     reach: "Saddle-to-bar distance", drop: "Saddle-to-bar height difference", crank: "Crank length",
     frame: "Approximate frame size", quickSaddle: "Quick saddle-height estimate",
   },
@@ -77,13 +85,18 @@ const en: FitAnswerCopy = {
         "Moving the saddle and bars together, making it hard to tell which change helps."],
     },
     "saddle-height": {
-      answer: "Your inseam is the starting point for saddle height. The calculator gives an initial value " +
-        "and a range to test gradually. Measure from the bottom bracket centre to the top of the saddle.",
-      method: "The calculation multiplies your inseam by a factor for your bike type. Small adjustments " +
-        "follow for riding goal, flexibility and core stability. The result is rounded to millimetres.",
-      limits: "A calculated value does not establish that a height is comfortable for you. Your shoes, pedals " +
-        "and movement on the bike are not measured here. Test a small change before adjusting further.",
-      mistakes: ["Measuring your inseam with shoes on.", "Measuring saddle height from the ground instead of the bottom bracket.",
+      answer: "Your height gives an initial saddle-height estimate for a road bike. " +
+        "Optionally add your measured inseam for a usually narrower uncertainty range. " +
+        "Measure saddle height from the bottom bracket centre along the seat tube to the top of the saddle.",
+      method: "Without a measurement, inseam is estimated as 0.47 × your height. The advice is inseam × 0.883. " +
+        "The 95% range combines measurement uncertainty with variation in the formula; " +
+        "its bounds are rounded to 5 mm. " +
+        "Bike type, riding goal, flexibility and core stability are not requested here.",
+      limits: "The range describes uncertainty under the calculation model and is not a safe adjustment zone. " +
+        "Shoes, pedals and movement on the bike are not measured. Check an unusual inseam measurement; " +
+        "an unresolved warning keeps the range wide. Test small adjustments and stop if you feel pain or tingling.",
+      mistakes: ["Measuring your inseam with shoes on.",
+        "Measuring saddle height from the ground instead of the bottom bracket.",
         "Entering an estimate as though it were a careful measurement."],
     },
     "frame-size": {

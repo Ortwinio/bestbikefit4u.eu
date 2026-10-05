@@ -146,11 +146,13 @@ export const logMarketingEvent = mutation({
     }
 
     const pagePath = normalizeRelativePath(args.pagePath, "pagePath");
-    if (args.eventType === "calculator_result_view" || args.eventType === "calculator_login_cta_click") {
+    const isSaddleInteraction = args.eventType === "quick_fix_used" || args.eventType === "inseam_added";
+    if (isSaddleInteraction || args.eventType === "calculator_result_view" || args.eventType === "calculator_login_cta_click") {
       const calculator = PUBLIC_CALCULATORS.find((id) => id === args.sourceTag);
       const extraFields = [args.section, args.ctaLabel, args.ctaTargetPath, args.valueCents, args.currency];
       if (
-        !calculator || publicCalculatorPath(calculator, pagePath) !== pagePath ||
+        !calculator || (isSaddleInteraction && calculator !== "saddle-height") ||
+        publicCalculatorPath(calculator, pagePath) !== pagePath ||
         /[?#]/.test(pagePath) || extraFields.some((value) => value !== undefined)
       ) {
         throw new Error("Calculator analytics accepts only calculator, locale and public path");

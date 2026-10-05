@@ -1,0 +1,73 @@
+.calculator {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  color: var(--color-foreground);
+}
+
+.heading { margin-bottom: 28px; }
+.heading h1 { font-family: var(--font-display); font-size: clamp(32px, 4vw, 44px); line-height: 1.05; font-weight: 800; }
+.heading > p:last-child { margin-top: 12px; max-width: 62ch; }
+.eyebrow { color: var(--color-primary); font-size: 13px; font-weight: 700; letter-spacing: .08em; margin-bottom: 8px; }
+.layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 24px; margin-top: 16px; }
+.inputs, .results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 24px; padding: 28px; min-width: 0; }
+.inputTitle { font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+.hint { font-size: 14px; color: var(--color-muted-foreground); margin-top: 12px; }
+.prompt { font-size: 14px; color: var(--color-primary); font-weight: 600; margin-top: 8px; }
+.inlineLink { display: inline-flex; min-height: 44px; align-items: center; text-decoration: underline; font-weight: 600; }
+.inlineLink:focus-visible, .save:focus-visible, .disclosure:focus-visible, .card summary:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+.resultHeader { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+.resultTitle { display: flex; align-items: center; gap: 12px; flex: 1 1 200px; }
+.resultTitle h2 { font-family: var(--font-display); font-size: 26px; font-weight: 800; }
+.letter { width: 44px; height: 44px; display: grid; place-items: center; flex: none; border-radius: 50%; background: var(--bbf-lime); color: var(--bbf-inkt); font-weight: 700; }
+.reference { font-size: 14px; color: var(--color-muted-foreground); }
+.value { font-family: var(--bbf-font-cijfers); white-space: nowrap; text-align: right; margin-left: auto; }
+.value > div { font-size: 48px; line-height: 1; }
+.value span { font-size: 18px; margin-left: 6px; color: var(--color-muted-foreground); }
+.value p { font-size: 16px; margin-top: 6px; }
+.sentence { margin-top: 20px; }
+.improvement { width: fit-content; background: var(--bbf-lime-zacht); color: var(--bbf-inkt); border-radius: 999px; padding: 6px 14px; font-size: 14px; font-weight: 600; margin-top: 16px; }
+.nextStep { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--bbf-petrol-zacht); color: var(--bbf-inkt); border-radius: 16px; margin-top: 16px; font-size: 15px; font-weight: 600; }
+.explanation { margin-top: 16px; }
+.card summary { min-height: 44px; align-content: center; cursor: pointer; font-weight: 700; }
+.warning { background: var(--color-warning); color: var(--color-warning-foreground); border-color: var(--bbf-warning); }
+.error { background: var(--color-destructive-soft); border: 2px solid var(--color-destructive); }
+.error h2 { color: var(--color-danger-text); }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.actions button { white-space: normal; min-height: 44px; }
+.refinement { background: var(--bbf-inkt); color: var(--bbf-wit); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.refinement h2 { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+.refinement ul { list-style: disc; padding-left: 20px; color: var(--bbf-op-donker); }
+.refinement p { font-size: 13px; color: var(--bbf-op-donker); }
+.save { background: var(--bbf-lime); color: var(--bbf-inkt); align-self: flex-start; border-radius: 999px; padding: 12px 20px; min-height: 44px; font-weight: 700; text-align: center; }
+.quickInseam { grid-column: 1 / -1; }
+.disclosure { color: var(--color-foreground); min-height: 44px; font-weight: 700; text-align: left; padding: 8px 0; text-decoration: underline; cursor: pointer; }
+.quick { padding-top: 12px; padding-bottom: 8px; }
+.quick .heading { margin-bottom: 12px; }
+.quick .card { padding: 18px; }
+
+@media (max-width: 767px) {
+  .calculator { padding: 24px 16px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .card { padding: 20px; }
+  .resultHeader { gap: 12px; }
+  .resultTitle { flex-basis: 150px; }
+  .resultTitle h2 { font-size: 23px; }
+  .value > div { font-size: 40px; }
+  .quick { padding: 8px 16px; }
+  .quick .heading h1 { font-size: 25px; }
+  .quick .layout { gap: 8px; margin-top: 8px; }
+  .quick .card { padding: 12px 16px; border-radius: 18px; }
+  .quick .inputTitle { display: none; }
+  .quick .hint { margin-top: 4px; font-size: 12px; }
+  .quick .resultHeader { margin-bottom: 12px; }
+  .quick .letter { display: none; }
+  .quick .resultTitle h2 { font-size: 20px; }
+  .quick .reference { font-size: 12px; }
+  .quick .value > div { font-size: 34px; }
+  .quick .value p { font-size: 14px; }
+}

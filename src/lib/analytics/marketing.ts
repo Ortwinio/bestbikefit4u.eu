@@ -1,6 +1,8 @@
 import { BRAND } from "../../config/brand";
 
 export const MARKETING_EVENT_TYPES = [
+  "quick_fix_used",
+  "inseam_added",
   "calculator_result_view",
   "calculator_login_cta_click",
   "newsletter_opt_in",
@@ -70,6 +72,8 @@ export const MARKETING_EVENT_TYPES = [
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];
 
 export const ANONYMOUS_MARKETING_EVENT_TYPES = [
+  "quick_fix_used",
+  "inseam_added",
   "calculator_result_view",
   "calculator_login_cta_click",
   "cta_click",

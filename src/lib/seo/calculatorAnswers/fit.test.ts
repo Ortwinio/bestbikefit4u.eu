@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { answersFit } from "@/i18n/calculators/answersFit";
+import { calculateSaddleHeight } from "../../../../shared/reliability/saddleHeight";
 import {
-  runBikeFitCalculation, runCrankLengthCalculation, runFrameSizeCalculation, runSaddleHeightCalculation,
+  runBikeFitCalculation, runCrankLengthCalculation, runFrameSizeCalculation,
 } from "@/lib/public-calculators/fitAdapters";
 import { FIT_ANSWER_EXAMPLE, getFitAnswer } from "./fit";
 
@@ -14,14 +15,20 @@ describe("engine-backed fit answers", () => {
     const mm = (value: number) => `${number(value)} mm`;
     const range = (value: { min: number; max: number }) => `${number(value.min)}–${number(value.max)} mm`;
     const fit = runBikeFitCalculation(FIT_ANSWER_EXAMPLE).fitResult;
-    const saddle = runSaddleHeightCalculation(FIT_ANSWER_EXAMPLE);
+    const saddle = calculateSaddleHeight({
+      heightCm: FIT_ANSWER_EXAMPLE.heightCm,
+      inseamCm: FIT_ANSWER_EXAMPLE.inseamCm,
+    });
     const frame = runFrameSizeCalculation(FIT_ANSWER_EXAMPLE);
     expect(getFitAnswer("bike-fit", locale).example.results.map(row => row.value)).toEqual([
       mm(fit.saddleHeightMm), range(fit.saddleHeightRange), mm(fit.saddleToBarReachMm),
       mm(fit.barDropMm), mm(fit.crankLengthMm),
     ]);
     expect(getFitAnswer("saddle-height", locale).example.results.map(row => row.value))
-      .toEqual([mm(saddle.height), range(saddle.range)]);
+      .toEqual([
+        mm(saddle.adviceMm), `±${mm(saddle.halfWidthMm)}`,
+        range({ min: saddle.lowerMm, max: saddle.upperMm }),
+      ]);
     expect(getFitAnswer("frame-size", locale).example.results.map(row => row.value))
       .toEqual([frame.estimatedFrameSize, mm(frame.estimatedSaddleHeight)]);
     expect(getFitAnswer("crank-length", locale).example.results.map(row => row.value))
@@ -39,6 +46,31 @@ describe("engine-backed fit answers", () => {
     expect(getFitAnswer("bike-fit", locale).example.inputs).toContainEqual({
       label: answersFit[locale].labels.missing, value: answersFit[locale].labels.notProvided,
     });
+  });
+  it.each(["nl", "en"] as const)("describes the public saddle uncertainty model in %s", locale => {
+    const answer = getFitAnswer("saddle-height", locale);
+    const labels = answersFit[locale].labels;
+    const isNl = locale === "nl";
+    expect(answer).toMatchObject(answersFit[locale].tools["saddle-height"]);
+    expect(answer.example.inputs).toEqual([
+      { label: labels.height, value: "178 cm" },
+      { label: labels.inseam, value: isNl ? "84,5 cm" : "84.5 cm" },
+    ]);
+    expect(answer.example.results).toEqual([
+      { label: labels.saddle, value: "746 mm" },
+      { label: isNl ? "Onzekerheid (95%)" : "Uncertainty (95%)", value: "±23 mm" },
+      { label: isNl ? "95%-onzekerheidsbereik" : "95% uncertainty range", value: "725–770 mm" },
+    ]);
+    expect(answer.answer).toContain(isNl ? "optioneel" : "Optionally");
+    expect(answer.answer).toContain(isNl ? "racefiets" : "road bike");
+    expect(answer.method).toContain(isNl ? "0,47" : "0.47");
+    expect(answer.method).toContain(isNl ? "0,883" : "0.883");
+    expect(answer.method).toContain("5 mm");
+    expect(answer.method).toContain(isNl ? "worden hier niet uitgevraagd" : "are not requested here");
+    expect(answer.limits).toContain(isNl ? "geen veilige afstelzone" : "not a safe adjustment zone");
+    expect(answer.limits).toContain(
+      isNl ? "een open melding houdt het bereik breed" : "an unresolved warning keeps the range wide",
+    );
   });
   it("keeps translated keys aligned and explains the frame table's actual inputs", () => {
     expect(Object.keys(answersFit.nl.labels)).toEqual(Object.keys(answersFit.en.labels));

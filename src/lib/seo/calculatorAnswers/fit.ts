@@ -1,7 +1,8 @@
 import type { Locale } from "@/i18n/config";
 import { answersFit, type FitAnswerTool } from "@/i18n/calculators/answersFit";
+import { calculateSaddleHeight } from "../../../../shared/reliability/saddleHeight";
 import {
-  runBikeFitCalculation, runCrankLengthCalculation, runFrameSizeCalculation, runSaddleHeightCalculation,
+  runBikeFitCalculation, runCrankLengthCalculation, runFrameSizeCalculation,
 } from "@/lib/public-calculators/fitAdapters";
 import type { CalculatorAnswerContent } from "./types";
 
@@ -20,11 +21,32 @@ export function getFitAnswer(tool: FitAnswerTool, locale: Locale): CalculatorAns
   }).format(value);
   const mm = (value: number) => `${number(value)} mm`;
   const range = (value: { min: number; max: number }) => `${number(value.min)}–${number(value.max)} mm`;
+  if (tool === "saddle-height") {
+    const result = calculateSaddleHeight({ heightCm: input.heightCm, inseamCm: input.inseamCm });
+    return {
+      ...copy.tools[tool],
+      example: {
+        inputs: [
+          { label: labels.height, value: `${number(input.heightCm)} cm` },
+          { label: labels.inseam, value: `${number(input.inseamCm)} cm` },
+        ],
+        results: [
+          { label: labels.saddle, value: mm(result.adviceMm) },
+          { label: labels.saddleUncertainty, value: `±${mm(result.halfWidthMm)}` },
+          {
+            label: labels.saddleUncertaintyRange,
+            value: range({ min: result.lowerMm, max: result.upperMm }),
+          },
+        ],
+      },
+    };
+  }
   const inputs = [
-    ...(tool === "bike-fit" || tool === "frame-size" ? [{ label: labels.height, value: `${number(input.heightCm)} cm` }] : []),
+    ...(tool === "bike-fit" || tool === "frame-size"
+      ? [{ label: labels.height, value: `${number(input.heightCm)} cm` }] : []),
     { label: labels.inseam, value: `${number(input.inseamCm)} cm` },
     { label: labels.category, value: labels.road },
-    ...(tool === "bike-fit" || tool === "saddle-height" ? [
+    ...(tool === "bike-fit" ? [
       { label: labels.goal, value: labels.balanced },
       { label: labels.flexibility, value: number(input.flexibility) },
       { label: labels.core, value: number(input.coreStability) },
@@ -42,12 +64,6 @@ export function getFitAnswer(tool: FitAnswerTool, locale: Locale): CalculatorAns
         { label: labels.drop, value: mm(fitResult.barDropMm) },
         { label: labels.crank, value: mm(fitResult.crankLengthMm) },
       ];
-      break;
-    }
-    case "saddle-height": {
-      const result = runSaddleHeightCalculation(input);
-      results = [{ label: labels.saddle, value: mm(result.height) },
-        { label: labels.saddleRange, value: range(result.range) }];
       break;
     }
     case "frame-size": {

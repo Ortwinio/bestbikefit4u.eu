@@ -16,13 +16,26 @@ const base = {
   locale: "nl", pagePath: "/nl/calculators/saddle-height",
 };
 describe("anonymous value-free calculator analytics", () => {
-  it.each(["calculator_result_view", "calculator_login_cta_click"])("accepts %s without authentication", async (eventType) => {
+  it.each(["calculator_result_view", "calculator_login_cta_click", "quick_fix_used", "inseam_added"])(
+    "accepts %s without authentication", async (eventType) => {
     expect(ANONYMOUS_MARKETING_EVENT_TYPES).toContain(eventType);
     const { ctx, insert } = fixture();
     await run(ctx, { ...base, eventType });
     const recorded = insert.mock.calls.find(([table]) => table === "marketingEvents");
     expect(recorded).toBeDefined();
     expect(JSON.parse(JSON.stringify(recorded?.[1]))).toEqual({ ...base, eventType, occurredAt: expect.any(Number) });
+  });
+  it.each(["quick_fix_used", "inseam_added"])("rejects measurements and other calculators for %s", async (eventType) => {
+    for (const extra of [
+      { section: "inseam=89" }, { ctaLabel: "height=190" }, { valueCents: 8900 },
+      { ctaTargetPath: "/login?inseam=89" }, { currency: "EUR" },
+      { pagePath: "/nl/calculators/saddle-height?height=190" },
+      { sourceTag: "gearing", pagePath: "/nl/calculators/gearing" },
+    ]) {
+      const { ctx, insert } = fixture();
+      await expect(run(ctx, { ...base, eventType, ...extra })).rejects.toThrow("Calculator analytics");
+      expect(insert).not.toHaveBeenCalled();
+    }
   });
   it.each([
     { valueCents: 8400 }, { section: "inseam=84" }, { ctaLabel: "84" },
