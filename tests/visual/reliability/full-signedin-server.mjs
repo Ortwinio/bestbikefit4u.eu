@@ -43,7 +43,13 @@ export async function prepareSignedinFixtures({ origin, fetch: localFetch = fetc
       if (url.pathname === "/fixture.js") { response.setHeader("Content-Type", "text/javascript"); response.end(script); return; }
       if (url.pathname === "/fixture.css") { response.setHeader("Content-Type", "text/css"); response.end(styles); return; }
       if (url.pathname.startsWith("/_next/static/")) {
-        const asset = await localFetch(new URL(url.pathname, origin), { redirect: "error" });
+        // Only proxy plain static asset paths to the fixed local build origin.
+        if (!/^\/_next\/static\/[A-Za-z0-9._~/-]+$/.test(url.pathname) || url.pathname.includes("..")) {
+          response.statusCode = 404; response.end(); return;
+        }
+        const target = new URL(url.pathname, origin);
+        if (target.origin !== new URL(origin).origin) { response.statusCode = 404; response.end(); return; }
+        const asset = await localFetch(target, { redirect: "error" });
         response.statusCode = asset.status;
         response.setHeader("Content-Type", asset.headers.get("Content-Type") ?? "application/octet-stream");
         response.end(Buffer.from(await asset.arrayBuffer())); return;
@@ -57,7 +63,7 @@ export async function prepareSignedinFixtures({ origin, fetch: localFetch = fetc
       }
       response.setHeader("Content-Type", "text/html");
       response.end(`<!doctype html><html lang="${url.pathname.startsWith("/nl/") ? "nl" : "en"}" class="${htmlClass}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signed-in calculator fixture</title><link rel="stylesheet" href="/fixture.css"></head><body class="${bodyClass}"><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`);
-    } catch (error) { response.statusCode = 500; response.end(String(error)); }
+    } catch (error) { console.error(error); response.statusCode = 500; response.end("Fixture error"); }
   });
   await new Promise(done => server.listen(0, "127.0.0.1", done));
   return { origin: `http://127.0.0.1:${server.address().port}`, close: () => new Promise(done => server.close(done)) };

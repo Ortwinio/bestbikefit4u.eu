@@ -51,7 +51,7 @@ export async function prepareReliabilityFixtures({ origin, fetch: previewFetch =
       const dark = url.searchParams.get("theme") === "dark";
       response.setHeader("content-type", "text/html; charset=utf-8");
       response.end(`<!doctype html><html lang="${locale}" class="${htmlClass} ${dark ? "dark" : ""}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline reliability fixture</title><link rel="stylesheet" href="/fixture.css"></head><body class="${bodyClass}"><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`);
-    } catch (error) { response.statusCode = 500; response.end(String(error)); }
+    } catch (error) { console.error(error); response.statusCode = 500; response.end("Fixture error"); }
   });
   await new Promise((done, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", done); });
   return { origin: `http://127.0.0.1:${server.address().port}`, close: () => new Promise(done => server.close(done)) };
