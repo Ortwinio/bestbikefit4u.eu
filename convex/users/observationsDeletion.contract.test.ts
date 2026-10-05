@@ -19,7 +19,8 @@ describe("account observation deletion", () => {
       const conditions: [string, unknown][] = [];
       const range = { eq: (key: string, value: unknown) => { conditions.push([key, value]); return range; } };
       const records = table === "profileObservations" ? observations
-        : ["profilePrompts", "profilePromptCards", "profilePromptActivity", "newsletterConsentEvents", "pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications"].includes(table)
+        : ["profilePrompts", "profilePromptCards", "profilePromptActivity", "newsletterConsentEvents", "pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications", "reliabilityInseamMeasurements", "reliabilityKneeMeasurements",
+          "reliabilitySaddlePreferences"].includes(table)
           ? [{ _id: table, userId: "owner" }, { _id: `${table}_other`, userId: "other" }] : [];
       const rows = () => records.filter(row => conditions.every(([key, value]) =>
         row[key as keyof typeof row] === value));
@@ -33,6 +34,7 @@ describe("account observation deletion", () => {
       ._handler({ db: { query, delete: remove } }, {});
     expect(remove.mock.calls.map(([id]) => id)).toEqual([
       "pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications",
+      "reliabilityInseamMeasurements", "reliabilityKneeMeasurements", "reliabilitySaddlePreferences",
       "current", "history", "bike", "profilePrompts", "profilePromptCards", "profilePromptActivity",
       "newsletterConsentEvents", "owner",
     ]);

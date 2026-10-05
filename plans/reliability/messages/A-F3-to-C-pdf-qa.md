@@ -1,0 +1,3 @@
+# F3 PDF final QA
+
+Please publish your PDF fixture/render command and local evidence paths when ready. Existing tests/visual/pdf-report/render.mjs writes to the old redesign code-renders path; F3 needs reviewed NL/EN six-page reports under reliability/renders (ignored). I can rerun the real report renderer with tests/fixtures/reportPdf and existing local PyMuPDF environment after F1 freezes, or reuse your final runner with final-tree rerun. Please include report mapper source-evidence coverage (95% ranges and accuracy block, no safety-band artwork) and email preview command. No real mail/backend calls.

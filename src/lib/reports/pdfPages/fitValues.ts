@@ -9,29 +9,25 @@ const LETTERS: Partial<Record<ReportDetailedRow["key"], string>> = {
   handlebarReach: "D",
 };
 const NUMBER = "[+-]?\\d+(?:[.,]\\d+)?";
-const RANGE = new RegExp(`^\\s*(${NUMBER})\\s*(?:mm)?\\s*[-–]\\s*(${NUMBER})\\s*(?:mm)?\\s*$`);
 const MILLIMETRES = new RegExp(`^\\s*(${NUMBER})\\s*mm(?:\\s*@.*)?$`);
 const ANGLE = new RegExp(`@\\s*(${NUMBER})\\s*(?:°|deg(?:rees)?)\\s*$`, "i");
 const number = (value: string) => Number(value.replace(",", "."));
 
 function rangeBar(row: ReportDetailedRow, locale: string): string {
-  if (row.status === "pending_data" || !row.rangeLabel) return "";
-  const range = row.rangeLabel.match(RANGE);
-  const target = row.targetLabel.match(MILLIMETRES);
-  if (!range || !target) return `<span class="pdf-fit-range-text">${escapeHtml(row.rangeLabel)}</span>`;
-  const [low, high, value] = [number(range[1]), number(range[2]), number(target[1])];
-  if (![low, high, value].every(Number.isFinite) || high <= low) {
-    return `<span class="pdf-fit-range-text">${escapeHtml(row.rangeLabel)}</span>`;
-  }
-  const span = high - low;
-  const min = Math.min(low - span * 0.7, value);
-  const max = Math.max(high + span * 0.7, value);
+  const range = row.reliability95;
+  if (row.status === "pending_data" || !range) return "";
+  const { lower: low, upper: high, value, scaleMin: min, scaleMax: max } = range;
+  if (![low, high, value, min, max].every(Number.isFinite) || high <= low || max <= min) return "";
   const percent = (n: number) => (((n - min) / (max - min)) * 100).toFixed(2);
-  const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
-  return `<div class="pdf-fit-range" aria-label="${escapeHtml(row.rangeLabel)}">
+  const fmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+  const label = `${fmt.format(low)}–${fmt.format(high)} mm (95%)`;
+  return `<div class="pdf-fit-range" aria-label="${escapeHtml(label)}">
     <div class="pdf-fit-track"></div>
     <div class="pdf-fit-zone" style="left:${percent(low)}%;
       width:${(((high - low) / (max - min)) * 100).toFixed(2)}%"></div>
+    ${range.kind === "size" ? range.options
+      .filter((option) => option >= min && option <= max)
+      .map((option) => `<i class="pdf-fit-size" style="left:${percent(option)}%"></i>`).join("") : ""}
     <div class="pdf-fit-mark" style="left:${percent(value)}%"></div>
     <span class="pdf-fit-low" style="left:${percent(low)}%">${fmt.format(low)}</span>
     <span class="pdf-fit-high" style="left:${percent(high)}%">${fmt.format(high)}</span>
@@ -113,7 +109,8 @@ export function renderFitValuesPage(
         <span>${escapeHtml(copy.parameters[row.key].label)}</span></div>
         <p class="pdf-fit-why">${escapeHtml(text.why[row.key])}</p></div>
       <div role="cell">${rangeBar(row, copy.locale)}</div>
-      <div role="cell" class="pdf-fit-target">${targetValue(row, copy)}</div>
+      <div role="cell" class="pdf-fit-target">${targetValue(row, copy)}${row.reliability95
+        ? `<small class="pdf-fit-uncertainty">± ${row.reliability95.halfWidth} mm</small>` : ""}</div>
       <div role="cell" class="pdf-fit-now" aria-label="${escapeHtml(text.fillIn)}"></div>
     </div>`;
     })
@@ -159,6 +156,7 @@ export const fitValuesStyles = `
 .pdf-fit-name{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700}
 .pdf-fit-why{margin:3px 0 0;font-size:12px;line-height:1.3;color:var(--bbf-gedempt)}
 .pdf-fit-target{text-align:right;font-family:'DM Mono',monospace;font-size:22px;white-space:nowrap}
+.pdf-fit-uncertainty{display:block;font-size:12px;margin-top:3px}
 .pdf-fit-unit{font-size:12px;color:var(--bbf-gedempt)}
 .pdf-fit-now{height:36px;border:1px solid var(--bbf-gedempt);border-radius:8px;background:var(--bbf-wit)}
 .pdf-fit-pending,.pdf-fit-target-text{font-family:Figtree,sans-serif;font-size:12px;line-height:1.3}
@@ -167,6 +165,7 @@ export const fitValuesStyles = `
  border-radius:99px;background:var(--bbf-papier)}
 .pdf-fit-zone{position:absolute;top:13px;height:16px;border-radius:5px;background:var(--bbf-lime);
  border:1.5px solid var(--bbf-inkt);box-sizing:border-box}
+.pdf-fit-size{position:absolute;top:16px;width:2px;height:10px;background:var(--bbf-gedempt)}
 .pdf-fit-mark{position:absolute;top:8px;width:4px;height:26px;margin-left:-2px;border-radius:2px;
  background:var(--bbf-inkt)}
 .pdf-fit-low,.pdf-fit-high{position:absolute;top:32px;font-family:'DM Mono',monospace;font-size:11px;

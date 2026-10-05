@@ -12,11 +12,12 @@ export interface CalculatorChainOptions<T> {
   externalKey: string;
   scopeKey?: string;
   bindings: ChainBinding<T>[];
-  applyChanges: (changes: ChainChange[]) => Promise<ChainSaveResult>;
+  applyChanges: (changes: ChainChange[], automatic?: boolean) => Promise<ChainSaveResult>;
   enabled?: boolean;
+  autoSaveProfile?: boolean;
 }
 export function useCalculatorChain<T>({
-  initialValues, externalKey, bindings, applyChanges, enabled = true, scopeKey = "",
+  initialValues, externalKey, bindings, applyChanges, enabled = true, scopeKey = "", autoSaveProfile = false,
 }: CalculatorChainOptions<T>) {
   const requestGeneration = useRef(0);
   useEffect(() => {
@@ -32,6 +33,36 @@ export function useCalculatorChain<T>({
   const [error, setError] = useState<unknown>(null);
   const [savedChanges, setSavedChanges] = useState<ChainChange[]>([]);
   const [conflicts, setConflicts] = useState<unknown[]>([]);
+  useEffect(() => {
+    if (!autoSaveProfile || !enabled || status === "saving" || status === "conflict" || status === "error") return;
+    const changes = editor.pending.filter((change) => change.source === "profile" && (change.kind === "measured"
+      || bindings.find((binding) => chainFieldKey(binding) === chainFieldKey(change))?.kind !== "measured"));
+    if (!changes.length) return;
+    const generation = requestGeneration.current;
+    const timer = setTimeout(async () => {
+      setStatus("saving");
+      try {
+        const result = await applyChanges(changes, true);
+        if (requestGeneration.current !== generation) return;
+        if (result.status === "conflict") {
+          setConflicts(result.conflicts ?? []);
+          setStatus("conflict");
+          return;
+        }
+        setEditor((current) => ({ ...current, pending: current.pending.filter((pending) => !changes.some((saved) =>
+          chainFieldKey(saved) === chainFieldKey(pending) && equalChainValues(saved.value, pending.value)
+          && saved.kind === pending.kind && saved.measurePoint === pending.measurePoint)) }));
+        setSavedChanges(changes);
+        setConflicts([]);
+        setStatus("saved");
+      } catch (failure) {
+        if (requestGeneration.current !== generation) return;
+        setError(failure);
+        setStatus("error");
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [autoSaveProfile, enabled, status, editor.pending, bindings, applyChanges, scopeKey]);
   if (enabled && editor.key !== externalKey) {
     const sameScope = editor.scopeKey === scopeKey;
     if (!sameScope) {
@@ -90,6 +121,7 @@ export function useCalculatorChain<T>({
     }
   }
   function useForThisCalculation() {
+    if (autoSaveProfile) return;
     setEditor((current) => ({ ...current, pending: [], trial: [
       ...new Map([...current.trial, ...current.pending].map((change) => [chainFieldKey(change), change])).values(),
     ] }));
@@ -121,7 +153,8 @@ export function useCalculatorChain<T>({
     values: editor.values, setValues, revision: editor.revision, formKey: `${externalKey}:${editor.formVersion}`,
     pendingChanges: editor.pending, usedInputs, saveToProfile, useForThisCalculation, discardChanges,
     status, error, conflicts, savedChanges, setChangeKind, trialChanges: editor.trial, trial: editor.trial.length > 0,
-    canAutosave: enabled && !editor.pending.length && !editor.trial.length && status !== "saving",
+    autoSaveProfile,
+    canAutosave: enabled && (autoSaveProfile || (!editor.pending.length && !editor.trial.length && status !== "saving")),
   };
 }
 

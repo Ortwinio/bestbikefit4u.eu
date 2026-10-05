@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ComponentProps } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
@@ -25,6 +25,10 @@ import { useMarketingEventLogger } from "@/components/analytics/MarketingEventTr
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
 import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
 import { extractLocaleFromPathname, withLocalePrefix } from "@/i18n/navigation";
+import { readHandoff, subscribeHandoff } from "@/lib/handoff/store";
+
+const hasSessionValues = () => readHandoff().entries.length > 0;
+const noServerValues = () => false;
 
 type AuthStep = "email" | "code" | "success";
 const RESEND_COOLDOWN_SECONDS = 30;
@@ -264,7 +268,8 @@ export default function LoginPage() {
   const text = loginCopy[locale];
   const pagePath = withLocalePrefix("/login", locale);
   const sourceTag = searchParams?.get("src") ?? undefined;
-  const isHandoff = searchParams?.get("handoff") === "1";
+  const hasStoredValues = useSyncExternalStore(subscribeHandoff, hasSessionValues, noServerValues);
+  const isHandoff = searchParams?.get("handoff") === "1" || hasStoredValues;
   const isGiftReturn = searchParams?.get("gift") === "1";
   const redirectTo = withLocalePrefix(isGiftReturn ? "/gift" : isHandoff ? "/welcome" : "/dashboard", locale);
   const Presentation = isHandoff ? LoginHandoffPanel : LoginPresentation;

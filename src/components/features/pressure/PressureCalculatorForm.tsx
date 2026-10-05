@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
-import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { ReliabilityCalculatorTemplate } from "@/components/reliability/ReliabilityCalculatorTemplate";
+import { reliabilityPressureMessages } from "@/i18n/calculators/reliabilityPressure";
 import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
 import { pressureHandoffMessages } from "@/i18n/calculators/pressureHandoff";
 import type { HandoffField } from "@/lib/handoff/store";
@@ -156,6 +157,23 @@ export function PressureCalculatorForm({
     if (!handoff.ready || prefilled.current || accountMode) return;
     prefilled.current = true;
     const fields: HandoffField[] = [];
+    const category = handoff.getPrefill("bikeCategory");
+    if (!defaultDiscipline && (category?.value === "road" || category?.value === "gravel" || category?.value === "mtb")) {
+      setDiscipline(category.value);
+      fields.push("bikeCategory");
+    }
+    const bikeWeight = handoff.getPrefill("bikeWeightKg");
+    if (typeof bikeWeight?.value === "number" && bikeWeight.value >= 3 && bikeWeight.value <= 20) {
+      setBikeWeightKg(bikeWeight.value);
+      setAdvanced(true);
+      fields.push("bikeWeightKg");
+    }
+    const goal = handoff.getPrefill("ridingGoal");
+    if (GOALS.includes(goal?.value as RidingGoal)) {
+      setRidingGoal(goal!.value as RidingGoal);
+      setAdvanced(true);
+      fields.push("ridingGoal");
+    }
     const weight = handoff.getPrefill("weightKg");
     if (typeof weight?.value === "number" && weight.value >= 35 && weight.value <= 160) {
       setBodyWeightKg(weight.value);
@@ -185,7 +203,7 @@ export function PressureCalculatorForm({
     }
     setPrefilledFields(fields);
     if (fields.length) setEdited(true);
-  }, [handoff, accountMode]);
+  }, [handoff, accountMode, defaultDiscipline]);
   /* eslint-enable react-hooks/set-state-in-effect */
   const widthRearMm = linked ? widthFrontMm : manualWidthRearMm;
   const input: PressureCalculatorValues = {
@@ -222,6 +240,8 @@ export function PressureCalculatorForm({
       setter(value);
       if (key === "bodyWeightKg") handoff.touch("weightKg", value, "kg");
       if (key === "surface") handoff.touch("surface", value, "none", "bike");
+      if (key === "discipline") handoff.touch("bikeCategory", value, "none", "bike");
+      if (key === "bikeWeightKg") handoff.touch("bikeWeightKg", value, "kg", "bike");
       setEdited(true);
       notifyChange({ [key]: value });
     };
@@ -237,20 +257,7 @@ export function PressureCalculatorForm({
   const tubeLabels = [labels.tubeTypeInnerTube, labels.tubeTypeLatex, labels.tubeTypeTubeless];
   const goalLabels = [labels.ridingGoalSpeed, labels.ridingGoalBalance, labels.ridingGoalComfort];
   const resultTitle = accountMode || edited ? copy.result : copy.example;
-  return (
-    <ConfiguratorLayout
-      notice={!accountMode && <HandoffPrefillNotice
-        calculator="tire-pressure" locale={locale} fields={prefilledFields}
-      />}
-      afterResults={!accountMode && <PersonalizeAdviceBlock calculator="tire-pressure" locale={locale} />}
-      eyebrow={copy.eyebrow}
-      title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
-      description={copy.intro}
-      navigation={headerSlot}
-      inputs={
-        <>
-          {statusSlot}
-          <StepCard number={1} title={copy.body}>
+  const bodyInputs = (
             <div className="space-y-6">
               <Choices
                 label={labels.disciplineLabel}
@@ -276,8 +283,8 @@ export function PressureCalculatorForm({
                 ticks={[{ value: 35 }, { value: 160 }]}
               />
             </div>
-          </StepCard>
-          <StepCard number={2} title={copy.tires}>
+  );
+  const tireInputs = (
             <div className="space-y-6">
               <Slider
                 label={labels.widthFrontLabel}
@@ -351,8 +358,9 @@ export function PressureCalculatorForm({
                 onChange={update("tubeType", setTubeType)}
               />
             </div>
-          </StepCard>
-          <StepCard number={3} title={copy.route}>
+  );
+  const routeInputs = (
+    <>
             <Choices
               label={labels.surfaceLabel}
               options={SURFACES.map((value, index) => ({ value, label: surfaceLabels[index] }))}
@@ -383,6 +391,8 @@ export function PressureCalculatorForm({
                   value={ridingGoal ?? "unset"}
                   onChange={(value) => {
                     setRidingGoal(value === "unset" ? undefined : (value as RidingGoal));
+                    if (value === "unset") handoff.remove("ridingGoal");
+                    else handoff.touch("ridingGoal", value, "none");
                     setEdited(true);
                     notifyChange({ ridingGoal: value === "unset" ? undefined : (value as RidingGoal) });
                   }}
@@ -401,11 +411,10 @@ export function PressureCalculatorForm({
                 />
               </div>
             )}
-          </StepCard>
-        </>
-      }
-      results={
-        <>
+    </>
+  );
+  const pressureResult = (
+    <>
           {result ? (
             <section
               id="pressure-result"
@@ -428,7 +437,7 @@ export function PressureCalculatorForm({
                     <p className="mt-2 font-mono text-sm">
                       {wheel.psi} {resultLabels.psi}
                     </p>
-                    <Gauge
+                    {accountMode && <Gauge
                       label={`${wheel.label}: ${copy.gauge}`}
                       value={wheel.bar}
                       min={DOMAINS[discipline][0]}
@@ -436,11 +445,11 @@ export function PressureCalculatorForm({
                       unit="bar"
                       locale={locale}
                       className="mt-3 [--gauge-accent:var(--bbf-petrol)]"
-                    />
+                    />}
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-sm leading-relaxed">{copy.scale}</p>
+              {accountMode && <p className="mt-4 text-sm leading-relaxed">{copy.scale}</p>}
               <p role="status" aria-label={copy.summary} className="sr-only">
                 {resultLabels.front}: {number.format(result.frontBar)} bar; {resultLabels.rear}:{" "}
                 {number.format(result.rearBar)} bar
@@ -449,6 +458,9 @@ export function PressureCalculatorForm({
           ) : (
             <p role="alert">{copy.error}</p>
           )}
+    </>
+  );
+  const warnings = (
           <section className="rounded-3xl border border-border bg-card p-6">
             <h2 className="font-display text-2xl font-bold">{resultLabels.warningsTitle}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.limit}</p>
@@ -465,6 +477,47 @@ export function PressureCalculatorForm({
               </ul>
             )}
           </section>
+  );
+  if (!accountMode) {
+    const reliabilityCopy = reliabilityPressureMessages[locale];
+    return (
+      <ReliabilityCalculatorTemplate
+        locale={locale}
+        calculator="tire-pressure"
+        eyebrow={copy.eyebrow}
+        title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
+        description={copy.intro}
+        notice={<>{headerSlot}{statusSlot}<HandoffPrefillNotice
+          calculator="tire-pressure" locale={locale} fields={prefilledFields}
+        /></>}
+        steps={[
+          { title: copy.body, content: bodyInputs },
+          { title: reliabilityCopy.tiresAndRoute, content: <>{tireInputs}{routeInputs}</> },
+        ]}
+        results={<>{pressureResult}<p className="mt-4 text-sm">{reliabilityCopy.uncertainty}</p></>}
+        nextStep={copy.steps[0]}
+        omitted={<p>{copy.excluded}</p>}
+        meaning={<p>{reliabilityCopy.meaning}</p>}
+        warnings={warnings}
+        refinement={[{ text: reliabilityCopy.refinement }]}
+      />
+    );
+  }
+  return (
+    <ConfiguratorLayout
+      eyebrow={copy.eyebrow}
+      title={defaultDiscipline ? copy.preset[defaultDiscipline] : copy.title}
+      description={copy.intro}
+      navigation={headerSlot}
+      inputs={<>
+        {statusSlot}
+        <StepCard number={1} title={copy.body}>{bodyInputs}</StepCard>
+        <StepCard number={2} title={copy.tires}>{tireInputs}</StepCard>
+        <StepCard number={3} title={copy.route}>{routeInputs}</StepCard>
+      </>}
+      results={<>
+          {pressureResult}
+          {warnings}
           <section className="rounded-3xl border border-border bg-card p-6">
             <h2 className="font-display text-2xl font-bold">{copy.scope}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.excluded}</p>

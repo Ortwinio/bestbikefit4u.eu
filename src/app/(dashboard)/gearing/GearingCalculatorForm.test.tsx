@@ -69,12 +69,12 @@ describe("gearing rider-profile chain", () => {
       changes: expect.arrayContaining([expect.objectContaining({ field: "ftpWatts", value: Number(expected), expectedCurrentValue: null })]),
     })));
   });
-  it("treats an edited start as a local trial and never restores the suggestion after clearing", () => {
+  it("keeps an edited start pending for autosave and never restores the suggestion after clearing", () => {
     state.profile = { sex: "male", weightKg: 75 };
     render(<GearingCalculatorForm />); openInputs();
     fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "205" } });
     expect(screen.queryByText(ftpSliderStartCopy.en.pending)).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages.en.trial }));
+    expect(screen.queryByRole("button", { name: calculatorChainMessages.en.trial })).toBeNull();
     expect(state.apply).not.toHaveBeenCalled();
     expect(state.save).not.toHaveBeenCalled();
     fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "" } });
@@ -130,21 +130,20 @@ describe("gearing rider-profile chain", () => {
     render(<GearingCalculatorForm />); openInputs();
     fireEvent.keyDown(screen.getByRole("slider", { name: locale === "nl" ? "Buitenblad" : "Outer chainring" }),
       { key: "ArrowRight" });
-    expect(screen.getByText(calculatorChainMessages[locale].choice)).toBeTruthy();
+    expect(screen.getByText(calculatorChainMessages[locale].automaticChoice)).toBeTruthy();
     expect(state.save).not.toHaveBeenCalled(); expect(state.apply).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages[locale].save }));
     await waitFor(() => expect(state.apply).toHaveBeenCalledWith(expect.objectContaining({ calculator: "gearing", bikeId: "bike1",
       changes: [expect.objectContaining({ field: "gearing.chainrings", value: [51, 34], expectedCurrentValue: [34, 50], kind: "declared" })],
     })));
   });
-  it("keeps FTP trials local and does not restore them over the profile on a new visit", () => {
-    const view = render(<GearingCalculatorForm />); openInputs();
+  it("automatically saves changed declared FTP with an account guard", async () => {
+    render(<GearingCalculatorForm />); openInputs();
     fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "290" } });
-    fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages.en.trial }));
-    expect(screen.getByText(calculatorChainMessages.en.trialStatus)).toBeTruthy();
-    expect(state.apply).not.toHaveBeenCalled(); expect(state.save).not.toHaveBeenCalled();
-    view.unmount(); render(<GearingCalculatorForm />); openInputs();
-    expect(screen.getByRole("spinbutton").getAttribute("value")).toBe("250");
+    expect(screen.queryByRole("button", { name: calculatorChainMessages.en.trial })).toBeNull();
+    await waitFor(() => expect(state.apply).toHaveBeenCalledWith(expect.objectContaining({ automatic: true,
+      expectedUserId: "user1", changes: expect.arrayContaining([expect.objectContaining({ field: "ftpWatts", value: 290 })]),
+    })));
   });
   it("retains a pending edit when live source data changes and submits its original expected value", async () => {
     const view = render(<GearingCalculatorForm />); openInputs();

@@ -67,7 +67,8 @@ export const deleteAccount = mutation({
   handler: async (ctx) => {
     const userId = await requireUserId(ctx);
 
-    for (const table of ["pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications"] as const) {
+    for (const table of ["pricingEntitlements", "pricingTransitionOffers", "pricingAppointmentNotifications",
+      "reliabilityInseamMeasurements", "reliabilityKneeMeasurements", "reliabilitySaddlePreferences"] as const) {
       const rows = await ctx.db.query(table)
         .withIndex("by_user", range => range.eq("userId", userId)).collect();
       for (const row of rows) await ctx.db.delete(row._id);

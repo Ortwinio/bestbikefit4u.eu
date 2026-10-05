@@ -42,7 +42,7 @@ describe("homepage saddle starting-point handoff", () => {
     const copy = saddleReliabilityMessages[locale];
     expect(readHandoff().entries).toEqual([]);
     fireEvent.change(screen.getByRole("slider", { name: widgetCopy.height }), { target: { value: "190" } });
-    expect(readHandoff().entries).toEqual([]);
+    expect(readHandoff().entries).toEqual([expect.objectContaining({ field: "heightCm", value: 190 })]);
     const link = screen.getByRole("link", { name: widgetCopy.refine });
     const href = link.getAttribute("href")!;
     expect(href).toBe(`/${locale}/calculators/saddle-height#inseam`);
@@ -73,11 +73,11 @@ describe("homepage saddle starting-point handoff", () => {
       .toBe("true");
     expect(screen.getByRole("slider", { name: copy.height }).getAttribute("aria-valuenow")).toBe("185");
     const inseam = screen.getByRole("slider", { name: copy.inseam });
-    expect(inseam.getAttribute("aria-valuetext")).toBe(copy.missing);
+    expect(inseam.getAttribute("aria-valuetext")).toBe("88 cm");
     expect(document.activeElement).toBe(inseam);
     expect(readHandoff()).toEqual(stored);
     expect(screen.queryByText(copy.example)).toBeNull();
-    const result = calculatePublicSaddleHeight({ heightCm: 185 }).result!;
+    const result = calculatePublicSaddleHeight({ heightCm: 185, inseamCm: 88 }).result!;
     expect(screen.getByRole("img", { name: new RegExp(`${result.adviceMm} mm.*${result.lowerMm}.*${result.upperMm}`) }))
       .toBeTruthy();
     const height = screen.getByRole("slider", { name: copy.height });
@@ -107,11 +107,11 @@ describe("homepage saddle starting-point handoff", () => {
     expect(readHandoff().entries).toEqual([]);
   });
 
-  it("does not adopt this calculator's old height or steal focus on an ordinary visit", () => {
+  it("restores this calculator's saved height without stealing focus on an ordinary visit", () => {
     seedHeight(175);
     window.history.replaceState(null, "", "/en/calculators/saddle-height");
     render(<SaddleHeightCalculatorForm />);
-    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("190");
+    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("175");
     expect(document.activeElement).not.toBe(screen.getByRole("slider", { name: "Inseam" }));
   });
 
@@ -152,6 +152,7 @@ describe("homepage saddle starting-point handoff", () => {
     sessionStorage.setItem(HOME_SADDLE_START_KEY, String(Date.now() - 120_000));
     window.history.replaceState(null, "", "/en/calculators/saddle-height");
     render(<SaddleHeightCalculatorForm />);
-    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("190");
+    expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("185");
+    expect(document.activeElement).not.toBe(screen.getByRole("slider", { name: "Inseam" }));
   });
 });

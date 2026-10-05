@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 import type { Doc } from "../_generated/dataModel";
 import { requireBikeOwner, requireUserId } from "../lib/authz";
-import { recordProfileObservations } from "../profiles/provenance";
+import { readProfileProvenance, recordProfileObservations } from "../profiles/provenance";
 import { assertPaidBikeWrite } from "../bikes/profile";
 import { equalProfileObservationValues, PROFILE_OBSERVATION_FIELDS } from "../../shared/profileObservationFields";
 import { valueAt } from "../advice/provenance";
@@ -19,6 +19,7 @@ const updateBike = makeFunctionReference<"mutation", {
 
 export const applyChanges = mutation({
   args: {
+    automatic: v.optional(v.boolean()), expectedUserId: v.optional(v.id("users")),
     calculator, bikeId: v.optional(v.id("bikes")), tireSetupId: v.optional(v.id("tireSetups")), changes: v.array(v.object({
       field: v.string(), source: v.optional(v.union(v.literal("profile"), v.literal("bike"))),
       value: changeValue, expectedCurrentValue: v.union(changeValue, v.null()), kind: kindValidator,
@@ -27,12 +28,14 @@ export const applyChanges = mutation({
   },
   handler: async (ctx, args) => {
     const userId = await requireUserId(ctx);
+    if (args.expectedUserId && args.expectedUserId !== userId) throw new Error("ACCOUNT_CHANGED");
     const bike = args.bikeId ? (await requireBikeOwner(ctx, args.bikeId)).bike : null;
     if (!args.changes.length || args.changes.length > 32
       || new Set(args.changes.map(change => change.field)).size !== args.changes.length) {
       throw new Error("Invalid calculator changes");
     }
     const profile = await ctx.db.query("profiles").withIndex("by_user", q => q.eq("userId", userId)).unique();
+    const profileEvidence = args.automatic ? (await readProfileProvenance(ctx, userId)).observations : [];
     const { activeTireSetup } = args.changes.some(change => change.field.startsWith("tires."))
       ? await activeTires(ctx, userId, args.bikeId) : { activeTireSetup: null };
     if (args.changes.some(change => change.field.startsWith("tires."))
@@ -56,7 +59,8 @@ export const applyChanges = mutation({
       const existing = await ctx.db.query("profileObservations")
         .withIndex("by_user_field_bike_status", q => q.eq("userId", userId).eq("field", change.field)
           .eq("bikeId", definition.source === "bike" ? args.bikeId : undefined).eq("status", "current")).collect();
-      if (change.kind === "derived" && existing.some(item => item.kind === "measured")) {
+      if (change.kind === "derived" && existing.some(item => item.kind === "measured")
+        && !(args.automatic && definition.source === "profile")) {
         throw new Error("A calculated value cannot replace a measurement");
       }
       const tireField = change.field.startsWith("tires.");
@@ -65,7 +69,9 @@ export const applyChanges = mutation({
         : valueAt(definition.source === "profile" ? profile : bike, change.field) ?? null;
       return { ...change, ...definition, currentValue, existing };
     }));
-    const conflicts = planned.filter(change => !equalProfileObservationValues(change.currentValue, change.expectedCurrentValue))
+    const conflicts = planned.filter(change => !equalProfileObservationValues(change.currentValue, change.expectedCurrentValue)
+      || (args.automatic && change.source === "profile" && change.kind !== "measured"
+        && profileEvidence.some(observation => observation.field === change.field && observation.kind === "measured")))
       .map(change => ({ field: change.field, currentValue: change.currentValue, incomingValue: change.value }));
     if (conflicts.length) return { status: "conflict" as const, conflicts };
     const changed = planned.filter(change => !equalProfileObservationValues(change.currentValue, change.value));

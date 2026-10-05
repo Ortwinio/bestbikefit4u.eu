@@ -12,10 +12,17 @@ function controller(patch: Partial<ChainPanelController> = {}): ChainPanelContro
     usedInputs: [{ field: "inseamCm", source: "profile", value: 81, unit: "cm", kind: "measured",
       recordedAt: Date.UTC(2026, 8, 28) }], saveToProfile: vi.fn(), useForThisCalculation: vi.fn(),
     discardChanges: vi.fn(), setChangeKind: vi.fn(), status: "idle", error: null, conflicts: [], trial: false,
-    canAutosave: true, ...patch };
+    canAutosave: true, autoSaveProfile: false, ...patch };
 }
 const context = { profile: { inseamCm: 81, hasPain: "no" }, bikes: [], observations: [], bikeObservations: [] };
 describe("account calculator chain panels", () => {
+  it.each(["nl", "en"] as const)("offers explicit measured replacement but no calculation-only exemption in %s", (locale) => {
+    render(<CalculatorChainPanel calculator="saddle-height" locale={locale} context={context}
+      chain={controller({ autoSaveProfile: true, pendingChanges: [{ field: "inseamCm", source: "profile",
+        value: 82, expectedCurrentValue: 81, kind: "declared" }] })} />);
+    expect(screen.queryByRole("button", { name: calculatorChainMessages[locale].trial })).toBeNull();
+    expect(screen.getByRole("button", { name: calculatorChainMessages[locale].save })).toBeTruthy();
+  });
   it.each(["nl", "en"] as const)("shows real used values, source and date in %s", (locale) => {
     render(<CalculatorChainPanel calculator="saddle-height" locale={locale} chain={controller()} context={context} />);
     expect(screen.getByRole("heading", { name: calculatorChainMessages[locale].used })).toBeTruthy();

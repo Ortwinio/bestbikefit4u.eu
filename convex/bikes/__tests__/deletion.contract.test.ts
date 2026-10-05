@@ -155,6 +155,17 @@ describe("confirmed bike deletion", () => {
     expect(store.find(other._id)).not.toBeNull();
   });
 
+  it("deletes bike-specific reliability plans and keeps rider and other-bike measurements", async () => {
+    const store = database(); const bike = store.add("bikes", { name: "My bike", userId: "owner" });
+    const removed = ["reliabilityKneeMeasurements", "reliabilitySaddlePreferences"].map(table =>
+      store.add(table, { bikeId: bike._id, userId: "owner" }));
+    const kept = [store.add("reliabilityInseamMeasurements", { userId: "owner" }),
+      store.add("reliabilityKneeMeasurements", { bikeId: "another-bike", userId: "owner" }),
+      store.add("reliabilitySaddlePreferences", { userId: "owner" })];
+    await invoke(remove, store.ctx, { bikeId: bike._id, confirmName: "My bike" }); await store.drain();
+    for (const row of removed) expect(store.find(row._id)).toBeNull();
+    for (const row of kept) expect(store.find(row._id)).not.toBeNull();
+  });
   it("immediately revokes the bike/passport, then deletes the complete graph in bounded batches", async () => {
     const store = database();
     const bike = store.add("bikes", {

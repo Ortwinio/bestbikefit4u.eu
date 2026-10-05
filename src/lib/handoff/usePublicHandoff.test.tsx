@@ -35,12 +35,12 @@ describe("usePublicHandoff", () => {
     expect(second.result.current.entries).toHaveLength(2);
     expect(second.result.current.initialEntries).toEqual([original]);
   });
-  it("does not offer the current calculator's own edits as a cross-calculator prefill", () => {
+  it("restores previous entries when returning to the same calculator", () => {
     writeHandoffEntry({
       field: "inseamCm", value: 81, unit: "cm", method: "measured", calculator: "saddle-height", touchedAt: Date.now(),
     });
     const { result } = renderHook(() => usePublicHandoff("saddle-height"));
-    expect(result.current.getPrefill("inseamCm")).toBeUndefined();
+    expect(result.current.getPrefill("inseamCm")?.value).toBe(81);
   });
   it("never reads or writes account-mode handoff data", () => {
     const { result } = renderHook(() => usePublicHandoff("saddle-height", false));
@@ -83,18 +83,19 @@ describe("usePublicHandoff", () => {
   });
 });
 
-it("reacts to consent without requiring a field edit and preserves the original prefill snapshot", () => {
+it("keeps data session-only through consent changes and preserves the original prefill snapshot", () => {
   const { result } = renderHook(() => usePublicHandoff("saddle-height"));
   expect(result.current.retention).toBe("session");
   act(() => writeCookieConsent("accepted"));
-  expect(result.current.retention).toBe("persistent");
+  expect(result.current.retention).toBe("session");
   expect(result.current.entries).toEqual([]);
   expect(localStorage.getItem(HANDOFF_KEY)).toBeNull();
   act(() => result.current.touch("inseamCm", 81, "cm", "measured"));
-  expect(localStorage.getItem(HANDOFF_KEY)).not.toBeNull();
+  expect(localStorage.getItem(HANDOFF_KEY)).toBeNull();
+  expect(sessionStorage.getItem(HANDOFF_KEY)).not.toBeNull();
   expect(result.current.initialEntries).toEqual([]);
   act(() => writeCookieConsent("essential"));
   expect(result.current.retention).toBe("session");
-  expect(result.current.entries).toEqual([]);
+  expect(result.current.entries).toHaveLength(1);
   expect(localStorage.getItem(HANDOFF_KEY)).toBeNull();
 });

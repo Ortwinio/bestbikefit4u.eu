@@ -41,7 +41,7 @@ export const getContext = query({
       ...pressures.map(item => ({ calculator: "tire-pressure", updatedAt: item.createdAt, bikeId: item.bikeId })),
       ...recommendations.map(item => ({ calculator: "bike-fit", updatedAt: item.createdAt, bikeId: item.bikeId })),
     ].filter(item => !bikeId || !item.bikeId || item.bikeId === bikeId).sort((a, b) => b.updatedAt - a.updatedAt);
-    return { profile, observations, bikes, bikeObservations, recentCalculators, ...wheels,
+    return { userId, profile, observations, bikes, bikeObservations, recentCalculators, ...wheels,
       // Conservative summary only; R9's persisted dependencies provide exact advice staleness separately.
       advice: recentCalculators.map(item => ({ ...item, stale: Math.max(profile?.updatedAt ?? 0,
         bikes.find(bike => bike._id === item.bikeId)?.updatedAt ?? 0) > item.updatedAt })),

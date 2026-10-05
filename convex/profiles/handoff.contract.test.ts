@@ -65,6 +65,28 @@ beforeEach(() => {
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 describe("public handoff import", () => {
+  it.each([[90, false, true], [90, true, false], [105, true, true]] as const)(
+    "stores conservative shared quality for inseam %s confirmed %s", async (inseamCm, confirmed, warning) => {
+      const ctx = context();
+      await invoke(ctx, { records: [entry({ field: "heightCm", value: 180 }), entry({ value: inseamCm })],
+        inseamConfirmed: confirmed });
+      expect(ctx.tables.get("profileObservations")).toEqual(expect.arrayContaining([
+        expect.objectContaining({ field: "inseamCm", repeatCount: 1, withinTolerance: false, unresolvedWarning: warning }),
+      ]));
+    },
+  );
+  it("updates existing inseam warning after height import while retaining measurement date and method", async () => {
+    const ctx = context();
+    await ctx.db.insert("profiles", { userId: "user_owner", inseamCm: 90 });
+    await ctx.db.insert("profileObservations", { userId: "user_owner", field: "inseamCm", value: 90, unit: "cm",
+      kind: "measured", method: "repeat_measurement", recordedAt: 1234, status: "current",
+      repeatCount: 3, withinTolerance: true, unresolvedWarning: false });
+    await invoke(ctx, { records: [entry({ field: "heightCm", value: 160 })] });
+    expect(ctx.tables.get("profileObservations")).toEqual(expect.arrayContaining([
+      expect.objectContaining({ field: "inseamCm", recordedAt: 1234, method: "repeat_measurement",
+        repeatCount: 3, withinTolerance: true, unresolvedWarning: true }),
+    ]));
+  });
   it("refuses paid handoff values and unchanged-value provenance upgrades when enforced", async () => {
     vi.stubEnv("PAID_ACCESS_ENFORCED", "true");
     const ctx = context();

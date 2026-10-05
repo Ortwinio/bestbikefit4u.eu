@@ -1,6 +1,9 @@
 import { BRAND } from "../../config/brand";
 
 export const MARKETING_EVENT_TYPES = [
+  "leave_data_notice_shown",
+  "leave_data_notice_signup",
+  "leave_data_notice_dismissed",
   "home_saddle_widget_used",
   "quick_fix_used",
   "inseam_added",
@@ -73,6 +76,9 @@ export const MARKETING_EVENT_TYPES = [
 export type MarketingEventType = (typeof MARKETING_EVENT_TYPES)[number];
 
 export const ANONYMOUS_MARKETING_EVENT_TYPES = [
+  "leave_data_notice_shown",
+  "leave_data_notice_signup",
+  "leave_data_notice_dismissed",
   "home_saddle_widget_used",
   "quick_fix_used",
   "inseam_added",

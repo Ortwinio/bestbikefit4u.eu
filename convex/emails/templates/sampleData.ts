@@ -35,6 +35,8 @@ export function sampleData(locale: EmailLocale) {
     giftsGiven: 2, giftsIncluded: true, cancellationUrl: `${BRAND.siteUrl}/${locale}/settings`,
   };
   return {
+    kneeAngleEvaluation: { ...personal, ...preferences, angleDegrees: 31, targetSaddleHeightMm: 787,
+      actionUrl: `${BRAND.siteUrl}/${locale}/tools/knee-angle` },
     giftMeasurement: {
       senderFirstName: "Thomas",
       message: locale === "nl" ? "Veel plezier met je bikefit!" : "Enjoy your bike fit!",

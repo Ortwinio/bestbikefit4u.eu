@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Zadelhoogte in het gratis account</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0A7263}a:hover{color:#075A4E}
+input[type=range]{accent-color:#0A7263}
+.zone{transition:left .4s ease,width .4s ease}
+@media (prefers-reduced-motion: reduce){.zone{transition:none}}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1120px; box-sizing: border-box; padding: 48px 56px; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; justify-content: space-between; align-items: end; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Gratis account · Canyon Aeroad</div>
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.02; letter-spacing: -.03em; color: #0F2420">Zadelhoogte</h1>
+      <p style="margin: 0; font-size: 16px; max-width: 62ch">We gebruiken wat al in je profiel staat. Pas aan wat niet klopt; het bewaren gaat vanzelf.</p>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 440px minmax(0, 1fr); gap: 24px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-weight: 700; color: #0F2420; font-size: 17px">1. Binnenbeenlengte</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="1">
+            <span style="font-family: 'DM Mono', monospace; font-size: 14px; background: #E1F2EE; color: #075A4E; border-radius: 999px; padding: 4px 12px">{{c.label}}</span>
+          </sc-for>
+          <span style="font-size: 13px; color: #4A5F5A">{{measMeta}}</span>
+        </div>
+        <sc-if value="{{canAdd}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 8px; border-top: 1px solid #DCE6E1">
+            <div style="display: flex; justify-content: space-between; align-items: baseline">
+              <label for="nieuw" style="font-size: 14px; font-weight: 600; color: #0F2420">Nieuwe meting</label>
+              <span style="font-family: 'DM Mono', monospace; font-size: 18px; color: #0F2420">{{draftLabel}}</span>
+            </div>
+            <input id="nieuw" type="range" min="80" max="98" step="0.5" value="{{draft}}" onInput="{{onDraft}}" style="width: 100%">
+            <button type="button" onClick="{{add}}" style="align-self: flex-start; font: inherit; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer; background: #0A7263; color: #FFFFFF; border: 2px solid #0A7263">Meting {{nextNumber}} bewaren</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{spread}}" hint-placeholder-val="{{false}}">
+          <p style="margin: 0; font-size: 14px; color: #0F2420">De metingen liggen meer dan 5 mm uit elkaar. Meet nog een keer; ze tellen pas als herhaalde meting als ze dicht bij elkaar liggen.</p>
+        </sc-if>
+      </section>
+
+      <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-weight: 700; color: #0F2420; font-size: 17px">2. Je fiets en rijdoel</h2>
+        <div role="group" aria-label="Fietstype" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{cats}}" as="o" hint-placeholder-count="4">
+            <button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border-radius: 999px; cursor: pointer; border: 1.5px solid {{o.border}}; background: {{o.bg}}; color: #0F2420">{{o.label}}</button>
+          </sc-for>
+        </div>
+        <div role="group" aria-label="Rijdoel" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{goals}}" as="o" hint-placeholder-count="4">
+            <button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border-radius: 999px; cursor: pointer; border: 1.5px solid {{o.border}}; background: {{o.bg}}; color: #0F2420">{{o.label}}</button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <h2 style="margin: 0; font-weight: 700; color: #0F2420; font-size: 17px">3. Lenigheid en core</h2>
+          <span style="font-size: 12px; font-weight: 700; background: #EEF3EF; color: #3B4F4A; border-radius: 999px; padding: 3px 10px">Zelf ingeschat</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><label for="lenig" style="font-weight: 600; color: #0F2420">Lenigheid</label><span>{{flexLabel}}</span></div>
+        <input id="lenig" type="range" min="1" max="5" step="1" value="{{flex}}" onInput="{{onFlex}}" style="width: 100%">
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><label for="core" style="font-weight: 600; color: #0F2420">Core-stabiliteit</label><span>{{coreLabel}}</span></div>
+        <input id="core" type="range" min="1" max="5" step="1" value="{{core}}" onInput="{{onCore}}" style="width: 100%">
+        <p style="margin: 0; font-size: 13px; color: #4A5F5A">Verschuift je zadelhoogte een paar millimeter. Met de geleide test (verdieping) wordt het een meting in plaats van een inschatting.</p>
+      </section>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start">
+          <div style="display: flex; gap: 14px; align-items: center">
+            <span style="width: 44px; height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex: none">A</span>
+            <div>
+              <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; color: #0F2420">Jouw advies</div>
+              <div style="font-size: 15px; color: #4A5F5A">Midden trapas tot bovenkant zadel</div>
+            </div>
+          </div>
+          <div style="text-align: right">
+            <div style="font-family: 'DM Mono', monospace; font-size: 48px; line-height: 1; color: #0F2420">{{sh}}<span style="font-size: 18px; margin-left: 6px">mm</span></div>
+            <div style="font-family: 'DM Mono', monospace; font-size: 16px; color: #0F2420; margin-top: 6px">± {{half}} mm</div>
+          </div>
+        </div>
+
+        <div role="img" aria-label="{{barLabel}}" style="display: flex; flex-direction: column; gap: 8px; padding-top: 8px">
+          <div style="position: relative; height: 30px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box">
+            <div class="zone" style="position: absolute; top: -1.5px; bottom: -1.5px; left: {{zoneLeft}}%; width: {{zoneWidth}}%; background: #CFF26A; border: 1.5px solid #0F2420; border-radius: 999px; box-sizing: border-box"></div>
+            <div style="position: absolute; left: 50%; top: -9px; width: 5px; height: 46px; margin-left: -2.5px; background: #0F2420; border-radius: 3px"></div>
+          </div>
+          <div style="position: relative; height: 24px; font-family: 'DM Mono', monospace; font-size: 16px; color: #0F2420">
+            <span class="zone" style="position: absolute; left: {{zoneLeft}}%; transform: translateX(-50%)">{{low}}</span>
+            <span class="zone" style="position: absolute; left: {{zoneRight}}%; transform: translateX(-50%)">{{high}}</span>
+          </div>
+        </div>
+
+        <details style="font-size: 15px">
+          <summary style="cursor: pointer; font-weight: 700; color: #0F2420; min-height: 28px">Hoe we op {{sh}} mm komen</summary>
+          <div style="margin-top: 10px; display: flex; flex-direction: column">
+            <sc-for list="{{breakdown}}" as="b" hint-placeholder-count="5">
+              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #DCE6E1; font-weight: {{b.weight}}"><span>{{b.label}}</span><span style="font-family: 'DM Mono', monospace; color: #0F2420">{{b.value}}</span></div>
+            </sc-for>
+          </div>
+        </details>
+
+        <div style="display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: #E1F2EE; border-radius: 16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <span style="font-size: 15px; color: #075A4E; font-weight: 600">{{nextStep}}</span>
+        </div>
+      </div>
+
+      <sc-if value="{{showPaid}}" hint-placeholder-val="{{false}}">
+        <div style="background: #FFFFFF; border: 1.5px solid #0F2420; border-radius: 24px; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Verdieping</div>
+          <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">Controleer je kniehoek: bereik ± 13 mm</div>
+          <p style="margin: 0; font-size: 15px">Je binnenbeen is nu goed gemeten. De volgende stap is kijken hoe jouw knie zich op de fiets gedraagt: één foto van opzij in de onderste pedaalstand. Je meet de hoek zelf, wij vertellen wat hij betekent. Je krijgt er een aanpassingsplan bij dat je na twee ritten evalueert.</p>
+          <a href="Betaald.dc.html" style="align-self: flex-start; background: #0F2420; color: #FFFFFF; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 11px 20px; text-decoration: none">Bekijk wat de verdieping toevoegt</a>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1120}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { meas: [89], draft: 89, cat: 'road', goal: 'performance', flex: 2, core: 3 };
+  }
+  renderVals() {
+    const s = this.state;
+    const n = s.meas.length;
+    const mean = s.meas.reduce((a, b) => a + b, 0) / n;
+    const spread = n >= 2 && (Math.max.apply(null, s.meas) - Math.min.apply(null, s.meas)) > 0.5;
+    const sB = n >= 2 && !spread ? 10 / Math.sqrt(n) : 10;
+    const M = { road: 0.883, gravel: 0.88, mtb: 0.875, city: 0.87 }[s.cat];
+    const map = { 1: 2, 2: 4, 3: 5, 4: 7, 5: 9 };
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const dFlex = clamp(1.5 * (map[s.flex] - 5), -8, 4);
+    const dCore = clamp(0.8 * (map[s.core] - 5), -4, 2);
+    const dGoal = { comfort: -4, balanced: 0, performance: 3, aero: 6 }[s.goal];
+    const base = mean * 10 * M;
+    const sh = Math.round(base + dFlex + dCore + dGoal);
+    const halfFor = (x) => Math.round(1.96 * Math.sqrt(Math.pow(0.883 * x, 2) + Math.pow(0.01 * sh, 2)));
+    const half = halfFor(sB);
+    const r5 = (v) => Math.round(v / 5) * 5;
+    const low = r5(sh - half), high = r5(sh + half);
+    const pct = (v) => Math.max(0, Math.min(100, (v - (sh - 60)) / 120 * 100));
+    const mm = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + String(Math.abs(Math.round(v * 10) / 10)).replace('.', ',') + ' mm';
+    const fmt = (v) => String(v).replace('.', ',');
+    const opt = (list, cur, key) => list.map((o) => ({ label: o[1], pressed: String(cur === o[0]), bg: cur === o[0] ? '#E6F8A8' : '#FFFFFF', border: cur === o[0] ? '#0A7263' : '#B9CCC6', pick: () => this.setState({ [key]: o[0] }) }));
+    const flexNames = ['Zeer beperkt', 'Beperkt', 'Gemiddeld', 'Goed', 'Uitstekend'];
+    const coreNames = ['Plank < 20 s', 'Plank 20–40 s', 'Plank 40–60 s', 'Plank 60–90 s', 'Plank > 90 s'];
+    const repeated = n >= 3 && !spread;
+    let nextStep;
+    if (!repeated) nextStep = 'Meet nog ' + (3 - Math.min(n, 3) || 1) + ' keer → ± ' + halfFor(10 / Math.sqrt(3)) + ' mm';
+    else nextStep = 'Controleer je kniehoek → ± ' + Math.round(1.96 * Math.sqrt(Math.pow(0.883 * sB, 2) + 16)) + ' mm';
+    return {
+      chips: s.meas.map((m) => ({ label: fmt(m) + ' cm' })),
+      measMeta: n === 1 ? '1× gemeten · 3 okt 2026' : n + '× gemeten · gemiddeld ' + fmt(Math.round(mean * 10) / 10) + ' cm',
+      canAdd: n < 3 || spread, nextNumber: n + 1,
+      draft: s.draft, draftLabel: fmt(s.draft) + ' cm',
+      spread: spread,
+      cats: opt([['road', 'Race'], ['gravel', 'Gravel'], ['mtb', 'MTB'], ['city', 'Stad']], s.cat, 'cat'),
+      goals: opt([['comfort', 'Comfort'], ['balanced', 'Gebalanceerd'], ['performance', 'Prestatie'], ['aero', 'Aero']], s.goal, 'goal'),
+      flex: s.flex, core: s.core, flexLabel: s.flex + '/5 · ' + flexNames[s.flex - 1], coreLabel: s.core + '/5 · ' + coreNames[s.core - 1],
+      sh: sh, half: half, low: low, high: high,
+      zoneLeft: pct(low).toFixed(1), zoneWidth: (pct(high) - pct(low)).toFixed(1), zoneRight: pct(high).toFixed(1),
+      barLabel: 'Zadelhoogte ' + sh + ' mm, bereik ' + low + ' tot ' + high + ' mm',
+      breakdown: [
+        { label: 'Binnenbeen × ' + fmt(M), value: fmt(Math.round(base * 10) / 10) + ' mm', weight: '400' },
+        { label: 'Lenigheid', value: mm(dFlex), weight: '400' },
+        { label: 'Core-stabiliteit', value: mm(dCore), weight: '400' },
+        { label: 'Rijdoel', value: mm(dGoal), weight: '400' },
+        { label: 'Advies', value: sh + ' mm', weight: '700' }
+      ],
+      nextStep: nextStep,
+      showPaid: repeated,
+      onDraft: (e) => this.setState({ draft: Number(e.target.value) }),
+      add: () => this.setState({ meas: (spread ? s.meas.slice(1) : s.meas).concat([s.draft]) }),
+      onFlex: (e) => this.setState({ flex: Number(e.target.value) }),
+      onCore: (e) => this.setState({ core: Number(e.target.value) })
+    };
+  }
+}
+</script>
+</body>
+</html>

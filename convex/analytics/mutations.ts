@@ -146,6 +146,14 @@ export const logMarketingEvent = mutation({
     }
 
     const pagePath = normalizeRelativePath(args.pagePath, "pagePath");
+    if (args.eventType.startsWith("leave_data_notice_")) {
+      const extraFields = [args.section, args.ctaLabel, args.ctaTargetPath,
+        args.sourceTag, args.valueCents, args.currency];
+      if (!pagePath.startsWith(`/${args.locale}/`) && pagePath !== `/${args.locale}`
+        || /[?#]/.test(pagePath) || extraFields.some(value => value !== undefined)) {
+        throw new Error("Leave notice analytics accepts only locale and page path");
+      }
+    }
     if (args.eventType === "home_saddle_widget_used") {
       const extraFields = [args.section, args.ctaLabel, args.ctaTargetPath, args.valueCents, args.currency];
       if (

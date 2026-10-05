@@ -1,3 +1,4 @@
+import { checkInseamPlausibility } from "../../../shared/reliability/saddleHeight";
 /**
  * Input Validation for Bike Fit Algorithm
  */
@@ -6,10 +7,6 @@ import type { FitInputs, FitWarning } from "./types";
 import {
   HEIGHT_MIN_MM,
   HEIGHT_MAX_MM,
-  INSEAM_MIN_MM,
-  INSEAM_MAX_MM,
-  INSEAM_RATIO_MIN,
-  INSEAM_RATIO_MAX,
   TORSO_MIN_MM,
   TORSO_MAX_MM,
   ARM_MIN_MM,
@@ -38,35 +35,23 @@ export function validateInputs(inputs: FitInputs): ValidationResult {
   }
 
   // Hard rejects - height range
-  if (inputs.heightMm < HEIGHT_MIN_MM || inputs.heightMm > HEIGHT_MAX_MM) {
+  if (!Number.isFinite(inputs.heightMm) || inputs.heightMm < HEIGHT_MIN_MM || inputs.heightMm > HEIGHT_MAX_MM) {
     errors.push(
       `Height must be between ${HEIGHT_MIN_MM}mm and ${HEIGHT_MAX_MM}mm (got ${inputs.heightMm}mm)`
     );
   }
 
-  // Hard rejects - inseam range
-  if (inputs.inseamMm < INSEAM_MIN_MM || inputs.inseamMm > INSEAM_MAX_MM) {
-    errors.push(
-      `Inseam must be between ${INSEAM_MIN_MM}mm and ${INSEAM_MAX_MM}mm (got ${inputs.inseamMm}mm)`
-    );
-  }
-
-  // Hard reject - inseam >= height (impossible)
-  if (inputs.inseamMm >= inputs.heightMm) {
-    errors.push("Inseam cannot be greater than or equal to height");
-  }
-
-  // Soft warnings - inseam ratio
-  if (inputs.heightMm && inputs.inseamMm) {
-    const inseamRatio = inputs.inseamMm / inputs.heightMm;
-    if (inseamRatio < INSEAM_RATIO_MIN || inseamRatio > INSEAM_RATIO_MAX) {
-      warnings.push({
-        type: "measurement_warning",
-        severity: "warning",
-        message: `Inseam ratio (${(inseamRatio * 100).toFixed(1)}%) is outside normal range (${INSEAM_RATIO_MIN * 100}-${INSEAM_RATIO_MAX * 100}%)`,
-        recommendation: "Please re-measure your inseam to ensure accuracy",
-      });
-    }
+  const inseamCheck = checkInseamPlausibility(inputs.heightMm / 10, inputs.inseamMm / 10);
+  if (inseamCheck.status === "error") {
+    errors.push(inputs.inseamMm >= inputs.heightMm ? "Inseam cannot be greater than or equal to height"
+      : "Inseam must be between 550mm and 1050mm and height must be valid");
+  } else if (inseamCheck.status === "check" || inseamCheck.status === "large") {
+    warnings.push({
+      type: "measurement_warning", severity: "warning",
+      message: `Inseam differs by ${Math.abs(inseamCheck.deviationRatio * 100).toFixed(1)}% from the height estimate`,
+      recommendation: inseamCheck.status === "large"
+        ? "Re-measure your inseam or consult a bike fitter" : "Please verify your inseam measurement",
+    });
   }
 
   // Optional field validation - torso

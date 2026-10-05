@@ -8,6 +8,10 @@
  * @module
  */
 
+import type * as reliability_evaluationData from "../reliability/evaluationData.js";
+import type * as reliability_evaluation from "../reliability/evaluation.js";
+import type * as reliability_queries from "../reliability/queries.js";
+import type * as reliability_mutations from "../reliability/mutations.js";
 import type * as admin_actions from "../admin/actions.js";
 import type * as admin_audit from "../admin/audit.js";
 import type * as admin_authz from "../admin/authz.js";
@@ -144,6 +148,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "reliability/evaluationData": typeof reliability_evaluationData;
+  "reliability/evaluation": typeof reliability_evaluation;
+  "reliability/queries": typeof reliability_queries;
+  "reliability/mutations": typeof reliability_mutations;
   "gifts/mutations": typeof gifts_mutations;
   "gifts/queries": typeof gifts_queries;
   "emails/gifts": typeof emails_gifts;

@@ -61,13 +61,12 @@ describe("saddle advice rider-profile chain", () => {
     })));
     expect(screen.queryByRole("link", { name: /free account/i })).toBeNull();
   });
-  it("keeps a trial local and restores authoritative data on a fresh visit", () => {
-    const view = render(<SaddleSelectorForm />); openInputs(); edit();
-    fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages.en.trial }));
-    expect(screen.getByText(calculatorChainMessages.en.trialStatus)).toBeTruthy();
-    expect(state.apply).not.toHaveBeenCalled(); expect(state.save).not.toHaveBeenCalled();
-    view.unmount(); render(<SaddleSelectorForm />); openInputs();
-    expect(screen.getByRole("slider", { name: saddleWidthMessages.en.sitBone }).getAttribute("aria-valuenow")).toBe("125");
+  it("automatically stores declared profile edits without a calculation-only option", async () => {
+    render(<SaddleSelectorForm />); openInputs(); edit();
+    expect(screen.queryByRole("button", { name: calculatorChainMessages.en.trial })).toBeNull();
+    await waitFor(() => expect(state.apply).toHaveBeenCalledWith(expect.objectContaining({
+      changes: [expect.objectContaining({ field: "sitBoneWidthMm", kind: "declared" })],
+    })));
   });
   it("autosaves only local riding preferences when no bike is selected", async () => {
     render(<SaddleSelectorForm />); openInputs();
@@ -84,12 +83,12 @@ describe("saddle advice rider-profile chain", () => {
     expect([...document.querySelectorAll("a")].some((link) => link.getAttribute("href")?.split("?")[0] === "/en/tools/saddle-height"))
       .toBe(true);
   });
-  it("retains failed shared changes for retry without silently saving session values", async () => {
+  it("retains failed shared changes for retry while independently saving last-used inputs", async () => {
     state.apply.mockRejectedValueOnce(new Error("offline"));
     render(<SaddleSelectorForm />); openInputs(); edit();
     fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages.en.save }));
     await screen.findByText(calculatorChainMessages.en.error);
     expect(screen.getByRole("slider", { name: saddleWidthMessages.en.sitBone }).getAttribute("aria-valuenow")).toBe("126");
-    expect(state.save).not.toHaveBeenCalled();
+    expect(state.save).toHaveBeenCalledWith(expect.objectContaining({ sitBoneWidthMm: 126 }));
   });
 });

@@ -45,14 +45,22 @@ import {
 } from "@/lib/public-calculators/performance";
 
 import { FtpRatings, FuelHeadline, FuelResults, Sources } from "./SourcedResults";
+import { PublicPerformanceCalculator } from "./PublicPerformanceCalculator";
 
-// Both public and account routes use this same form and engine.
-export function PerformanceCalculator({ tool, locale, initialValues, onValuesChange, navigation, account = false, riderProfile, ftpKnown = initialValues !== undefined }: {
+type PerformanceCalculatorProps = {
   tool: MoreTool; locale: Locale; initialValues?: PerformanceValues;
   onValuesChange?: (values: PerformanceValues, confirmedFields?: readonly string[]) => void; navigation?: ReactNode; account?: boolean;
   riderProfile?: { sex?: RiderSex; weightKg?: number };
   ftpKnown?: boolean;
-}) {
+};
+
+export function PerformanceCalculator(props: PerformanceCalculatorProps) {
+  return props.account
+    ? <AccountPerformanceForm {...props} />
+    : <PublicPerformanceCalculator tool={props.tool} locale={props.locale} />;
+}
+
+function AccountPerformanceForm({ tool, locale, initialValues, onValuesChange, navigation, account = false, riderProfile, ftpKnown = initialValues !== undefined }: PerformanceCalculatorProps) {
   const copy = performanceMessages[locale];
   const handoff = usePublicHandoff(tool, !account);
   const prefilled = useRef(false);

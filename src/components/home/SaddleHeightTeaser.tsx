@@ -10,13 +10,19 @@ import { useHomeSaddleWidgetAnalytics } from "@/lib/analytics/useHomeSaddleWidge
 import type { Locale } from "@/i18n/config";
 import { homeSaddleWidget } from "@/i18n/marketing/homeSaddleWidget";
 import { withLocalePrefix } from "@/i18n/navigation";
-import { writeHandoffEntry } from "@/lib/handoff/store";
+import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
+import { dataReuseMessages } from "@/i18n/calculators/dataReuse";
 import { markHomeSaddleStart } from "@/lib/handoff/homeStart";
 import { calculateSaddleHeight, getPublicSaddleHeightNextStep } from "../../../shared/reliability/saddleHeight";
 import styles from "./MarketingHome.module.css";
 
 export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?: () => void }) {
-  const [height, setHeight] = useState(175);
+  const [editedHeight, setHeight] = useState<number | null>(null);
+  const handoff = usePublicHandoff("saddle-height");
+  const prefill = handoff.getPrefill("heightCm");
+  const savedHeight = typeof prefill?.value === "number" && Number.isFinite(prefill.value)
+    ? Math.min(220, Math.max(130, Math.round(prefill.value))) : null;
+  const height = editedHeight ?? savedHeight ?? 175;
   const { trackHomeSaddleWidgetUsed } = useHomeSaddleWidgetAnalytics(useMarketingEventLogger());
   const copy = homeSaddleWidget[locale];
   const result = calculateSaddleHeight({ heightCm: height });
@@ -29,10 +35,7 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
   }
 
   function refine() {
-    writeHandoffEntry({
-      field: "heightCm", value: height, unit: "cm", method: "declared",
-      calculator: "saddle-height", touchedAt: Date.now(),
-    });
+    if (editedHeight === null && savedHeight === null) handoff.touch("heightCm", height, "cm", "declared");
     markHomeSaddleStart();
     used();
   }
@@ -46,7 +49,11 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
       <Slider
         id="home-height" label={copy.height} tooltip={copy.heightHelp} tooltipLabel={copy.height}
         min={130} max={220} step={1} value={height} valueLabel={value} unit="cm"
-        aria-valuetext={`${value} cm`} onChange={(nextHeight) => { setHeight(nextHeight); used(); }}
+        aria-valuetext={`${value} cm`} onChange={(nextHeight) => {
+          setHeight(nextHeight);
+          handoff.touch("heightCm", nextHeight, "cm", "declared");
+          used();
+        }}
       />
       <div className={styles.result}>
         <output aria-label={copy.title} aria-live="polite" htmlFor="home-height">
@@ -57,7 +64,11 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
         value={result.adviceMm} low={result.lowerMm} high={result.upperMm}
         min={result.scaleMinMm} max={result.scaleMaxMm} size="compact" locale={locale}
       />
-      <p className={styles.context}>{copy.basis}</p>
+      <p className={styles.context}>
+        {editedHeight === null && savedHeight !== null
+          ? `${dataReuseMessages[locale][handoff.source === "profile" ? "profile" : "previous"]}. ` : ""}
+        {copy.basis}
+      </p>
       <Link
         className={styles.primary}
         href={withLocalePrefix("/calculators/saddle-height", locale) + "#inseam"} onClick={refine}

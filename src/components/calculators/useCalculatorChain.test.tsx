@@ -1,10 +1,11 @@
 /* @vitest-environment jsdom */
-import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, cleanup, renderHook } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { useCalculatorChain } from "./useCalculatorChain";
 import type { ChainBinding } from "@/lib/calculators/chain";
 
 type Values = { inseam: number; distance: number };
+afterEach(() => { cleanup(); vi.useRealTimers(); });
 const binding = (value = 84): ChainBinding<Values> => ({
   field: "inseamCm", source: "profile", value, unit: "cm", kind: "measured", recordedAt: 100,
   read: values => values.inseam, write: (values, next) => ({ ...values, inseam: Number(next) }),
@@ -14,6 +15,51 @@ function options(value = 84, key = "profile1") {
     applyChanges: vi.fn().mockResolvedValue({ status: "saved" as const }) };
 }
 describe("explicit calculator chain", () => {
+  it("autosaves actual non-measured profile edits as declared, without saving mount defaults", async () => {
+    vi.useFakeTimers();
+    const initial = { ...options(), autoSaveProfile: true, bindings: [{ ...binding(), kind: "declared" as const }] };
+    const { result } = renderHook(() => useCalculatorChain(initial));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(initial.applyChanges).not.toHaveBeenCalled();
+    act(() => result.current.setValues({ inseam: 86, distance: 140 }));
+    act(() => result.current.useForThisCalculation());
+    expect(result.current.trial).toBe(false);
+    expect(result.current.canAutosave).toBe(true);
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(initial.applyChanges).toHaveBeenCalledWith([{ field: "inseamCm", source: "profile", value: 86,
+      expectedCurrentValue: 84, kind: "declared" }], true);
+    expect(result.current.pendingChanges).toEqual([]);
+  });
+  it("requires explicit action before a declared edit replaces measured profile data", async () => {
+    vi.useFakeTimers();
+    const initial = { ...options(), autoSaveProfile: true };
+    const { result } = renderHook(() => useCalculatorChain(initial));
+    act(() => result.current.setValues({ inseam: 86, distance: 120 }));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(initial.applyChanges).not.toHaveBeenCalled();
+    expect(result.current.canAutosave).toBe(true);
+    await act(() => result.current.saveToProfile());
+    expect(initial.applyChanges).toHaveBeenCalledOnce();
+  });
+  it("autosaves a new measurement only after the rider explicitly identifies it as measured", async () => {
+    vi.useFakeTimers();
+    const initial = { ...options(), autoSaveProfile: true };
+    const { result } = renderHook(() => useCalculatorChain(initial));
+    act(() => result.current.setValues({ inseam: 86, distance: 100 }));
+    act(() => result.current.setChangeKind("inseamCm", "measured"));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(initial.applyChanges).toHaveBeenCalledWith([expect.objectContaining({ value: 86, kind: "measured" })], true);
+  });
+  it("cancels pending automatic writes when the account scope changes", async () => {
+    vi.useFakeTimers();
+    const initial = { ...options(), scopeKey: "user-one", autoSaveProfile: true,
+      bindings: [{ ...binding(), kind: "declared" as const }] };
+    const { result, rerender } = renderHook(useCalculatorChain<Values>, { initialProps: initial });
+    act(() => result.current.setValues({ inseam: 86, distance: 100 }));
+    rerender({ ...initial, externalKey: "user-two", scopeKey: "user-two" });
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(initial.applyChanges).not.toHaveBeenCalled();
+  });
   it("requires profile-save choice after confirming an unchanged placeholder", async () => {
     const initial = options();
     initial.bindings = [{ ...binding(), value: undefined }];

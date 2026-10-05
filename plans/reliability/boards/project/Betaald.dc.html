@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Verdieping: kniehoek zelf meten en aanpassingsplan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0A7263}a:hover{color:#075A4E}
+input[type=range]{accent-color:#0A7263}
+</style>
+</helmet>
+<div style="width: 1120px; height: 920px; box-sizing: border-box; padding: 44px 52px; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; justify-content: space-between; align-items: end; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Verdieping · betaald</div>
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 36px; letter-spacing: -.03em; color: #0F2420">Meet je kniehoek</h1>
+    </div>
+    <span style="font-size: 13px; color: #4A5F5A; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 999px; padding: 6px 12px">Binnenkort: wij meten de hoek uit je foto</span>
+  </div>
+  <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <figure style="margin: 0; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+        <div style="height: 300px; border-radius: 16px; background: #E1F2EE; overflow: hidden">
+          <svg viewBox="0 0 380 300" width="100%" height="100%" role="img" aria-label="Zijaanzicht in de onderste pedaalstand: meet de hoek tussen het verlengde van het bovenbeen en het onderbeen">
+            <line x1="150" y1="30" x2="215" y2="165" stroke="#0F2420" stroke-width="5" stroke-linecap="round"></line>
+            <line x1="215" y1="165" x2="185" y2="270" stroke="#0F2420" stroke-width="5" stroke-linecap="round"></line>
+            <line x1="215" y1="165" x2="246" y2="230" stroke="#0A7263" stroke-width="2" stroke-dasharray="5 5"></line>
+            <path d="M 229 194 A 32 32 0 0 1 207 196" stroke="#0A7263" stroke-width="3" fill="none"></path>
+            <circle cx="150" cy="30" r="10" fill="#CFF26A" stroke="#0F2420" stroke-width="3"></circle>
+            <circle cx="215" cy="165" r="10" fill="#CFF26A" stroke="#0F2420" stroke-width="3"></circle>
+            <circle cx="185" cy="270" r="10" fill="#CFF26A" stroke="#0F2420" stroke-width="3"></circle>
+            <text x="166" y="34" font-family="Figtree, sans-serif" font-size="14" font-weight="700" fill="#0F2420">Heup (trochanter)</text>
+            <text x="232" y="162" font-family="Figtree, sans-serif" font-size="14" font-weight="700" fill="#0F2420">Knie</text>
+            <text x="201" y="284" font-family="Figtree, sans-serif" font-size="14" font-weight="700" fill="#0F2420">Enkel</text>
+            <text x="250" y="214" font-family="DM Mono, monospace" font-size="18" fill="#075A4E">hoek</text>
+          </svg>
+        </div>
+        <figcaption style="font-size: 14px; color: #4A5F5A">De hoek die je meet: tussen het verlengde van je bovenbeen (stippellijn) en je onderbeen.</figcaption>
+      </figure>
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px 24px">
+        <div style="font-weight: 700; color: #0F2420; font-size: 16px; margin-bottom: 8px">Zo meet je het</div>
+        <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #0F2420">
+          <li>Zet je fiets op een trainer of laat iemand hem vasthouden. Draag je fietsschoenen.</li>
+          <li>Trap rustig en stop met de crank in het verlengde van de zitbuis, pedaal onderaan.</li>
+          <li>Laat iemand een foto maken recht van opzij, op heuphoogte.</li>
+          <li>Meet de hoek met een gradenboog-app of op een print. Meet twee keer en vul het gemiddelde in.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <label for="hoek" style="font-weight: 700; color: #0F2420; font-size: 17px">Jouw gemeten kniehoek</label>
+          <span style="font-family: 'DM Mono', monospace; font-size: 30px; color: #0F2420">{{angle}}°</span>
+        </div>
+        <input id="hoek" type="range" min="15" max="45" step="1" value="{{angle}}" onInput="{{onAngle}}" style="width: 100%">
+        <div style="padding: 12px 16px; border-radius: 14px; background: {{verdictBg}}; color: #0F2420; font-size: 15px">{{verdict}}</div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-weight: 700; color: #0F2420">Zadelhoogte</span>
+          <span style="font-family: 'DM Mono', monospace; color: #0F2420"><span style="font-size: 26px">{{sh}}</span> mm · ± {{half}} mm</span>
+        </div>
+        <dc-import name="Bereikbalk" low="{{low}}" high="{{high}}" value="{{sh}}" min="{{min}}" max="{{max}}" low-label="{{lowLabel}}" high-label="{{highLabel}}" size="groot" aria="{{aria}}" hint-size="100%,72px"></dc-import>
+        <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: binnenbeen 3× gemeten en {{basis}}</div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 12px">
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">Je aanpassingsplan</div>
+        <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: #0F2420">
+          <li>{{step1}}</li>
+          <li>Rijd twee rustige ritten van minstens een uur.</li>
+          <li>Evalueer: knie, onderrug, wiegen op het zadel. Wij vragen het je per mail na 7 dagen.</li>
+          <li>{{step4}}</li>
+        </ol>
+        <p style="margin: 0; font-size: 13px; color: #4A5F5A">Pijn of tintelingen? Stop met aanpassen en ga naar een erkende bikefitter of fysiotherapeut.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":920}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { angle: 31 };
+  }
+  renderVals() {
+    const a = this.state.angle;
+    const current = 787;
+    const inWindow = a >= 25 && a <= 35;
+    // About 2 mm saddle height per degree of knee angle; aim for the middle of the window, max 5 mm per step.
+    const wanted = inWindow ? 0 : Math.round((a - 30) * 2);
+    const step = Math.max(-5, Math.min(5, wanted));
+    const sh = current + step;
+    const sB = 10 / Math.sqrt(3);
+    const sM = inWindow ? 4 : 0.01 * sh;
+    const half = Math.round(1.96 * Math.sqrt(Math.pow(0.883 * sB, 2) + sM * sM));
+    const r5 = (v) => Math.round(v / 5) * 5;
+    const low = r5(sh - half), high = r5(sh + half);
+    return {
+      angle: a,
+      verdict: inWindow ? 'Binnen het aanbevolen venster van 25–35°. Je zadelhoogte staat goed; het bereik wordt smaller.'
+        : a < 25 ? 'Je been is onderaan bijna gestrekt (onder 25°). Je zadel staat waarschijnlijk te hoog.'
+        : 'Je knie is onderaan sterk gebogen (boven 35°). Je zadel staat waarschijnlijk te laag.',
+      verdictBg: inWindow ? '#E6F8A8' : '#FFF7DB',
+      sh: sh, half: half, low: low, high: high, min: sh - 61, max: sh + 61, lowLabel: String(low), highLabel: String(high),
+      aria: 'Zadelhoogte ' + sh + ' mm, bereik ' + low + ' tot ' + high + ' mm',
+      basis: inWindow ? 'kniehoek ' + a + '° (zelf gemeten)' : 'kniehoek buiten het venster, meet na aanpassen opnieuw',
+      step1: step === 0 ? 'Laat je zadel op ' + current + ' mm staan.' : 'Zet je zadel ' + Math.abs(step) + ' mm ' + (step > 0 ? 'hoger' : 'lager') + ': van ' + current + ' naar ' + sh + ' mm, gemeten van het midden van de trapas langs de zitbuis.',
+      step4: inWindow ? 'Ga daarna verder met het volgende onderdeel: zadelterugstand.' : 'Meet je kniehoek opnieuw. Nog buiten 25–35°? Dan volgt een tweede stap van maximaal 5 mm.',
+      onAngle: (e) => this.setState({ angle: Number(e.target.value) })
+    };
+  }
+}
+</script>
+</body>
+</html>

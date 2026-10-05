@@ -32,7 +32,7 @@ export function PersonalizeAdviceBlock({ calculator, locale }: {
 }) {
   const copy = handoffMessages[locale];
   const specific = copy.calculators[calculator];
-  const { entries, retention } = usePublicHandoff(calculator);
+  const { entries, source } = usePublicHandoff(calculator);
   const titleId = useId();
   const benefits = [
     [copy.benefits.savedTitle, copy.benefits.savedBody],
@@ -101,9 +101,7 @@ export function PersonalizeAdviceBlock({ calculator, locale }: {
           }
         >{copy.cta}</Link>
         <p className="text-sm leading-relaxed">{copy.reassurance}</p>
-        <p className="text-sm leading-relaxed" aria-live="polite">
-          {retention === "persistent" ? copy.persistentRetention : copy.sessionOnly}
-        </p>
+        {source === "session" && <p className="text-sm leading-relaxed" aria-live="polite">{copy.sessionOnly}</p>}
       </div>
     </section>
   );

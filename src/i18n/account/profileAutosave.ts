@@ -1,3 +1,4 @@
+import { checkInseamPlausibility } from "../../../shared/reliability/saddleHeight";
 export const profileAutosaveCopy = {
   nl: {
     extra: "Extra lichaamsmaten",
@@ -43,13 +44,25 @@ export const profileMeasurementInstructions = {
 } as const;
 
 export function profileMeasurementWarning(locale: Locale, field: "inseam" | "weight", height: number, value: number) {
-  const predicted = field === "inseam" ? Math.round(height * 0.47) : Math.round(22 * (height / 100) ** 2);
+  if (field === "inseam") {
+    const check = checkInseamPlausibility(height, value);
+    if (check.status === "ok") return null;
+    if (check.status === "error") return locale === "nl"
+      ? "Vul een binnenbeenlengte tussen 55 en 105 cm in, korter dan je lengte."
+      : "Enter an inseam between 55 and 105 cm, shorter than your height.";
+    if (check.status === "large") return locale === "nl"
+      ? "Deze binnenbeenlengte wijkt sterk af. Meet opnieuw of laat je meten door een bikefitter."
+      : "This inseam differs substantially. Measure again or consult a bike fitter.";
+    return locale === "nl"
+      ? "Je binnenbeen wijkt wat af van de schatting bij je lengte. Controleer je meting."
+      : "Your inseam differs from the estimate for your height. Check your measurement.";
+  }
+  const predicted = Math.round(22 * (height / 100) ** 2);
   if (Math.abs(value - predicted) / predicted <= 0.2) return null;
-  const unit = field === "inseam" ? "cm" : "kg";
+  const unit = "kg";
   if (locale === "nl") return measurementWarningNl(field, value, predicted, unit);
-  const direction = field === "inseam" ? (value > predicted ? "longer" : "shorter")
-    : (value > predicted ? "heavier" : "lighter");
-  const action = field === "inseam" ? "double-check your measurement." : "verify the value is correct.";
+  const direction = value > predicted ? "heavier" : "lighter";
+  const action = "verify the value is correct.";
   return `${value} ${unit} is more than 20% ${direction} than expected for your height (${predicted} ${unit}) — ${action}`;
 }
 import type { Locale } from "@/i18n/config";

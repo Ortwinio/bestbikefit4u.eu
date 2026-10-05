@@ -1,3 +1,4 @@
+import { checkInseamPlausibility } from "../../shared/reliability/saddleHeight";
 import type { Ambition, BikeCategory } from "../../convex/lib/fitAlgorithm/types";
 
 export type PublicFitScore = 1 | 2 | 3 | 4 | 5;
@@ -260,27 +261,18 @@ export function validatePublicFitBaseline(
     baseline.inseamCm !== undefined &&
     baseline.inseamCm < baseline.heightCm
   ) {
-    const ratio = baseline.inseamCm / baseline.heightCm;
-
-    if (ratio < 0.41) {
+    const plausibility = checkInseamPlausibility(baseline.heightCm, baseline.inseamCm);
+    if (plausibility.status === "check" || plausibility.status === "large") {
       issues.push({
-        code: "inseam_height_ratio_low",
-        field: "baseline",
-        severity: "warning",
+        code: plausibility.direction === "shorter" ? "inseam_height_ratio_low" : "inseam_height_ratio_high",
+        field: "baseline", severity: "warning",
         message: isNl
-          ? "Deze verhouding tussen lengte en binnenbeenlengte is ongebruikelijk. Controleer je meting nog eens."
-          : "This height-to-inseam ratio is unusual. Recheck your measurement.",
-      });
-    }
-
-    if (ratio > 0.54) {
-      issues.push({
-        code: "inseam_height_ratio_high",
-        field: "baseline",
-        severity: "warning",
-        message: isNl
-          ? "Deze verhouding tussen lengte en binnenbeenlengte is ongebruikelijk hoog. Controleer je meting nog eens."
-          : "This height-to-inseam ratio is unusually high. Recheck your measurement.",
+          ? plausibility.status === "large"
+            ? "Deze binnenbeenlengte wijkt sterk af. Meet opnieuw of laat je meten door een bikefitter."
+            : "Je binnenbeen wijkt wat af van de schatting bij je lengte. Controleer je meting."
+          : plausibility.status === "large"
+            ? "This inseam differs substantially. Measure again or consult a bike fitter."
+            : "Your inseam differs from the estimate for your height. Check your measurement.",
       });
     }
   }

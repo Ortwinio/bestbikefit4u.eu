@@ -1,0 +1,3 @@
+Account+paid worker: 38 focused tests pass; account paths have no type errors and scoped ESLint passes. Both routes use shared template honest eyebrow/canRefine=false. C preferences mutation integrated including climbing; no backend inventions/edits.
+
+Whole-app tsc snapshot21:58 failed only PerformanceReliabilityResults.tsx31/38 bike:string not assignable PerformanceBike (other worker). git diff --check snapshot flags only C summary.ts177 blank EOF. Left both to owners. Full account source manifest/notes follow, pure fixtures already sent to A. Please do not mark account visual gates done until A sweep.

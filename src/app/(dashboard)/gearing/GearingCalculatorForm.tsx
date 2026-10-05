@@ -81,9 +81,9 @@ function GearingEditor({ bike, saved, context, userId, currentUser, header, ref 
           wheelCircumferenceMm: typeof value === "number" ? value : undefined } }) },
     ] : []),
   ], context.observations, context.bikeObservations.filter((item) => item.bikeId === bike?._id));
-  const chain = useCalculatorChain({ scopeKey: `gearing:${bike?._id ?? ""}`, initialValues: initial, bindings,
+  const chain = useCalculatorChain({ autoSaveProfile: true, scopeKey: `gearing:${bike?._id ?? ""}`, initialValues: initial, bindings,
     externalKey: JSON.stringify(bindings.map(({ field, value, kind, recordedAt }) => ({ field, value, kind, recordedAt }))),
-    applyChanges: (changes) => apply({ calculator: "gearing", bikeId: bike?._id,
+    applyChanges: (changes, automatic) => apply({ calculator: "gearing", bikeId: bike?._id, automatic, expectedUserId: userId,
       changes: [...changes, ...(changes.some((change) => change.field === "ftpWatts") ? [{
         field: "ftpMethod", source: "profile" as const, value: "known",
         expectedCurrentValue: profile?.ftpMethod ?? null, kind: "declared" as const, measurePoint: undefined,

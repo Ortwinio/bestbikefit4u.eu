@@ -17,7 +17,7 @@ vi.mock("./CalculatorChainPanel", () => ({ CalculatorChainLayout: ({ children, c
   children: ReactNode; chain: ChainPanelController;
 }) => <>{children}<p data-testid="pending">{chain.pendingChanges.length}</p>
   <button onClick={() => { void chain.saveToProfile(); }}>Save profile</button>
-  <button onClick={chain.useForThisCalculation}>Trial</button>
+  {!chain.autoSaveProfile && <button onClick={chain.useForThisCalculation}>Trial</button>}
   <p>{chain.status}</p></> }));
 vi.mock("convex/react", () => ({
   useQuery: (ref: Parameters<typeof getFunctionName>[0]) => {
@@ -25,7 +25,7 @@ vi.mock("convex/react", () => ({
     const name = getFunctionName(ref);
     if (name === "users/queries:getCurrentUser") return { _id: "user1" };
     if (name === "bikes/queries:list") return [];
-    if (name === "calculatorChain/queries:getContext") return { profile: fixture.profile,
+    if (name === "calculatorChain/queries:getContext") return { userId: "user1", profile: fixture.profile,
       observations: [], bikeObservations: [], bikes: [], recentCalculators: [], advice: [] };
     if (name === "calculatorStates/queries:get") return fixture.saved;
     throw new Error(name);
@@ -44,7 +44,7 @@ beforeEach(() => {
 afterEach(cleanup);
 describe("account fit calculator chain", () => {
   it.each(["saddle-height", "frame-size", "crank-length"] as const)(
-    "%s waits for a choice on rider edits without persisting profile overrides", async (calculator) => {
+    "%s supports explicit save before the automatic profile write", async (calculator) => {
       render(<AccountFitCalculator calculator={calculator} />);
       const input = screen.getByRole("slider", { name: "Binnenbeenlengte" });
       expect(input.getAttribute("aria-valuenow")).toBe("83");
@@ -69,12 +69,16 @@ describe("account fit calculator chain", () => {
     expect(screen.getByRole("slider", { name: "Binnenbeenlengte" }).getAttribute("aria-valuenow")).toBe("81");
     expect(fixture.save).not.toHaveBeenCalled();
   });
-  it("keeps a trial local without profile writes", () => {
+  it("automatically stores rider edits without a calculation-only opt-out", async () => {
     render(<AccountFitCalculator calculator="crank-length" />);
     fireEvent.keyDown(screen.getByRole("slider", { name: "Binnenbeenlengte" }), { key: "ArrowRight" });
-    fireEvent.click(screen.getByRole("button", { name: "Trial" }));
-    expect(screen.getByTestId("pending").textContent).toBe("0");
+    expect(screen.queryByRole("button", { name: "Trial" })).toBeNull();
+    expect(screen.getByTestId("pending").textContent).toBe("1");
     expect(fixture.apply).not.toHaveBeenCalled();
-    expect(fixture.save).not.toHaveBeenCalled();
+    await waitFor(() => expect(fixture.apply).toHaveBeenCalledWith(expect.objectContaining({
+      calculator: "crank-length", expectedUserId: "user1", automatic: true,
+      changes: [expect.objectContaining({ field: "inseamCm", value: 83.1, kind: "declared" })],
+    })));
+    expect(screen.getByTestId("pending").textContent).toBe("0");
   });
 });

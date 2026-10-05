@@ -7,7 +7,7 @@ import { chromium } from "playwright";
 import { renderBoard } from "./board.mjs";
 
 const root = process.cwd();
-const output = resolve(root, "plans/redesign-canvas/code-renders");
+const output = resolve(root, process.env.PDF_RENDER_OUTPUT_DIR ?? "plans/reliability/renders/pdf");
 await mkdir(output, { recursive: true });
 const temp = await mkdtemp(join(tmpdir(), "bbf26-render-"));
 await symlink(resolve(root, "node_modules"), join(temp, "node_modules"), "dir");
@@ -176,7 +176,7 @@ try {
   await browser.close();
 }
 await writeFile(
-  variantsOnly ? join(temp, "26-variants.json") : resolve(root, "plans/redesign-canvas/audit/26-browser.json"),
+  variantsOnly ? join(temp, "26-variants.json") : join(output, "26-browser.json"),
   JSON.stringify(audit, null, 2),
 );
 console.log(JSON.stringify(audit));

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>PDF-rapport: afstelwaarden met 95%-bereik</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1120px; height: 600px; box-sizing: border-box; padding: 40px 48px; background: #FFFFFF; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 36px; align-items: start">
+  <div style="background: #F5F8F3; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">Hoe nauwkeurig is dit advies?</div>
+    <div style="font-family: 'DM Mono', monospace; font-size: 34px; color: #0F2420; line-height: 1">± 23 mm</div>
+    <p style="margin: 0; font-size: 14px; color: #0F2420">Zadelhoogte, op basis van 1 meting van je binnenbeen. In 19 van de 20 gevallen ligt je ideale hoogte binnen het bereik.</p>
+    <p style="margin: 0; font-size: 14px; color: #0F2420; padding-top: 12px; border-top: 1px solid #DCE6E1">Smaller maken: meet je binnenbeen nog 2 keer (± 18 mm) of laat je kniehoek controleren (± 13 mm).</p>
+    <p style="margin: 0; font-size: 13px; color: #4A5F5A">Elk onderdeel heeft zijn eigen bereik; de breedte in mm is de betrouwbaarheid.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 120px 90px; gap: 20px; padding-bottom: 10px; border-bottom: 1.5px solid #0F2420; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #4A5F5A">
+      <span>Onderdeel</span><span>95%-bereik</span><span style="text-align: right">Advies</span><span style="text-align: center">Nu</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 120px 90px; gap: 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid #DCE6E1">
+      <div style="display: flex; gap: 12px; align-items: center">
+        <span style="width: 34px; height: 34px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: none">A</span>
+        <div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; color: #0F2420">Zadelhoogte</div><div style="font-size: 13px; color: #4A5F5A">Kniebelasting en trapritme</div></div>
+      </div>
+      <div role="img" aria-label="Zadelhoogte 787 mm, bereik 765 tot 810 mm" style="display: flex; flex-direction: column; gap: 4px">
+        <div style="position: relative; height: 20px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box">
+          <div style="position: absolute; top: -1.5px; bottom: -1.5px; left: 31.7%; width: 37.5%; background: #CFF26A; border: 1.5px solid #0F2420; border-radius: 999px; box-sizing: border-box"></div>
+          <div style="position: absolute; left: 50%; top: -6px; width: 4px; height: 29px; margin-left: -2px; background: #0F2420; border-radius: 2px"></div>
+        </div>
+        <div style="position: relative; height: 18px; font-family: 'DM Mono', monospace; font-size: 13px; color: #0F2420">
+          <span style="position: absolute; left: 31.7%; transform: translateX(-50%)">765</span>
+          <span style="position: absolute; left: 69.2%; transform: translateX(-50%)">810</span>
+        </div>
+      </div>
+      <div style="text-align: right"><div style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420">787 mm</div><div style="font-family: 'DM Mono', monospace; font-size: 13px">± 23 mm</div></div>
+      <div style="height: 40px; border: 1.5px solid #B9CCC6; border-radius: 10px"></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 120px 90px; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid #DCE6E1">
+      <div style="display: flex; gap: 12px; align-items: center"><span style="width: 34px; height: 34px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: none">B</span><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; color: #0F2420">Zadelterugstand</div></div>
+      <dc-import name="Bereikbalk" low="36" high="66" value="51" min="32" max="70" low-label="35" high-label="65" size="compact" aria="Zadelterugstand 51 mm, bereik 35 tot 65 mm" hint-size="100%,50px"></dc-import>
+      <div style="text-align: right"><div style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420">51 mm</div><div style="font-family: 'DM Mono', monospace; font-size: 13px">± 15 mm</div></div>
+      <div style="height: 40px; border: 1.5px solid #B9CCC6; border-radius: 10px"></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 120px 90px; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid #DCE6E1">
+      <div style="display: flex; gap: 12px; align-items: center"><span style="width: 34px; height: 34px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: none">C</span><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; color: #0F2420">Stuurdrop</div></div>
+      <dc-import name="Bereikbalk" low="77" high="117" value="97" min="59" max="135" low-label="75" high-label="115" size="compact" aria="Stuurdrop 97 mm, bereik 75 tot 115 mm" hint-size="100%,50px"></dc-import>
+      <div style="text-align: right"><div style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420">97 mm</div><div style="font-family: 'DM Mono', monospace; font-size: 13px">± 20 mm</div></div>
+      <div style="height: 40px; border: 1.5px solid #B9CCC6; border-radius: 10px"></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 120px 90px; gap: 20px; align-items: center; padding: 16px 0; border-bottom: 1px solid #DCE6E1">
+      <div style="display: flex; gap: 12px; align-items: center"><span style="width: 34px; height: 34px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: none">D</span><div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; color: #0F2420">Reach</div></div>
+      <dc-import name="Bereikbalk" low="554" high="584" value="569" min="538" max="600" low-label="555" high-label="585" size="compact" aria="Reach 569 mm, bereik 555 tot 585 mm" hint-size="100%,50px"></dc-import>
+      <div style="text-align: right"><div style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420">569 mm</div><div style="font-family: 'DM Mono', monospace; font-size: 13px">± 15 mm</div></div>
+      <div style="height: 40px; border: 1.5px solid #B9CCC6; border-radius: 10px"></div>
+    </div>
+
+    <p style="margin: 16px 0 0; font-size: 13px; color: #4A5F5A">De vaste testband van 0,86–0,91 × binnenbeen blijft de veiligheidsgrens van de berekening, maar wordt niet meer als balk getoond.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":600}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

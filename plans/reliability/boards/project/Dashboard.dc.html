@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Dashboard: jouw afstelling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0A7263}a:hover{color:#075A4E}
+</style>
+</helmet>
+<div style="width: 1120px; height: 660px; box-sizing: border-box; padding: 40px; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start">
+  <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; color: #0F2420">Jouw afstelling · Canyon Aeroad</h2>
+      <span style="font-size: 14px; color: #4A5F5A">Bereik = 95%</span>
+    </div>
+
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 36px 190px minmax(0, 1fr) 120px; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid #DCE6E1">
+        <span style="width: 32px; height: 32px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">{{r.letter}}</span>
+        <div style="font-weight: 700; color: #0F2420; font-size: 16px">{{r.name}}</div>
+        <div>
+          <dc-import name="Bereikbalk" low="{{r.low}}" high="{{r.high}}" value="{{r.value}}" min="{{r.min}}" max="{{r.max}}" low-label="{{r.lowLabel}}" high-label="{{r.highLabel}}" size="compact" aria="{{r.aria}}" hint-size="100%,50px"></dc-import>
+          <div style="font-size: 12px; color: #4A5F5A">{{r.basis}}</div>
+        </div>
+        <div style="text-align: right">
+          <div style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420; line-height: 1.1">{{r.value}}<span style="font-size: 13px; margin-left: 4px">mm</span></div>
+          <div style="font-family: 'DM Mono', monospace; font-size: 13px; color: #3B4F4A">{{r.pm}}</div>
+        </div>
+      </div>
+    </sc-for>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: #E1F2EE; border-radius: 16px; margin-top: 8px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      <span style="font-size: 15px; color: #075A4E; font-weight: 600">Grootste winst: meet je binnenbeen nog 2 keer → zadelhoogte ± 18 mm</span>
+    </div>
+  </section>
+
+  <aside style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Mijn profiel · maat</div>
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-weight: 700; color: #0F2420; font-size: 18px">Binnenbeen</span>
+      <span style="font-family: 'DM Mono', monospace; font-size: 24px; color: #0F2420">89 cm</span>
+    </div>
+    <dl style="margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; font-size: 14px">
+      <dt style="color: #4A5F5A">Herkomst</dt><dd style="margin: 0; color: #0F2420">Zelf gemeten, 1×</dd>
+      <dt style="color: #4A5F5A">Datum</dt><dd style="margin: 0; color: #0F2420">3 oktober 2026</dd>
+      <dt style="color: #4A5F5A">Controle</dt><dd style="margin: 0; color: #0F2420">Past bij je lengte</dd>
+    </dl>
+    <p style="margin: 0; font-size: 14px; color: #0F2420; padding: 12px 14px; background: #F5F8F3; border-radius: 14px">Beïnvloedt je zadelhoogte: nu ± 23 mm, na 3 metingen ± 18 mm.</p>
+    <a href="#meten" style="align-self: flex-start; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 11px 20px; text-decoration: none">Meet opnieuw</a>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":660}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const row = (letter, name, v, half, widest, basis) => {
+      const r5 = (x) => Math.round(x / 5) * 5;
+      const low = r5(v - half), high = r5(v + half), span = 1.25 * widest;
+      return { letter, name, value: v, low, high, min: v - span, max: v + span, lowLabel: String(low), highLabel: String(high),
+        pm: '± ' + half + ' mm', basis, aria: name + ' ' + v + ' mm, bereik ' + low + ' tot ' + high + ' mm' };
+    };
+    return {
+      rows: [
+        row('A', 'Zadelhoogte', 787, 23, 49, 'Binnenbeen 1× gemeten'),
+        row('B', 'Zadelterugstand', 51, 15, 15, 'Dijbeen geschat'),
+        row('C', 'Stuurdrop', 97, 20, 30, 'Lenigheid zelf ingeschat'),
+        row('D', 'Reach', 569, 15, 25, 'Torso en arm gemeten')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

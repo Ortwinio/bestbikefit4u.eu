@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PerformanceCalculator } from "./PerformanceCalculator";
+import { PerformanceCalculator as Calculator } from "./PerformanceCalculator";
 import { FtpRatings, FuelHeadline } from "./SourcedResults";
 import { performanceMessages } from "@/i18n/calculators/performance";
 import { carbohydrateGuidance } from "@/lib/public-calculators/performance";
@@ -10,13 +10,17 @@ import { performanceDefaults } from "@/lib/calculators/accountState";
 import { ftpSliderStartCopy } from "@/i18n/calculators/ftpSliderStart";
 import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
 
+function PerformanceCalculator(props: React.ComponentProps<typeof Calculator>) {
+  return <Calculator account ftpKnown {...props} />;
+}
+
 afterEach(() => { cleanup(); sessionStorage.clear(); });
 function keys(value: object, prefix = ""): string[] {
   return Object.entries(value).flatMap(([key, item]) =>
     typeof item === "object" ? keys(item, `${prefix}${key}.`) : `${prefix}${key}`,
   );
 }
-describe("performance calculator interactions", () => {
+describe("preserved account performance calculator interactions", () => {
   it.each(["en", "nl"] as const)("keeps the %s starter UI-only until confirmation", (locale) => {
     const onValuesChange = vi.fn();
     render(<PerformanceCalculator tool="ftp-wkg" locale={locale} account
@@ -92,9 +96,8 @@ describe("performance calculator interactions", () => {
     writeHandoffEntry({ calculator: "climb-planner", field: "ftpWatts", value: 275,
       unit: "W", method: "declared", touchedAt: Date.now() });
     const before = readHandoff();
-    render(<PerformanceCalculator tool="ftp-wkg" locale="en" />);
+    render(<PerformanceCalculator tool="ftp-wkg" locale="en" account={false} />);
     expect(screen.getByRole("slider", { name: "Your FTP" }).getAttribute("aria-valuenow")).toBe("275");
-    fireEvent.click(screen.getByRole("button", { name: "Women" }));
     expect(screen.queryByText(ftpSliderStartCopy.en.hint)).toBeNull();
     expect(readHandoff()).toEqual(before);
   });
@@ -161,9 +164,7 @@ describe("performance calculator interactions", () => {
     expect(screen.getByTestId("climb-profile").getAttribute("d")).not.toBe(initial);
     fireEvent.keyDown(screen.getByRole("slider", { name: "Climb length" }), { key: "End" });
     expect(screen.getByText("164")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Check your gearing" }).getAttribute("href")).toBe(
-      "/en/calculators/gearing",
-    );
+    expect(screen.queryByRole("link", { name: "Check your gearing" })).toBeNull();
   });
   it("handles FTP test modes and uses Dutch decimal formatting", () => {
     render(<PerformanceCalculator tool="ftp-wkg" locale="nl" />);

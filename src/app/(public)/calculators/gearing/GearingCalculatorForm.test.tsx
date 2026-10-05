@@ -1,7 +1,10 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { GearingCalculatorForm } from "./GearingCalculatorForm";
+import { GearingCalculatorForm as Calculator } from "./GearingCalculatorForm";
+function GearingCalculatorForm(props: React.ComponentProps<typeof Calculator>) {
+  return <Calculator accountMode {...props} />;
+}
 const save = vi.hoisted(() => vi.fn().mockResolvedValue(null));
 vi.mock("convex/react", () => ({ useMutation: () => save }));
 afterEach(() => {
@@ -10,8 +13,8 @@ afterEach(() => {
   sessionStorage.clear();
 });
 
-describe("gearing sliders and live result", () => {
-  it.each([true, false])("keeps public gearing FTP-free with visible gear results (NL=%s)", (isNl) => {
+describe("preserved account gearing sliders and live result", () => {
+  it.each([true, false])("keeps account gearing FTP-free with visible gear results (NL=%s)", (isNl) => {
     render(<GearingCalculatorForm isNl={isNl} />);
     expect(screen.queryByRole("slider", { name: /FTP/i })).toBeNull();
     expect(screen.queryByRole("spinbutton")).toBeNull();
@@ -33,10 +36,10 @@ describe("gearing sliders and live result", () => {
     expect(changed).toHaveBeenLastCalledWith(expect.objectContaining({ outerChainringTeeth: 49, cadenceRpm: 92 }));
     expect(save).not.toHaveBeenCalled();
   });
-  it("uses the real public gear calculation and native keyboard limits", () => {
+  it("uses the real account gear calculation and native keyboard limits", () => {
     render(<GearingCalculatorForm isNl />);
-    expect(screen.getByRole("region", { name: "Voorbeeldfiets · Lichtste verhouding" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Open de klimplanner" }).getAttribute("href")).toBe("/nl/calculators/climb-planner");
+    expect(screen.getByRole("region", { name: "Lichtste verhouding" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Open de klimplanner" }).getAttribute("href")).toBe("/nl/tools/climb-planner");
     const ring = screen.getByRole("slider", { name: "Buitenblad" });
     fireEvent.keyDown(ring, { key: "End" });
     expect(ring.getAttribute("aria-valuetext")).toBe("70 T");

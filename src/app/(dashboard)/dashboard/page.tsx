@@ -21,6 +21,7 @@ import {
 import { ProfilePhotoUpload } from "@/components/profile/ProfilePhotoUpload";
 import { DashboardHomeProfileIndicators } from "@/components/dashboard/DashboardHomeProfileIndicators";
 import { DashboardReportBike } from "@/components/dashboard/DashboardReportBike";
+import { DashboardReportMeasurementPanel } from "@/components/dashboard/DashboardReportMeasurementPanel";
 import { DashboardCalculatorQuickLinks } from "@/components/dashboard/DashboardCalculatorQuickLinks";
 import { DashboardProfilePrompts } from "@/components/dashboard/DashboardProfilePrompts";
 import { DashboardProfileStrength } from "@/components/dashboard/DashboardProfileStrength";
@@ -128,7 +129,8 @@ export default function DashboardPage() {
         />
         <CardContent className="gap-5">
           {profile ? (
-            <div className="space-y-4">
+            <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_20rem]">
+              <div className="min-w-0 space-y-4">
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <MeasurementTile
                   label={messages.profile.measurements.height}
@@ -170,6 +172,8 @@ export default function DashboardPage() {
                 <p className="font-semibold">{copy.improve}</p>
                 <p className="mt-1 text-sm">{copy.improveBody}</p>
               </div>}
+              </div>
+              <DashboardReportMeasurementPanel locale={locale} />
             </div>
           ) : (
             <InfoBox

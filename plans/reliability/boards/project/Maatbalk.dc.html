@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bereikbalk voor maten</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div role="img" aria-label="{{aria}}" style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; font-family: 'DM Mono', monospace; color: #0F2420; padding-top: 8px">
+  <div style="position: relative; height: 28px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box">
+    <div style="position: absolute; top: -1.5px; bottom: -1.5px; left: {{left}}%; width: {{width}}%; background: #CFF26A; border: 1.5px solid #0F2420; border-radius: 999px; box-sizing: border-box"></div>
+    <sc-for list="{{ticks}}" as="t" hint-placeholder-count="4">
+      <div style="position: absolute; left: {{t.pos}}%; top: 6px; bottom: 6px; width: 1px; background: #4A5F5A; opacity: .35"></div>
+    </sc-for>
+    <div style="position: absolute; left: {{mark}}%; top: -9px; width: 5px; height: 44px; margin-left: -2.5px; background: #0F2420; border-radius: 3px"></div>
+  </div>
+  <div style="position: relative; height: 22px; font-size: 15px">
+    <sc-for list="{{labels}}" as="l" hint-placeholder-count="5">
+      <span style="position: absolute; left: {{l.pos}}%; transform: translateX(-50%); white-space: nowrap; font-weight: {{l.weight}}; color: {{l.color}}">{{l.text}}</span>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"options":{"editor":"text","default":"XS,S,M,L,XL"},"from":{"editor":"float","default":1.7},"to":{"editor":"float","default":3.1},"value":{"editor":"float","default":2},"aria":{"editor":"text","default":"Framemaat M, bereik M tot L"},"$preview":{"width":560,"height":80}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const opts = String(p.options ?? 'XS,S,M,L,XL').split(',');
+    const n = opts.length;
+    const pos = (i) => ((i + 0.5) / n * 100);
+    const from = Number(p.from ?? 1.7), to = Number(p.to ?? 3.1), value = Number(p.value ?? 2);
+    return {
+      left: pos(from).toFixed(1), width: (pos(to) - pos(from)).toFixed(1), mark: pos(value).toFixed(1),
+      ticks: opts.slice(1).map((o, i) => ({ pos: ((i + 1) / n * 100).toFixed(1) })),
+      labels: opts.map((o, i) => ({ text: o, pos: pos(i).toFixed(1), weight: Math.round(value) === i ? '500' : '400', color: (i >= from - 0.5 && i <= to + 0.5) ? '#0F2420' : '#4A5F5A' })),
+      aria: p.aria ?? ''
+    };
+  }
+}
+</script>
+</body>
+</html>

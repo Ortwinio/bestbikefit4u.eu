@@ -5,6 +5,7 @@ import * as adapters from "@/lib/public-calculators/fitAdapters";
 import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
 import { crankLengthMessages } from "@/i18n/calculators/crankLength";
 import { handoffLoginHref } from "@/components/calculators/PersonalizeAdviceBlock";
+import { calculateSaddleHeight } from "../../../../../shared/reliability/saddleHeight";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
 import { FrameSizeCalculatorForm } from "../frame-size/FrameSizeCalculatorForm";
 import { CrankLengthCalculatorForm } from "../crank-length/CrankLengthCalculatorForm";
@@ -40,7 +41,7 @@ describe("public body calculator handoff", () => {
       expect(url.pathname).toBe(`/${locale}/login`);
       expect([...url.searchParams.keys()]).toEqual(["src", "handoff"]);
       expect(readHandoff().entries).toEqual([]);
-      expect(container.querySelector('[data-slot="configurator-results"]')).toBeTruthy();
+      expect(container.querySelector('[data-reliability-result]')).toBeTruthy();
       unmount();
     }
   });
@@ -167,32 +168,58 @@ describe("public body calculator handoff", () => {
     const before = readHandoff();
     const calculate = vi.spyOn(adapters, "runFrameSizeCalculation");
     const frame = render(<FrameSizeCalculatorForm locale="en" />);
-    expect(calculate).toHaveBeenCalledWith(expect.objectContaining({ inseamCm: 85, inseamSource: "estimated" }));
+    expect(calculate).toHaveBeenCalledWith(expect.objectContaining({ inseamCm: 85 }));
+    expect(screen.getByText(/not yet confirmed as a measurement/)).toBeTruthy();
     expect(readHandoff()).toEqual(before);
     frame.unmount();
     render(<SaddleHeightCalculatorForm />);
     const inseam = screen.getByRole("slider", { name: "Inseam" });
-    expect(inseam.getAttribute("aria-valuenow")).toBe("89");
-    expect(inseam.getAttribute("aria-valuetext")).toBe("not entered yet");
-    expect(screen.getByRole("img", { name: "Saddle height 789 mm, range 740 to 840 mm" })).toBeTruthy();
+    expect(inseam.getAttribute("aria-valuenow")).toBe("85");
+    expect(inseam.getAttribute("aria-valuetext")).toBe("85 cm");
+    const expected = calculateSaddleHeight({ heightCm: 190, inseamCm: 85, provenance: { kind: method } });
+    expect(screen.getByRole("img", { name: `Saddle height ${expected.adviceMm} mm, range ${expected.lowerMm} to ${expected.upperMm} mm` })).toBeTruthy();
+    const link = screen.getByRole("link", { name: "Save and refine for free" });
+    link.addEventListener("click", event => event.preventDefault());
+    fireEvent.click(link);
+    expect(readHandoff().entries.find(entry => entry.field === "inseamCm"))
+      .toEqual(before.entries.find(entry => entry.field === "inseamCm"));
+    expect(readHandoff().entries.find(entry => entry.field === "heightCm")?.method).toBe("declared");
+  });
+
+  it("retains repeated measured provenance and its shared-model interval on save", () => {
+    writeHandoffEntry({ field: "heightCm", value: 190, unit: "cm", method: "declared",
+      calculator: "frame-size", touchedAt: Date.now() });
+    writeHandoffEntry({ field: "inseamCm", value: 89, unit: "cm", method: "measured", kind: "measured",
+      repeatCount: 3, withinTolerance: true, calculator: "frame-size", touchedAt: Date.now() });
+    const before = readHandoff();
+    render(<SaddleHeightCalculatorForm />);
+    expect(screen.getByText(/measured 3 times/)).toBeTruthy();
+    const expected = calculateSaddleHeight({ heightCm: 190, inseamCm: 89,
+      provenance: { kind: "measured", repeatCount: 3, withinTolerance: true } });
+    expect(screen.getByRole("img", { name: `Saddle height ${expected.adviceMm} mm, range ${expected.lowerMm} to ${expected.upperMm} mm` })).toBeTruthy();
+    const link = screen.getByRole("link", { name: "Save and refine for free" });
+    link.addEventListener("click", event => event.preventDefault());
+    fireEvent.click(link);
     expect(readHandoff()).toEqual(before);
   });
 
-  it("maps aero to the profile performance goal while keeping the public calculation aerodynamic", () => {
+  it("keeps public bike type but defers goal, flexibility and core to the account", () => {
     const calculate = vi.spyOn(adapters, "runBikeFitCalculation");
     render(<BikeFitCalculatorForm isNl={false} />);
-    fireEvent.click(screen.getByRole("radio", { name: /^Aero/ }));
-    expect(calculate).toHaveBeenCalledWith(expect.objectContaining({ ridingGoal: "aero" }));
+    expect(screen.queryByRole("radio", { name: /^Aero/ })).toBeNull();
+    expect(screen.queryByRole("slider", { name: /flexibility|core/i })).toBeNull();
+    fireEvent.click(screen.getByRole("radio", { name: "Gravel" }));
+    expect(calculate).toHaveBeenCalledWith(expect.objectContaining({ category: "gravel", ridingGoal: "balanced" }));
     expect(readHandoff().entries).toEqual([expect.objectContaining({
-      field: "ridingGoal", value: "performance", method: "declared",
+      field: "bikeCategory", value: "gravel", method: "bike",
     })]);
   });
 
-  it("records a method confirmation only for inseam, never untouched height or scores", () => {
+  it("records an actual inseam edit, never untouched height or scores", () => {
     render(<BikeFitCalculatorForm isNl={false} />);
-    fireEvent.click(screen.getByRole("radio", { name: "Measured" }));
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Inseam" }), { key: "ArrowRight" });
     expect(readHandoff().entries).toEqual([expect.objectContaining({
-      field: "inseamCm", value: 84, method: "measured",
+      field: "inseamCm", value: 89.5, method: "measured",
     })]);
   });
 
@@ -212,14 +239,14 @@ describe("public body calculator handoff", () => {
     expect(readHandoff()).toEqual(before);
   });
 
-  it("clears optional bike inputs from the session when they are erased", () => {
+  it("clears an optional public measurement when it is omitted", () => {
     render(<CrankLengthCalculatorForm locale="en" copy={crankLengthMessages.en} initialCategory="road" />);
-    const input = screen.getByRole("spinbutton", { name: "Your current crank length (mm)" });
-    fireEvent.change(input, { target: { value: "170" } });
+    const input = screen.getByRole("slider", { name: "Inseam" });
+    fireEvent.keyDown(input, { key: "ArrowRight" });
     expect(readHandoff().entries).toEqual([expect.objectContaining({
-      field: "currentCrankLengthMm", value: 170, method: "bike",
+      field: "inseamCm", value: 89.5, method: "measured",
     })]);
-    fireEvent.change(input, { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "Omit measurement" }));
     expect(readHandoff().entries).toEqual([]);
   });
 });

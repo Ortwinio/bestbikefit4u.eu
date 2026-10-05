@@ -93,7 +93,9 @@ describe("profile provenance", () => {
     const rows = ctx.tables.get("profileObservations")!;
     expect(rows.slice(0, 2).every(row => row.status === "current")).toBe(true);
     expect(rows.slice(2).map(row => row.status)).toEqual(["superseded", "superseded", "current"]);
-    expect(rows.every(row => row.repeatCount === undefined && row.withinTolerance === undefined)).toBe(true);
+    expect(rows.slice(0, 2).every(row => row.repeatCount === undefined && row.withinTolerance === undefined)).toBe(true);
+    expect(rows.slice(2).map(row => ({ repeatCount: row.repeatCount, withinTolerance: row.withinTolerance })))
+      .toEqual(Array.from({ length: 3 }, () => ({ repeatCount: 1, withinTolerance: false })));
   });
 
   it.each([

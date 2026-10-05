@@ -43,8 +43,9 @@ describe("PDF summary payload fidelity", () => {
     const correction = root.querySelector(".pdf-summary-reach-correction");
     expect(correction?.querySelector("rect")?.getAttribute("height")).toBe("24");
     expect(correction?.querySelector("path")?.getAttribute("d")).toContain("M219 13H460");
-    expect(root.querySelector(".pdf-summary-percent")?.textContent).toBe("64%");
-    expect(root.querySelector(".pdf-summary-gauge-value")?.getAttribute("stroke-dasharray")).toBe("64 100");
+    expect(root.querySelector(".pdf-summary-percent")).toBeNull();
+    expect(root.querySelector(".pdf-summary-gauge-value")).toBeNull();
+    expect(root.querySelector(".pdf-summary-accuracy")?.textContent).toContain("±");
   });
 
   it("uses the actual ordered priorities, omits pending rows and stops at three", () => {

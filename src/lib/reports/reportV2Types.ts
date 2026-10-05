@@ -1,3 +1,5 @@
+import type { ReliabilityRange } from "../../../shared/reliability/calculators";
+
 export type ReportParameterKey =
   | "saddleHeight"
   | "saddleSetback"
@@ -76,7 +78,9 @@ export type ReportPriorityRow = {
 export type ReportDetailedRow = {
   key: ReportParameterKey;
   targetLabel: string;
+  /** Legacy engine test band, retained for compatibility; never rendered as uncertainty. */
   rangeLabel: string | null;
+  reliability95?: ReliabilityRange | null;
   confidence: number;
   status: ReportItemStatus;
   feasibility: "direct" | "component_change_required" | "not_yet_evaluated";

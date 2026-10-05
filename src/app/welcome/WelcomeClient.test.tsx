@@ -5,11 +5,20 @@ import { HANDOFF_KEY, readHandoff, writeHandoffEntry, type HandoffEntry } from "
 import { getWelcomeCopy } from "@/i18n/account/welcome";
 import type { Context, ImportArgs } from "./handoff";
 import WelcomeClient from "./WelcomeClient";
+import { getFunctionName } from "convex/server";
 
 const runtime = vi.hoisted(() => ({ auth: { isAuthenticated: true, isLoading: false }, locale: "en" as "en" | "nl", context: { profile: null, observations: [] } as Context | undefined, save: vi.fn(), replace: vi.fn(), query: vi.fn() }));
 const pricing = vi.hoisted(() => ({ enforced: false, fullProfile: true, isLoading: false, access: undefined }));
+const calculator = vi.hoisted(() => ({ context: { userId: "users:test", entries: [] as HandoffEntry[] }, save: vi.fn() }));
 vi.mock("@/hooks/useProfileAccess", () => ({ useProfileAccess: () => pricing }));
-vi.mock("convex/react", () => ({ useConvexAuth: () => runtime.auth, useQuery: (...args: unknown[]) => { runtime.query(...args); return runtime.context; }, useMutation: () => runtime.save }));
+vi.mock("convex/react", () => ({
+  useConvexAuth: () => runtime.auth,
+  useQuery: (...args: unknown[]) => {
+    runtime.query(...args);
+    return getFunctionName(args[0] as never).startsWith("calculatorData/") ? calculator.context : runtime.context;
+  },
+  useMutation: (reference: never) => getFunctionName(reference).startsWith("calculatorData/") ? calculator.save : runtime.save,
+}));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: runtime.replace }) }));
 vi.mock("@/i18n/useDashboardMessages", () => ({ useDashboardMessages: () => ({ locale: runtime.locale }) }));
 vi.mock("@/components/branding/BrandLogo", () => ({ BrandLogo: () => <span>BikeFitBoost</span> }));
@@ -25,11 +34,110 @@ beforeEach(() => {
   runtime.locale = "en";
   pricing.enforced = false; pricing.fullProfile = true; pricing.isLoading = false;
   runtime.context = { profile: null, observations: [] };
+  calculator.context = { userId: "users:test", entries: [] };
+  calculator.save.mockResolvedValue({ acceptedFields: ["powerWatts"], retainedFields: [] });
   runtime.save.mockResolvedValue({ status: "imported", importedFields: ["inseamCm"], conflicts: [], profileId: null, bikeId: null });
 });
 afterEach(cleanup);
 
 describe("welcome handoff review", () => {
+  it.each(["nl", "en"] as const)("explicitly confirms replacing measured generic profile data in %s", async locale => {
+    runtime.locale = locale;
+    const record = entry({ field: "hipCircumferenceCm", value: 100, method: "declared", kind: "declared" });
+    const current = { ...record, value: 95, method: "measured" as const, kind: "measured" as const,
+      touchedAt: record.touchedAt + 500 };
+    writeHandoffEntry(record);
+    calculator.context.entries = [current];
+    calculator.save.mockResolvedValue({ acceptedFields: [record.field], retainedFields: [] });
+    render(<WelcomeClient />);
+    submit();
+    expect(calculator.save).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: getWelcomeCopy(locale).today }));
+    submit();
+    await waitFor(() => expect(calculator.save).toHaveBeenCalledWith({
+      entries: [expect.objectContaining({ field: record.field, value: 100, method: "declared", kind: "declared" })],
+      expectedUserId: "users:test", confirmedProfileFields: [{ field: record.field,
+        expectedValue: 95, expectedTouchedAt: current.touchedAt }],
+    }));
+    expect(calculator.save.mock.calls[0][0].entries[0].touchedAt).toBeGreaterThan(current.touchedAt);
+    await waitFor(() => expect(readHandoff().entries).toHaveLength(0));
+  });
+
+  it("retains all session values when a chosen differing generic profile value was not accepted", async () => {
+    const record = entry({ field: "hipCircumferenceCm", value: 100, method: "declared" });
+    writeHandoffEntry(record);
+    writeHandoffEntry(entry());
+    calculator.context.entries = [{ ...record, value: 95, method: "measured" }];
+    calculator.save.mockResolvedValue({ acceptedFields: [], retainedFields: [record.field] });
+    render(<WelcomeClient />);
+    fireEvent.click(screen.getByRole("button", { name: getWelcomeCopy("en").today }));
+    submit();
+    await screen.findByRole("alert");
+    expect(readHandoff().entries).toHaveLength(2);
+    expect(runtime.save).not.toHaveBeenCalled();
+    expect(runtime.replace).not.toHaveBeenCalled();
+  });
+
+  it("allows retaining an identical generic value without discarding the successful import", async () => {
+    const record = entry({ field: "hipCircumferenceCm", value: 100, method: "declared" });
+    writeHandoffEntry(record);
+    calculator.context.entries = [{ ...record, method: "measured" }];
+    calculator.save.mockResolvedValue({ acceptedFields: [], retainedFields: [record.field] });
+    render(<WelcomeClient />);
+    submit();
+    await waitFor(() => expect(runtime.replace).toHaveBeenCalledWith("/en/dashboard"));
+    expect(readHandoff().entries).toHaveLength(0);
+  });
+
+  it("offers generic calculator values separately and saves them only on confirmation", async () => {
+    const record = entry({ field: "powerWatts", value: 220, unit: "W", calculator: "power-speed", method: "declared" });
+    writeHandoffEntry(record);
+    render(<WelcomeClient />);
+    expect(screen.getByRole("region", { name: "Your calculator details" })).toBeTruthy();
+    expect(calculator.save).not.toHaveBeenCalled();
+    submit();
+    await waitFor(() => expect(calculator.save).toHaveBeenCalledWith({ entries: [record], expectedUserId: "users:test" }));
+    expect(runtime.save).toHaveBeenCalledWith({ records: [] });
+    await waitFor(() => expect(readHandoff().entries).toHaveLength(0));
+  });
+
+  it("keeps generic and legacy session data when calculator saving fails", async () => {
+    writeHandoffEntry(entry({ field: "powerWatts", value: 220, unit: "W", calculator: "power-speed" }));
+    writeHandoffEntry(entry());
+    calculator.save.mockRejectedValue(new Error("offline"));
+    render(<WelcomeClient />);
+    submit();
+    await screen.findByRole("alert");
+    expect(readHandoff().entries).toHaveLength(2);
+    expect(runtime.save).not.toHaveBeenCalled();
+    expect(runtime.replace).not.toHaveBeenCalled();
+  });
+
+  it("requires a choice before replacing a different saved calculator value", async () => {
+    const record = entry({ field: "powerWatts", value: 220, unit: "W", calculator: "power-speed" });
+    writeHandoffEntry(record);
+    calculator.context.entries = [{ ...record, value: 250 }];
+    render(<WelcomeClient />);
+    submit();
+    expect(calculator.save).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "From my profile" }));
+    submit();
+    await waitFor(() => expect(runtime.replace).toHaveBeenCalledWith("/en/dashboard"));
+    expect(calculator.save).not.toHaveBeenCalled();
+  });
+
+  it("retains the session for retry if the legacy save fails after generic data is saved", async () => {
+    writeHandoffEntry(entry({ field: "powerWatts", value: 220, unit: "W", calculator: "power-speed" }));
+    writeHandoffEntry(entry());
+    runtime.save.mockRejectedValue(new Error("offline"));
+    render(<WelcomeClient />);
+    submit();
+    await screen.findByRole("alert");
+    expect(calculator.save).toHaveBeenCalledTimes(1);
+    expect(readHandoff().entries).toHaveLength(2);
+    expect(runtime.replace).not.toHaveBeenCalled();
+  });
+
   it("scores the real handoff with authoritative free/paid access and leaves OFF unchanged", () => {
     runtime.context = { profile: { inseamCm: 83, femurLengthCm: 47 } as NonNullable<Context["profile"]>, observations: [] };
     const view = render(<WelcomeClient />);

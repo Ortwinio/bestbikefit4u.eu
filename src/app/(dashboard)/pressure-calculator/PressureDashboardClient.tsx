@@ -75,10 +75,10 @@ function SavedPressureForm({ bikeId, userId, initialValues, header, stale, profi
       })),
     ] : []),
   ], context.observations, context.bikeObservations.filter((item) => item.bikeId === bikeId));
-  const chain = useCalculatorChain({ scopeKey: `tire-pressure:${bikeId ?? ""}`, initialValues, bindings,
+  const chain = useCalculatorChain({ autoSaveProfile: true, scopeKey: `tire-pressure:${bikeId ?? ""}`, initialValues, bindings,
     externalKey: JSON.stringify({ inputs: bindings.map(({ field, value, kind, recordedAt }) => ({ field, value, kind, recordedAt })),
       tireSetup: tires?._id, discipline: bike?.discipline, bikeType: bike?.bikeType }),
-    applyChanges: (changes) => apply({ calculator: "tire-pressure", bikeId,
+    applyChanges: (changes, automatic) => apply({ calculator: "tire-pressure", bikeId, automatic, expectedUserId: userId,
       tireSetupId: changes.some((change) => change.field.startsWith("tires.")) ? tires?._id : undefined,
       changes: changes.map(({ source: _source, ...change }) => {
         if (change.value === null) throw new Error(saveCopy.invalid);

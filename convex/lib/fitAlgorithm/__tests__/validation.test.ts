@@ -73,6 +73,6 @@ describe("validateInputs", () => {
     expect(result.isValid).toBe(true);
     expect(result.warnings.length).toBeGreaterThan(0);
     expect(result.warnings[0]?.type).toBe("measurement_warning");
-    expect(result.warnings[0]?.message).toContain("Inseam ratio");
+    expect(result.warnings[0]?.message).toContain("Inseam differs");
   });
 });

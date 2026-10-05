@@ -18,12 +18,12 @@ import { getBikeTypeLabel } from "@/lib/bikes";
 import { getDashboardPressureCalculatorPath } from "@/lib/pressureRoutes";
 import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
 import { getReportV2Copy, PDF_SUMMARY_COPY } from "@/lib/reports/reportV2Copy";
-import { formatPdfDate, localizePdfValue } from "@/lib/reports/pdfShared";
-import { DashboardFitRange } from "./DashboardFitRange";
+import { localizePdfValue } from "@/lib/reports/pdfShared";
+import { DashboardReliabilityReport } from "./DashboardReliabilityReport";
+import { mapDashboardGreatestGain, mapDashboardReliabilityRows } from "./DashboardReportReliabilityMapping";
 import { DashboardNumber } from "./DashboardNumber";
 
 type BikeSummary = FunctionReturnType<typeof api.bikes.queries.listSummariesByUser>[number];
-const letters = { saddleHeight: "A", saddleSetback: "B", handlebarDrop: "C", handlebarReach: "D" };
 const linkClass = "inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-primary " +
   "underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
 
@@ -37,6 +37,8 @@ export function DashboardReportBike({ bike, latestFit }: {
   const summaryCopy = PDF_SUMMARY_COPY[locale];
   const usage = getBikeUsageCopy(locale);
   const source = useQuery(api.recommendations.queries.getReportV2,
+    latestFit ? { sessionId: latestFit.session._id } : "skip");
+  const reliability = useQuery(api.reliability.queries.getDashboardReliability,
     latestFit ? { sessionId: latestFit.session._id } : "skip");
   const report = source?.recommendation ? mapReportV2Payload(source) : null;
   const photo = useResolvedImageUrl(bike.photoUrl);
@@ -53,8 +55,6 @@ export function DashboardReportBike({ bike, latestFit }: {
     ["positionPriority", questionnaire?.positionPriority ?? responses.position_priority],
     ["typeOfRiding", questionnaire?.typeOfRiding ?? responses.road_riding_type ?? responses.mtb_terrain],
   ] as const;
-  const priorities = report?.prioritySummary.filter((row) =>
-    row.status !== "pending_data" && row.targetLabel && row.targetLabel !== "n/a").slice(0, 3) ?? [];
   const pressure = report?.tirePressure.status === "ready" ? report.tirePressure : null;
   const pressureValues = report ? pressure && {
     recommendedFrontBar: pressure.frontBar, recommendedRearBar: pressure.rearBar,
@@ -129,39 +129,10 @@ export function DashboardReportBike({ bike, latestFit }: {
       <CardContent className="space-y-5">
         {latestFit && source === undefined ? <LoadingState label={messages.layout.loading} /> :
           report ? <>
-            <dl className="space-y-3">
-              {report.detailedFit.filter((row) => row.key in letters && row.status !== "pending_data"
-                && row.targetLabel && row.targetLabel !== "n/a").map((row) =>
-                <div key={row.key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 rounded-xl bg-background p-3">
-                  <dt className="flex items-center gap-2 text-sm font-semibold">
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-accent
-                      font-mono text-accent-foreground">{letters[row.key as keyof typeof letters]}</span>
-                    {reportCopy.parameters[row.key].label}
-                  </dt>
-                  <dd className="col-start-2 row-span-3 row-start-1 self-center font-mono text-lg">
-                    <DashboardNumber value={row.targetLabel} />
-                  </dd>
-                  <dd className="col-start-1"><DashboardFitRange target={row.targetLabel} range={row.rangeLabel} /></dd>
-                  {row.rangeLabel && <dd className="col-start-1 mt-2 text-xs text-muted-foreground"
-                    data-report-range={row.rangeLabel}>
-                    <DashboardNumber value={row.rangeLabel.replace(/\s*mm\s*-\s*/, "-")} />
-                  </dd>}
-                </div>)}
-            </dl>
-            {Number.isFinite(report.profile.globalConfidence) && report.profile.globalConfidence >= 0 &&
-              report.profile.globalConfidence <= 100 && <p className="text-sm text-muted-foreground">
-              {summaryCopy.confidence}{" "}
-              <strong className="text-foreground"><DashboardNumber value={`${report.profile.globalConfidence}%`} /></strong>
-              {" · "}<DashboardNumber value={formatPdfDate(report.reportDate, reportCopy)} />
-            </p>}
-            {priorities.length > 0 && <section className="space-y-2" aria-label={summaryCopy.priorities}>
-              <h3 className="font-semibold">{summaryCopy.priorities}</h3>
-              <ol className="list-inside list-decimal space-y-2 text-sm">
-                {priorities.map((step) => <li key={step.key}>
-                  {reportCopy.parameters[step.key].label}: <DashboardNumber value={step.targetLabel} />
-                </li>)}
-              </ol>
-            </section>}
+            {reliability === undefined ? <LoadingState label={messages.layout.loading} /> :
+              <DashboardReliabilityReport locale={locale}
+                rows={mapDashboardReliabilityRows(reliability?.rows.flatMap(row => row.range ? [row.range] : []) ?? [], locale)}
+                greatestGain={mapDashboardGreatestGain(reliability?.largestGain ?? null, locale)} />}
             {source?.recommendation?.climbingCalculatedFit && <InfoBox variant="success">
               <p className="font-semibold">{messages.bikeGarage.climbingProfileIncluded}</p>
               <p className="mt-2 font-mono text-sm">
