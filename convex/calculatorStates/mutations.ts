@@ -7,9 +7,10 @@ import { validCalculatorState } from "../../src/lib/calculators/accountState";
 import { captureInputProvenance, calculatorUsedInputs } from "../advice/provenance";
 
 export const upsert = mutation({
-  args: { bikeId: v.optional(v.id("bikes")), state: calculatorState },
-  handler: async (ctx, { bikeId, state }) => {
+  args: { bikeId: v.optional(v.id("bikes")), state: calculatorState, expectedUserId: v.optional(v.id("users")) },
+  handler: async (ctx, { bikeId, state, expectedUserId }) => {
     const userId = await requireUserId(ctx);
+    if (expectedUserId && expectedUserId !== userId) throw new Error("ACCOUNT_CHANGED");
     if (bikeId) await requireBikeOwner(ctx, bikeId);
     if (!validCalculatorState(state)) throw new Error("INVALID_CALCULATOR_VALUES");
     const current = await ctx.db.query("calculatorStates")

@@ -69,7 +69,12 @@ function halfWidth(sigmaInseamMm: number, sigmaModelMm: number): number {
   return 1.96 * Math.hypot(SADDLE_HEIGHT_BIKE_FACTORS.road * sigmaInseamMm, sigmaModelMm);
 }
 
-function inseamUncertainty(inseamMm: number, provenance: SaddleHeightProvenance): number {
+export function getInseamSigmaMm(inseamMm: number, provenance: SaddleHeightProvenance): number {
+  if (!Number.isFinite(inseamMm) || inseamMm < 550 || inseamMm > 1050
+    || (provenance.repeatCount !== undefined
+      && (!Number.isInteger(provenance.repeatCount) || provenance.repeatCount < 1))) {
+    throw new RangeError("Invalid measurement uncertainty input");
+  }
   if (provenance.unresolvedWarning || provenance.kind !== "measured") return 0.03 * inseamMm;
   if (provenance.method === "fitter" || provenance.method === "video") return 5;
   if (provenance.withinTolerance && (provenance.repeatCount ?? 1) >= 2) {
@@ -103,7 +108,7 @@ export function calculateSaddleHeight(input: SaddleHeightInput): SaddleHeightRes
   const effectiveProvenance = input.inseamCm === undefined
     ? { ...provenance, kind: "derived" as const }
     : provenance ?? { kind: "measured" as const };
-  const sigmaInseamMm = inseamUncertainty(inseamMm, effectiveProvenance);
+  const sigmaInseamMm = getInseamSigmaMm(inseamMm, effectiveProvenance);
   const sigmaModelMm = 0.01 * advice;
   const width = halfWidth(sigmaInseamMm, sigmaModelMm);
   const adviceMm = Math.round(advice);

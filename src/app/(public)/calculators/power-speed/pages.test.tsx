@@ -66,6 +66,6 @@ describe("Dutch calculator prose", () => {
     expect((await powerMetadata()).title).toBe("Vermogen- / snelheidsschatting | BikeFitBoost");
     render(await FuelPage());
     expect(screen.getByText(/Wat je maag en darmen verdragen, het klimaat/)).toBeTruthy();
-    expect(screen.getByText(/Vraag bij een ingewikkelde situatie advies aan een coach of sportdiëtist/)).toBeTruthy();
+    expect(screen.getAllByText(/Vraag bij een ingewikkelde situatie advies aan een coach of sportdiëtist/).length).toBeGreaterThan(0);
   });
 });

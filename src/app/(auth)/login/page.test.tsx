@@ -206,9 +206,38 @@ describe("calculator handoff login", () => {
 
   it.each(["0", "true"])("does not activate the handoff panel for flag %s", (flag) => {
     search = new URLSearchParams(`handoff=${flag}`);
-    sessionStorage.setItem(HANDOFF_KEY, fixture());
     render(<LoginPage />);
     expect(screen.queryByText(loginHandoffCopy.en.title)).toBeNull();
+  });
+
+  it.each(["en", "nl"] as const)("offers session values on plain %s login without a handoff flag", async locale => {
+    pathname = `/${locale}/login`;
+    search = new URLSearchParams();
+    const stored = fixture();
+    sessionStorage.setItem(HANDOFF_KEY, stored);
+    signInMock.mockResolvedValue({ signingIn: false });
+    render(<LoginPage />);
+    expect(await screen.findByText(loginHandoffCopy[locale].title)).toBeTruthy();
+    const input = screen.getAllByPlaceholderText(locale === "nl" ? "jij@example.com" : "you@example.com")[0];
+    fireEvent.change(input, { target: { value: "test@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() => expect(signInMock).toHaveBeenCalledWith("resend", {
+      email: "test@example.com", locale, redirectTo: `/${locale}/welcome`,
+    }));
+    expect(sessionStorage.getItem(HANDOFF_KEY)).toBe(stored);
+  });
+
+  it("keeps the gift destination ahead of stored calculator data", async () => {
+    search = new URLSearchParams("gift=1");
+    sessionStorage.setItem(HANDOFF_KEY, fixture());
+    signInMock.mockResolvedValue({ signingIn: false });
+    render(<LoginPage />);
+    const input = screen.getAllByPlaceholderText("you@example.com")[0];
+    fireEvent.change(input, { target: { value: "test@example.com" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() => expect(signInMock).toHaveBeenCalledWith("resend", {
+      email: "test@example.com", locale: "en", redirectTo: "/en/gift",
+    }));
   });
 
   it("sends only auth parameters and the clean welcome destination", async () => {

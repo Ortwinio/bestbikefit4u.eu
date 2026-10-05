@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { calculatePublicSaddleHeight } from "../../../../../shared/reliability/saddleHeight";
+import {
+  calculatePublicSaddleHeight, calculateSaddleHeight, getPublicSaddleHeightNextStep,
+  type SaddleHeightProvenance,
+} from "../../../../../shared/reliability/saddleHeight";
 import { Button, Slider } from "@/components/ui";
 import { RangeBar } from "@/components/ui/RangeBar";
 import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
@@ -37,6 +40,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   const [heightCm, setHeightCm] = useState(190);
   const [heightKnown, setHeightKnown] = useState(false);
   const [inseamCm, setInseamCm] = useState<number>();
+  const [inseamProvenance, setInseamProvenance] = useState<SaddleHeightProvenance>({ kind: "measured" });
   const [confirmed, setConfirmed] = useState(false);
   const [override, setOverride] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
@@ -59,9 +63,12 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
       setHeightKnown(true);
       fields.push("heightCm");
     }
-    if (!homeStart && typeof inseam?.value === "number" && inseam.method === "measured"
+    if (typeof inseam?.value === "number"
       && inseam.value >= 55 && inseam.value <= 105) {
       setInseamCm(inseam.value);
+      setInseamProvenance({ kind: inseam.kind ?? (inseam.method === "bike" ? "declared" : inseam.method),
+        method: inseam.measurementMethod, repeatCount: inseam.repeatCount,
+        withinTolerance: inseam.withinTolerance, unresolvedWarning: inseam.unresolvedWarning });
       setShowInseam(true);
       fields.push("inseamCm");
     }
@@ -79,9 +86,20 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   }, [homeStart, prefilled, quick]);
 
   const state = calculatePublicSaddleHeight({ heightCm, inseamCm, confirmed, override });
-  const result = state.result;
+  const unresolvedWarning = state.unresolvedWarning || Boolean(inseamProvenance.unresolvedWarning);
+  const result = state.result && state.basis === "measured" && inseamCm !== undefined
+    ? calculateSaddleHeight({ heightCm, inseamCm, provenance: { ...inseamProvenance, unresolvedWarning } })
+    : state.result;
   const estimated = calculatePublicSaddleHeight({ heightCm }).result;
-  const nextWidth = state.nextStep.halfWidthMm;
+  const measured = inseamCm !== undefined && inseamProvenance.kind === "measured";
+  const nextStep = getPublicSaddleHeightNextStep({ hasInseam: measured,
+    unresolvedLargeWarning: state.status === "large" || Boolean(inseamProvenance.unresolvedWarning), result });
+  const nextWidth = nextStep.halfWidthMm;
+  const canRefine = state.canRefine && !unresolvedWarning;
+  const basis = state.basis !== "measured" ? copy.bases[state.basis]
+    : !measured ? copy.reusedUnmeasured
+      : (inseamProvenance.repeatCount ?? 1) > 1 ? copy.reusedRepeated.replace("{count}", String(inseamProvenance.repeatCount))
+        : copy.bases.measured;
   const guideHref = withLocalePrefix("/measurement-guide", locale);
   const saveHref = handoffLoginHref("saddle-height", locale);
 
@@ -98,6 +116,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
 
   function updateInseam(value: number) {
     setInseamCm(value);
+    setInseamProvenance({ kind: "measured" });
     setConfirmed(false);
     setOverride(false);
     if (calculatePublicSaddleHeight({ heightCm, inseamCm: value }).canRefine) {
@@ -110,6 +129,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
 
   function remeasure() {
     setInseamCm(undefined);
+    setInseamProvenance({ kind: "measured" });
     setConfirmed(false);
     setOverride(false);
     setShowInseam(true);
@@ -118,9 +138,14 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
   }
 
   function saveMeasurements() {
-    if (!state.canRefine || inseamCm === undefined) return;
-    handoff.touch("heightCm", heightCm, "cm", "declared");
-    handoff.touch("inseamCm", inseamCm, "cm", "measured");
+    if (!canRefine || inseamCm === undefined) return;
+    if (handoff.entries.find(entry => entry.field === "heightCm")?.value !== heightCm) {
+      handoff.touch("heightCm", heightCm, "cm", "declared");
+    }
+    if (handoff.entries.find(entry => entry.field === "inseamCm")?.value !== inseamCm) {
+      const method = inseamProvenance.kind === "derived" ? "estimated" : inseamProvenance.kind;
+      handoff.touch("inseamCm", inseamCm, "cm", method);
+    }
   }
 
   const measurementCard = (
@@ -173,19 +198,19 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
               </div>
             </div>
             <RangeBar value={result.adviceMm} low={result.lowerMm} high={result.upperMm}
-              dashed={state.dashed} locale={locale} size={quick ? "compact" : "large"} />
+              dashed={unresolvedWarning} locale={locale} size={quick ? "compact" : "large"} />
             {!quick && <p className={styles.sentence}>
               {copy.sentence.replace("{low}", String(result.lowerMm)).replace("{high}", String(result.upperMm))
-                .replace("{basis}", copy.bases[state.basis])}
+                .replace("{basis}", basis)}
             </p>}
-            {!quick && state.canRefine && estimated && estimated.halfWidthMm > result.halfWidthMm
+            {!quick && canRefine && estimated && estimated.halfWidthMm > result.halfWidthMm
               && <p className={styles.improvement}>
                 {copy.narrower.replace("{from}", String(estimated.halfWidthMm))
                   .replace("{to}", String(result.halfWidthMm))}
               </p>}
             {!quick && <p className={styles.nextStep} data-slot="saddle-next-step">
               <span aria-hidden="true">→</span>
-              {copy.nextSteps[state.nextStep.kind].replace("{width}", String(nextWidth ?? ""))}
+              {copy.nextSteps[nextStep.kind].replace("{width}", String(nextWidth ?? ""))}
             </p>}
             {!quick && <details className={styles.explanation}>
               <summary>{copy.rangeTitle}</summary><p className={styles.hint}>{copy.rangeBody}</p>
@@ -199,6 +224,7 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
             <div className={styles.actions}>
               <Button onClick={() => {
                 setConfirmed(true);
+                setInseamProvenance({ kind: "measured" });
                 if (inseamCm !== undefined) handoff.touch("inseamCm", inseamCm, "cm", "measured");
                 onInseamAdded?.();
               }}>{copy.confirm}</Button>
@@ -215,10 +241,10 @@ export function PublicSaddleHeightCalculator({ isNl = false, mode = "full", onIn
               <Link href={withLocalePrefix("/bike-fitting", locale)} className={styles.inlineLink}>{copy.fitter}</Link>
             </div>
           </section>}
-          {!quick && state.canRefine && <section className={styles.refinement}>
+          {!quick && canRefine && <section className={styles.refinement}>
             <h2>{copy.refineTitle}</h2>
             <ul>
-              <li>{copy.repeat.replace("{width}", String(nextWidth))}</li>
+              <li>{(measured ? copy.repeat : copy.nextSteps["add-inseam"]).replace("{width}", String(nextWidth))}</li>
               <li>{copy.context}</li>
               <li>{copy.saved}</li>
             </ul>

@@ -82,12 +82,12 @@ function SaddleEditor({ userId, context, bikes, bikeId, saved, onSelectBike }: {
       write: (input: SaddleWidthInput, value: unknown) => ({ ...input,
         currentSaddleWidthMm: typeof value === "number" ? value : undefined }) }] : []),
   ], context.observations, context.bikeObservations.filter((item) => item.bikeId === bikeId));
-  const chain = useCalculatorChain({ scopeKey: `saddle-width:${bikeId ?? ""}`,
+  const chain = useCalculatorChain({ autoSaveProfile: true, scopeKey: `saddle-width:${bikeId ?? ""}`,
     initialValues: { ...initial.values, currentSaddleWidthMm: bike?.saddleWidthMm ?? saved?.currentSaddleWidthMm },
     bindings,
     externalKey: JSON.stringify({ bindings: bindings.map(({ field, value, kind, recordedAt }) =>
       ({ field, value, kind, recordedAt })), bikeType: bike?.bikeType, goal: bike?.primaryGoal }),
-    applyChanges: (changes) => apply({ calculator: "saddle-width", bikeId,
+    applyChanges: (changes, automatic) => apply({ calculator: "saddle-width", bikeId, automatic, expectedUserId: userId,
       changes: changes.map(({ source: _source, ...change }) => {
         if (change.value === null) throw new Error(autosaveMessages[locale].invalid);
         return { ...change, value: change.value,

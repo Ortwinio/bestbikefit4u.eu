@@ -32,7 +32,8 @@ function context(extra: Record<string, Row[]> = {}) {
   return { db, runMutation: vi.fn(async () => undefined) };
 }
 const save = (applyChanges as unknown as {
-  _handler: (ctx: MutationCtx, args: { calculator: string; bikeId?: string; tireSetupId?: string; changes: Row[] }) => Promise<unknown>;
+  _handler: (ctx: MutationCtx, args: { calculator: string; bikeId?: string; tireSetupId?: string; changes: Row[];
+    automatic?: boolean; expectedUserId?: string }) => Promise<unknown>;
 })._handler;
 const read = (getContext as unknown as {
   _handler: (ctx: QueryCtx, args: { bikeId?: string }) => Promise<Record<string, unknown>>;
@@ -40,6 +41,37 @@ const read = (getContext as unknown as {
 const change = { field: "inseamCm", value: 85, expectedCurrentValue: 84, kind: "declared" };
 
 describe("account calculator chain", () => {
+  it.each([84, 85])("blocks a queued declaration after the profile evidence becomes measured, incoming %s", async value => {
+    const ctx = context({ profileObservations: [{ _id: "recent-measurement", userId: "user1", field: "inseamCm",
+      value: 84, kind: "measured", status: "current", recordedAt: Date.now() }] });
+    expect(await save(ctx as unknown as MutationCtx, { calculator: "bike-fit", automatic: true,
+      expectedUserId: "user1", changes: [{ ...change, value }] })).toEqual({ status: "conflict",
+      conflicts: [{ field: "inseamCm", currentValue: 84, incomingValue: value }] });
+    expect(ctx.db.patch).not.toHaveBeenCalled();
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+  });
+  it("rejects queued autosave after an account change", async () => {
+    const ctx = context();
+    await expect(save(ctx as unknown as MutationCtx, { calculator: "bike-fit", automatic: true,
+      expectedUserId: "previous-user", changes: [change] })).rejects.toThrow("ACCOUNT_CHANGED");
+    expect(ctx.db.query).not.toHaveBeenCalled();
+    expect(ctx.db.patch).not.toHaveBeenCalled();
+  });
+  it("keeps explicit measured-profile replacement available after review", async () => {
+    const ctx = context({ profileObservations: [{ _id: "measurement", userId: "user1", field: "inseamCm",
+      value: 84, kind: "measured", status: "current" }] });
+    expect(await save(ctx as unknown as MutationCtx, { calculator: "bike-fit", automatic: false,
+      expectedUserId: "user1", changes: [change] })).toEqual({ status: "saved", fields: ["inseamCm"] });
+    expect(ctx.db.insert).toHaveBeenCalledWith("profileObservations", expect.objectContaining({ kind: "declared" }));
+  });
+  it("allows a new actual measurement to replace an earlier measured profile value automatically", async () => {
+    const ctx = context({ profileObservations: [{ _id: "measurement", userId: "user1", field: "inseamCm",
+      value: 84, kind: "measured", status: "current" }] });
+    expect(await save(ctx as unknown as MutationCtx, { calculator: "bike-fit", automatic: true,
+      expectedUserId: "user1", changes: [{ ...change, kind: "measured" }] }))
+      .toEqual({ status: "saved", fields: ["inseamCm"] });
+    expect(ctx.db.insert).toHaveBeenCalledWith("profileObservations", expect.objectContaining({ kind: "measured", value: 85 }));
+  });
   it("rejects unauthenticated requests and another owner's bike before writes", async () => {
     const ctx = context();
     auth.mockResolvedValue(null);

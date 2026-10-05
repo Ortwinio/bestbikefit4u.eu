@@ -126,12 +126,15 @@ describe("profile provenance", () => {
     expect(within(rows).getByText("Veel")).toBeTruthy();
     expect(within(rows).getByText("Na de rit")).toBeTruthy();
   });
-  it("renders unsupported existing hip measurements read-only without inventing bounds", () => {
+  it("edits hip measurements within the existing saddle-width engine bounds", () => {
     state.context!.profile = { ...profile, hipCircumferenceCm: 90 };
     mount();
     expect(screen.getByText("Hip circumference")).toBeTruthy();
     expect(screen.getByText("90 cm")).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Change: Hip circumference" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Change: Hip circumference" }));
+    const input = screen.getByLabelText("Hip circumference (cm)", { selector: "input" }) as HTMLInputElement;
+    expect(input.min).toBe("70");
+    expect(input.max).toBe("160");
   });
   it("uses array provenance only when it structurally matches current profile values", () => {
     state.context!.profile = { ...profile, hasPain: "yes" };

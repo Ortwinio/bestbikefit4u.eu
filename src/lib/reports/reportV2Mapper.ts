@@ -1,3 +1,4 @@
+import { getReliabilityRange, type ReliabilityEvidence, type ReliabilityMetric } from "../../../shared/reliability/calculators";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import {
   deriveComfortScore,
@@ -18,6 +19,7 @@ import type {
 } from "./reportV2Types";
 
 type ReportV2Source = {
+  reliabilityEvidence?: ReliabilityEvidence;
   session: Doc<"fitSessions">;
   recommendation: Doc<"recommendations"> | null;
   bike: Doc<"bikes"> | null;
@@ -467,7 +469,29 @@ function buildDetailedRows(source: ReportV2Source): ReportDetailedRow[] {
     currentLabel: getCurrentLabelForKey(key, source),
   }));
 
-  return syntheticRows.map((row) => baseRows.get(row.key) ?? row);
+  return syntheticRows.map((fallback) => {
+    const row = baseRows.get(fallback.key) ?? fallback;
+    const metrics: Partial<Record<ReportParameterKey, ReliabilityMetric>> = {
+      saddleHeight: "saddleHeight", saddleSetback: "saddleSetback",
+      handlebarDrop: "handlebarDrop", handlebarReach: "reach", crankLength: "crankLength",
+    };
+    const metric = metrics[row.key];
+    const match = row.targetLabel.match(/^([+-]?\d+(?:\.\d+)?) mm$/);
+    if (!metric || !match || row.status === "pending_data") return row;
+    // Old profiles have no measurement history. Do not turn missing provenance into a measurement.
+    const evidence: ReliabilityEvidence = {
+      inseamCm: source.profile?.inseamCm,
+      inseamProvenance: { kind: "declared" },
+      ...source.reliabilityEvidence,
+    };
+    return {
+      ...row,
+      reliability95: getReliabilityRange({
+        metric,
+        value: Number(match[1]), evidence,
+      }),
+    };
+  });
 }
 
 function buildPrioritySummary(rows: ReportDetailedRow[]): ReportPriorityRow[] {

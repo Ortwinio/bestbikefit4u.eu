@@ -213,3 +213,35 @@ describe("profile saves keep provenance current", () => {
     expect(ctx.db.patch).not.toHaveBeenCalled();
   });
 });
+
+
+describe("reliability metadata on existing profile saves", () => {
+  it("stores warnings, only explicit check confirmation clears them", async () => {
+    const ctx = context();
+    await ctx.db.insert("profiles", { userId: "owner", heightCm: 190, inseamCm: 89 });
+    await invoke("updateMeasurements", ctx, { inseamCm: 96 });
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ unresolvedWarning: true, repeatCount: 1 });
+    const save = (provenance.saveObservation as unknown as Handler)._handler;
+    await save(ctx, { field: "inseamCm", value: 96, expectedCurrentValue: 96,
+      kind: "measured", method: "single_measurement", inseamConfirmed: true });
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ unresolvedWarning: false });
+    await save(ctx, { field: "inseamCm", value: 75, expectedCurrentValue: 96,
+      kind: "measured", method: "single_measurement", inseamConfirmed: true });
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ unresolvedWarning: true });
+  });
+  it("rechecks height changes without relabeling the inseam date or method", async () => {
+    const ctx = context();
+    await ctx.db.insert("profiles", { userId: "owner", heightCm: 190, inseamCm: 89 });
+    await ctx.db.insert("profileObservations", { userId: "owner", field: "inseamCm", value: 89,
+      kind: "measured", method: "fitter", recordedAt: 123, status: "current", unresolvedWarning: false });
+    await invoke("updateMeasurements", ctx, { heightCm: 165 });
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ recordedAt: 123, method: "fitter", unresolvedWarning: true });
+  });
+  it("rejects an impossible pair before writing observations or profile", async () => {
+    const ctx = context();
+    await ctx.db.insert("profiles", { userId: "owner", heightCm: 190, inseamCm: 89 });
+    ctx.db.insert.mockClear(); ctx.db.patch.mockClear();
+    await expect(invoke("updateMeasurements", ctx, { inseamCm: 106 })).rejects.toThrow();
+    expect(ctx.db.insert).not.toHaveBeenCalled(); expect(ctx.db.patch).not.toHaveBeenCalled();
+  });
+});

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bereikbalk bij alle calculators</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1440px; box-sizing: border-box; padding: 48px 56px 64px; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Publieke resultaten · voorbeeldrijder 190 cm, binnenbeen 89 cm, 94 kg</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -.03em; color: #0F2420">Eén balk, elke calculator</h1>
+    <p style="margin: 0; font-size: 16px; max-width: 80ch">Elk resultaat heeft dezelfde vier delen: waarde met ±, de bereikbalk, waarop het is gebaseerd en één volgende stap. Breedtes zijn voorlopige rekenregels; zadelhoogte is uitgewerkt, de rest wordt gekalibreerd.</p>
+  </div>
+
+  <h2 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; color: #0F2420">Fit</h2>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <sc-for list="{{fit}}" as="c" hint-placeholder-count="3">
+      <article style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+          <div>
+            <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">{{c.title}}</div>
+            <div style="font-size: 13px; color: #4A5F5A">{{c.what}}</div>
+          </div>
+          <div style="text-align: right; flex: none">
+            <div style="font-family: 'DM Mono', monospace; font-size: 28px; line-height: 1; color: #0F2420">{{c.value}}<span style="font-size: 13px; margin-left: 4px">{{c.unit}}</span></div>
+            <div style="font-family: 'DM Mono', monospace; font-size: 13px; color: #0F2420; margin-top: 4px">{{c.pm}}</div>
+          </div>
+        </div>
+        <dc-import name="Bereikbalk" low="{{c.low}}" high="{{c.high}}" value="{{c.v}}" min="{{c.min}}" max="{{c.max}}" low-label="{{c.lowLabel}}" high-label="{{c.highLabel}}" size="groot" aria="{{c.aria}}" hint-size="100%,72px"></dc-import>
+        <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: {{c.basis}}</div>
+        <div style="display: flex; gap: 8px; align-items: center; padding: 10px 12px; background: #E1F2EE; border-radius: 12px">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #0F2420; color: #FFFFFF; border-radius: 999px; padding: 2px 8px; flex: none">{{c.tier}}</span>
+          <span style="font-size: 13px; color: #075A4E; font-weight: 600">{{c.next}}</span>
+        </div>
+      </article>
+    </sc-for>
+
+    <article style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+        <div>
+          <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">Framemaat</div>
+          <div style="font-size: 13px; color: #4A5F5A">Maat in de tabel van je merk</div>
+        </div>
+        <div style="text-align: right; flex: none"><div style="font-family: 'DM Mono', monospace; font-size: 28px; line-height: 1; color: #0F2420">M of L</div><div style="font-family: 'DM Mono', monospace; font-size: 13px; color: #0F2420; margin-top: 4px">2 maten</div></div>
+      </div>
+      <dc-import name="Maatbalk" options="XS,S,M,L,XL" from="1.8" to="3.2" value="2.5" aria="Framemaat M of L" hint-size="100%,72px"></dc-import>
+      <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: lengte en binnenbeen, zonder je fiets</div>
+      <div style="display: flex; gap: 8px; align-items: center; padding: 10px 12px; background: #E1F2EE; border-radius: 12px">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #0F2420; color: #FFFFFF; border-radius: 999px; padding: 2px 8px; flex: none">Account</span>
+        <span style="font-size: 13px; color: #075A4E; font-weight: 600">Kies merk en model → één maat via stack en reach</span>
+      </div>
+    </article>
+
+    <article style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+        <div>
+          <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">Cranklengte</div>
+          <div style="font-size: 13px; color: #4A5F5A">In stappen van 2,5 mm</div>
+        </div>
+        <div style="text-align: right; flex: none"><div style="font-family: 'DM Mono', monospace; font-size: 28px; line-height: 1; color: #0F2420">172,5<span style="font-size: 13px; margin-left: 4px">mm</span></div><div style="font-family: 'DM Mono', monospace; font-size: 13px; color: #0F2420; margin-top: 4px">170–175</div></div>
+      </div>
+      <dc-import name="Maatbalk" options="165,167.5,170,172.5,175,177.5" from="1.8" to="4.2" value="3" aria="Cranklengte 172,5 mm, bereik 170 tot 175 mm" hint-size="100%,72px"></dc-import>
+      <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: binnenbeen 1× gemeten</div>
+      <div style="display: flex; gap: 8px; align-items: center; padding: 10px 12px; background: #E1F2EE; border-radius: 12px">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #0F2420; color: #FFFFFF; border-radius: 999px; padding: 2px 8px; flex: none">Account</span>
+        <span style="font-size: 13px; color: #075A4E; font-weight: 600">Meet je dijbeen → één lengte</span>
+      </div>
+    </article>
+  </div>
+
+  <h2 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; color: #0F2420">Prestatie</h2>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <sc-for list="{{perf}}" as="c" hint-placeholder-count="3">
+      <article style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px">
+          <div>
+            <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px; color: #0F2420">{{c.title}}</div>
+            <div style="font-size: 13px; color: #4A5F5A">{{c.what}}</div>
+          </div>
+          <div style="text-align: right; flex: none">
+            <div style="font-family: 'DM Mono', monospace; font-size: 28px; line-height: 1; color: #0F2420">{{c.value}}<span style="font-size: 13px; margin-left: 4px">{{c.unit}}</span></div>
+            <div style="font-family: 'DM Mono', monospace; font-size: 13px; color: #0F2420; margin-top: 4px">{{c.pm}}</div>
+          </div>
+        </div>
+        <dc-import name="Bereikbalk" low="{{c.low}}" high="{{c.high}}" value="{{c.v}}" min="{{c.min}}" max="{{c.max}}" low-label="{{c.lowLabel}}" high-label="{{c.highLabel}}" size="groot" aria="{{c.aria}}" hint-size="100%,72px"></dc-import>
+        <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: {{c.basis}}</div>
+        <div style="display: flex; gap: 8px; align-items: center; padding: 10px 12px; background: #E1F2EE; border-radius: 12px">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #0F2420; color: #FFFFFF; border-radius: 999px; padding: 2px 8px; flex: none">{{c.tier}}</span>
+          <span style="font-size: 13px; color: #075A4E; font-weight: 600">{{c.next}}</span>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1720}}'>
+class Component extends DCLogic {
+  card(title, what, v, half, widest, unit, dec, basis, tier, next) {
+    const f = (x) => (dec ? x.toFixed(dec) : String(Math.round(x))).replace('.', ',');
+    const low = v - half, high = v + half, span = 1.25 * widest;
+    return { title, what, unit, value: f(v), v, low, high, min: v - span, max: v + span,
+      lowLabel: f(low), highLabel: f(high), pm: '± ' + f(half) + (unit ? ' ' + unit : ''),
+      aria: title + ' ' + f(v) + ' ' + unit + ', bereik ' + f(low) + ' tot ' + f(high), basis, tier, next };
+  }
+  renderVals() {
+    return {
+      fit: [
+        this.card('Zadelhoogte', 'Midden trapas tot bovenkant zadel', 787, 23, 49, 'mm', 0, 'lengte en binnenbeen 1× gemeten', 'Account', 'Meet nog 2× → ± 18 mm'),
+        this.card('Zadelterugstand', 'Zadelpunt achter de trapas', 51, 15, 15, 'mm', 0, 'dijbeen geschat uit lengte', 'Account', 'Meet je dijbeen → ± 10 mm'),
+        this.card('Stuurdrop', 'Hoogteverschil zadel en stuur', 97, 30, 30, 'mm', 0, 'gemiddelde lenigheid aangenomen', 'Account', 'Schat je lenigheid en core → ± 20 mm'),
+        this.card('Reach', 'Zadel tot stuur, horizontaal', 569, 25, 25, 'mm', 0, 'torso en arm geschat uit lengte', 'Account', 'Meet torso en arm → ± 15 mm'),
+        this.card('Zadelbreedte', 'Breedte van het zadel', 143, 15, 15, 'mm', 0, 'geschat uit lengte, gewicht en heup', 'Publiek', 'Meet je zitbotten met karton → ± 5 mm')
+      ],
+      perf: [
+        this.card('Vermogen en snelheid', 'Snelheid bij 220 W op vlak', 32.4, 2.0, 2.0, 'km/u', 1, 'standaard houding en fiets', 'Account', 'Kies je fiets en houding → ± 1,2 km/u'),
+        this.card('Klimplanner', 'Tijd voor 12 km aan 7%', 41, 4, 4, 'min', 0, 'FTP geschat uit 20-minutentest', 'Account', 'Bewaar een gemeten FTP → ± 2 min'),
+        this.card('FTP en W/kg', 'Vermogen per kilo', 3.0, 0.2, 0.3, 'W/kg', 1, '20-minutentest × 0,95, gewicht opgegeven', 'Verdieping', 'Geleide FTP-test → ± 0,1 W/kg'),
+        this.card('Verzet', 'Cadans in lichtste verzet op 10%', 66, 8, 8, 'rpm', 0, 'vermogen geschat, gewicht opgegeven', 'Account', 'Vul je FTP in → ± 4 rpm'),
+        this.card('Voeding en vocht', 'Vochtverlies per uur', 650, 325, 325, 'ml/u', 0, 'zweet geschat uit temperatuur en inspanning', 'Account', 'Weeg je voor en na een rit → ± 100 ml/u')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

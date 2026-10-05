@@ -4,16 +4,20 @@ import { getFunctionName } from "convex/server";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
 import type { Locale } from "@/i18n/config";
 import { fitResultsSource } from "../fit/[sessionId]/results/fixture.test-support";
-import { mapReportV2Payload } from "@/lib/reports/reportV2Mapper";
-import { getReportV2Copy } from "@/lib/reports/reportV2Copy";
+import { PDF_SUMMARY_COPY } from "@/lib/reports/reportV2Copy";
 import { accountCalculatorNavigation } from "@/components/account/account-navigation";
+import { getReliabilityDashboardCopy } from "@/i18n/account/reliabilityDashboard";
+import { getReliabilityRange } from "../../../../shared/reliability/calculators";
 
 const state = vi.hoisted(() => ({
   locale: "nl" as Locale,
   query: vi.fn(),
 }));
 
-vi.mock("convex/react", () => ({ useQuery: state.query }));
+vi.mock("convex/react", () => ({
+  useQuery: state.query,
+  useConvexAuth: () => ({ isAuthenticated: true, isLoading: false }),
+}));
 vi.mock("@/components/dashboard/DashboardProfilePrompts", () => ({
   DashboardProfilePrompts: ({ locale }: { locale: Locale }) => <section data-profile-prompts={locale} />,
 }));
@@ -42,6 +46,21 @@ const bike = {
   advisedPressureSummary: null, pressureStateSummary: { isStale: false, hasCurrentPressure: false },
 };
 
+function reliabilityFixture(source: typeof fitResultsSource | null | undefined) {
+  if (!source) return source;
+  const fit = source.recommendation.calculatedFit;
+  const definitions = [
+    ["A", "saddleHeight", fit.saddleHeightMm], ["B", "saddleSetback", fit.saddleSetbackMm],
+    ["C", "handlebarDrop", fit.handlebarDropMm], ["D", "reach", fit.handlebarReachMm],
+  ] as const;
+  return {
+    sessionId: source.session._id,
+    rows: definitions.map(([letter, metric, value]) => ({ letter, metric, value,
+      range: getReliabilityRange({ metric, value, evidence: { inseamCm: profile.inseamCm } }) })),
+    largestGain: { metric: "saddleHeight", nextStepKey: "measure-inseam", halfWidth: 23, reduction: 26 },
+  };
+}
+
 function setup(overrides: Record<string, unknown> = {}) {
   const values: Record<string, unknown> = {
     "profiles/queries:getMyProfile": profile,
@@ -50,10 +69,8 @@ function setup(overrides: Record<string, unknown> = {}) {
     "sessions/queries:getAllSessionsWithBikes": [],
     ...overrides,
   };
-  state.query.mockImplementation((reference, args) => {
-    const name = getFunctionName(reference);
-    if (args === "skip") return undefined;
-    if (name !== "recommendations/queries:getReportV2") return values[name];
+  function reportSource(args: { sessionId: string }) {
+    const name = "recommendations/queries:getReportV2";
     if (name in overrides) {
       const override = overrides[name];
       return typeof override === "function" ? override(args) : override;
@@ -80,6 +97,22 @@ function setup(overrides: Record<string, unknown> = {}) {
         ...fitResultsSource.latestPressureCalculation, ...summary.advisedPressureSummary,
       } : null,
     };
+  }
+  state.query.mockImplementation((reference, args) => {
+    const name = getFunctionName(reference);
+    if (args === "skip") return undefined;
+    if (name in overrides) {
+      const override = overrides[name];
+      return typeof override === "function" ? override(args) : override;
+    }
+    if (name === "recommendations/queries:getReportV2") return reportSource(args);
+    if (name === "reliability/queries:getDashboardReliability") {
+      return reliabilityFixture(reportSource(args));
+    }
+    if (name === "reliability/queries:getSaddleState") {
+      return { profile: values["profiles/queries:getMyProfile"], observations: [], model: null };
+    }
+    return values[name];
   });
   return renderToStaticMarkup(<DashboardPage />);
 }
@@ -151,7 +184,9 @@ describe("dashboard home presentation", () => {
     expect(html).toContain(messages.dashboardHome.noBikeTitle);
     for (const route of ["profile", "fit", "bikes", "bikes/new"]) expect(html).toContain(`href="/${locale}/${route}"`);
     expect(html).not.toMatch(/Voorbeeldgegevens|Ontwerpstaat|Canyon|Lisa/);
-    expect(state.query).toHaveBeenCalledTimes(5);
+    expect(state.query).toHaveBeenCalledTimes(6);
+    expect(state.query.mock.calls.some(([reference, args]) =>
+      getFunctionName(reference) === "reliability/queries:getSaddleState" && Object.keys(args).length === 0)).toBe(true);
   });
 
   it("preserves missing profile and missing weight as distinct states", () => {
@@ -171,6 +206,9 @@ describe("dashboard home presentation", () => {
     expect(html).toContain('href="/nl/fit?bikeId=bike-1"');
     expect(html).toContain(getDashboardMessages("nl").bikeGarage.noFitYet);
     expect(html).not.toContain("report actions");
+    expect(state.query.mock.calls.filter(([reference]) =>
+      ["recommendations/queries:getReportV2", "reliability/queries:getDashboardReliability"]
+        .includes(getFunctionName(reference))).map(([, args]) => args)).toEqual(["skip", "skip"]);
   });
 
   it("offers bike-specific pressure calculation when a fit has no pressure advice", () => {
@@ -211,28 +249,38 @@ describe("dashboard home presentation", () => {
     });
     expect(html).toContain('data-session="latest" data-path="/nl/dashboard"');
     expect(html).not.toContain('data-session="older"');
-    for (const value of ["751", "748", "529.7", "3,2", "3,5", "3,4", "3,7"]) expect(html).toContain(value);
+    for (const value of ["751", "748", "529,7", "3,2", "3,5", "3,4", "3,7"]) expect(html).toContain(value);
     expect(html).toContain(getDashboardMessages("nl").dashboardHome.pressureStale);
     expect(html).toContain(getDashboardMessages("nl").bikeGarage.climbingProfileIncluded);
     expect(html).toContain("bikeId=bike-1");
   });
 
-  it.each(["nl", "en"] as const)("uses the PDF mapper's exact values, ranges and confidence in %s", (locale) => {
+  it.each(["nl", "en"] as const)("keeps report values and uses queried reliability instead of safety bands/global confidence in %s", (locale) => {
     state.locale = locale;
     const source = { ...fitResultsSource, bike: { ...fitResultsSource.bike, _id: bike._id } };
-    const report = mapReportV2Payload(source as unknown as Parameters<typeof mapReportV2Payload>[0]);
+    const reliability = reliabilityFixture(source)!;
+    const copy = getReliabilityDashboardCopy(locale);
+    const format = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
     const html = setup({
       "bikes/queries:listSummariesByUser": [bike],
       "sessions/queries:getAllSessionsWithBikes": [{ bike, session: source.session,
         recommendation: source.recommendation, responses: {} }],
       "recommendations/queries:getReportV2": source,
+      "reliability/queries:getDashboardReliability": reliability,
     });
-    for (const row of report.detailedFit.slice(0, 4)) {
-      expect(html).toContain(getReportV2Copy(locale).parameters[row.key].label);
-      expect(html).toContain(row.targetLabel);
-      if (row.rangeLabel) expect(html).toContain(row.rangeLabel);
+    for (const row of reliability.rows) {
+      const key = row.metric === "reach" ? "handlebarReach" : row.metric;
+      expect(html).toContain(`data-reliability-row="${key}"`);
+      expect(html).toContain(copy.parameters[key]);
+      expect(html).toContain(`${format(row.value)} mm, ${locale === "nl" ? "bereik" : "range"} ${format(row.range!.lower)} ${locale === "nl" ? "tot" : "to"} ${format(row.range!.upper)} mm`);
+      expect(html).toContain(`± ${format(row.range!.halfWidth)} mm`);
     }
-    expect(html).toContain(`${report.profile.globalConfidence}%`);
+    expect(html).toContain(copy.greatestGain);
+    expect(html.split(copy.greatestGain)).toHaveLength(2);
+    expect(html).not.toContain('data-report-range=');
+    expect(html).not.toContain(`${source.recommendation.confidenceScore}%`);
+    expect(html).not.toContain(PDF_SUMMARY_COPY[locale].confidence);
+    expect(html).not.toContain(PDF_SUMMARY_COPY[locale].priorities);
     expect(html).not.toContain("14/19");
   });
 
@@ -249,7 +297,7 @@ describe("dashboard home presentation", () => {
     expect(html).not.toContain("Fitadvies beschikbaar");
   });
 
-  it("loads each bike's own report and skips pending-data priorities like the PDF summary", () => {
+  it("loads each bike's own report and reliability without legacy pending-data priorities", () => {
     const otherBike = { ...bike, _id: "bike-2", name: "Second bike" };
     const entries = [bike, otherBike].map((entry, index) => ({
       bike: entry, session: { ...fitResultsSource.session, _id: `session-${index}` },
@@ -273,7 +321,12 @@ describe("dashboard home presentation", () => {
     expect(reportQuery).toHaveBeenCalledWith({ sessionId: "session-1" });
     expect(html).toContain("711 mm");
     expect(html).toContain("788 mm");
-    expect(html).not.toContain(getReportV2Copy("nl").parameters.saddleSetback.label);
+    expect(html).not.toContain('data-report-range=');
+    expect(html).not.toContain(PDF_SUMMARY_COPY.nl.priorities);
+    for (const sessionId of ["session-0", "session-1"]) {
+      expect(state.query.mock.calls.some(([reference, args]) =>
+        getFunctionName(reference) === "reliability/queries:getDashboardReliability" && args.sessionId === sessionId)).toBe(true);
+    }
   });
 
   it("keeps pressure advice available without a fit and displays saved bike metadata", () => {

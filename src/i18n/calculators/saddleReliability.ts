@@ -20,6 +20,8 @@ const nl = {
     "height-until-remeasured": "je lengte, tot je binnenbeen opnieuw is gemeten",
   },
   narrower: "Nauwkeuriger: ±{from} → ±{to} mm",
+  reusedUnmeasured: "je eerder ingevulde binnenbeen; nog niet als meting bevestigd",
+  reusedRepeated: "je binnenbeen, {count} keer gemeten",
   nextSteps: {
     remeasure: "Meet je binnenbeen opnieuw",
     "add-inseam": "Vul je binnenbeenlengte in → ±{width} mm",
@@ -71,6 +73,8 @@ const en: typeof nl = {
     "height-until-remeasured": "your height until you measure your inseam again",
   },
   narrower: "More precise: ±{from} → ±{to} mm",
+  reusedUnmeasured: "your previously entered inseam; not yet confirmed as a measurement",
+  reusedRepeated: "your inseam, measured {count} times",
   nextSteps: {
     remeasure: "Measure your inseam again",
     "add-inseam": "Enter your inseam → ±{width} mm",

@@ -296,3 +296,31 @@ describe("reportV2Mapper", () => {
     expect(absent.bike.currentFrameSize).toBeNull();
   });
 });
+
+
+describe("PDF uncertainty preserves engine advice", () => {
+  it("keeps the 787 mm target and uses recorded measurement provenance for its 95% range", () => {
+    const source = {
+      ...baseSource,
+      recommendation: {
+        ...baseSource.recommendation,
+        calculatedFit: { ...baseSource.recommendation.calculatedFit, saddleHeightMm: 787 },
+      },
+      profile: { ...baseSource.profile, inseamCm: 89 },
+    };
+    const mapped = mapReportV2Payload({
+      ...source,
+      reliabilityEvidence: { inseamCm: 89, inseamProvenance: { kind: "measured" } },
+    } as unknown as Parameters<typeof mapReportV2Payload>[0]);
+    const saddle = mapped.detailedFit.find((row) => row.key === "saddleHeight")!;
+    expect(saddle.targetLabel).toBe("787 mm");
+    expect(saddle.reliability95).toMatchObject({ value: 787, lower: 765, upper: 810, halfWidth: 23 });
+    expect(mapped.detailedFit.find((row) => row.key === "handlebarDrop")?.reliability95?.halfWidth).toBe(30);
+  });
+
+  it("does not pretend legacy values without provenance were measured", () => {
+    const mapped = mapReportV2Payload(baseSource as unknown as Parameters<typeof mapReportV2Payload>[0]);
+    expect(mapped.detailedFit.find((row) => row.key === "saddleHeight")?.reliability95?.basisKey)
+      .toBe("declared");
+  });
+});

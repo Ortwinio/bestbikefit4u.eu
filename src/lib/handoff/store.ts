@@ -1,8 +1,8 @@
-import { COOKIE_CONSENT_EVENT, COOKIE_CONSENT_KEY, readCookieConsent } from "../cookieConsent";
+import { COOKIE_CONSENT_EVENT, COOKIE_CONSENT_KEY } from "../cookieConsent";
 
 export const HANDOFF_KEY = "bbf.handoff";
 export const HANDOFF_MAX_BYTES = 16_384;
-export const HANDOFF_MAX_ENTRIES = 32;
+export const HANDOFF_MAX_ENTRIES = 64;
 export const HANDOFF_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const HANDOFF_FIELD_UNITS = {
@@ -29,6 +29,18 @@ export const HANDOFF_FIELD_UNITS = {
   innerChainringTeeth: "teeth",
   cassetteSmallestCogTeeth: "teeth",
   cassetteLargestCogTeeth: "teeth",
+  powerWatts: "W",
+  speedKph: "km/h",
+  bikeWeightKg: "kg",
+  gradientPercent: "%",
+  distanceKm: "km",
+  durationMinutes: "min",
+  temperatureC: "°C",
+  bottleSizeMl: "ml",
+  twentyMinuteWatts: "W",
+  rampWatts: "W",
+  intensity: "none",
+  hipCircumferenceCm: "cm",
 } as const;
 
 export type HandoffField = keyof typeof HANDOFF_FIELD_UNITS;
@@ -45,6 +57,11 @@ export interface HandoffEntry {
   calculator: HandoffCalculator;
   method: HandoffMethod;
   touchedAt: number;
+  kind?: "measured" | "declared" | "derived" | "estimated";
+  measurementMethod?: string;
+  repeatCount?: number;
+  withinTolerance?: boolean;
+  unresolvedWarning?: boolean;
 }
 export interface HandoffRecord {
   version: 1;
@@ -66,6 +83,14 @@ function validEntry(value: unknown): value is HandoffEntry {
   return entry.unit === HANDOFF_FIELD_UNITS[entry.field]
     && calculators.has(entry.calculator)
     && methods.has(entry.method)
+    && (entry.kind === undefined || ["measured", "declared", "derived", "estimated"].includes(entry.kind))
+    && (entry.measurementMethod === undefined
+      || (typeof entry.measurementMethod === "string" && entry.measurementMethod.trim().length > 0
+        && entry.measurementMethod.length <= 100))
+    && (entry.repeatCount === undefined
+      || (Number.isSafeInteger(entry.repeatCount) && entry.repeatCount > 0 && entry.repeatCount <= 100))
+    && (entry.withinTolerance === undefined || typeof entry.withinTolerance === "boolean")
+    && (entry.unresolvedWarning === undefined || typeof entry.unresolvedWarning === "boolean")
     && Number.isSafeInteger(entry.touchedAt) && entry.touchedAt > 0
     && (entry.unit === "none"
       ? typeof entry.value === "string" && entry.value.trim().length > 0 && entry.value.length <= 120
@@ -81,11 +106,37 @@ function storage(mode: "session" | "persistent"): Storage | undefined {
   }
 }
 
-export function getHandoffRetention(): "session" | "persistent" {
-  try {
-    if (readCookieConsent() === "accepted" && storage("persistent")) return "persistent";
-  } catch { /* Storage and consent are optional. */ }
+export function getHandoffRetention(): "session" {
   return "session";
+}
+
+function cleanEntry(entry: HandoffEntry): HandoffEntry {
+  const { field, value, unit, calculator, method, touchedAt, kind, measurementMethod,
+    repeatCount, withinTolerance, unresolvedWarning } = entry;
+  return { field, value, unit, calculator, method, touchedAt,
+    ...(kind === undefined ? {} : { kind }),
+    ...(measurementMethod === undefined ? {} : { measurementMethod }),
+    ...(repeatCount === undefined ? {} : { repeatCount }),
+    ...(withinTolerance === undefined ? {} : { withinTolerance }),
+    ...(unresolvedWarning === undefined ? {} : { unresolvedWarning }) };
+}
+
+export function mergeHandoffEntries(existing: HandoffEntry[], incoming: HandoffEntry[]): HandoffEntry[] {
+  const quality = (entry: HandoffEntry) => {
+    const kind = entry.kind ?? entry.method;
+    return kind === "measured" ? 4 : kind === "declared" || kind === "bike" ? 3 : kind === "estimated" ? 2 : 1;
+  };
+  const merged = new Map<HandoffField, HandoffEntry>();
+  for (const entry of [...existing, ...incoming]) {
+    if (!validEntry(entry)) continue;
+    const previous = merged.get(entry.field);
+    if (!previous || quality(entry) > quality(previous)
+      || (quality(entry) === quality(previous) && entry.touchedAt > previous.touchedAt)) {
+      merged.set(entry.field, cleanEntry(entry));
+    }
+  }
+  return [...merged.values()].sort((first, second) => first.touchedAt - second.touchedAt)
+    .slice(-HANDOFF_MAX_ENTRIES);
 }
 
 function remove(target: Storage | undefined): void {
@@ -119,9 +170,7 @@ function readStorage(target: Storage | undefined, expires: boolean): HandoffReco
     const now = Date.now();
     const entries = record.entries.filter(entry => !expires
       || (entry.touchedAt <= now && now - entry.touchedAt < HANDOFF_MAX_AGE_MS))
-      .map(({ field, value, unit, calculator, method, touchedAt }) => ({
-        field, value, unit, calculator, method, touchedAt,
-      }));
+      .map(cleanEntry);
     const clean: HandoffRecord = { version: 1, entries };
     if (entries.length !== record.entries.length) persist(target, clean);
     return clean;
@@ -133,44 +182,21 @@ function readStorage(target: Storage | undefined, expires: boolean): HandoffReco
 
 /** All browser data is untrusted; account import still requires server validation. */
 export function readHandoff(): HandoffRecord {
-  const session = storage("session");
-  const local = storage("persistent");
-  if (getHandoffRetention() === "session") {
-    remove(local);
-    return readStorage(session, true);
-  }
-  const remembered = readStorage(local, true);
-  const current = readStorage(session, true);
-  if (!current.entries.length) return remembered;
-  const merged = new Map(remembered.entries.map(entry => [entry.field, entry]));
-  for (const entry of current.entries) {
-    if ((merged.get(entry.field)?.touchedAt ?? 0) <= entry.touchedAt) merged.set(entry.field, entry);
-  }
-  const record: HandoffRecord = { version: 1,
-    entries: [...merged.values()].sort((a, b) => a.touchedAt - b.touchedAt).slice(-HANDOFF_MAX_ENTRIES) };
-  // Only remove the session copy after promotion succeeds; never refresh touchedAt.
-  if (persist(local, record)) remove(session);
-  return record;
+  remove(storage("persistent"));
+  return readStorage(storage("session"), true);
 }
 
 const notify = () => listeners.forEach(listener => listener());
 
-export function syncHandoffConsent(choice: "accepted" | "essential" | null): void {
-  if (choice !== "accepted") clearHandoff();
-  else {
-    readHandoff();
-    notify();
-  }
+export function syncHandoffConsent(_choice: "accepted" | "essential" | null): void {
+  readHandoff();
+  notify();
 }
 
 function writeRecord(record: HandoffRecord): void {
   if (new TextEncoder().encode(JSON.stringify(record)).byteLength > HANDOFF_MAX_BYTES) return;
-  const mode = getHandoffRetention();
-  if (!persist(storage(mode), record) && mode === "persistent") {
-    // A stale persistent record must not resurrect a field removed from the fallback session copy.
-    remove(storage("persistent"));
-    persist(storage("session"), record);
-  }
+  remove(storage("persistent"));
+  persist(storage("session"), record);
   notify();
 }
 
@@ -178,13 +204,7 @@ export function writeHandoffEntry(entry: HandoffEntry): void {
   if (!validEntry(entry)) return;
   if (entry.touchedAt > Date.now() || Date.now() - entry.touchedAt >= HANDOFF_MAX_AGE_MS) return;
   const record = readHandoff();
-  const previous = record.entries.find(item => item.field === entry.field);
-  if (previous && previous.touchedAt > entry.touchedAt) return;
-  const { field, value, unit, calculator, method, touchedAt } = entry;
-  const entries = record.entries.filter(item => item.field !== field);
-  entries.push({ field, value, unit, calculator, method, touchedAt });
-  entries.sort((a, b) => a.touchedAt - b.touchedAt);
-  writeRecord({ version: 1, entries: entries.slice(-HANDOFF_MAX_ENTRIES) });
+  writeRecord({ version: 1, entries: mergeHandoffEntries(record.entries, [entry]) });
 }
 
 export function removeHandoffEntry(field: HandoffField): void {
@@ -213,14 +233,10 @@ export function subscribeHandoff(listener: () => void): () => void {
   };
   const onChange = () => { schedule(); listener(); };
   listeners.add(onChange);
-  const onConsent = () => {
-    if (getHandoffRetention() === "session") clearHandoff();
-    else onChange();
-  };
+  const onConsent = onChange;
   const onStorage = (event: StorageEvent) => {
     if (event.key === COOKIE_CONSENT_KEY) onConsent();
     else if (event.key === HANDOFF_KEY || event.key === null) {
-      if (event.newValue === null && event.storageArea === storage("persistent")) remove(storage("session"));
       onChange();
     }
   };

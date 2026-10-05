@@ -1,4 +1,4 @@
-import { AccountFitCalculator } from "@/components/calculators/AccountFitCalculator";
+import { AccountSaddleHeight } from "@/components/reliability/account/AccountSaddleHeight";
 import { accountCalculatorMessages } from "@/i18n/account/calculators";
 import { getRequestLocale } from "@/i18n/request";
 
@@ -8,5 +8,5 @@ export async function generateMetadata() {
 }
 
 export default function CalculatorPage() {
-  return <AccountFitCalculator calculator="saddle-height" />;
+  return <AccountSaddleHeight />;
 }

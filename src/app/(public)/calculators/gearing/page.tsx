@@ -38,7 +38,7 @@ function buildFaqs(isNl: boolean) {
           q: "Waarom helpt trapfrequentie bij verzetadvies?",
           a:
             "Dezelfde versnelling voelt anders als je sneller of langzamer trapt. De " +
-            "calculator laat daarom de snelheid bij jouw gekozen cadans zien.",
+            "calculator schat daarom je cadans op de klim met je lichtste verzet.",
         },
         {
           q: "Is 1x altijd genoeg voor beklimmingen?",
@@ -58,7 +58,7 @@ function buildFaqs(isNl: boolean) {
           q: "Why does cadence matter in a gearing calculator?",
           a:
             "The same gear feels very different if you spin faster or slower. That is why the" +
-            " calculator shows speed at your chosen cadence.",
+            " calculator estimates your climbing cadence in your easiest gear.",
         },
         {
           q: "Is 1x always enough for climbing?",
@@ -165,16 +165,12 @@ export default async function GearingCalculatorPage() {
               : "A short flow to understand your drivetrain quickly.",
             steps: isNl
               ? [
-                  "Kies 1x of 2x en vul je kettingring(s) in.",
-                  "Voer cassette, wielomtrek, cadans en klimhelling in.",
-                  "Lees lichtste en zwaarste versnelling plus snelheid bij cadans.",
-                  "Controleer de kliminschatting en upgrade-richting.",
+                  "Vul je kleinste voorblad en grootste tandwiel in.",
+                  "Vul je steilste klim en gewicht in en bekijk je geschatte cadans met onzekerheidsbereik.",
                 ]
               : [
-                  "Choose 1x or 2x and enter your chainring(s).",
-                  "Fill in cassette, wheel circumference, cadence, and climb gradient.",
-                  "Read the easiest and hardest gear plus speed at cadence.",
-                  "Check the climb verdict and upgrade direction.",
+                  "Enter your smallest chainring and largest sprocket.",
+                  "Enter your steepest gradient and weight, then review your estimated cadence and uncertainty range.",
                 ],
           }),
           buildFaqPageSchema(faqs),

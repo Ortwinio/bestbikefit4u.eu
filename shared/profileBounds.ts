@@ -1,6 +1,6 @@
 export const PROFILE_RANGES = {
   heightCm: [120, 230],
-  inseamCm: [50, 120],
+  inseamCm: [55, 105],
   armLengthCm: [35, 110],
   torsoLengthCm: [30, 90],
   femurLengthCm: [20, 80],
@@ -8,6 +8,7 @@ export const PROFILE_RANGES = {
   footLengthCm: [15, 40],
   handSpanCm: [10, 35],
   sitBoneWidthMm: [60, 200],
+  hipCircumferenceCm: [70, 160],
   coreStabilityScore: [1, 5],
   flexibilityTestCm: [-20, 20],
   coreTestSeconds: [0, 180],

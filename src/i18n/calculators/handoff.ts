@@ -18,7 +18,6 @@ interface HandoffCopy {
   prefillInseam: string;
   prefill: string;
   sessionOnly: string;
-  persistentRetention: string;
   methods: Record<HandoffMethod | "unknown", string>;
   fields: Record<HandoffField, string>;
   values: Record<string, string>;
@@ -52,7 +51,6 @@ const nl: HandoffCopy = {
   prefillInseam: "Je binnenbeen van de vorige calculator is al ingevuld.",
   prefill: "Al ingevuld vanuit je vorige calculator: {fields}.",
   sessionOnly: "Je ingevulde gegevens blijven alleen in deze browsersessie bewaard.",
-  persistentRetention: "Met je cookietoestemming onthoudt deze browser je ingevulde gegevens maximaal 30 dagen.",
   methods: { measured: "gemeten", estimated: "geschat", declared: "opgegeven", bike: "fiets", unknown: "methode onbekend" },
   fields: {
     heightCm: "Lichaamslengte", inseamCm: "Binnenbeenlengte", flexibilityScore: "Flexibiliteit",
@@ -63,6 +61,10 @@ const nl: HandoffCopy = {
     tireWidthFrontMm: "Bandbreedte voor", tireWidthRearMm: "Bandbreedte achter", rimType: "Velgtype",
     surface: "Ondergrond", outerChainringTeeth: "Groot kettingblad", innerChainringTeeth: "Klein kettingblad",
     cassetteSmallestCogTeeth: "Kleinste krans", cassetteLargestCogTeeth: "Grootste krans",
+    powerWatts: "Vermogen", speedKph: "Snelheid", bikeWeightKg: "Fietsgewicht",
+    gradientPercent: "Stijgingspercentage", distanceKm: "Afstand", durationMinutes: "Duur",
+    temperatureC: "Temperatuur", bottleSizeMl: "Bidoninhoud", twentyMinuteWatts: "20-minutenvermogen",
+    rampWatts: "Rampvermogen", intensity: "Inspanning", hipCircumferenceCm: "Heupomtrek",
   },
   values: {
     road: "Racefiets", gravel: "Gravel", mtb: "MTB", mountain: "MTB", city: "Stadsfiets",
@@ -135,7 +137,6 @@ const en: HandoffCopy = {
   prefillInseam: "Your inseam from the previous calculator is already filled in.",
   prefill: "Already filled in from your previous calculator: {fields}.",
   sessionOnly: "Your entered details are only remembered for this browser session.",
-  persistentRetention: "With your cookie consent, this browser remembers your entered details for up to 30 days.",
   methods: { measured: "measured", estimated: "estimated", declared: "provided", bike: "bike", unknown: "method unknown" },
   fields: {
     heightCm: "Height", inseamCm: "Inseam", flexibilityScore: "Flexibility", coreStabilityScore: "Core stability",
@@ -146,6 +147,10 @@ const en: HandoffCopy = {
     tireWidthFrontMm: "Front tire width", tireWidthRearMm: "Rear tire width", rimType: "Rim type", surface: "Surface",
     outerChainringTeeth: "Outer chainring", innerChainringTeeth: "Inner chainring",
     cassetteSmallestCogTeeth: "Smallest sprocket", cassetteLargestCogTeeth: "Largest sprocket",
+    powerWatts: "Power", speedKph: "Speed", bikeWeightKg: "Bike weight",
+    gradientPercent: "Gradient", distanceKm: "Distance", durationMinutes: "Duration",
+    temperatureC: "Temperature", bottleSizeMl: "Bottle capacity", twentyMinuteWatts: "20-minute power",
+    rampWatts: "Ramp power", intensity: "Intensity", hipCircumferenceCm: "Hip circumference",
   },
   values: {
     road: "Road bike", gravel: "Gravel", mtb: "MTB", mountain: "MTB", city: "City bike",

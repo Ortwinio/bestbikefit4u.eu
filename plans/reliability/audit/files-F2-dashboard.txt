@@ -1,0 +1,14 @@
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/app/(dashboard)/dashboard/page.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/app/(dashboard)/dashboard/page.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportBike.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportBike.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReliabilityReport.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReliabilityReport.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportMeasurement.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportMeasurement.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportMeasurementPanel.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportMeasurementPanel.test.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportReliabilityMapping.ts
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReportReliabilityMapping.test.ts
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/components/dashboard/DashboardReliability.fixture.tsx
+/Users/ortwinverreck/Developer/bikefitboost-reliability/src/i18n/account/reliabilityDashboard.ts

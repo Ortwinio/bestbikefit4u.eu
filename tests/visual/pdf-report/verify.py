@@ -5,14 +5,17 @@ Run with a Python environment containing PyMuPDF after render.mjs.
 
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
 import fitz
 
 ROOT = Path(__file__).resolve().parents[3]
-OUTPUT = ROOT / "plans/redesign-canvas/code-renders"
-AUDIT = ROOT / "plans/redesign-canvas/audit/26-pdf.json"
+OUTPUT = Path(os.environ.get("PDF_RENDER_OUTPUT_DIR", ROOT / "plans/reliability/renders/pdf"))
+if not OUTPUT.is_absolute():
+    OUTPUT = ROOT / OUTPUT
+AUDIT = OUTPUT / "26-pdf.json"
 FAMILIES = ("BricolageGrotesque", "Figtree", "DMMono")
 
 

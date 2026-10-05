@@ -45,6 +45,15 @@ const args = (inseamCm = 84, bikeId?: string): Args => ({
   state: { calculator: "saddle-height", values: { ...calculatorDefaults["saddle-height"], inseamCm } },
 });
 describe("calculator state storage", () => {
+  it("refuses queued scenario writes after the authenticated account changes", async () => {
+    const { ctx, db, rows } = database();
+    auth.userId = "user2";
+    await expect(save(ctx, { ...args(), expectedUserId: "user1" as Args["expectedUserId"] }))
+      .rejects.toThrow("ACCOUNT_CHANGED");
+    expect(rows).toHaveLength(0);
+    expect(db.insert).not.toHaveBeenCalled();
+    expect(db.patch).not.toHaveBeenCalled();
+  });
   it("updates one record and restores it after a new authenticated visit", async () => {
     const { ctx, db, rows } = database();
     const id = await save(ctx, args());

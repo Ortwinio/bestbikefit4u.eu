@@ -8,6 +8,12 @@ export const bikeTypes = ["road", "gravel", "mountain", "hybrid", "tt_triathlon"
 export type BikeType = (typeof bikeTypes)[number];
 export const flexibilityValues = ["very_limited", "limited", "average", "good", "excellent"] as const;
 export const riderFields = new Set<HandoffField>(["heightCm", "inseamCm", "flexibilityScore", "coreStabilityScore", "ridingGoal", "weightKg", "ftpWatts", "ftpMethod", "sitBoneWidthMm", "sweatProfile"]);
+export const legacyFields = new Set<string>([
+  ...riderFields, "bikeCategory", "currentSaddleHeightMm", "currentCrankLengthMm", "currentSaddleWidthMm",
+  "currentSaddleModel", "tireWidthFrontMm", "tireWidthRearMm", "rimType", "surface",
+  "outerChainringTeeth", "innerChainringTeeth", "cassetteSmallestCogTeeth", "cassetteLargestCogTeeth",
+]);
+export const isGenericEntry = (entry: HandoffEntry) => !legacyFields.has(entry.field);
 export const enumValues: Partial<Record<HandoffField, readonly string[]>> = {
   ridingGoal: ["comfort", "balanced", "performance"], bikeCategory: bikeTypes,
   rimType: ["hooked", "hookless", "unknown"], sweatProfile: ["low", "medium", "high"],
@@ -28,6 +34,12 @@ export type ImportResult = { status: "imported" | "conflicts"; importedFields: s
 export type Context = { profile: Doc<"profiles"> | null; observations: { field: string; value: number | string; kind: "measured" | "estimated" | "derived" | "declared"; method: string; recordedAt: number; status: "current" | "superseded" }[] };
 export const importHandoff = makeFunctionReference<"mutation", ImportArgs, ImportResult>("profiles/mutations:importHandoff");
 export const getHandoffContext = makeFunctionReference<"query", Record<string, never>, Context>("profiles/queries:getHandoffContext");
+export type CalculatorContext = { entries: HandoffEntry[]; userId: Id<"users"> };
+export const getCalculatorContext = makeFunctionReference<"query", Record<string, never>, CalculatorContext | null>("calculatorData/queries:get");
+export const saveCalculatorEntries = makeFunctionReference<"mutation", {
+  entries: HandoffEntry[]; expectedUserId: Id<"users">;
+  confirmedProfileFields?: { field: string; expectedValue: number | string; expectedTouchedAt: number }[];
+}, { acceptedFields: string[]; retainedFields: string[] }>("calculatorData/mutations:save");
 
 export function asBikeType(value: unknown): BikeType | "" {
   const mapped = value === "mtb" ? "mountain" : value === "tt" || value === "triathlon" ? "tt_triathlon" : value;

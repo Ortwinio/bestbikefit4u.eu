@@ -39,7 +39,7 @@ describe("public pressure calculator", () => {
     expect(screen.getByText(en.pressure.result.warningMessages.mtb_tire_width_unusual)).toBeTruthy();
   });
 
-  it("shows a disclosed example then updates the real result and meters by keyboard", () => {
+  it("shows a disclosed example then updates the real result by keyboard without a pressure gauge", () => {
     mount();
     expect(screen.getByRole("region", { name: "Example starting pressure" })).toBeTruthy();
     expectResult(basic);
@@ -47,9 +47,7 @@ describe("public pressure calculator", () => {
     fireEvent.keyDown(weight, { key: "ArrowRight" });
     expectResult({ ...basic, bodyWeightKg: 76 });
     expect(screen.getByRole("region", { name: "Your starting pressure" })).toBeTruthy();
-    expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuenow")).toBe(
-      String(calculateBasicPressure({ ...basic, bodyWeightKg: 76 }).frontBar),
-    );
+    expect(screen.queryByRole("meter")).toBeNull();
     fireEvent.keyDown(weight, { key: "Home" });
     expect(weight.getAttribute("aria-valuenow")).toBe("35");
     fireEvent.keyDown(weight, { key: "End" });
@@ -75,8 +73,7 @@ describe("public pressure calculator", () => {
     (discipline) => {
       mount(discipline);
       expectResult({ ...basic, discipline });
-      const max = { road: 9, gravel: 5, mtb: 3.5 }[discipline];
-      expect(screen.getAllByRole("meter")[0].getAttribute("aria-valuemax")).toBe(String(max));
+      expect(screen.queryByRole("meter")).toBeNull();
       for (const warning of calculateBasicPressure({ ...basic, discipline }).warnings) {
         expect(screen.getByText(en.pressure.result.warningMessages[warning])).toBeTruthy();
       }

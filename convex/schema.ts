@@ -1,4 +1,6 @@
+import { reliabilityTables } from "./reliability/schema";
 import { bikeFieldMeasurement } from "./bikes/profileValidators";
+import { calculatorInput } from "./calculatorData/validators";
 import { sessionProfileSnapshot, sessionObservationSnapshot } from "./sessions/profileSnapshot";
 import { bikeFitValues, calculatorId, calculatorState } from "./calculatorStates/validators";
 import { inputProvenanceValidator, adviceProgressValidator } from "./advice/validators";
@@ -220,6 +222,7 @@ export default defineSchema({
   // Auth tables from @convex-dev/auth
   ...authTables,
   ...giftTables,
+  ...reliabilityTables,
 
   // Users table - extended with app-specific fields
   // Note: The auth library creates a base users table, we extend it
@@ -321,6 +324,7 @@ export default defineSchema({
   // User profiles - body measurements for bike fitting
   profiles: defineTable({
     userId: v.id("users"),
+    calculatorInputs: v.optional(v.array(calculatorInput)),
 
     // Required body measurements (in cm)
     heightCm: v.optional(v.number()),
@@ -435,6 +439,9 @@ export default defineSchema({
     method: v.string(),
     source: v.union(v.literal("public_handoff"), v.literal("legacy_migration"), v.literal("profile_edit")),
     recordedAt: v.number(),
+    repeatCount: v.optional(v.number()),
+    withinTolerance: v.optional(v.boolean()),
+    unresolvedWarning: v.optional(v.boolean()),
     status: v.union(v.literal("current"), v.literal("superseded")),
   }).index("by_user_field", ["userId", "field"])
     .index("by_user_field_bike_status", ["userId", "field", "bikeId", "status"])

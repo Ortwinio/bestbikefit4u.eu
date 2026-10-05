@@ -87,20 +87,18 @@ it.each(["nl", "en"] as const)("preserves one consented value-free baseline even
   expect(JSON.stringify(baseline.log.mock.calls)).not.toContain("81");
 });
 
-it.each(["nl", "en"] as const)("updates the %s retention line when consent changes", locale => {
+it.each(["nl", "en"] as const)("keeps the %s session-only retention line when consent changes", locale => {
   const copy = handoffMessages[locale];
   render(<PersonalizeAdviceBlock calculator="saddle-height" locale={locale} />);
   expect(screen.getByText(copy.sessionOnly)).toBeTruthy();
   act(() => writeCookieConsent("accepted"));
-  expect(screen.getByText(copy.persistentRetention)).toBeTruthy();
-  expect(screen.queryByText(copy.sessionOnly)).toBeNull();
+  expect(screen.getByText(copy.sessionOnly)).toBeTruthy();
   act(() => writeCookieConsent("essential"));
   expect(screen.getByText(copy.sessionOnly)).toBeTruthy();
-  expect(screen.queryByText(copy.persistentRetention)).toBeNull();
 });
 it("keeps the prefill notice consistent with browser retention", () => {
   render(<HandoffPrefillNotice calculator="saddle-height" locale="nl" fields={["inseamCm"]} />);
   expect(screen.getByText(handoffMessages.nl.sessionOnly)).toBeTruthy();
   act(() => writeCookieConsent("accepted"));
-  expect(screen.getByText(handoffMessages.nl.persistentRetention)).toBeTruthy();
+  expect(screen.getByText(handoffMessages.nl.sessionOnly)).toBeTruthy();
 });

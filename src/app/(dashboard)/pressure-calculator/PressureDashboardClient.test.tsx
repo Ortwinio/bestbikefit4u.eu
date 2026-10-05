@@ -118,13 +118,12 @@ describe("account pressure rider-profile chain", () => {
       bikeId: undefined, changes: [expect.objectContaining({ field: "weightKg", value: 76, expectedCurrentValue: 75 })],
     })));
   });
-  it("keeps trials out of profile, bike and saved calculation state", () => {
-    const view = mount(); incrementWeight();
-    fireEvent.click(screen.getByRole("button", { name: calculatorChainMessages.en.trial }));
-    expect(screen.getByText(calculatorChainMessages.en.trialStatus)).toBeTruthy();
-    expect(state.mutate).not.toHaveBeenCalled(); expect(state.apply).not.toHaveBeenCalled();
-    view.unmount(); mount();
-    expect(weightSlider().getAttribute("aria-valuenow")).toBe("75");
+  it("automatically stores declared profile edits without a calculation-only option", async () => {
+    mount(); incrementWeight();
+    expect(screen.queryByRole("button", { name: calculatorChainMessages.en.trial })).toBeNull();
+    await waitFor(() => expect(state.apply).toHaveBeenCalledWith(expect.objectContaining({
+      changes: [expect.objectContaining({ field: "weightKg", value: 76, kind: "declared" })],
+    })));
   });
   it("submits changed width to the selected bike active tire setup after an explicit choice", async () => {
     state.bikes = [{ _id: "bike-1", name: "Road", bikeType: "road" }];
@@ -150,14 +149,15 @@ describe("account pressure rider-profile chain", () => {
     })));
     expect(state.apply).not.toHaveBeenCalled();
   });
-  it("does not switch bikes before the pending source decision is resolved", async () => {
+  it("stores last-used inputs but does not switch bikes while profile edits remain pending", async () => {
     state.bikes = [{ _id: "bike-1", name: "Road", bikeType: "road" }];
     mount("bike-1"); incrementWeight();
     fireEvent.click(screen.getByRole("button", { name: "Calculate without a bike" }));
     await act(async () => {});
     expect(within(screen.getByRole("region", { name: "Choose your bike" })).getByRole("button", { name: "Road" })
       .getAttribute("aria-pressed")).toBe("true");
-    expect(state.mutate).not.toHaveBeenCalled();
+    expect(state.mutate).toHaveBeenCalledWith(expect.objectContaining({ bikeId: "bike-1",
+      inputSnapshot: expect.objectContaining({ bodyWeightKg: 76 }) }));
   });
   it("retains rejected save inputs and keeps retry available", async () => {
     state.apply.mockRejectedValueOnce(new Error("offline")); mount(); incrementWeight();

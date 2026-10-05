@@ -93,7 +93,8 @@ export function CalculatorChainPanel(props: CalculatorChainPanelProps) {
         {used.map((input) => <div key={`${input.source}:${input.field}`}
           className="flex flex-wrap items-center justify-between gap-3 py-3">
           <dt><strong>{label(input.field)}</strong><p className="text-xs text-muted-foreground">
-            {changes.some((item) => item.field === input.field) ? copy.trial : input.source === "bike" ? copy.bike : copy.profile}
+            {changes.some((item) => item.field === input.field)
+              ? chain.autoSaveProfile ? copy.pendingSave : copy.trial : input.source === "bike" ? copy.bike : copy.profile}
           </p></dt>
           <dd className="flex flex-wrap items-center gap-2">
             <span className="font-mono">{displayValue(input.value, input.unit, locale)}</span>
@@ -112,7 +113,8 @@ export function CalculatorChainPanel(props: CalculatorChainPanelProps) {
         </ul><p className="mt-3 text-sm text-muted-foreground">{copy.missingHint}</p>
       </div>}
       {changes.length > 0 && <div className="mt-4 space-y-3 rounded-2xl bg-muted p-4">
-        <h3 className="font-semibold">{copy.choice}</h3>
+        <h3 className="font-semibold">{chain.autoSaveProfile ? copy.automaticChoice : copy.choice}</h3>
+        {chain.autoSaveProfile && <p className="text-sm">{copy.automaticHint}</p>}
         {changes.map((change) => <div key={`${change.source}:${change.field}`} className="space-y-2">
           <p className="text-sm"><strong>{label(change.field)}</strong>{": "}
             <span className="font-mono">{displayValue(change.expectedCurrentValue, undefined, locale)}</span>
@@ -139,7 +141,7 @@ export function CalculatorChainPanel(props: CalculatorChainPanelProps) {
           <Button disabled={chain.status === "saving" || changes.some((change) =>
             change.field === "currentSetup.saddleHeightMm" && change.kind === "measured" && !change.measurePoint)}
             onClick={() => { void chain.saveToProfile(); }}>{chain.status === "saving" ? copy.saving : copy.save}</Button>
-          <Button variant="outline" onClick={chain.useForThisCalculation}>{copy.trial}</Button>
+          {!chain.autoSaveProfile && <Button variant="outline" onClick={chain.useForThisCalculation}>{copy.trial}</Button>}
           <Button variant="ghost" onClick={chain.discardChanges}>{copy.reset}</Button>
         </div>
       </div>}

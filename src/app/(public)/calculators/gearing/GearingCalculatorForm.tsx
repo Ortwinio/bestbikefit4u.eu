@@ -11,6 +11,7 @@ import { usePublicHandoff } from "@/lib/handoff/usePublicHandoff";
 import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
 import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
 import type { HandoffField } from "@/lib/handoff/store";
+import { PublicPerformanceCalculator } from "../power-speed/PublicPerformanceCalculator";
 import {
   calculateGearing,
   DEFAULT_WHEEL_CIRCUMFERENCE_MM_BY_BIKE_TYPE,
@@ -59,7 +60,13 @@ type Props = {
   description?: string;
 };
 
-export function GearingCalculatorForm({
+export function GearingCalculatorForm(props: Props) {
+  return props.accountMode
+    ? <AccountGearingForm {...props} />
+    : <PublicPerformanceCalculator tool="gearing" locale={props.isNl ? "nl" : "en"} />;
+}
+
+function AccountGearingForm({
   isNl, initialValues, onValuesChange, accountMode = false, headerSlot, statusSlot, description,
 }: Props) {
   const locale = isNl ? "nl" : "en";

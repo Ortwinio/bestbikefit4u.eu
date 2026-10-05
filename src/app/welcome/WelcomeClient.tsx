@@ -13,10 +13,14 @@ import { getProfileScoreCopy } from "@/i18n/account/profileScore";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { withLocalePrefix } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { handoffMessages } from "@/i18n/calculators/handoff";
+import { dataReuseMessages } from "@/i18n/calculators/dataReuse";
 import { clearHandoff, readHandoff, type HandoffEntry, type HandoffField } from "@/lib/handoff/store";
+import { calculatorDataKey, isProfileCalculatorField } from "../../../shared/calculatorDataScope";
 import { scoreBike, scoreRiderProfile, type BikeValues, type RiderValues, type ScoreObservation } from "../../../shared/profileScore";
 import { asBikeType, bikeTypes, bounds, enumValues, flexibilityValues, getHandoffContext, importHandoff, profileField, profileValue, riderFields, type BikeType, type Conflict, type Context, type Resolution } from "./handoff";
 import styles from "./Welcome.module.css";
+import { getCalculatorContext, isGenericEntry, saveCalculatorEntries, type CalculatorContext } from "./handoff";
 
 const subscribeReady = () => () => {};
 
@@ -27,20 +31,24 @@ export default function WelcomeClient() {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const ready = useSyncExternalStore(subscribeReady, () => true, () => false);
   const context = useQuery(getHandoffContext, isAuthenticated ? {} : "skip");
+  const calculatorContext = useQuery(getCalculatorContext, isAuthenticated ? {} : "skip");
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.replace(`${withLocalePrefix("/login", locale)}?handoff=1`);
   }, [isLoading, isAuthenticated, locale, router]);
 
-  if (!ready || isLoading || !isAuthenticated || context === undefined) return <main className={styles.status} role="status">{text.loading}</main>;
-  return <WelcomeReview locale={locale} context={context} />;
+  if (!ready || isLoading || !isAuthenticated || context === undefined || calculatorContext === undefined) return <main className={styles.status} role="status">{text.loading}</main>;
+  return <WelcomeReview key={calculatorContext?.userId} locale={locale} context={context} calculatorContext={calculatorContext} />;
 }
 
-function WelcomeReview({ locale, context }: { locale: Locale; context: Context }) {
+function WelcomeReview({ locale, context, calculatorContext }: { locale: Locale; context: Context; calculatorContext: CalculatorContext | null }) {
   const access = useProfileAccess();
   const text = getWelcomeCopy(locale);
   const router = useRouter();
   const save = useMutation(importHandoff);
+  const saveCalculator = useMutation(saveCalculatorEntries);
+  const dataCopy = dataReuseMessages[locale];
+  const fieldLabels = { ...handoffMessages[locale].fields, ...text.fields };
   const [entries, setEntries] = useState(() => readHandoff().entries);
   const [omitted, setOmitted] = useState<Set<HandoffField>>(() => new Set());
   const [editing, setEditing] = useState<HandoffField | null>(null);
@@ -56,14 +64,16 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
   const [error, setError] = useState(false);
   const [scoreTime] = useState(() => Date.now());
   const saving = useRef(false);
-  const selected = entries.filter(entry => !omitted.has(entry.field) && (riderFields.has(entry.field) || bikeKeep));
+  const selected = entries.filter(entry => !omitted.has(entry.field) && (riderFields.has(entry.field) || isGenericEntry(entry) || bikeKeep));
   if (flexEntry) selected.push(flexEntry);
   const currentProfile = context.profile as Record<string, unknown> | null;
   const conflicts: Conflict[] = selected.flatMap(entry => {
-    if (!riderFields.has(entry.field)) return [];
+    if (!riderFields.has(entry.field) && !isGenericEntry(entry)) return [];
     const server = serverConflicts.find(conflict => conflict.field === entry.field);
     if (server) return [server];
-    const current = currentProfile?.[profileField(entry.field)];
+    const current = isGenericEntry(entry)
+      ? calculatorContext?.entries.find(saved => calculatorDataKey(saved) === calculatorDataKey(entry))?.value
+      : currentProfile?.[profileField(entry.field)];
     return (typeof current === "number" || typeof current === "string") && current !== profileValue(entry)
       ? [{ field: entry.field, currentValue: current, incomingValue: profileValue(entry), unit: entry.unit }] : [];
   });
@@ -85,7 +95,7 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
   const score = scoreRiderProfile({ profile: preview as RiderValues, observations }, scoreTime, access);
   const bikePreview: BikeValues = { ...(bikeType ? { bikeType } : {}), currentSetup: {} };
   const bikeObservations: ScoreObservation[] = [];
-  for (const entry of selected.filter(entry => !riderFields.has(entry.field))) {
+  for (const entry of selected.filter(entry => !riderFields.has(entry.field) && !isGenericEntry(entry))) {
     const setting = entry.field === "currentSaddleHeightMm" && measurePoint ? "saddleHeightMm"
       : entry.field === "currentCrankLengthMm" ? "crankLengthMm" : null;
     if (setting && typeof entry.value === "number") bikePreview.currentSetup![setting] = entry.value;
@@ -117,8 +127,31 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
     setPending(true);
     setError(false);
     try {
-      const result = await save({ records: selected,
-        ...(resolutions.length ? { resolutions: resolutions.filter(resolution => selected.some(entry => entry.field === resolution.field)) } : {}),
+      const generic = selected.filter(isGenericEntry).filter(entry => {
+        const conflict = conflicts.find(item => item.field === entry.field);
+        return !conflict || resolutionFor(conflict)?.choice === "today";
+      });
+      if (generic.length) {
+        if (!calculatorContext?.userId) throw new Error("Missing calculator owner");
+        const confirmedProfileFields: { field: string; expectedValue: number | string; expectedTouchedAt: number }[] = [];
+        const confirmedEntries = generic.map(entry => {
+          const current = calculatorContext.entries.find(saved => calculatorDataKey(saved) === calculatorDataKey(entry));
+          const conflict = conflicts.find(item => item.field === entry.field);
+          if (!current || !conflict || resolutionFor(conflict)?.choice !== "today") return entry;
+          if (isProfileCalculatorField(entry.field)) confirmedProfileFields.push({ field: entry.field,
+            expectedValue: current.value, expectedTouchedAt: current.touchedAt });
+          return { ...entry, touchedAt: Math.max(Date.now(), current.touchedAt + 1) };
+        });
+        const calculatorResult = await saveCalculator({ entries: confirmedEntries, expectedUserId: calculatorContext.userId,
+          ...(confirmedProfileFields.length ? { confirmedProfileFields } : {}) });
+        if (generic.some(entry => calculatorResult.retainedFields.includes(entry.field)
+          && calculatorContext.entries.find(saved => calculatorDataKey(saved) === calculatorDataKey(entry))?.value !== entry.value)) {
+          throw new Error("Calculator value was not imported");
+        }
+      }
+      const legacy = selected.filter(entry => !isGenericEntry(entry));
+      const result = await save({ records: legacy,
+        ...(resolutions.length ? { resolutions: resolutions.filter(resolution => legacy.some(entry => entry.field === resolution.field)) } : {}),
         ...(bikeKeep && bikeType ? { bike: { name: bikeName.trim(), bikeType, ...(saddleSelected && measurePoint ? { saddleHeightMeasurePoint: "bb_center_to_saddle_top" as const } : {}) } } : {}),
       });
       if (result.status === "conflicts") {
@@ -139,10 +172,10 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
 
   function renderEntry(entry: HandoffEntry) {
     const keep = !omitted.has(entry.field);
-    const active = keep && (riderFields.has(entry.field) || bikeKeep);
+    const active = keep && (riderFields.has(entry.field) || isGenericEntry(entry) || bikeKeep);
     const options = enumValues[entry.field];
     const numeric = entry.unit !== "none";
-    const fieldLabel = text.fields[entry.field];
+    const fieldLabel = fieldLabels[entry.field];
     return <div key={entry.field} className={`${styles.row} ${keep ? "" : styles.omitted}`}>
       <div><strong>{fieldLabel}</strong><div className={styles.source}>{text.calculators[entry.calculator]} · {new Date(entry.touchedAt).toLocaleDateString(locale)}</div></div>
       <span className={`${styles.value} ${options || entry.field === "flexibilityScore" ? styles.enumValue : ""}`}>{labelValue(entry.field === "flexibilityScore" ? profileValue(entry) : entry.value)} {unitLabel(entry.unit)}</span>
@@ -167,8 +200,8 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
       <fieldset disabled={pending} className={styles.main}>
         <main className={styles.stack}>
           <div className={styles.intro}><span className={styles.eyebrow}>{text.welcome}</span><h1>{text.title}</h1><p className={styles.muted}>{text.intro}</p></div>
-          {conflicts.map(conflict => <section key={conflict.field} className={styles.conflict} role="alert" aria-label={`${text.conflict}: ${text.fields[conflict.field as HandoffField]}`}>
-            <h2>{text.conflict}: {text.fields[conflict.field as HandoffField]}</h2>
+          {conflicts.map(conflict => <section key={conflict.field} className={styles.conflict} role="alert" aria-label={`${text.conflict}: ${fieldLabels[conflict.field as HandoffField]}`}>
+            <h2>{text.conflict}: {fieldLabels[conflict.field as HandoffField]}</h2>
             <p>{text.profileValue}: <strong>{labelValue(conflict.currentValue)} {unitLabel(conflict.unit)}</strong> · {text.incomingValue}: <strong>{labelValue(conflict.incomingValue)} {unitLabel(conflict.unit)}</strong></p>
             <div className={styles.actions}>{(["profile", "today", "remeasure"] as const).map(choice => <Button key={choice} type="button" variant="outline" aria-pressed={resolutionFor(conflict)?.choice === choice} onClick={() => setResolutions(previous => [...previous.filter(resolution => resolution.field !== conflict.field), { field: conflict.field, choice, expectedCurrentValue: conflict.currentValue }])}>{text[choice]}</Button>)}</div>
             {resolutionFor(conflict)?.choice === "remeasure" && <p>{text.remeasureHint}</p>}
@@ -178,7 +211,11 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
             {entries.filter(entry => riderFields.has(entry.field)).map(renderEntry)}
             {!entries.some(entry => riderFields.has(entry.field)) && <p className={styles.notice}>{text.empty}</p>}
           </section>
-          {entries.some(entry => !riderFields.has(entry.field)) && <section className={styles.card} aria-label={text.bike}>
+          {entries.some(isGenericEntry) && <section className={styles.card} aria-label={dataCopy.calculatorDetails}>
+            <div className={styles.cardHeader}><h2>{dataCopy.calculatorDetails}</h2><span>{dataCopy.calculatorHint}</span></div>
+            {entries.filter(isGenericEntry).map(renderEntry)}
+          </section>}
+          {entries.some(entry => !riderFields.has(entry.field) && !isGenericEntry(entry)) && <section className={styles.card} aria-label={text.bike}>
             <div className={styles.cardHeader}><h2>{text.bike}</h2><span>{text.bikeHint}</span></div>
             <div className={styles.bikeSettings}>
               <Button type="button" variant="outline" aria-pressed={bikeKeep} onClick={() => setBikeKeep(!bikeKeep)}>{bikeKeep ? `${text.createBike} ✓` : text.later}</Button>
@@ -191,7 +228,7 @@ function WelcomeReview({ locale, context }: { locale: Locale; context: Context }
                 {saddleSelected && <Select label={text.measurePoint} helperText={text.measurePointHint} placeholder={text.choose} value={measurePoint ? "bb_center_to_saddle_top" : ""} options={[{ value: "bb_center_to_saddle_top", label: text.measurePointOption }]} onChange={event => setMeasurePoint(event.target.value === "bb_center_to_saddle_top")} />}
               </>}
             </div>
-            {entries.filter(entry => !riderFields.has(entry.field)).map(renderEntry)}
+            {entries.filter(entry => !riderFields.has(entry.field) && !isGenericEntry(entry)).map(renderEntry)}
           </section>}
           {error && <p role="alert" className={styles.conflict}>{text.error}</p>}
         </main>

@@ -1,3 +1,4 @@
+import { getReliabilityRange } from "../../../../shared/reliability/calculators";
 import { describe, expect, it } from "vitest";
 import { getReportV2Copy } from "../reportV2Copy";
 import type { PdfReportAssets } from "../pdfShared";
@@ -16,6 +17,10 @@ const row = (overrides: Partial<ReportDetailedRow> = {}): ReportDetailedRow => (
   key: "saddleHeight",
   targetLabel: "754 mm",
   rangeLabel: "731 mm - 774 mm",
+  reliability95: getReliabilityRange({
+    metric: "saddleHeight", value: 754,
+    evidence: { inseamCm: 85.5, inseamProvenance: { kind: "measured" } },
+  }),
   status: "ready",
   confidence: 90,
   feasibility: "direct",
@@ -31,18 +36,19 @@ function report(rows: ReportDetailedRow[], frame?: Partial<ReportV2Payload["fram
 }
 
 describe("PDF fit values", () => {
-  it("uses actual target/range data and leaves current write-in boxes empty", () => {
+  it("uses actual target and uncertainty data and leaves current write-in boxes empty", () => {
     const html = renderFitValuesPage(report([row()]), copy, assets);
     expect(html).toContain('class="pdf-fit-letter">A');
     expect(html).toContain('754<span class="pdf-fit-unit"> mm');
-    expect(html).toContain('aria-label="731 mm - 774 mm"');
+    expect(html).toContain('aria-label="730–775 mm (95%)"');
     expect(html).toContain('class="pdf-fit-now" aria-label="Fill in by hand"></div>');
     expect(html).not.toContain("999");
   });
 
   it("never invents missing ranges or frame blocks", () => {
-    const html = renderFitValuesPage(report([row({ rangeLabel: null })]), copy, assets);
+    const html = renderFitValuesPage(report([row({ rangeLabel: "100 mm - 900 mm", reliability95: null })]), copy, assets);
     expect(html).not.toContain('class="pdf-fit-range"');
+    expect(html).not.toContain("100 mm - 900 mm");
     expect(html).not.toContain('class="pdf-fit-frame"');
     expect(html).not.toContain('class="pdf-fit-stem"');
   });

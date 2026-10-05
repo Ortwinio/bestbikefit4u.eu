@@ -1,3 +1,4 @@
+import { buildReliabilityEvidence } from "../reliability/state";
 import { query, internalQuery } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
@@ -154,13 +155,19 @@ export const getReportV2 = query({
         ).sort((a, b) => b.createdAt - a.createdAt)[0] ?? null
       : null;
 
+    // Historic reports use only their recorded inputs/evidence; today's measurements cannot narrow them.
+    const reportProfile = profile ? sessionProfile(profile, session, true) : null;
+    const reliabilityEvidence = buildReliabilityEvidence({
+      profile: reportProfile, observations: session.profileObservationSnapshot ?? [],
+    });
     return {
       session,
+      reliabilityEvidence,
       recommendation: await visibleRecommendation(ctx, recommendation),
       access: recommendation ? await reportAccess(ctx, recommendation) : null,
       bike,
       bikeProfile,
-      profile: profile ? sessionProfile(profile, session, true) : null,
+      profile: reportProfile,
       user,
       questionnaireResponses: questionnaireResponses.sort(
         (a, b) => a.questionOrder - b.questionOrder

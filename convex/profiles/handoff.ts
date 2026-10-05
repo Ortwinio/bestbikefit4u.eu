@@ -7,6 +7,7 @@ import { validateNumberRange, validateShortString } from "../lib/validation";
 import { bikeTypeValidator, createBikeWithProfiles } from "../bikes/mutations";
 import { PROFILE_RANGES } from "../../shared/profileBounds";
 import { bikeEditRanges } from "../../shared/bikeEditValidation";
+import { getInseamObservationQuality } from "../../shared/reliability/measurementQuality";
 
 const recordValidator = v.object({
   field: v.string(), value: v.union(v.number(), v.string()), unit: v.string(),
@@ -90,6 +91,7 @@ function normalizeRecord(record: HandoffRecord, now: number) {
 export const importHandoff = mutation({
   args: {
     records: v.array(recordValidator),
+    inseamConfirmed: v.optional(v.boolean()),
     resolutions: v.optional(v.array(v.object({ field: v.string(),
       choice: v.union(v.literal("profile"), v.literal("today"), v.literal("remeasure")),
       expectedCurrentValue: v.union(v.number(), v.string()),
@@ -145,6 +147,16 @@ export const importHandoff = mutation({
     }
     const weight = accepted.find((record) => record.field === "weightKg");
     if (weight) updates.weightUpdatedAt = weight.touchedAt;
+    const inseamChanged = accepted.some(record => record.field === "inseamCm");
+    const heightChanged = accepted.some(record => record.field === "heightCm");
+    const inseamCm = updates.inseamCm ?? profile?.inseamCm;
+    const currentInseam = observations.find(observation => observation.field === "inseamCm"
+      && observation.status === "current" && observation.bikeId === undefined && observation.value === inseamCm);
+    const inseamQuality = (inseamChanged || heightChanged) && typeof inseamCm === "number"
+      ? getInseamObservationQuality({ inseamCm, heightCm: Number(updates.heightCm ?? profile?.heightCm) || undefined,
+        confirmed: inseamChanged && args.inseamConfirmed === true,
+        repeatCount: inseamChanged ? 1 : currentInseam?.repeatCount,
+        withinTolerance: !inseamChanged && currentInseam?.withinTolerance }) : undefined;
     await assertPaidProfileWrite(ctx, userId, updates, profile, true);
     let profileId = profile?._id ?? null;
     if (Object.keys(updates).length) {
@@ -178,7 +190,12 @@ export const importHandoff = mutation({
       await ctx.db.insert("profileObservations", { userId, ...(record.isBike && bikeId ? { bikeId } : {}),
         field: record.target, value: record.value, unit: record.unit, kind: record.kind,
         method: record.field === "ftpWatts" ? String(updates.ftpMethod ?? record.method) : record.method,
-        source: "public_handoff", recordedAt: record.touchedAt, status: "current" });
+        source: "public_handoff", recordedAt: record.touchedAt, status: "current",
+        ...(record.field === "inseamCm" ? inseamQuality : {}) });
+    }
+    if (inseamQuality && !inseamChanged) {
+      for (const observation of observations.filter(entry => entry.field === "inseamCm"
+        && entry.status === "current" && entry.bikeId === undefined)) await ctx.db.patch(observation._id, inseamQuality);
     }
     return { status: "imported" as const, importedFields: accepted.map((record) => record.field),
       conflicts: [], profileId, bikeId };

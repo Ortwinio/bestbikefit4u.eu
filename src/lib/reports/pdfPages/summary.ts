@@ -1,4 +1,4 @@
-import { PDF_SUMMARY_COPY, type ReportV2Copy } from "../reportV2Copy";
+import { PDF_ACCURACY_COPY, PDF_SUMMARY_COPY, type ReportV2Copy } from "../reportV2Copy";
 import type { ReportParameterKey, ReportV2Payload } from "../reportV2Types";
 import { escapeHtml, formatPdfDate, localizePdfValue, type PdfReportAssets } from "../pdfShared";
 
@@ -25,9 +25,12 @@ export function renderSummaryPage(report: ReportV2Payload, copy: ReportV2Copy, a
     { label: labels.goal, value: localizePdfValue(report.profile.goal, copy, "goal"), mono: false },
     { label: labels.session, value: report.profile.sessionId, mono: true },
   ].filter((item) => item.value);
-  const confidence = report.profile.globalConfidence;
-  const showConfidence =
-    report.detailedFit.length > 0 && Number.isFinite(confidence) && confidence >= 0 && confidence <= 100;
+  const accuracyCopy = PDF_ACCURACY_COPY[copy.locale === "nl" ? "nl" : "en"];
+  const ranges = report.detailedFit.filter((row) =>
+    row.status !== "pending_data" && row.reliability95 && MEASUREMENTS.some(({ key }) => key === row.key));
+  const saddleRange = ranges.find((row) => row.key === "saddleHeight")?.reliability95;
+  const nextStep = saddleRange
+    ? accuracyCopy.nextSteps[saddleRange.nextStepKey as keyof typeof accuracyCopy.nextSteps] : null;
   const priorities = report.prioritySummary
     .filter((row) => row.status !== "pending_data" && row.targetLabel && row.targetLabel !== "n/a")
     .slice(0, 3);
@@ -63,19 +66,15 @@ export function renderSummaryPage(report: ReportV2Payload, copy: ReportV2Copy, a
       </figcaption>
     </figure>`
       : "";
-  const gauge = showConfidence
-    ? `
-    <section class="pdf-summary-confidence" aria-label="${escapeHtml(labels.confidence)}">
-      <h2>${escapeHtml(labels.confidence)}</h2>
-      <svg width="150" height="86" viewBox="0 0 150 86" fill="none" aria-hidden="true">
-        <path d="M15 78A60 60 0 0 1 135 78" class="pdf-summary-gauge-track" />
-        <path d="M15 78A60 60 0 0 1 135 78" class="pdf-summary-gauge-value"
-          pathLength="100" stroke-dasharray="${confidence} 100" />
-      </svg>
-      <div class="pdf-summary-percent mono">${escapeHtml(confidence)}<span>%</span></div>
-      <p>${escapeHtml(labels.confidenceBody)}</p>
-    </section>`
-    : "";
+  const gauge = ranges.length
+    ? `<section class="pdf-summary-accuracy" aria-label="${escapeHtml(accuracyCopy.title)}">
+      <h2>${escapeHtml(accuracyCopy.title)}</h2>
+      <dl>${ranges.map((row) => `<div><dt>${escapeHtml(copy.parameters[row.key].label)}</dt>
+        <dd class="mono">± ${row.reliability95!.halfWidth} mm</dd></div>`).join("")}</dl>
+      <p>${escapeHtml(accuracyCopy.body)}</p>
+      ${saddleRange?.basisKey === "declared" ? `<p>${escapeHtml(accuracyCopy.fallback)}</p>` : ""}
+      ${nextStep ? `<p>${escapeHtml(nextStep)}</p>` : ""}
+    </section>` : "";
   const order = priorities.length
     ? `
     <section class="pdf-summary-priorities">
@@ -123,7 +122,8 @@ export const summaryStyles = `
 .pdf-summary-meta dd.mono { font-size: 13px; font-weight: 400; }
 .pdf-summary-figure { margin: 18px 0 0; padding: 8px 8px 12px; border-radius: 24px;
   background: var(--bbf-papier); }
-.pdf-summary-bike { position: relative; width: 650px; height: 430px; }
+.pdf-summary-bike { position: relative; width: 650px; height: 390px;
+  transform: scale(.9); transform-origin: top center; }
 .pdf-summary-bike img { width: 650px; height: 430px; display: block; object-fit: contain; }
 .pdf-summary-reach-correction { position: absolute; inset: 0; width: 650px; height: 430px; }
 .pdf-summary-measure { position: absolute; display: flex; align-items: center; gap: 6px; height: 28px;
@@ -139,8 +139,13 @@ export const summaryStyles = `
   font-size: 12px; line-height: 1.35; color: var(--bbf-tekst); }
 .pdf-summary-figure strong { color: var(--bbf-inkt); }
 .pdf-summary-reference { flex-basis: 100%; text-align: right; font-size: 11px; }
-.pdf-summary-bottom { margin-top: 18px; display: grid; grid-template-columns: 200px 1fr; gap: 16px; }
+.pdf-summary-bottom { margin-top: 18px; display: grid; grid-template-columns: 260px 1fr; gap: 16px; }
 .pdf-summary-no-confidence { grid-template-columns: 1fr; }
+.pdf-summary-accuracy{padding:16px;border-radius:20px;background:var(--bbf-papier)}
+.pdf-summary-accuracy h2{font-size:19px;line-height:1.1;margin:0}
+.pdf-summary-accuracy dl{margin:10px 0}.pdf-summary-accuracy dl>div{display:flex;justify-content:space-between;
+ gap:8px;font-size:12px;line-height:1.5}.pdf-summary-accuracy dd{margin:0;white-space:nowrap}
+.pdf-summary-accuracy p{font-size:11px;line-height:1.35;margin:6px 0 0;color:var(--bbf-tekst)}
 .pdf-summary-confidence { display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 18px 16px; border: 1px solid var(--bbf-rand); border-radius: 20px; }
 .pdf-summary-confidence h2 { margin: 0; align-self: flex-start; font-size: 14px; font-weight: 700; }
@@ -165,7 +170,7 @@ export const summaryStyles = `
 .pdf-summary-compact .pdf-summary-name h1 { font-size: 32px; line-height: 1.05; }
 .pdf-summary-compact .pdf-summary-meta dd { font-size: 12px; line-height: 1.3; }
 .pdf-summary-compact .pdf-summary-meta { margin-top: 12px; }
-.pdf-summary-compact .pdf-summary-bike { height: 365px; transform: scale(.85); transform-origin: top center; }
+.pdf-summary-compact .pdf-summary-bike { height: 325px; transform: scale(.75); transform-origin: top center; }
 .pdf-summary-compact .pdf-summary-figure { margin-top: 12px; }
 .pdf-summary-compact .pdf-summary-bottom { margin-top: 12px; }
 `;

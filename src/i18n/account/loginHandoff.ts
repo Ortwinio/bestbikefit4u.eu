@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import type { HandoffEntry } from "@/lib/handoff/store";
+import { handoffMessages } from "@/i18n/calculators/handoff";
 
 type LoginHandoffCopy = {
   title: string;
@@ -39,6 +40,7 @@ export const loginHandoffCopy: Record<Locale, LoginHandoffCopy> = {
     calculator: "Probeer de calculator zonder account",
     methods: { measured: "gemeten", estimated: "geschat", declared: "opgegeven", bike: "fiets" },
     fields: {
+      ...handoffMessages.nl.fields,
       heightCm: "Lichaamslengte", inseamCm: "Binnenbeenlengte", flexibilityScore: "Flexibiliteit",
       coreStabilityScore: "Core-stabiliteit", ridingGoal: "Rijdoel", weightKg: "Gewicht",
       ftpWatts: "FTP", ftpMethod: "FTP-methode", sitBoneWidthMm: "Zitbotbreedte", sweatProfile: "Zweetprofiel",
@@ -72,6 +74,7 @@ export const loginHandoffCopy: Record<Locale, LoginHandoffCopy> = {
     calculator: "Try the calculator without an account",
     methods: { measured: "measured", estimated: "estimated", declared: "declared", bike: "bike" },
     fields: {
+      ...handoffMessages.en.fields,
       heightCm: "Height", inseamCm: "Inseam", flexibilityScore: "Flexibility",
       coreStabilityScore: "Core stability", ridingGoal: "Riding goal", weightKg: "Weight",
       ftpWatts: "FTP", ftpMethod: "FTP method", sitBoneWidthMm: "Sit bone width", sweatProfile: "Sweat profile",

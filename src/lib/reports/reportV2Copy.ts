@@ -98,8 +98,8 @@ export const PDF_FIT_VALUES_COPY = {
     title: "Je afstelwaarden",
     intro:
       "Meet je fiets zoals op pagina 6 en schrijf je huidige waarde in de kolom Nu. " +
-      "Een testmarge staat alleen bij waarden waarvoor die beschikbaar is.",
-    margin: "Testmarge",
+      "Het 95%-bereik toont de onzekerheid, niet de veiligheidsgrens.",
+    margin: "95%-bereik",
     target: "Doel",
     now: "Nu",
     component: "Onderdeel",
@@ -129,8 +129,8 @@ export const PDF_FIT_VALUES_COPY = {
     title: "Your fit values",
     intro:
       "Measure your bike as shown on page 6 and write your current value in the Now column. " +
-      "A test range is shown only where one is available.",
-    margin: "Test range",
+      "The 95% range shows uncertainty, not the safety limit.",
+    margin: "95% range",
     target: "Target",
     now: "Now",
     component: "Component",
@@ -416,3 +416,37 @@ export const PDF_MEASUREMENT_COPY = {
     update: "Werk je waarden bij in je account.",
   },
 };
+
+
+export const PDF_ACCURACY_COPY = {
+  nl: {
+    title: "Hoe nauwkeurig is dit advies?",
+    body: "Het 95%-bereik combineert meetonzekerheid en spreiding van het model. De breedtes zijn rekenregels die we nog toetsen.",
+    detail: "Elk onderdeel heeft zijn eigen bereik; smaller betekent minder onzekerheid.",
+    fallback: "Zonder vastgelegde meetmethode rekenen we je binnenbeen als een schatting.",
+    next: "Meet je binnenbeen opnieuw en bewaar de meetmethode. Herhaalmetingen binnen 5 mm maken het bereik smaller.",
+    nextSteps: {
+      "measure-inseam": "Meet je binnenbeen en bewaar de meetmethode om dit bereik smaller te maken.",
+      "repeat-inseam": "Meet je binnenbeen nogmaals. Metingen binnen 5 mm maken het bereik smaller.",
+      remeasure: "Meet je binnenbeen opnieuw om de open controlemelding op te lossen.",
+      "measure-knee-angle": "Controleer je kniehoek voor een kleiner bereik.",
+      "narrowest-online": "Dit is het smalste bereik dat we online kunnen geven.",
+    },
+    missing: "Voor dit onderdeel is nog geen 95%-bereik beschikbaar.",
+  },
+  en: {
+    title: "How accurate is this advice?",
+    body: "The 95% range combines measurement uncertainty and model variation. These model estimates still need validation.",
+    detail: "Each component has its own range; narrower means less uncertainty.",
+    fallback: "Without a recorded measurement method, we treat your inseam as an estimate.",
+    next: "Measure your inseam again and record the method. Repeated measurements within 5 mm narrow the range.",
+    nextSteps: {
+      "measure-inseam": "Measure your inseam and record the method to narrow this range.",
+      "repeat-inseam": "Measure your inseam again. Measurements within 5 mm narrow the range.",
+      remeasure: "Measure your inseam again to resolve the outstanding check.",
+      "measure-knee-angle": "Check your knee angle for a narrower range.",
+      "narrowest-online": "This is the narrowest range we can provide online.",
+    },
+    missing: "A 95% range is not yet available for this component.",
+  },
+} as const;

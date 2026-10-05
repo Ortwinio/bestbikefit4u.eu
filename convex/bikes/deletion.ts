@@ -29,6 +29,7 @@ const sessionTables = [
 ] as const;
 
 const bikeTables = [
+  "reliabilityKneeMeasurements", "reliabilitySaddlePreferences",
   "profileObservations", "pressureCalculations", "pressureProfiles", "gearingSessions", "saddleWidthSessions", "recommendations",
 ] as const;
 

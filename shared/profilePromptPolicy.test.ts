@@ -239,7 +239,7 @@ describe("profile prompt selection", () => {
 
   it("rehydrates definitions independently of completion/eligibility", () => {
     expect(buildPromptCandidates(input({ profile: completeProfile }))).toEqual([]);
-    expect(getPromptDefinition("inseamCm", false)).toMatchObject({ unit: "cm", kind: "measured", range: [50, 120], effort: "measure" });
+    expect(getPromptDefinition("inseamCm", false)).toMatchObject({ unit: "cm", kind: "measured", range: [55, 105], effort: "measure" });
     expect(getPromptDefinition("currentSetup.saddleHeightMm", true)).toMatchObject({ unit: "mm", range: [400, 1000] });
     expect(getPromptDefinition("currentSetup.saddleHeightMm", false)).toBeUndefined();
   });

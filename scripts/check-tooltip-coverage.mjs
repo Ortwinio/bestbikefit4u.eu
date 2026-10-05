@@ -85,11 +85,18 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([
+  "src/components/reliability/account/AccountSaddleHeight.tsx",
+  "src/components/reliability/account/AccountKneeAngle.tsx",
+  "src/components/reliability/account/InseamMeasurements.tsx",
+  "src/components/reliability/account/KneeMeasurementForm.tsx",
+  "src/components/reliability/account/SaddleSettings.tsx",
   "src/components/profile/ProfileRefinements.tsx",
   "src/components/calculators/AccountCalculatorBike.tsx",
   "src/components/calculators/CalculatorChainPanel.tsx",
   "src/app/(public)/calculators/crank-length/CrankLengthCalculatorForm.tsx",
   "src/app/(public)/calculators/saddle-width/SaddleWidthCalculatorForm.tsx",
+  "src/app/(public)/calculators/crank-length/LegacyCrankLengthCalculatorForm.tsx",
+  "src/app/(public)/calculators/saddle-width/LegacySaddleWidthCalculatorForm.tsx",
   "src/components/profile/ProfileProvenance.tsx",
   "src/components/profile/AdviceProgressActions.tsx",
   "src/components/dashboard/DashboardProfilePrompts.tsx",
