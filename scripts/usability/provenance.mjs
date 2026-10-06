@@ -108,7 +108,7 @@ export async function verifyBuildProvenance(root, stamp, buildFile = resolve(roo
   return { valid: true, reason: null };
 }
 
-export function verifyManualApproval(review, record, required, { buildId, sourceHash, evidenceHash }) {
+export function verifyManualDecision(review, record, required, { buildId, sourceHash, evidenceHash }) {
   if (!review || !nonblank(buildId) || !sha256(sourceHash) || !sha256(evidenceHash)
     || review.buildId !== buildId || review.sourceHash !== sourceHash
     || !sha256(record.screenshotHash) || !Array.isArray(review.checks)) return null;
@@ -116,7 +116,12 @@ export function verifyManualApproval(review, record, required, { buildId, source
     && check.locale === record.locale && check.width === record.width && check.rule === required.rule);
   if (matches.length !== 1) return null;
   const check = matches[0];
-  return check.status === "pass" && nonblank(check.reviewer) && nonblank(check.note)
+  return ["pass", "fail"].includes(check.status) && nonblank(check.reviewer) && nonblank(check.note)
     && check.screenshotHash === record.screenshotHash && check.evidenceHash === evidenceHash
     ? check : null;
+}
+
+export function verifyManualApproval(review, record, required, provenance) {
+  const decision = verifyManualDecision(review, record, required, provenance);
+  return decision?.status === "pass" ? decision : null;
 }

@@ -53,4 +53,10 @@ https://bikefitboost.com https://bestbikefit4u.eu --local`, email previews, **us
 
 ## U1 completion — 6 October
 
+### Owner bar follow-up — 7 October
+
+DONE U1-BAR. Owner bar corrections `6d4c2a43` are included in frozen final15 `jytw4ikWvOEcr_Thl1YBK`. All 15 rules pass with the narrow rule12 owner exception, 332 cases, 1,476 manual checks and six surface attestations. All combined gates pass. Consent-visible bar, menu, footer, session dismissal and blocked-storage Close are covered; homepage length is reported without a new threshold. Exact results and limitations: `messages/A-guard-final15.md`, `audit/U1-notes.md`. No bar behaviour changes by A, commits or deploys.
+
+### Earlier final14 candidate
+
 DONE U1. Final frozen build `A-_g2mE1fYoPQrVxnnicS`: all combined gates pass,332 NL/EN390/1440 cases,1476 manual checks and6 pressure surfaces. Strict finalization reports all15 rules green, `releasePassed:true`, no outstanding manual checks and no errors. Evidence: `renders/guard/final14/reviewed-report.md`; scope, limitations and manifest: `audit/U1-notes.md`, `audit/files-U1.txt`. Public pressure remains under7 screens in both mobile locales with visible safety and server-rendered disclosure text. This is local Codex validation, not deployment or human approval. No commits/deploys/production changes/real mails.

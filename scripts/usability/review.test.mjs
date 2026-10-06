@@ -48,10 +48,23 @@ test("saved evidence can be approved without rerendering or mutating the raw rep
   assert.equal(JSON.stringify(input.report), original);
 });
 
+test("a provenance-bound manual failure is completed review, never a passing release", () => {
+  const input = setup();
+  input.review.checks[0].status = "fail";
+  input.review.checks[0].note = "Owner bar covers navigation; behaviour left unchanged.";
+  const result = finalizeReview(input);
+  assert.equal(result.passed, false);
+  assert.equal(result.releasePassed, false);
+  assert.equal(result.manualOutstanding, false);
+  assert.equal(result.rules.find(rule => rule.rule === input.review.checks[0].rule).status, "fail");
+  input.review.checks[0].screenshotHash = "f".repeat(64);
+  assert.equal(finalizeReview(input).manualOutstanding, true);
+});
+
 test("missing, duplicate and incorrectly bound approvals remain pending", () => {
   for (const change of [input => { input.review.checks = []; }, input => { input.review.sourceHash = "b".repeat(64); },
     input => { input.review.checks[0].evidenceHash = "b".repeat(64); }, input => { input.review.checks[0].screenshotHash = "b".repeat(64); },
-    input => { input.review.checks.push(input.review.checks[0]); }, input => { input.review.checks[0].status = "fail"; }]) {
+    input => { input.review.checks.push(input.review.checks[0]); }, input => { input.review.checks[0].status = "manual"; }]) {
     const input = setup(); change(input);
     const result = finalizeReview(input);
     assert.equal(result.passed, false);

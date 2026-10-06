@@ -9,8 +9,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { createPreviewCertificate, createPreviewFetch } from "../tests/visual/final-sweep/tls.mjs";
 import { classifyExpectedDiagnostic } from "../tests/visual/final-sweep/diagnostics.mjs";
 import { pages, calculators, locales, viewports, localizedPagePath, pressureSurfaces } from "./usability/routes.mjs";
-import { checkRules, manualRequirements, summarize } from "./usability/rules.mjs";
+import { checkRules, manualRequirements, summarize, stickyBarStateChecks } from "./usability/rules.mjs";
 import { measureDocument } from "./usability/measure.mjs";
+import { measureStickyBar, prepareStickyBar, inspectStickyBarLifecycle } from "./usability/sticky-bar.mjs";
 import { localOrigin, parseOptions } from "./usability/options.mjs";
 import { verifyEditedHandoff } from "./usability/handoff.mjs";
 import { runPool } from "./usability/pool.mjs";
@@ -91,7 +92,8 @@ async function inspectExpandedStates(page, record, serverHtml, calculatorPaths, 
     record.interactionChecks ??= [];
     record.interactionChecks.push({ state, numericInputs: metrics.numericInputs, smallTargets: metrics.smallTargets,
       violations: axe.violations, overflow: metrics.overflow,
-      forbidden: metrics.forbidden, upgradeOverlays: metrics.upgradeOverlays, urgency: metrics.urgency });
+      forbidden: metrics.forbidden, upgradeOverlays: metrics.upgradeOverlays, urgency: metrics.urgency,
+      ...(descriptor.kind === "home" ? { stickyBar: await page.evaluate(measureStickyBar) } : {}) });
     return metrics;
   };
   const menu = page.locator('[data-usability="menu-trigger"]:visible');
@@ -136,7 +138,8 @@ async function stateChecks(page, descriptor, metrics, url, locale, record) {
     record.interactionChecks ??= [];
     record.interactionChecks.push({ state, numericInputs: stateMetrics.numericInputs, smallTargets: stateMetrics.smallTargets,
       violations: axe.violations, overflow: stateMetrics.overflow,
-      forbidden: stateMetrics.forbidden, upgradeOverlays: stateMetrics.upgradeOverlays, urgency: stateMetrics.urgency });
+      forbidden: stateMetrics.forbidden, upgradeOverlays: stateMetrics.upgradeOverlays, urgency: stateMetrics.urgency,
+      ...(descriptor.kind === "home" ? { stickyBar: await page.evaluate(measureStickyBar) } : {}) });
     const filename = `${descriptor.id}-${locale}-${metrics.width}-${state}.png`;
     await page.screenshot({ path: resolve(output, filename), fullPage: true, animations: "disabled" });
     record.stateScreenshots ??= [];
@@ -280,8 +283,10 @@ try {
       if (descriptor.fixture && !descriptor.path.includes("login") && /\/login(?:[/?]|$)/.test(page.url())) {
         throw new Error("Login redirect is not authenticated fixture coverage");
       }
+      const stickyBar = descriptor.kind === "home" ? await prepareStickyBar(page, record, output, serverHtml) : null;
       const metrics = await page.evaluate(measureDocument, { serverHtml, viewport,
         calculatorPaths: calculators.map(calculator => localizedPagePath(calculator, locale)) });
+      if (stickyBar) metrics.stickyBar = stickyBar;
       const axe = await new AxeBuilder({ page }).analyze();
       metrics.contrast = axe.violations.filter(violation => violation.id === "color-contrast");
       record.accessibility = axe.violations;
@@ -294,9 +299,11 @@ try {
         calculators.map(calculator => localizedPagePath(calculator, locale)), descriptor);
       if (editorMetrics) metrics.measurementKinds = editorMetrics.measurementKinds;
       await stateChecks(page, descriptor, metrics, url, locale, record);
+      if (stickyBar) await inspectStickyBarLifecycle(page, record, output, url, metrics);
       record.metrics = metrics;
       record.checks = checkRules(descriptor, metrics);
       for (const state of record.interactionChecks ?? []) {
+        record.checks.push(...stickyBarStateChecks(state));
         record.checks.push({ rule: 9, status: state.numericInputs.length ? "fail" : "pass", evidence: state });
         record.checks.push({ rule: 12, status: state.upgradeOverlays.length || state.urgency.length ? "fail" : "pass", evidence: state });
         record.checks.push({ rule: 14, status: state.forbidden.length ? "fail" : "pass", evidence: state });

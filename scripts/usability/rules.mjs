@@ -14,6 +14,16 @@ export function checkRules(page, metrics) {
     status: !applicable ? "not-applicable" : passed ? "pass" : "fail", evidence });
   const calculator = page.kind === "calculator";
   const home = page.kind === "home";
+  const sticky = metrics.stickyBar;
+  const stickyVisible = sticky?.initial?.visible === true;
+  const stickyDismissible = sticky?.ownerException?.rule === 12
+    && sticky.ownerException.reference === "U1-BAR" && stickyVisible
+    && sticky.cookieUndecided?.visible === false && sticky.dismissed?.visible === false
+    && sticky.dismissed.dismissedInSession === "1" && sticky.revisit?.visible === false
+    && sticky.revisit.dismissedInSession === "1" && sticky.storageDenied?.visible === false;
+  const stickyReserved = stickyVisible && Number.isFinite(sticky.initial.rect?.height)
+    && sticky.initial.bodyPaddingBottom >= sticky.initial.rect.height - 0.5
+    && sticky.footer?.footerOverlap === false && sticky.footer.occludedFooterControls?.length === 0;
   const explanation = calculator || page.kind === "content";
   const welcome = /^welcome(?:-flag-off|-paid)?$/.test(page.id) && page.kind === "account";
   const headerAction = page.kind === "checkout" ? metrics.checkoutBack : metrics.menu;
@@ -43,9 +53,12 @@ export function checkRules(page, metrics) {
   { progress: metrics.progress, reuse: metrics.reuse, nextMatches: metrics.nextMatches,
     nextJourney: metrics.nextJourney, reasonSuppressedOnRevisit: metrics.reasonSuppressedOnRevisit });
   add(4, home, metrics.routeStarts.includes("posture") && metrics.routeStarts.includes("ride")
-    && metrics.missingCalculators.length === 0, { routes: metrics.routeStarts, missing: metrics.missingCalculators });
+    && metrics.missingCalculators.length === 0 && stickyVisible,
+  { routes: metrics.routeStarts, missing: metrics.missingCalculators, sticky: home ? sticky?.initial : undefined,
+    pageScreens: metrics.pageScreens });
   add(5, metrics.width === 390, Boolean(metrics.header && metrics.header.height <= 64.5
-    && headerNavigation && !metrics.cookieCoversHeader),
+    && headerNavigation && !metrics.cookieCoversHeader
+    && (!home || stickyVisible && sticky.initial.headerOverlap === false && sticky.cookieUndecided?.visible === false)),
   { header: metrics.header, menu: metrics.menu, checkoutBack: metrics.checkoutBack,
     ...(welcome ? { welcomeLogo, welcomeProgress } : {}),
     headerPattern: welcome ? "canvas-welcome-logo-progress" : page.kind === "checkout" ? "canvas-checkout-back-progress" : "site-menu",
@@ -62,15 +75,28 @@ export function checkRules(page, metrics) {
     metrics.measurementKinds);
   add(11, Boolean(page.tyrePressure), metrics.tyreComponents.length > 0
     && metrics.tyreComponents.every(component => component.name && component.front && component.rear), metrics.tyreComponents);
-  add(12, true, metrics.upgradeOverlays.length === 0 && metrics.urgency.length === 0,
-    { overlays: metrics.upgradeOverlays, urgency: metrics.urgency });
+  add(12, true, metrics.upgradeOverlays.length === 0 && metrics.urgency.length === 0
+    && (!home || stickyDismissible),
+  { overlays: metrics.upgradeOverlays, urgency: metrics.urgency, ownerApprovedException: home ? sticky : undefined });
   add(13, Boolean(page.safety), metrics.safety.length > 0 && metrics.safety.every(item => item.visible)
     && (!page.safetyStates || metrics.safetyStates?.length === page.safetyStates.length
       && metrics.safetyStates.every(state => state.visible)), { default: metrics.safety, states: metrics.safetyStates });
   add(14, true, metrics.forbidden.length === 0, { forbidden: metrics.forbidden });
-  add(15, true, metrics.smallTargets.length === 0 && metrics.contrast.length === 0 && !metrics.overflow,
-    { targets: metrics.smallTargets, contrast: metrics.contrast, overflow: metrics.overflow });
+  add(15, true, metrics.smallTargets.length === 0 && metrics.contrast.length === 0 && !metrics.overflow
+    && (!home || stickyReserved),
+  { targets: metrics.smallTargets, contrast: metrics.contrast, overflow: metrics.overflow,
+    stickyReservation: home ? { initial: sticky?.initial, footer: sticky?.footer } : undefined });
   return checks;
+}
+
+export function stickyBarStateChecks(state) {
+  const sticky = state.stickyBar;
+  if (!sticky) return [];
+  const navigationClear = sticky.headerOverlap === false && sticky.occludedMenuControls?.length === 0;
+  const controlsClear = navigationClear && sticky.occludedFooterControls?.length === 0
+    && sticky.targets?.every(target => target.width >= 43.5 && target.height >= 43.5);
+  return [{ rule: 5, status: navigationClear ? "pass" : "fail", evidence: { state: state.state, sticky } },
+    { rule: 15, status: controlsClear ? "pass" : "fail", evidence: { state: state.state, sticky } }];
 }
 
 export function manualRequirements(page) {
@@ -91,7 +117,9 @@ export function manualRequirements(page) {
   if (page.presentations?.length) checks.push({ rule: 7, reason: "Review the distinct paid forms against canvas, including locked score portion." });
   if (page.tyrePressure) checks.push({ rule: 11, reason: "Confirm shared component use, front lime/rear ink; email alternatives remain text." });
   if (page.safety) checks.push({ rule: 13, reason: "Confirm complete relevant safety information is always readable, not merely a marker." });
-  checks.push({ rule: 12, reason: "No paid urgency/fear. Leave notice saves data, triggers only after input and once per session." });
+  checks.push({ rule: 12, reason: page.kind === "home"
+    ? "Owner-approved U1-BAR exception only: verify consent-first, nonblocking session dismissal, including unavailable storage; no other paid urgency or modal exemption."
+    : "No paid urgency/fear. Leave notice saves data, triggers only after input and once per session." });
   return checks;
 }
 

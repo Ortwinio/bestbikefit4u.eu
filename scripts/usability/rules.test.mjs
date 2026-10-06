@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { checkRules, manualRequirements, summarize } from "./rules.mjs";
+import { checkRules, manualRequirements, stickyBarStateChecks, summarize } from "./rules.mjs";
 
 const baseline = () => ({ width: 390, height: 844, pageScreens: 5,
   account: { top: 900, links: 1, text: "Save my measurement" }, result: { bottom: 800 }, next: { links: 1 },
@@ -13,6 +13,51 @@ const baseline = () => ({ width: 390, height: 844, pageScreens: 5,
   safety: [{ visible: true }], forbidden: [], smallTargets: [], contrast: [], overflow: false });
 const page = { kind: "calculator", safety: true, measurementKind: true, tyrePressure: true };
 const rule = (number, metrics) => checkRules(page, metrics).find(check => check.rule === number);
+
+const stickyMetrics = () => ({ ...baseline(), stickyBar: {
+  ownerException: { rule: 12, reference: "U1-BAR" },
+  cookieUndecided: { visible: false },
+  initial: { visible: true, rect: { height: 130 }, bodyPaddingBottom: 130, headerOverlap: false },
+  footer: { footerOverlap: false, occludedFooterControls: [] },
+  dismissed: { visible: false, dismissedInSession: "1" },
+  revisit: { visible: false, dismissedInSession: "1" },
+  storageDenied: { visible: false },
+} });
+const homeRule = (number, metrics) => checkRules({ kind: "home" }, metrics).find(check => check.rule === number);
+
+test("owner homepage bar exception requires consent, actual visibility and working dismissal", () => {
+  assert.equal(homeRule(12, stickyMetrics()).status, "pass");
+  for (const change of [{ initial: { visible: false } }, { cookieUndecided: { visible: true } },
+    { dismissed: { visible: true } }, { revisit: { visible: true } }, { storageDenied: { visible: true } },
+    { ownerException: { rule: 12, reference: "unapproved" } }]) {
+    const metrics = stickyMetrics();
+    Object.assign(metrics.stickyBar, change);
+    assert.equal(homeRule(12, metrics).status, "fail");
+  }
+  assert.equal(homeRule(12, { ...stickyMetrics(), urgency: ["only today"] }).status, "fail");
+  assert.equal(homeRule(12, { ...stickyMetrics(), upgradeOverlays: ["Upgrade modal"] }).status, "fail");
+});
+
+test("homepage bar cannot waive route availability, header or footer coverage", () => {
+  assert.equal(homeRule(4, stickyMetrics()).status, "pass");
+  assert.equal(homeRule(4, { ...stickyMetrics(), missingCalculators: ["gearing"] }).status, "fail");
+  const metrics = stickyMetrics();
+  metrics.stickyBar.initial.bodyPaddingBottom = 0;
+  assert.equal(homeRule(15, metrics).status, "fail");
+  metrics.stickyBar.initial.headerOverlap = true;
+  assert.equal(homeRule(5, metrics).status, "fail");
+  assert.equal(homeRule(15, { ...stickyMetrics(), contrast: ["bar text"] }).status, "fail");
+});
+
+test("visible bar interaction checks reject covered menu/footer controls and small targets", () => {
+  const stickyBar = { headerOverlap: false, occludedMenuControls: [], occludedFooterControls: [],
+    targets: [{ width: 44, height: 44 }] };
+  assert(stickyBarStateChecks({ state: "menu-open", stickyBar }).every(check => check.status === "pass"));
+  assert(stickyBarStateChecks({ state: "menu-open", stickyBar: { ...stickyBar, occludedMenuControls: ["Pricing"] } })
+    .every(check => check.status === "fail"));
+  assert.equal(stickyBarStateChecks({ stickyBar: { ...stickyBar, occludedFooterControls: ["Privacy"] } })[1].status, "fail");
+  assert.equal(stickyBarStateChecks({ stickyBar: { ...stickyBar, targets: [{ width: 30, height: 44 }] } })[1].status, "fail");
+});
 
 test("every page reports all fifteen rules without automatic manual approval", () => {
   assert.equal(checkRules(page, baseline()).length, 15);

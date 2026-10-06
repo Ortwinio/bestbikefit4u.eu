@@ -4,7 +4,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pages, locales, viewports, pressureSurfaces } from "./routes.mjs";
 import { manualRequirements, summarize } from "./rules.mjs";
-import { sourceFingerprint, verifyBuildProvenance, verifyManualApproval } from "./provenance.mjs";
+import { sourceFingerprint, verifyBuildProvenance, verifyManualDecision } from "./provenance.mjs";
 
 const hash = value => createHash("sha256").update(value).digest("hex");
 const validHash = value => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
@@ -48,10 +48,10 @@ export function finalizeReview({ report, review, currentSourceHash, currentBuild
       if (!automated.some(check => check.rule === rule)) record.errors.push(`Missing captured automated rule ${rule}`);
     }
     record.checks = [...automated, ...requirements.map(required => {
-      const approved = verifyManualApproval(review, record, required, {
+      const approved = verifyManualDecision(review, record, required, {
         buildId: report.buildId, sourceHash: report.sourceHash, evidenceHash: record.evidenceHash,
       });
-      return { ...required, status: approved ? "pass" : "manual",
+      return { ...required, status: approved ? approved.status : "manual",
         evidence: approved ? { reviewer: approved.reviewer, note: approved.note, screenshot: record.screenshot } : record.screenshot };
     })];
   }
