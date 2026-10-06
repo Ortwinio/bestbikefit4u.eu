@@ -117,9 +117,17 @@ export async function main(args) {
     const parsed = new URL(url);
     if (parsed.origin !== origin && !isLegacySiteHost(parsed.hostname)) throw new Error('Unapproved request origin');
     if (!local) await new Promise((done) => setTimeout(done, 175));
-    const options = { redirect: 'manual', signal: AbortSignal.timeout(30000),
-      headers: { 'user-agent': 'Googlebot (BikeFitBoost domain migration verification)' } };
-    return server ? server.fetch(url, options) : fetch(url, options);
+    // A single slow response should not abort a run of hundreds of checks: retry network errors twice.
+    for (let attempt = 1; ; attempt++) {
+      const options = { redirect: 'manual', signal: AbortSignal.timeout(30000),
+        headers: { 'user-agent': 'Googlebot (BikeFitBoost domain migration verification)' } };
+      try {
+        return await (server ? server.fetch(url, options) : fetch(url, options));
+      } catch (error) {
+        if (attempt >= 3) throw error;
+        await new Promise((done) => setTimeout(done, 1000 * attempt));
+      }
+    }
   };
   try {
     const sitemap = await readSitemaps(fetcher, origin);
