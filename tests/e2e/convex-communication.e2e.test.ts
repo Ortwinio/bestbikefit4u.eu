@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { getFunctionName, type FunctionReference } from "convex/server";
 import { wizardSchema } from "../../src/lib/validations/measurementWizard";
 import { comfortScoreToFields } from "../../src/lib/validations/profile";
 
@@ -20,7 +21,7 @@ import {
 import { generate as generateRecommendation } from "../../convex/recommendations/mutations";
 import { generateFromData } from "../../convex/recommendations/actions";
 import { storeResult } from "../../convex/recommendations/internalMutations";
-import { getBySession as getRecommendationBySession } from "../../convex/recommendations/queries";
+import { getBySession as getRecommendationBySession, getReportV2 } from "../../convex/recommendations/queries";
 import { sendFitReport } from "../../convex/emails/actions";
 import { getCurrentUser } from "../../convex/users/queries";
 
@@ -201,6 +202,21 @@ async function runRecommendationFlow(db: InMemoryDb, sessionId: string) {
   );
 }
 
+function emailContext(db: InMemoryDb) {
+  return {
+    runQuery: vi.fn(async (reference: FunctionReference<"query">, args?: { sessionId: string }) => {
+      const name = getFunctionName(reference);
+      if (name === getFunctionName(api.users.queries.getCurrentUser)) {
+        return handlerOf<Record<string, never>, unknown>(getCurrentUser)({ db }, {});
+      }
+      if (name === getFunctionName(api.recommendations.queries.getReportV2) && args) {
+        return handlerOf<{ sessionId: string }, unknown>(getReportV2)({ db }, args);
+      }
+      throw new Error(`Unexpected email query: ${name}`);
+    }),
+  };
+}
+
 describe("convex communication e2e", () => {
   let currentUserId: string | null;
 
@@ -208,8 +224,11 @@ describe("convex communication e2e", () => {
     vi.clearAllMocks();
     currentUserId = null;
     getAuthUserIdMock.mockImplementation(async () => currentUserId);
-    delete process.env.AUTH_RESEND_KEY;
+    vi.stubEnv("AUTH_RESEND_KEY", "");
+    vi.stubEnv("PAID_ACCESS_ENFORCED", "false");
   });
+
+  afterEach(() => vi.unstubAllEnvs());
 
   it("starts a fit from wizard data with rider-selected discomfort locations", async () => {
     const db = new InMemoryDb();
@@ -229,7 +248,8 @@ describe("convex communication e2e", () => {
     expect(await db.get(sessionId)).toMatchObject({ profileId, userId: currentUserId, status: "in_progress" });
   });
 
-  it("completes profile -> session -> questionnaire -> recommendation -> email flow", async () => {
+  it.each([false, true])("completes profile -> session -> questionnaire -> recommendation -> email flow (enforced=%s)", async (enforced) => {
+    vi.stubEnv("PAID_ACCESS_ENFORCED", String(enforced));
     const db = new InMemoryDb();
     const userId = await db.insert("users", { email: "rider@example.com" });
     currentUserId = userId;
@@ -346,29 +366,13 @@ describe("convex communication e2e", () => {
     expect(sessionAfter?.status).toBe("completed");
     expect(sessionAfter?.profileId).toBe(profileId);
 
-    const usersGetCurrentUserHandler = handlerOf<
-      Record<string, never>,
-      Record<string, unknown> | null
-    >(
-      getCurrentUser
-    );
-    const getRecommendationBySessionHandler = handlerOf<
-      { sessionId: string },
-      Record<string, unknown> | null
-    >(getRecommendationBySession);
+    const actionCtx = emailContext(db);
 
     const emailResult = await handlerOf<
       { sessionId: string; recipientEmail: string },
       { success: boolean; emailId?: string }
     >(sendFitReport)(
-      {
-        runQuery: async (_fnRef: unknown, args?: { sessionId: string }) => {
-          if (!args) {
-            return usersGetCurrentUserHandler({ db }, {});
-          }
-          return getRecommendationBySessionHandler({ db }, args);
-        },
-      },
+      actionCtx,
       {
         sessionId,
         recipientEmail: "rider@example.com",
@@ -376,6 +380,22 @@ describe("convex communication e2e", () => {
     );
 
     expect(emailResult).toEqual({ success: true });
+    const report = await handlerOf<{ sessionId: string }, {
+      access: { fullReport: boolean; canEmailReport: boolean };
+    }>(getReportV2)({ db }, { sessionId });
+    expect(report.access).toMatchObject({ fullReport: !enforced, canEmailReport: true });
+
+    // Once a newer report exists, free export is locked only when enforcement is on.
+    const { _id: oldId, ...stored } = recommendation!;
+    expect(oldId).toBeTruthy();
+    await db.insert("recommendations", {
+      ...stored, sessionId: "later-session", createdAt: Number(stored.createdAt) + 1,
+    });
+    const retry = handlerOf<{ sessionId: string; recipientEmail: string }, unknown>(sendFitReport)(
+      actionCtx, { sessionId, recipientEmail: "rider@example.com" }
+    );
+    if (enforced) await expect(retry).rejects.toThrow("REPORT_ACCESS_REQUIRED");
+    else await expect(retry).resolves.toEqual({ success: true });
   });
 
   it("fails session creation when profile is missing", async () => {
@@ -493,25 +513,7 @@ describe("convex communication e2e", () => {
     await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
 
-    const usersGetCurrentUserHandler = handlerOf<
-      Record<string, never>,
-      Record<string, unknown> | null
-    >(
-      getCurrentUser
-    );
-    const getRecommendationBySessionHandler = handlerOf<
-      { sessionId: string },
-      Record<string, unknown> | null
-    >(getRecommendationBySession);
-
-    const actionCtx = {
-      runQuery: async (_fnRef: unknown, args?: { sessionId: string }) => {
-        if (!args) {
-          return usersGetCurrentUserHandler({ db }, {});
-        }
-        return getRecommendationBySessionHandler({ db }, args);
-      },
-    };
+    const actionCtx = emailContext(db);
 
     await expect(
       handlerOf<
@@ -625,21 +627,7 @@ describe("convex communication e2e", () => {
     await db.patch(sessionId, { status: "questionnaire_complete" });
     await runRecommendationFlow(db, sessionId);
 
-    const usersGetCurrentUserHandler = handlerOf<
-      Record<string, never>,
-      Record<string, unknown> | null
-    >(
-      getCurrentUser
-    );
-    const getRecommendationBySessionHandler = handlerOf<
-      { sessionId: string },
-      Record<string, unknown> | null
-    >(getRecommendationBySession);
-
-    const runQuery = vi.fn(async (_fnRef: unknown, args?: { sessionId: string }) => {
-      if (!args) return usersGetCurrentUserHandler({ db }, {});
-      return getRecommendationBySessionHandler({ db }, args);
-    });
+    const { runQuery } = emailContext(db);
 
     await expect(
       handlerOf<
@@ -661,7 +649,7 @@ describe("convex communication e2e", () => {
     expect(runQuery).toHaveBeenNthCalledWith(1, api.users.queries.getCurrentUser);
     expect(runQuery).toHaveBeenNthCalledWith(
       2,
-      api.recommendations.queries.getBySession,
+      api.recommendations.queries.getReportV2,
       { sessionId }
     );
   });
