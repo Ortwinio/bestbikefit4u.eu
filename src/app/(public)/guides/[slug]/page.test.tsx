@@ -576,7 +576,11 @@ describe("guide page template redesign", () => {
     }
     const question = usesCms ? "Existing CMS question?" : "Existing fallback question?";
     const answer = usesCms ? "Existing CMS answer." : "Existing fallback answer.";
-    fireEvent.click(screen.getByRole("button", { name: question }));
+    const disclosure = screen.getByText(question).closest("details")!;
+    expect(disclosure.open).toBe(false);
+    expect(disclosure.textContent).toContain(answer);
+    fireEvent.click(disclosure.querySelector("summary")!);
+    expect(disclosure.open).toBe(true);
     expect(screen.getByText(answer)).toBeTruthy();
   });
 
@@ -661,12 +665,12 @@ describe("guide page template redesign", () => {
     expect(screen.getByAltText("Knee pain hero")).toBeTruthy();
     expect(screen.getByText("Key takeaway")).toBeTruthy();
     expect(screen.getByText(/most fit-related knee pain comes from overload/i)).toBeTruthy();
-    expect(screen.getByText("Symptom matrix")).toBeTruthy();
+    expect(screen.getAllByText("Symptom matrix").length).toBeGreaterThan(0);
     expect(screen.getByText("Saddle too low")).toBeTruthy();
     expect(screen.getByText("heavy gears")).toBeTruthy();
     expect(screen.getByText("Front of knee")).toBeTruthy();
     expect(screen.getByText("Saddle height")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "bike fit methods" }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: "bike fit methods", hidden: true }).getAttribute("href")).toBe(
       "/en/science/bike-fit-methods"
     );
 
@@ -675,9 +679,10 @@ describe("guide page template redesign", () => {
       screen.getAllByRole("link").find(link => link.getAttribute("data-section") === "guide_soft_tool_cta")
         ?.getAttribute("data-section")
     ).toBe("guide_soft_tool_cta");
-    expect(screen.getByText("Turn this guide into your own fit setup")).toBeTruthy();
+    expect(document.querySelector('[data-section="guide_mid_page_cta"]')).toBeNull();
     const startFreeFitLinks = screen.getAllByRole("link", { name: "Start Free Fit" });
-    expect(startFreeFitLinks[0]?.getAttribute("data-section")).toBe("guide_mid_page_cta");
+    expect(startFreeFitLinks.filter(link => link.getAttribute("data-section") === "guide_closing_cta")).toHaveLength(1);
+    expect(document.querySelector('[data-section="guide_mid_page_cta"]')).toBeNull();
     expect(startFreeFitLinks.at(-1)?.getAttribute("href")).toContain(
       "/en/login?from=guide&slug=bike-fitting-for-knee-pain"
     );
@@ -686,8 +691,8 @@ describe("guide page template redesign", () => {
     );
 
     expect(screen.getByText("Can bike fit cause knee pain?")).toBeTruthy();
-    expect(screen.queryByText(/load and position interact/i)).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /can bike fit cause knee pain/i }));
+    expect(screen.getByText(/load and position interact/i).closest("details")?.open).toBe(false);
+    fireEvent.click(screen.getByText("Can bike fit cause knee pain?").closest("summary")!);
     expect(screen.getByText(/load and position interact/i)).toBeTruthy();
 
     expect(screen.getByText("en:/guides/saddle-height-guide")).toBeTruthy();
@@ -701,7 +706,7 @@ describe("guide page template redesign", () => {
     const { rerender } = render(ui);
 
     expect(screen.queryByText("While you read")).toBeNull();
-    expect(screen.getByText(/your riding style shapes your fit priorities/i)).toBeTruthy();
+    expect(document.querySelector('[data-section="guide_mid_page_cta"]')).toBeNull();
 
     ui = await GuidePage({
       params: Promise.resolve({ slug: "nutrition-and-hydration" }),
@@ -768,7 +773,9 @@ describe("registered rewrite routes", () => {
     const { container } = render(await GuidePage(props));
     expect(container.querySelector('[data-guide-source="code-rewrite"]')).toBeTruthy();
     expect(screen.getByRole("heading", { level: 1, name: article.title })).toBeTruthy();
-    expect(screen.getByText(article.quickAnswer)).toBeTruthy();
+    for (const sentence of new Intl.Segmenter(locale, { granularity: "sentence" }).segment(article.quickAnswer)) {
+      expect(container.textContent).toContain(sentence.segment.trim());
+    }
     expect(screen.getByAltText(article.alt).getAttribute("src"))
       .toBe(`/illustrations/guides/${guide.illustration}.webp`);
     expect(container.querySelector('time')?.getAttribute('datetime')).toBe(guide.updatedAt);

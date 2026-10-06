@@ -24,8 +24,17 @@ async function choose(label: string, option: string) {
   fireEvent.pointerDown(item, { pointerType: "mouse" });
   fireEvent.click(item);
 }
+function moveSlider(target: number) {
+  const slider = screen.getByRole("slider");
+  let value = Number(slider.getAttribute("aria-valuenow"));
+  for (let attempts = 0; value !== target && attempts < 1000; attempts++) {
+    fireEvent.keyDown(slider, { key: value < target ? "ArrowRight" : "ArrowLeft" });
+    value = Number(slider.getAttribute("aria-valuenow"));
+  }
+  expect(value).toBe(target);
+}
 async function fillArm() {
-  fireEvent.change(screen.getByRole("spinbutton", { name: "Arm length (cm)" }), { target: { value: "61" } });
+  moveSlider(61);
   await choose("How was this value determined?", "I measured this");
   fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
 }
@@ -55,14 +64,16 @@ describe("dashboard profile prompts", () => {
     state.open.mockRejectedValueOnce(new Error("offline"));
     mount();
     await screen.findByRole("alert");
-    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.queryByRole("slider")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
-    await screen.findByRole("spinbutton");
+    await screen.findByRole("slider");
     expect(state.open).toHaveBeenCalledTimes(2);
   });
-  it("has no default numeric answer and requires an explicit method before saving", async () => {
+  it("preselects the logical method but never saves an untouched example", async () => {
     mount();
-    expect((screen.getByRole("spinbutton") as HTMLInputElement).value).toBe("");
+    expect(screen.getByText("Example")).toBeTruthy();
+    expect(screen.getByRole("combobox", { name: "How was this value determined?" }).textContent).toContain("I measured this");
+    expect(screen.queryByRole("spinbutton")).toBeNull();
     expect(screen.getByText(/bony shoulder tip.*middle finger tip/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
     expect(state.answer).not.toHaveBeenCalled();
@@ -76,7 +87,7 @@ describe("dashboard profile prompts", () => {
     mount();
     await fillArm();
     await screen.findByRole("alert");
-    expect((screen.getByRole("spinbutton") as HTMLInputElement).value).toBe("61");
+    expect(screen.getByRole("slider").getAttribute("aria-valuenow")).toBe("61");
     fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
     await screen.findByRole("status");
     expect(state.answer).toHaveBeenCalledTimes(2);
@@ -97,7 +108,7 @@ describe("dashboard profile prompts", () => {
     await screen.findByRole("alert");
     fireEvent.click(screen.getByRole("button", { name: label }));
     expect(state.answer).toHaveBeenCalledTimes(1);
-    expect((screen.getByRole("spinbutton") as HTMLInputElement).value).toBe("");
+    expect(screen.getByText("Example")).toBeTruthy();
     expect(screen.queryByRole("alert")).toBeNull();
   });
   it("retries a conflict only with the returned current value", async () => {
@@ -113,7 +124,7 @@ describe("dashboard profile prompts", () => {
     fireEvent.click(screen.getByRole("button", { name: "Skip" }));
     await screen.findByRole("status");
     expect(state.skip).toHaveBeenCalledExactlyOnceWith({ cardId: "card-1", key: "rider:armLengthCm" });
-    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.queryByRole("slider")).toBeNull();
     expect(state.open).not.toHaveBeenCalled();
   });
   it("uses the server hidden date after dismissal and keeps the profile link", async () => {
@@ -124,13 +135,13 @@ describe("dashboard profile prompts", () => {
     rendered.rerender(<DashboardProfilePrompts locale="en" />);
     expect(screen.getByText(/The question card is hidden until/)).toBeTruthy();
     expect(screen.getByRole("link", { name: "Go to My profile" }).getAttribute("href")).toBe("/en/profile");
-    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.queryByRole("slider")).toBeNull();
     expect(state.open).not.toHaveBeenCalled();
   });
   it("requires a saddle measurement point explicitly", async () => {
     state.view = view([question({ key: "bike:saddle", bikeId: "bike-1", bikeName: "My own bike", field: "currentSetup.saddleHeightMm", unit: "mm", range: [400, 1100] })]);
     mount();
-    fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "740" } });
+    moveSlider(740);
     await choose("How was this value determined?", "I measured this");
     fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
     expect(state.answer).not.toHaveBeenCalled();
@@ -141,7 +152,7 @@ describe("dashboard profile prompts", () => {
   it("labels test FTP as calculated and saves resulting FTP without conversion", async () => {
     state.view = view([question({ field: "ftpWatts", unit: "W", range: [30, 700] })]);
     mount("nl");
-    fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "235" } });
+    moveSlider(235);
     await choose("Hoe is deze waarde bepaald?", "FTP-resultaat van een 20-minutentest (berekend)");
     fireEvent.click(screen.getByRole("button", { name: "Bewaar gegeven" }));
     await waitFor(() => expect(state.answer).toHaveBeenCalledWith(expect.objectContaining({ value: 235, method: "ftp_test" })));
@@ -158,7 +169,7 @@ describe("dashboard profile prompts", () => {
     mount("nl");
     await choose("Hoe is deze waarde bepaald?", "Weet ik niet");
     expect(screen.getByRole("link", { name: "Open de FTP-calculator" }).getAttribute("href")).toBe("/nl/tools/ftp-wkg");
-    expect(screen.queryByRole("spinbutton")).toBeNull();
+    expect(screen.queryByRole("slider")).toBeNull();
     expect(screen.queryByRole("button", { name: "Bewaar gegeven" })).toBeNull();
     expect(screen.getByRole("button", { name: "Sla over" })).toBeTruthy();
     expect(state.answer).not.toHaveBeenCalled();
@@ -193,7 +204,7 @@ describe("dashboard profile prompts", () => {
     mount();
     fireEvent.click(screen.getByRole("button", { name: action === "dismiss" ? "Not now" : "Skip" }));
     await screen.findByRole("alert");
-    expect(screen.getByRole("spinbutton")).toBeTruthy();
+    expect(screen.getByRole("slider")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: action === "dismiss" ? "Not now" : "Skip" }));
     await waitFor(() => expect(state[action]).toHaveBeenCalledTimes(2));
     expect(state.answer).not.toHaveBeenCalled();

@@ -25,6 +25,7 @@ export interface ResultsSummaryData extends PersonalData, FitValues {
   actionUrl: string;
 }
 export interface FitReportData extends PersonalData, FitValues {
+  tirePressure?: { frontBar: number; rearBar: number; frontPsi?: number; rearPsi?: number };
   frameSize?: string;
   confidenceScore?: number;
   algorithmVersion?: string;

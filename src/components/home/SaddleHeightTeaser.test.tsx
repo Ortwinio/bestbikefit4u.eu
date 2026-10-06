@@ -29,6 +29,8 @@ describe("home saddle-height widget", () => {
     expect(screen.getByRole("link", { name: copy.refine }).getAttribute("href")).toBe(`/${locale}/calculators/saddle-height#inseam`);
     expect(readHandoff().entries).toEqual([]);
     expect(trackUsed).not.toHaveBeenCalled();
+    expect(screen.getByText(copy.example)).toBeTruthy();
+    expect(screen.getByText(copy.exampleLine.replace("{height}", "175"))).toBeTruthy();
   });
 
   it("updates advice, uncertainty and range and saves each actual height edit", () => {
@@ -42,6 +44,7 @@ describe("home saddle-height widget", () => {
       expect(readHandoff().entries[0]?.value).toBe(height);
     }
     expect(trackUsed).toHaveBeenCalledTimes(91);
+    expect(screen.queryByText(homeSaddleWidget.en.example)).toBeNull();
   });
 
   it("writes only chosen height on refinement and exposes a body-data-free callback", () => {
@@ -65,6 +68,7 @@ describe("home saddle-height widget", () => {
     render(<SaddleHeightTeaser locale="nl" />);
     expect(screen.getByRole("slider").getAttribute("aria-valuenow")).toBe("181");
     expect(screen.getByText(/Uit je eerdere invoer/)).toBeTruthy();
+    expect(screen.queryByText(homeSaddleWidget.nl.example)).toBeNull();
     const link = screen.getByRole("link");
     link.addEventListener("click", event => event.preventDefault());
     fireEvent.click(link);
@@ -80,6 +84,7 @@ describe("home saddle-height widget", () => {
     }}><SaddleHeightTeaser locale="en" /></CalculatorDataContext.Provider>);
     expect(screen.getByRole("slider").getAttribute("aria-valuenow")).toBe("183");
     expect(screen.getByText(/From your profile/)).toBeTruthy();
+    expect(screen.queryByText(homeSaddleWidget.en.example)).toBeNull();
     expect(save).not.toHaveBeenCalled();
     fireEvent.change(screen.getByRole("slider"), { target: { value: "185" } });
     expect(save).toHaveBeenCalledExactlyOnceWith({ field: "heightCm", value: 185, unit: "cm", method: "declared", calculator: "saddle-height", touchedAt: expect.any(Number) }, undefined);

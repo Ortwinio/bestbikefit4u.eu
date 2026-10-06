@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BikeNumberField } from "./BikeFormControls";
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
@@ -221,21 +222,27 @@ export function BikeProfilePanel({ bikeId, locale, detail }: {
               {row.editable.length > 1 && <Select label={copy.part} tooltip={copy.part} tooltipLabel={copy.part} value={draft.field}
                 options={row.editable.map((field) => ({ value: field, label: fieldLabel(field) }))}
                 onChange={(event) => open(event.target.value)} disabled={saving} />}
-              <Input label={`${fieldLabel(draft.field)}${bikeFieldUnit(draft.field) !== "none" ? ` (${bikeFieldUnit(draft.field)})` : ""}`}
+              {BIKE_PROFILE_FIELDS[draft.field].range ? <BikeNumberField
+                label={`${fieldLabel(draft.field)} (${bikeFieldUnit(draft.field)})`}
+                tooltip={copy.instructions[draft.field as keyof typeof copy.instructions] ?? copy.numericHint}
+                value={draft.value === "" ? null : Number(draft.value)} disabled={saving}
+                min={BIKE_PROFILE_FIELDS[draft.field].range![0]} max={BIKE_PROFILE_FIELDS[draft.field].range![1]}
+                step={0.1} onChange={value => setDraft({ ...draft, value: value === null ? "" : String(value) })} />
+                : <Input label={`${fieldLabel(draft.field)}${bikeFieldUnit(draft.field) !== "none" ? ` (${bikeFieldUnit(draft.field)})` : ""}`}
                 tooltip={copy.instructions[draft.field as keyof typeof copy.instructions] ?? copy.numericHint}
                 tooltipLabel={fieldLabel(draft.field)} value={draft.value} disabled={saving}
                 type={BIKE_PROFILE_FIELDS[draft.field].range ? "number" : "text"} step="any" maxLength={100}
                 min={BIKE_PROFILE_FIELDS[draft.field].range?.[0]} max={BIKE_PROFILE_FIELDS[draft.field].range?.[1]}
-                onChange={(event) => setDraft({ ...draft, value: event.target.value })} />
+                onChange={(event) => setDraft({ ...draft, value: event.target.value })} />}
               <p className="text-sm text-muted-foreground">
                 {copy.instructions[draft.field as keyof typeof copy.instructions] ?? copy.numericHint}
               </p>
-              <Select label={copy.howDetermined} tooltip={copy.measuredHint} tooltipLabel={copy.howDetermined}
+              <div data-usability="measurement-kind"><Select label={copy.howDetermined} tooltip={copy.measuredHint} tooltipLabel={copy.howDetermined}
                 value={draft.kind} disabled={saving}
                 options={(BIKE_MEASURE_POINTS[draft.field]
                   ? ["declared", "estimated", "measured"] as const : ["declared"] as const)
                   .map((kind) => ({ value: kind, label: copy.kinds[kind] }))}
-                onChange={(event) => setDraft({ ...draft, kind: event.target.value as Draft["kind"] })} />
+                onChange={(event) => setDraft({ ...draft, kind: event.target.value as Draft["kind"] })} /></div>
               {draft.kind === "measured" && <>
                 <Input type="date" label={copy.recordedAt} tooltip={copy.measuredHint} tooltipLabel={copy.recordedAt}
                   value={draft.date} max={new Date().toISOString().slice(0, 10)} disabled={saving}

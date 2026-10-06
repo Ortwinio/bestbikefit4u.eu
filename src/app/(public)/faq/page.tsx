@@ -1,3 +1,4 @@
+import { ShortAnswer, containsSafetyAdvice } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -391,7 +392,7 @@ export default async function FAQPage() {
         <section className={styles.hero} aria-labelledby="faq-title">
           <p className={styles.eyebrow}>{presentation.eyebrow}</p>
           <h1 id="faq-title">{page.title}</h1>
-          <p>{page.intro}</p>
+          <ShortAnswer text={page.intro} locale={locale} />
         </section>
 
         <div className={styles.trust}>
@@ -407,8 +408,13 @@ export default async function FAQPage() {
           <section key={section.id} aria-labelledby={`${section.id}-title`} className={styles.group}>
             <h2 id={`${section.id}-title`}>{section.title}</h2>
             <div>
-              {section.items.map((item) => (
-                <details key={item.id} open className={styles.disclosure}>
+              {section.items.map((item) => containsSafetyAdvice(item.answer) ? (
+                <section key={item.id} data-usability="safety" className="rounded-2xl border border-border bg-card p-6">
+                  <h3 className="font-semibold">{item.question}</h3>
+                  <p>{item.answer}</p>
+                </section>
+              ) : (
+                <details key={item.id} className={styles.disclosure}>
                   <summary aria-controls={`${item.id}-answer`}>{item.question}</summary>
                   <p id={`${item.id}-answer`}>{item.answer}</p>
                 </details>
@@ -422,7 +428,7 @@ export default async function FAQPage() {
           <h2 id="faq-guides">{page.guideTitle}</h2>
           <p>{page.guideBody}</p>
           <div className={styles.guideGrid}>
-            {page.guideLinks.map((link) => (
+            {page.guideLinks.slice(0, 3).map((link) => (
               <Link key={link.href} href={withLocalePrefix(link.href, locale)}>
                 {locale === "nl" && link.href.startsWith("/guides/")
                   ? getDutchGuideTitle(link.href.slice("/guides/".length)) ?? link.label
@@ -433,7 +439,7 @@ export default async function FAQPage() {
           </div>
         </section>
 
-        <section className={styles.nextStep} aria-labelledby="faq-next-step">
+        <section data-usability="next-step" className={styles.nextStep} aria-labelledby="faq-next-step">
           <div>
             <h2 id="faq-next-step">{page.nextStepTitle}</h2>
             <p>{page.trustParagraph}</p>
@@ -473,7 +479,7 @@ export default async function FAQPage() {
           </div>
         </section>
 
-        <section className={styles.cta} aria-labelledby="faq-contact">
+        <section data-usability="next-step" className={styles.cta} aria-labelledby="faq-contact">
           <div>
             <p className={styles.eyebrow}>{presentation.contactEyebrow}</p>
             <h2 id="faq-contact">{page.ctaTitle}</h2>

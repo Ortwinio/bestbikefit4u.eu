@@ -87,7 +87,7 @@ describe("results route preserved behavior", () => {
     state.values[accessKey] = { fullReport: false, canDownloadPdf: false, canEmailReport: false };
     await mount();
     expect(screen.queryByText("Your current setup and target")).toBeNull();
-    expect(screen.getByRole("link", { name: "Choose a single fit" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Unlock my adjustment plan" })).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Download PDF (core values)" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: copy.results.actions.emailReport }));
     expect(state.send).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe("results route preserved behavior", () => {
   it("shows core-only latest PDF and a checkout link without paid detail", async () => {
     await mount();
     expect(screen.queryByText("Your current setup and target")).toBeNull();
-    expect(screen.getByRole("link", { name: "Choose a single fit" }).getAttribute("href")).toContain("/en/checkout?product=single");
+    expect(screen.getByRole("link", { name: "Unlock my adjustment plan" }).getAttribute("href")).toContain("/en/checkout?product=single");
     expect(screen.getByRole("button", { name: "Download PDF (core values)" })).toBeTruthy();
     expect(screen.getByTestId("case-opt-in").textContent).toBe("session_1");
     expect(screen.queryByRole("button", { name: copy.results.actions.downloadPdf })).toBeNull();

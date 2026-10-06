@@ -153,6 +153,23 @@ describe("DashboardSidebar", () => {
     expect(sidebar.className).not.toContain("fixed");
   });
 
+  it("keeps the full navigation and account controls in one outer scroll region", () => {
+    render(<DashboardSidebar />);
+    const sidebar = screen.getByRole("complementary");
+    const scrollRegions = sidebar.querySelectorAll(".overflow-y-auto");
+    expect(scrollRegions).toHaveLength(1);
+    const scrollRegion = scrollRegions[0] as HTMLElement;
+    expect(sidebar.firstElementChild).toBe(scrollRegion);
+    expect(within(scrollRegion).getByRole("link", { name: "Brand" })).toBeTruthy();
+    expect(within(scrollRegion).getByRole("navigation", { name: "Language" })).toBeTruthy();
+    expect(within(scrollRegion).getByTestId("profile-strength")).toBeTruthy();
+    expect(within(scrollRegion).getByRole("navigation", { name: "Calculators" })).toBeTruthy();
+    expect(within(scrollRegion).getByText("Account plan")).toBeTruthy();
+    expect(within(scrollRegion).getByRole("button", { name: "Sign out" })).toBeTruthy();
+    expect([...scrollRegion.children].every(child => child.classList.contains("shrink-0"))).toBe(true);
+    expect(sidebar.classList.contains("w-[264px]")).toBe(true);
+  });
+
   it("links the saddle selector to the canonical dashboard route", () => {
     render(<DashboardSidebar />);
 

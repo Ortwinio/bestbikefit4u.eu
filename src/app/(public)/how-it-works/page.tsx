@@ -1,3 +1,4 @@
+import { ContentDisclosure, ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,7 +58,7 @@ export default async function HowItWorksPage() {
           <div>
             <p className={styles.eyebrow}>{page.eyebrow}</p>
             <h1>{page.title}</h1>
-            <p className={styles.lead}>{page.intro}</p>
+            <ShortAnswer text={page.intro} locale={locale} />
             {actions("hero")}
           </div>
           <figure>
@@ -80,15 +81,17 @@ export default async function HowItWorksPage() {
             ))}
           </div>
         </section>
-        <section className={styles.preparation} aria-labelledby="fit-preparation">
-          <Image src="/illustrations/06-meetset.webp" alt={presentation.prepAlt} width={900} height={600} sizes="(max-width: 800px) 100vw, 35vw" />
-          <div>
-            <p className={styles.eyebrow}>{presentation.prepEyebrow}</p>
-            <h2 id="fit-preparation">{presentation.prepHeading}</h2>
-            <article><h3>{page.prepTitle}</h3><p>{page.prepBody}</p></article>
-            <article><h3>{page.afterTitle}</h3><p>{page.afterBody}</p></article>
-          </div>
-        </section>
+        <ContentDisclosure title={presentation.prepHeading}>
+          <section className={styles.preparation} aria-labelledby="fit-preparation">
+            <Image src="/illustrations/06-meetset.webp" alt={presentation.prepAlt} width={900} height={600} sizes="(max-width: 800px) 100vw, 35vw" />
+            <div>
+              <p className={styles.eyebrow}>{presentation.prepEyebrow}</p>
+              <h2 id="fit-preparation">{presentation.prepHeading}</h2>
+              <article><h3>{page.prepTitle}</h3><p>{page.prepBody}</p></article>
+              <article><h3>{page.afterTitle}</h3><p>{page.afterBody}</p></article>
+            </div>
+          </section>
+        </ContentDisclosure>
         <section className={styles.section} aria-labelledby="fit-help">
           <p className={styles.eyebrow}>{presentation.helpEyebrow}</p>
           <h2 id="fit-help">{presentation.helpTitle}</h2>
@@ -101,7 +104,7 @@ export default async function HowItWorksPage() {
             ))}
           </div>
         </section>
-        <section className={styles.cta} aria-labelledby="fit-next-step">
+        <section data-usability="next-step" className={styles.cta} aria-labelledby="fit-next-step">
           <div>
             <p className={styles.eyebrow}>{presentation.ctaEyebrow}</p>
             <h2 id="fit-next-step">{presentation.ctaTitle}</h2>

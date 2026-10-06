@@ -1,14 +1,11 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getEquipmentAnswer } from "@/lib/seo/calculatorAnswers/equipment";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
-  PublicCtaBand,
   PublicPageShell,
   PublicSection,
 } from "@/components/public";
@@ -219,7 +216,10 @@ export default async function SaddleWidthCalculatorPage() {
       <SaddleWidthCalculatorForm locale={locale} copy={dictionary.saddleWidthCalculator} />
       <CalculatorAnswerSection id="saddle-width" locale={locale} content={getEquipmentAnswer("saddle-width", locale)} />
       <PublicPageShell className="text-foreground">
-        <PublicSection
+        <ContentDisclosure title={isNl
+              ? "Een bruikbaar startpunt zonder schijnprecisie"
+              : "A practical starting point without fake precision"}>
+<PublicSection
           className="mt-10"
           header={{
             eyebrow: isNl ? "Waarom dit vertrouwen wekt" : "Why this builds trust",
@@ -244,86 +244,42 @@ export default async function SaddleWidthCalculatorPage() {
             ))}
           </div>
         </PublicSection>
+</ContentDisclosure>
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-          title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
-          description={
-            isNl
-              ? "Maak een gratis account aan om symptomen, huidige zadelpositie en " +
-                "rijprofiel mee te nemen in een completere zadelanalyse."
-              : "Create a free account to include symptoms, current saddle position, and " +
-                "riding profile in a more complete saddle analysis."
-          }
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="saddle_width_result"
-                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                  />
-                }
-              >
-                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="saddle_width_pricing_cta"
-                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Bekijk prijzen" : "Compare plans"}
-              </Button>
-            </>
-          }
-          aside={
-            isNl
-              ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter " +
-                "kan toegevoegde waarde bieden bij complexe biomechanische kwesties."
-              : "The calculator gives a practical starting point. An in-person fitter " +
-                "can add value for complex biomechanical issues."
-          }
-        />
 
-        <PublicSection
-          className="mt-10"
-          header={{
-            title: isNl ? "Veelgestelde vragen" : "FAQ",
-            description: isNl
-              ? "Korte antwoorden op de belangrijkste vragen rond meten en interpreteren."
-              : "Short answers to the key measuring and interpretation questions.",
-          }}
-        >
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
-              >
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-2 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </PublicSection>
+
+        <ContentDisclosure title={isNl ? "Veelgestelde vragen" : "FAQ"}>
+          <PublicSection
+            className="mt-10"
+            header={{
+              title: isNl ? "Veelgestelde vragen" : "FAQ",
+              description: isNl
+                ? "Korte antwoorden op de belangrijkste vragen rond meten en interpreteren."
+                : "Short answers to the key measuring and interpretation questions.",
+            }}
+          >
+            <div className="space-y-4">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+                >
+                  <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                  <p className="mt-2 text-muted-foreground">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <section className="mt-10">
+          <ContentDisclosure title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}>
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-            links={getRelatedLinks("saddle-width", locale)}
+            links={getRelatedLinks("saddle-width", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </section>
       </PublicPageShell>
     </>

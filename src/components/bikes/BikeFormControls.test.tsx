@@ -2,7 +2,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
-import { BikeNumberField, BikeCassetteField } from "./BikeFormControls";
+import { BikeNumberField, BikeCassetteField, BikeFrameSizeField } from "./BikeFormControls";
 
 vi.mock("@/i18n/useDashboardMessages", () => ({ useDashboardMessages: () => ({ locale: "en" }) }));
 afterEach(cleanup);
@@ -29,4 +29,14 @@ describe("bike measurement controls", () => {
     fireEvent.click(screen.getByRole("button", { name: "Remove sprocket 2" }));
     expect(change).toHaveBeenCalledWith("11, 28");
   });
+});
+
+it("preserves a named manufacturer frame size until the rider enters a numerical measurement", () => {
+  const change = vi.fn();
+  render(<BikeFrameSizeField label="Frame size" value="M/L" onChange={change} />);
+  expect(screen.getByText("Frame size: M/L")).toBeTruthy();
+  expect(change).not.toHaveBeenCalled();
+  expect(document.querySelector('input[type="number"], input[type="text"]')).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Add measurement: Frame size" }));
+  expect(change).toHaveBeenCalledWith("35");
 });

@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 
 type BlogBodyMarkdownProps = {
   content: string;
+  precedingContent?: string;
 };
 
 function slugifyHeading(value: string) {
@@ -46,7 +47,7 @@ function MarkdownAnchor({
     return (
       <Link
         href={resolvedHref}
-        className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+        className="inline-flex min-h-11 min-w-11 items-center font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
       >
         {children}
       </Link>
@@ -58,15 +59,19 @@ function MarkdownAnchor({
       href={resolvedHref}
       target="_blank"
       rel="noopener noreferrer"
-      className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+      className="inline-flex min-h-11 min-w-11 items-center font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
     >
       {children}
     </a>
   );
 }
 
-export function BlogBodyMarkdown({ content }: BlogBodyMarkdownProps) {
+export function BlogBodyMarkdown({ content, precedingContent = "" }: BlogBodyMarkdownProps) {
   const usedHeadingIds = new Map<string, number>();
+  for (const heading of precedingContent.matchAll(/^##\s+(.+)$/gm)) {
+    const baseId = slugifyHeading(heading[1].replace(/\s+#+$/, "").trim()) || "section";
+    usedHeadingIds.set(baseId, (usedHeadingIds.get(baseId) ?? 0) + 1);
+  }
 
   function buildHeadingId(children: React.ReactNode) {
     const text = getNodeText(children);

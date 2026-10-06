@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
+import { getDictionary } from "@/i18n/getDictionary";
+import { Header } from "@/components/layout/Header";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -19,18 +21,33 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getRequestLocale();
+  const dictionary = await getDictionary(locale);
   return (
+    <>
+    <div className="lg:hidden">
+      <Header
+        locale={locale}
+        labels={{
+          common: dictionary.common,
+          nav: dictionary.nav,
+          dashboardNav: dictionary.dashboard.nav,
+          dashboardSignOut: dictionary.dashboard.common.signOut,
+        }}
+      />
+    </div>
     <main
       id="main-content"
       tabIndex={-1}
-      className="min-h-dvh w-full min-w-0 bg-background text-foreground"
+      className="min-h-[calc(100dvh-64px)] w-full min-w-0 bg-background text-foreground lg:min-h-dvh"
     >
       {children}
     </main>
+    </>
   );
 }

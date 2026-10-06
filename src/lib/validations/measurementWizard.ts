@@ -1,6 +1,15 @@
 import { z } from "zod";
 
 export const wizardSchema = z.object({
+  measurementKinds: z.object({
+    heightCm: z.enum(["measured", "estimated"]).optional(),
+    inseamCm: z.enum(["measured", "estimated"]).optional(),
+    weightKg: z.enum(["measured", "estimated"]).optional(),
+    torsoLengthCm: z.enum(["measured", "estimated"]).optional(),
+    armLengthCm: z.enum(["measured", "estimated"]).optional(),
+    femurLengthCm: z.enum(["measured", "estimated"]).optional(),
+    shoulderWidthCm: z.enum(["measured", "estimated"]).optional(),
+  }).optional(),
   // Step 1: Required body measurements
   heightCm: z.number().min(130).max(210),
   inseamCm: z.number().min(55).max(105),

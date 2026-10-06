@@ -25,6 +25,8 @@ const Component = routes[pathname];
 const content =
   pathname === "/bikes/new" ? (
     await NewBike()
+  ) : pathname === "/bikes/new/manual" ? (
+    await Manual({ searchParams: Promise.resolve(Object.fromEntries(new URLSearchParams(window.location.search))) })
   ) : Component ? (
     <Component />
   ) : pathname.endsWith("/edit") ? (

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Mijn adviezen, gegroepeerd</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,system-ui,sans-serif}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.025em}h1{font-size:44px;line-height:1.05}h2{font-size:26px;line-height:1.15}h3{font-size:20px;line-height:1.2}p{margin:0;line-height:1.5}a{color:#0A7263}a:hover{color:#075A4E}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:3px}.muted{color:#4A5F5A}.mono{font-family:'DM Mono',monospace}.card{padding:28px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px}.stack{display:flex;flex-direction:column;gap:16px}.row{display:flex;align-items:center;justify-content:space-between;gap:16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:2px solid #0F2420;background:#FFFFFF;color:#0F2420;text-decoration:none;font-weight:700;white-space:nowrap}.btn.primary{background:#0A7263;border-color:#0A7263;color:#FFFFFF}.btn.primary:hover{background:#075A4E;border-color:#075A4E;color:#FFFFFF}.btn.ink{background:#0F2420;border-color:#0F2420;color:#FFFFFF}.btn.sm{min-height:44px;padding:0 16px;font-size:14px}.ghost{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;border:0;background:transparent;color:#0A7263;font-weight:700;text-decoration:underline;text-underline-offset:3px}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:13px;font-weight:700;color:#0A7263}.chip{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.seg{display:grid;gap:6px;padding:5px;border-radius:16px;background:#EEF3EF}.seg button{min-height:44px;border:0;border-radius:12px;background:transparent;color:#3B4F4A;font-weight:700;padding:0 14px}.seg button[aria-pressed="true"]{background:#FFFFFF;color:#0F2420;box-shadow:0 1px 4px rgba(15,36,32,.18)}.tab{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;font-weight:700;text-decoration:none}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-width:44px;padding:0 2px;border:0;background:transparent;font-size:13px;color:#4A5F5A}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1440px; height: 2640px; display: flex; flex-direction: column; background: #F5F8F3">
+<div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div style="display: flex; gap: 4px"><sc-for list="{{views}}" as="view" hint-placeholder-count="2"><button type="button" class="review-pill" aria-pressed="{{view.selected}}" onClick="{{view.pick}}"><span>{{view.label}}</span></button></sc-for></div></div>
+<div style="flex-grow: 1; display: grid; grid-template-columns: 264px minmax(0, 1fr)">
+<div style="background: #0F2420"><dc-import name="RPSidebar" active="advice" vol="68" betr="57" next-step="meet je armlengte" hint-size="264px,1400px"></dc-import></div>
+<main style="padding: 36px 48px 56px; display: flex; flex-direction: column; gap: 24px">
+
+<header class="row">
+<div><div style="display: flex; align-items: center; gap: 12px"><span class="eyebrow">Sanne</span><span class="chip" style="background: #EEF3EF; color: #3B4F4A">Voorbeeldgegevens</span></div><h1 style="margin-top: 6px">Mijn adviezen</h1><p class="muted" style="margin-top: 6px">Alles wat je calculators adviseerden, gegroepeerd naar wat je aanpast.</p></div>
+<nav aria-label="Profiel" style="display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1"><a href="RP5Profile.dc.html" class="tab" style="color: #0F2420">Mijn gegevens</a><a href="RP7Advice.dc.html" aria-current="page" class="tab" style="background: #0F2420; color: #FFFFFF">Mijn adviezen</a><a href="RP8Bike.dc.html" class="tab" style="color: #0F2420">Mijn fietsen</a></nav>
+</header>
+
+<sc-if value="{{stale}}" hint-placeholder-val="{{true}}">
+<section role="status" style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 20px 26px; border-radius: 22px; background: #FFF1C2; border: 1px solid #E8C54A">
+<div><h3>1 advies is verouderd</h3><p style="margin-top: 4px">Je bandenspanning rekent nog met 70 kg. Je profiel zegt sinds 20 september 68 kg.</p></div>
+<button type="button" class="btn ink sm" onClick="{{recalc}}">Herbereken alles wat verouderd is</button>
+</section>
+</sc-if>
+<sc-if value="{{recalced}}" hint-placeholder-val="{{false}}"><p role="status" style="padding: 16px 22px; border-radius: 18px; background: #CFF26A; font-weight: 600">Bijgewerkt. Je bandenspanning gebruikt nu 68 kg: voor 0,1 bar lager, achter 0,1 bar lager.</p></sc-if>
+
+<div class="row">
+<div class="seg" role="group" aria-label="Toon adviezen voor" style="grid-template-columns: repeat(3, auto)"><sc-for list="{{filters}}" as="f" hint-placeholder-count="3"><button type="button" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}">{{f.label}}</button></sc-for></div>
+<div style="display: flex; gap: 14px; font-size: 13px; color: #4A5F5A; flex-wrap: wrap"><span style="display: inline-flex; gap: 6px; align-items: center"><span class="chip" style="background: #CFF26A; color: #0F2420">Nieuw</span>net berekend</span><span style="display: inline-flex; gap: 6px; align-items: center"><span class="chip" style="background: #E1F2EE; color: #075A4E">Uitgevoerd</span>door jou aangepast</span><span style="display: inline-flex; gap: 6px; align-items: center"><span class="chip" style="background: #FFF1C2; color: #5C4500">Verouderd</span>invoer veranderd</span></div>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="6">
+<section class="card" style="padding: 0; overflow: hidden">
+<div class="row" style="padding: 20px 26px; border-bottom: 1px solid #DCE6E1; background: #FBFCFA">
+<div style="display: flex; align-items: center; gap: 14px"><div style="width: 44px; height: 44px; border-radius: 12px; background: #E1F2EE; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; color: #0A7263">{{g.count}}</div><div><h2>{{g.title}}</h2><p class="muted" style="font-size: 14px">{{g.scope}}</p></div></div>
+<span class="chip" style="background: {{g.relBg}}; color: #0F2420">Betrouwbaarheid {{g.rel}}</span>
+</div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 300px">
+<div>
+<div style="display: grid; grid-template-columns: minmax(0, 1.2fr) 150px 150px 130px 120px; gap: 12px; padding: 10px 26px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #4A5F5A"><span>Advies</span><span>Doel</span><span>Nu → verschil</span><span>Zekerheid</span><span>Status</span></div>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: minmax(0, 1.2fr) 150px 150px 130px 120px; gap: 12px; align-items: center; padding: 14px 26px; border-top: 1px solid #EEF3EF">
+<div><strong>{{it.name}}</strong><div style="font-size: 13px; color: #4A5F5A">{{it.note}}</div><sc-if value="{{it.canDo}}" hint-placeholder-val="{{false}}"><button type="button" class="ghost" style="font-size: 14px" onClick="{{it.markDone}}">Markeer als uitgevoerd</button></sc-if></div>
+<div><span class="mono" style="font-size: 20px">{{it.target}}</span><div class="mono" style="font-size: 12px; color: #4A5F5A">{{it.range}}</div></div>
+<div class="mono" style="font-size: 15px">{{it.now}}</div>
+<span class="chip" style="align-self: center; justify-self: start; background: {{it.relBg}}; color: #0F2420">{{it.rel}}</span>
+<span class="chip" style="align-self: center; justify-self: start; background: {{it.stBg}}; color: {{it.stFg}}">{{it.status}}</span>
+</div>
+<sc-if value="{{it.hasPressure}}" hint-placeholder-val="{{false}}"><div style="padding: 0 26px 20px"><dc-import name="Bandenspanning" front="{{it.pFront}}" rear="{{it.pRear}}" max-bar="9" min-bar="4" size="compact" label="{{it.pLabel}}" hint-size="100%,220px"></dc-import></div></sc-if>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 22px; border-left: 1px solid #DCE6E1; background: #F5F8F3">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Wat je nog kunt verbeteren</span>
+<sc-for list="{{g.tips}}" as="t" hint-placeholder-count="2">
+<a href="{{t.href}}" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DCE6E1; text-decoration: none; color: #0F2420"><strong style="font-size: 15px">{{t.title}}</strong><span style="font-size: 13px; color: #4A5F5A">{{t.why}}</span></a>
+</sc-for>
+</div>
+</div>
+</section>
+</sc-for>
+
+<section style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 28px 32px; border-radius: 28px; background: #0F2420; color: #FFFFFF">
+<div><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #CFF26A">Losse meting</span><h2 style="color: #FFFFFF; margin-top: 6px">Volledig stappenplan voor deze fiets</h2><p style="color: #B9CCC6; margin-top: 6px; max-width: 640px">Inclusief volgorde, controleplan en bandenspanning. <span style="font-family: 'DM Mono', monospace; color: #FFFFFF">€13,50</span>, <span style="font-family: 'DM Mono', monospace">3</span> maanden toegang. Je adviezen hierboven blijven gratis.</p><p style="color: #B9CCC6; margin-top: 6px; font-size: 14px">Meerdere fietsen? Jaarabonnement <span style="font-family: 'DM Mono', monospace">€21,50</span> per jaar (<span style="font-family: 'DM Mono', monospace">€ 1,79</span> per maand), inclusief <span style="font-family: 'DM Mono', monospace">2</span> cadeaumetingen per jaar.</p></div>
+<a href="Pricing.dc.html" class="btn" style="background: #CFF26A; border-color: #CFF26A">Bekijk losse meting en jaarabonnement</a>
+</section>
+
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2640}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'normal', filter: 0, saddleDone: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const REL = { hoog: '#CFF26A', middel: '#FFF1C2', laag: '#FFB199' };
+    const ST = {
+      Nieuw: ['#CFF26A', '#0F2420'], Uitgevoerd: ['#E1F2EE', '#075A4E'], Actueel: ['#EEF3EF', '#3B4F4A'],
+      Verouderd: ['#FFF1C2', '#5C4500'], Open: ['#FFFFFF', '#4A5F5A'], 'Wacht op rit': ['#E1F2EE', '#075A4E']
+    };
+    const stale = s.view === 'normal';
+    const it = (name, note, target, range, now, rel, status, extra) => Object.assign({
+      name, note, target, range, now, rel, status, relBg: REL[rel] ?? '#EEF3EF',
+      stBg: (ST[status] ?? ST.Open)[0], stFg: (ST[status] ?? ST.Open)[1], canDo: false, markDone: () => {}, hasPressure: false, pFront: 0, pRear: 0, pLabel: ''
+    }, extra ?? {});
+    const groups = [
+      { title: 'Zitpositie', scope: 'Canyon Endurace', who: 1, rel: 'middel', items: [
+        it('Zadelhoogte', s.saddleDone ? 'Rijd twee ritten en laat weten hoe het voelt' : 'Verlaag in 3 stappen van max. 5 mm', '715 mm', '703–727', '728 → −13', 'middel', s.saddleDone ? 'Wacht op rit' : 'Nieuw', { canDo: !s.saddleDone, markDone: () => this.setState({ saddleDone: true }) }),
+        it('Zadelterugstand', 'Nog niet berekend: start een bike fit', '—', '', 'onbekend', 'n.v.t.', 'Open')
+      ], tips: [
+        { title: 'Meet je binnenbeen nog 2×', why: 'Marge van ±12 naar ±8 mm (verwacht)', href: 'RP5Profile.dc.html' },
+        { title: 'Start de bike fit', why: 'Voor zadelterugstand en zadelhoek', href: 'FitStart.dc.html' }
+      ] },
+      { title: 'Contactpunten', scope: 'Rider + Canyon Endurace', who: 0, rel: 'middel', items: [
+        it('Zadelbreedte', 'Op basis van je gemeten zitbotten', '143 mm', '138–148', '143 → 0', 'hoog', 'Uitgevoerd'),
+        it('Stuurbreedte', 'Schouderbreedte ontbreekt; we gaan uit van 42 cm', '420 mm', '400–440', '400 → +20', 'laag', 'Actueel')
+      ], tips: [
+        { title: 'Meet je schouderbreedte', why: 'Stuurbreedte van laag naar middel', href: 'RP5Profile.dc.html' },
+        { title: 'Vul schoen en cleat in', why: 'Dan kunnen we je cleatpositie adviseren', href: 'ShoeCleatFit.dc.html' }
+      ] },
+      { title: 'Cockpit en reach', scope: 'Canyon Endurace', who: 1, rel: 'laag', items: [
+        it('Reach zadel–stuur', 'Geschat uit je lengte', '505 mm', '490–520', 'onbekend', 'laag', 'Actueel'),
+        it('Drop zadel–stuur', 'Geschat uit lengte en flexibiliteit', '60 mm', '45–75', 'onbekend', 'laag', 'Actueel')
+      ], tips: [
+        { title: 'Meet je armlengte', why: 'Reach uit je eigen maten', href: 'RP4Dashboard.dc.html' },
+        { title: 'Meet je huidige reach en drop', why: 'Dan zie je wat je moet verstellen', href: 'RP8Bike.dc.html' }
+      ] },
+      { title: 'Aandrijving', scope: 'Canyon Endurace', who: 1, rel: 'middel', items: [
+        it('Cranklengte', 'Past bij je binnenbeen', '170 mm', '165–172,5', '170 → 0', 'middel', 'Actueel'),
+        it('Verzet voor klimmen', 'FTP ontbreekt: we gaan uit van 3 W/kg', '34 × 32', 'kleinste', '34 × 30', 'laag', 'Actueel')
+      ], tips: [
+        { title: 'Vul je FTP in', why: 'Klimadvies op je echte vermogen', href: 'RP4Dashboard.dc.html' }
+      ] },
+      { title: 'Banden', scope: 'Canyon Endurace · 28 mm tubeless', who: 1, rel: 'hoog', items: [
+        it('Bandenspanning', stale ? 'Rekent nog met 70 kg' : 'Rekent met 68 kg', 'zie meter', 'voor en achter', 'droog asfalt', 'hoog', stale ? 'Verouderd' : 'Nieuw', { hasPressure: true, pFront: stale ? 5.0 : 4.9, pRear: stale ? 5.3 : 5.2, pLabel: stale ? 'Canyon Endurace · rekent nog met 70 kg' : 'Canyon Endurace · droog asfalt' })
+      ], tips: [
+        { title: 'Voeg je natte-wegprofiel toe', why: 'Aparte spanning voor regen', href: 'PressureDashboard.dc.html' }
+      ] },
+      { title: 'Prestatie en voeding', scope: 'Rider', who: 0, rel: 'laag', items: [
+        it('Voeding lange rit', 'Op basis van je gewicht en een aangenomen FTP', '60 g/u', 'koolhydraten', '—', 'laag', 'Actueel'),
+        it('W/kg', 'FTP ontbreekt', '—', '', '—', 'n.v.t.', 'Open')
+      ], tips: [
+        { title: 'Vul je FTP in', why: '+5 volledig, maakt beide adviezen persoonlijk', href: 'RP4Dashboard.dc.html' }
+      ] },
+      { title: 'Framemaat', scope: 'Rider', who: 0, rel: 'middel', items: [
+        it('Framemaat racefiets', 'Stack 560–580 mm, reach 380–390 mm', 'M', 'twijfel: S', 'M → past', 'middel', 'Actueel')
+      ], tips: [
+        { title: 'Meet je torsolengte', why: 'Maakt de keuze tussen S en M scherper', href: 'RP5Profile.dc.html' }
+      ] }
+    ];
+    const shown = groups.filter((g) => s.filter === 0 || (s.filter === 1 ? g.scope.indexOf('Canyon') >= 0 : g.scope.indexOf('Rider') >= 0));
+    return {
+      stale, recalced: s.view === 'recalc',
+      recalc: () => this.setState({ view: 'recalc' }),
+      filters: ['Alles', 'Canyon Endurace', 'Rider'].map((label, i) => ({ label, pressed: String(s.filter === i), pick: () => this.setState({ filter: i }) })),
+      groups: shown.map((g) => Object.assign({}, g, { count: String(g.items.length), relBg: REL[g.rel] })),
+      views: [['normal', 'Met verouderd advies'], ['recalc', 'Na herberekenen']].map(([key, label]) => ({
+        label, selected: String(s.view === key), pick: () => this.setState({ view: key })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

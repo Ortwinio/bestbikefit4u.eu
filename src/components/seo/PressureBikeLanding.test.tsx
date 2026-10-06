@@ -33,8 +33,14 @@ describe("complete bike pressure tables", () => {
       expect(doc.querySelector("article")?.textContent).toContain(copy.limits);
       const faq = JSON.parse(doc.querySelector('script[type="application/ld+json"]')!.textContent!);
       expect(faq.mainEntity).toHaveLength(3);
-      expect(doc.querySelectorAll("details")).toHaveLength(3);
-      for (const question of faq.mainEntity) expect(doc.querySelector("article")?.textContent).toContain(question.name);
+      const faqDetails = doc.querySelectorAll('section[aria-labelledby="pressure-bike-faq"] details');
+      expect(faqDetails).toHaveLength(3);
+      for (const [index, question] of faq.mainEntity.entries()) {
+        expect(faqDetails[index].textContent).toContain(question.name);
+        expect(faqDetails[index].textContent).toContain(question.acceptedAnswer.text);
+        expect(faqDetails[index].hasAttribute("open")).toBe(false);
+      }
+      expect(doc.querySelector('[data-usability="safety"]')?.closest("details")).toBeNull();
       expect(doc.querySelectorAll('a[href*="kg-"]')).toHaveLength(0);
     }
   });

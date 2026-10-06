@@ -1,0 +1,3 @@
+# Build7 complete, C narrow source thaw
+
+Agreed no U3approval possible: all12Welcomecases lackthefixturedata, allotherU3automaticchecks clean. C realmanualfinding requires one sourcechange anyway: fixeddesktopfeedback covers targets/text. Since332capture complete C formsworker now changes ONLY accountFeedbackPlacement helper/test to normalflow ondesktopaccountpages too (responsiveposition/fitwidth/autoleftmargin; publicdesktopunchanged). Fixturealreadyusesexacthelper, no additionalfixtureprop. Please proceed your Welcome seedcorrection and B safeheightfix; C willpostready quickly. Do notstartbuild8beforeCready.

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Fietsen vergelijken · BikeFitBoost</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+*{box-sizing:border-box}
+a{color:#0A7263;text-decoration:none}
+a:focus-visible{outline:3px solid #0A7263;outline-offset:4px}
+aside a:focus-visible{outline-color:#CFF26A}
+.account-link{display:flex;align-items:center;gap:12px;height:46px;padding:0 14px;border-radius:12px;color:#E1F2EE;font-size:15px;font-weight:600}
+.account-link:hover{background:#17332D}
+.account-link[aria-current="page"]{background:#CFF26A;color:#0F2420}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif}
+p{margin:0;line-height:1.55}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1120px; display: grid; grid-template-columns: 264px 1fr; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+<aside style="display: flex; flex-direction: column; gap: 24px; padding: 28px 20px; background: #0F2420; color: #FFFFFF; box-sizing: border-box; font-family: Figtree, sans-serif; font-size: 15px; font-weight: 400; line-height: 1.4"><a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="41" height="32" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#CFF26A" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BikeFit<span style="color: #CFF26A">Boost</span></span>
+</a><nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600"><a href="Dashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>Dashboard</a><a href="Profile.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M8 8a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21c0-8 16-8 16 0"></path></svg>Mijn profiel</a><a href="Bikes.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #CFF26A; color: #0F2420; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M6 17l4-10h6l2 10M10 7l4 10"></path></svg>Mijn fietsgarage</a><a href="BikeAdd.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fiets</a><a href="History.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12v17H6zM9 2h6v4H9zM9 10h6M9 15h6"></path></svg>Fietsafstelling</a><a href="FitStart.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fit-sessie</a><a href="PressureDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 17a9 9 0 1 1 18 0M12 17l4-6"></path></svg>Bandenspanning</a><a href="GearingDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"></path></svg>Verzet</a><a href="SaddleSelector.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 7c0-5 18-5 18 0l-6 13H9z"></path></svg>Zadelkiezer</a><a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"></path></svg>Instellingen</a><a href="Feedback.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 4h18v13H9l-6 4z"></path></svg>Feedback</a></nav><div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #17332D"><div style="font-size: 12px; color: #B9CCC6">Sanne</div><div style="display: flex; justify-content: space-between; align-items: center"><strong>Gratis account</strong><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">1</span> van <span style="font-family: 'DM Mono', monospace">1</span> fiets</span></div><div role="img" aria-label="Eén van één fiets bewaard" style="height: 8px; border-radius: 99px; background: #2E4C45"><div style="width: 100%; height: 8px; border-radius: 99px; background: #CFF26A"></div></div><p style="margin: 0; font-size: 13px; color: #B9CCC6; line-height: 1.4">Je profiel en <span style="font-family: 'DM Mono', monospace">1</span> fiets blijven bewaard.</p><a href="Settings.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk je account</a></div></aside>
+<main style="display: flex; flex-direction: column; gap: 28px; padding: 32px 48px 48px">
+<header>
+<p style="font-size: 14px; font-weight: 700; color: #0A7263; text-transform: uppercase; letter-spacing: 0.08em">Mijn fietsgarage · Keuzehulp</p>
+<div style="display: flex; align-items: center; gap: 16px"><h1 style="margin: 8px 0 12px; font-size: 48px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1">Fietsen vergelijken</h1><span style="display: inline-flex; flex-shrink: 0; padding: 5px 10px; border-radius: 999px; background: #E1F2EE; color: #0A7263; font-family: Figtree, sans-serif; font-size: 12px; font-weight: 600; line-height: 1.5; letter-spacing: normal">Voorbeeldgegevens</span></div>
+<p style="max-width: 810px; font-size: 19px; color: #4A5F5A">Twee fietsen op het oog? Beoordeel stack, reach, cockpit en aanpasbaarheid samen voordat je kiest.</p>
+</header>
+<section style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; padding: 32px; border-radius: 28px; background: #CFF26A">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<span style="align-self: flex-start; padding: 7px 12px; border: 1px solid #0F2420; border-radius: 999px; font-size: 13px; font-weight: 700">Uitleg &amp; aandachtspunten</span>
+<h2 style="margin: 0; max-width: 470px; font-size: 34px; font-weight: 800; line-height: 1.12; letter-spacing: -0.025em">Je huidige fiets.<br>Je volgende fiets.<br>Jouw positie.</h2>
+<p style="font-size: 17px; color: #3B4F4A">Kijk verder dan de framemaat op de buis. De geometrie én de ruimte om de cockpit aan te passen bepalen of een fiets bij je past.</p>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 26px; border-radius: 24px; background: #F5F8F3">
+<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8M12 11L5 18M12 11l7 7M5 13v5h5M14 18h5v-5"></path></svg>
+<h3 style="margin: 0; font-size: 24px; line-height: 1.2">Wat past bij je rijdoel?</h3>
+<p style="font-size: 17px; color: #4A5F5A">Neem je gewenste positie, rijdoel en aanpassingsruimte als uitgangspunt voor je keuze.</p>
+<p style="padding-top: 16px; border-top: 1px solid #DCE6E1; font-size: 15px; font-weight: 600">Deze pagina helpt je op weg. Er wordt hier geen vergelijking berekend.</p>
+</div>
+</section>
+<section aria-labelledby="checklist-title" style="display: flex; flex-direction: column; gap: 16px">
+<h2 id="checklist-title" style="margin: 0; font-size: 27px; letter-spacing: -0.02em">Loop dit na vóór je kiest</h2>
+<ol style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 0; margin: 0; list-style: none">
+<li style="padding: 24px; border-radius: 24px; border: 1px solid #DCE6E1; background: #FFFFFF">
+<span style="display: inline-flex; width: 36px; height: 36px; justify-content: center; align-items: center; border-radius: 50%; background: #E1F2EE; font-family: 'DM Mono', monospace">1</span>
+<h3 style="margin: 16px 0 10px; font-size: 23px">Begin bij de geometrie</h3>
+<p style="font-size: 16px; color: #4A5F5A">Stack en reach zijn je uitgangspunt. Bekijk daarna de stuurpen, spacers, stuurbreedte en zadelpositie.</p>
+</li>
+<li style="padding: 24px; border-radius: 24px; border: 1px solid #DCE6E1; background: #FFFFFF">
+<span style="display: inline-flex; width: 36px; height: 36px; justify-content: center; align-items: center; border-radius: 50%; background: #E1F2EE; font-family: 'DM Mono', monospace">2</span>
+<h3 style="margin: 16px 0 10px; font-size: 23px">Toets je gewenste positie</h3>
+<p style="font-size: 16px; color: #4A5F5A">Past de fiets op papier én met de beschikbare cockpitaanpassing? Of vraagt je positie meteen een compromis?</p>
+</li>
+<li style="padding: 24px; border-radius: 24px; border: 1px solid #DCE6E1; background: #FFFFFF">
+<span style="display: inline-flex; width: 36px; height: 36px; justify-content: center; align-items: center; border-radius: 50%; background: #E1F2EE; font-family: 'DM Mono', monospace">3</span>
+<h3 style="margin: 16px 0 10px; font-size: 23px">Weeg extra hulp af</h3>
+<p style="font-size: 16px; color: #4A5F5A">Bij een grote aankoop of complexe fit is een volledige beoordeling verstandiger dan kiezen op losse aannames.</p>
+</li>
+</ol>
+</section>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 28px; border-radius: 24px; background: #E1F2EE">
+<div><h2 style="margin: 0 0 6px; font-size: 24px">Pak je fietsgegevens erbij</h2><p style="font-size: 16px; color: #4A5F5A">Bekijk je opgeslagen fietsen in je garage.</p></div>
+<a href="Bikes.dc.html" style="display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 12px; height: 52px; padding: 0 24px; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-size: 16px; font-weight: 700">Open fietsengarage<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

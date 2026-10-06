@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { BrandLogo } from "@/components/branding/BrandLogo";
 import { Button, Input, Select, Slider } from "@/components/ui";
+import { BikeNumberField } from "@/components/bikes/BikeFormControls";
+import { usabilityFormsCopy } from "@/i18n/account/usabilityForms";
 import { ProfileStrengthRings } from "@/components/profile/ProfileStrengthRings";
 import { useProfileAccess } from "@/hooks/useProfileAccess";
 import { getWelcomeCopy } from "@/i18n/account/welcome";
@@ -189,13 +191,29 @@ function WelcomeReview({ locale, context, calculatorContext }: { locale: Locale;
       </div>
       {editing === entry.field && <div className={styles.editor} id={`edit-${entry.field}`}>
         {options ? <Select label={fieldLabel} value={String(entry.value)} disabled={!active} options={[...new Set([String(entry.value), ...options])].map(value => ({ value, label: String(labelValue(value)) }))} onChange={event => editEntry(entry.field, event.target.value)} />
-          : <Input label={fieldLabel} type={numeric ? "number" : "text"} value={entry.value} disabled={!active} min={bounds[entry.field]?.[0]} max={bounds[entry.field]?.[1]} maxLength={100} step={entry.unit === "score" || entry.unit === "teeth" ? 1 : "any"} required={active} onChange={event => editEntry(entry.field, numeric && event.target.value !== "" ? Number(event.target.value) : event.target.value)} />}
+          : numeric ? <BikeNumberField label={fieldLabel} value={Number(entry.value)} disabled={!active}
+              min={bounds[entry.field]?.[0] ?? Math.min(0, Number(entry.value))}
+              max={bounds[entry.field]?.[1] ?? Math.max(100, Number(entry.value))}
+              step={entry.unit === "score" || entry.unit === "teeth" ? 1 : 0.1} allowClear={false}
+              onChange={value => { if (value !== null) editEntry(entry.field, value); }} />
+          : <Input label={fieldLabel} type="text" value={entry.value} disabled={!active} min={bounds[entry.field]?.[0]} max={bounds[entry.field]?.[1]} maxLength={100} step={entry.unit === "score" || entry.unit === "teeth" ? 1 : "any"} required={active} onChange={event => editEntry(entry.field, numeric && event.target.value !== "" ? Number(event.target.value) : event.target.value)} />}
+        {numeric && entry.method !== "bike" && <div data-usability="measurement-kind">
+          <Select label={usabilityFormsCopy[locale].method} value={entry.method}
+            options={(["measured", "estimated", "declared"] as const).map(method => ({ value: method, label: text.methods[method] }))}
+            onChange={event => {
+              const method = event.target.value as HandoffEntry["method"];
+              setEntries(previous => previous.map(item => item.field === entry.field
+                ? { ...item, method, kind: method === "bike" ? "declared" : method,
+                    repeatCount: undefined, withinTolerance: undefined, touchedAt: Date.now() } : item));
+              resetResolution(entry.field);
+            }} />
+        </div>}
       </div>}
     </div>;
   }
 
   return <div className={styles.page}>
-    <header className={styles.header}><BrandLogo href={withLocalePrefix("/dashboard", locale)} className={styles.logo} /><span className={styles.muted}>{text.step}</span></header>
+    <header data-usability="site-header" className={styles.header}><BrandLogo href={withLocalePrefix("/dashboard", locale)} className={styles.logo} /><span className={styles.muted}>{text.step}</span></header>
     <form onSubmit={confirm}>
       <fieldset disabled={pending} className={styles.main}>
         <main className={styles.stack}>

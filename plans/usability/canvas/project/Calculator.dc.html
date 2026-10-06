@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Calculatorsjabloon met bereikbalk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1440px; height: {{h}}px; box-sizing: border-box; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column">
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1; flex: none">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: #0F2420">
+<svg width="41" height="32" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#0A7263" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; color: #0F2420">BikeFit<span style="color: #0A7263">Boost</span></span>
+</a>
+<nav aria-label="Routes" style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 15px; font-weight: 700">
+<a href="SaddleHeight.dc.html" aria-current="{{houdingCurrent}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: {{houdingBg}}; color: {{houdingFg}}; text-decoration: none; white-space: nowrap">Mijn houding</a>
+<a href="TirePressure.dc.html" aria-current="{{ritCurrent}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: {{ritBg}}; color: {{ritFg}}; text-decoration: none; white-space: nowrap">Mijn rit</a>
+<a href="Main.dc.html#calculators" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; color: #3B4F4A; text-decoration: none; white-space: nowrap">Alle calculators</a>
+</nav>
+<a href="Login.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+<div style="box-sizing: border-box; padding: 40px 64px 64px; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Gratis calculator · 2 stappen · zonder account</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.03em; color: #0F2420">{{title}}</h1>
+    <p style="margin: 0; font-size: 17px; max-width: 64ch">{{intro}}</p>
+    <nav aria-label="{{routeAria}}" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px">
+      <sc-for list="{{routeSteps}}" as="rs" hint-placeholder-count="5">
+        <a href="{{rs.href}}" aria-current="{{rs.current}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 6px; border-radius: 999px; background: {{rs.bg}}; border: 1px {{rs.borderStyle}} {{rs.border}}; color: {{rs.fg}}; font-size: 14px; font-weight: 600; text-decoration: none">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: {{rs.numBg}}; color: #0F2420; font-family: 'DM Mono', monospace; font-size: 13px">
+            <sc-if value="{{rs.done}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if>
+            <sc-if value="{{rs.notDone}}" hint-placeholder-val="{{true}}">{{rs.num}}</sc-if>
+          </span>{{rs.label}}</a>
+      </sc-for>
+    </nav>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <sc-for list="{{steps}}" as="s" hint-placeholder-count="2">
+        <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+            <h2 style="margin: 0; font-weight: 700; color: #0F2420; font-size: 17px">{{s.title}}</h2>
+            <span style="font-size: 12px; font-weight: 700; color: {{s.statusColor}}">{{s.status}}</span>
+          </div>
+          <sc-for list="{{s.fields}}" as="f" hint-placeholder-count="1">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <sc-if value="{{f.isRange}}" hint-placeholder-val="{{true}}">
+                <div style="display: flex; justify-content: space-between; align-items: baseline">
+                  <label for="{{f.id}}" style="font-size: 15px; font-weight: 600; color: #0F2420">{{f.label}}</label>
+                  <span style="display: inline-flex; align-items: center; gap: 8px"><sc-if value="{{f.isExample}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; background: #EEF3EF; color: #3B4F4A; font-size: 12px; font-weight: 700">voorbeeld</span></sc-if><span style="font-family: 'DM Mono', monospace; font-size: 20px; color: {{f.valueColor}}">{{f.valueLabel}}</span></span>
+                </div>
+                <input id="{{f.id}}" type="range" min="{{f.min}}" max="{{f.max}}" step="{{f.step}}" value="{{f.value}}" onInput="{{f.onInput}}" style="width: 100%; height: 44px; margin: 0; accent-color: #0A7263">
+                <sc-if value="{{f.prefilled}}" hint-placeholder-val="{{false}}">
+                  <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 12px; font-weight: 700"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="#075A4E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Uit je eerdere invoer · wijzig met de schuif</span>
+                </sc-if>
+              </sc-if>
+              <sc-if value="{{f.isChoice}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 15px; font-weight: 600; color: #0F2420">{{f.label}}</span><sc-if value="{{f.prefilled}}" hint-placeholder-val="{{false}}"><span style="display: inline-flex; align-items: center; min-height: 26px; padding: 0 10px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 12px; font-weight: 700">Uit je eerdere invoer</span></sc-if></div>
+                <div role="group" aria-label="{{f.label}}" style="display: grid; grid-template-columns: repeat({{f.cols}}, minmax(0, 1fr)); gap: 6px">
+                  <sc-for list="{{f.options}}" as="o" hint-placeholder-count="4">
+                    <button type="button" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="font: inherit; font-size: 14px; font-weight: 600; min-height: 44px; border-radius: 999px; cursor: pointer; border: 1.5px solid {{o.border}}; background: {{o.bg}}; color: #0F2420; padding: 0 8px">{{o.label}}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{s.hasHint}}" hint-placeholder-val="{{false}}">
+            <p style="margin: 0; font-size: 14px; color: #4A5F5A">{{s.hint}}</p>
+          </sc-if>
+        </section>
+      </sc-for>
+
+      <details style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px 28px; font-size: 15px">
+        <summary style="display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; font-weight: 700; color: #0F2420; min-height: 44px">Wat we hier nog niet meenemen<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-left: auto"><path d="M6 9l6 6 6-6"></path></svg></summary>
+        <p style="margin: 10px 0 0">{{notIncluded}}</p>
+      </details>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 18px">
+        <sc-if value="{{hasExample}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: #EEF3EF; color: #3B4F4A; font-size: 14px">{{exampleLine}}</div>
+        </sc-if>
+        <sc-for list="{{results}}" as="r" hint-placeholder-count="1">
+          <div style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid {{r.divider}}">
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start">
+              <div style="display: flex; gap: 12px; align-items: center">
+                <sc-if value="{{r.hasLetter}}" hint-placeholder-val="{{false}}">
+                  <span style="width: 36px; height: 36px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none">{{r.letter}}</span>
+                </sc-if>
+                <div>
+                  <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: {{r.titleSize}}px; color: #0F2420">{{r.title}}</div>
+                  <div style="font-size: 14px; color: #4A5F5A">{{r.what}}</div>
+                </div>
+              </div>
+              <div style="text-align: right">
+                <div style="font-family: 'DM Mono', monospace; font-size: {{r.valueSize}}px; line-height: 1; color: #0F2420">{{r.valueText}}<span style="font-size: 15px; margin-left: 5px">{{r.unit}}</span></div>
+                <div style="font-family: 'DM Mono', monospace; font-size: 14px; color: #0F2420; margin-top: 5px">{{r.pmText}}</div>
+                <sc-if value="{{r.hasPaidPm}}" hint-placeholder-val="{{false}}">
+                  <a href="Pricing.dc.html" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: #0F2420; color: #CFF26A; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3"></path></svg>Betaald <span style="font-family: 'DM Mono', monospace">{{r.paidPm}}</span></a>
+                </sc-if>
+              </div>
+            </div>
+            <sc-if value="{{r.isBar}}" hint-placeholder-val="{{true}}">
+              <dc-import name="Bereikbalk" low="{{r.low}}" high="{{r.high}}" value="{{r.v}}" min="{{r.min}}" max="{{r.max}}" low-label="{{r.lowLabel}}" high-label="{{r.highLabel}}" size="{{r.size}}" dashed="{{r.dashed}}" aria="{{r.aria}}" hint-size="100%,72px"></dc-import>
+            </sc-if>
+            <sc-if value="{{r.isMaat}}" hint-placeholder-val="{{false}}">
+              <dc-import name="Maatbalk" options="{{r.options}}" from="{{r.from}}" to="{{r.to}}" value="{{r.idx}}" aria="{{r.aria}}" hint-size="100%,72px"></dc-import>
+            </sc-if>
+            <sc-if value="{{r.isNote}}" hint-placeholder-val="{{false}}">
+              <div style="font-size: 14px; color: #0F2420; background: #F5F8F3; border-radius: 12px; padding: 10px 14px">{{r.note}}</div>
+            </sc-if>
+            <div style="font-size: 13px; color: #3B4F4A">Gebaseerd op: {{r.basis}}</div>
+          </div>
+        </sc-for>
+
+        <div style="display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: #E1F2EE; border-radius: 16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          <span style="font-size: 15px; color: #075A4E; font-weight: 600">{{next}}</span>
+        </div>
+
+        <details style="font-size: 15px">
+          <summary style="display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; font-weight: 700; color: #0F2420; min-height: 44px">Wat betekent dit bereik?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-left: auto"><path d="M6 9l6 6 6-6"></path></svg></summary>
+          <p style="margin: 10px 0 0; max-width: 64ch">{{meaning}}</p>
+        </details>
+      </div>
+
+      <section aria-label="Zo wordt je advies preciezer" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 26px 28px; display: flex; flex-direction: column; gap: 14px">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Zo wordt je advies preciezer</div>
+        <p style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.25; color: #0F2420">{{reason}}</p>
+        <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 150px; gap: 16px; align-items: center; padding: 12px 16px; border-radius: 16px; background: #F5F8F3">
+          <div><div style="font-weight: 700; color: #0F2420">Nu</div><div style="font-size: 13px">{{lad.now.text}}</div></div>
+          <sc-if value="{{lad.now.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #DCE6E1"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.now.left}}%; width: {{lad.now.width}}%; border-radius: 999px; background: #B9CCC6"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #0F2420"></div></div></sc-if><sc-if value="{{lad.now.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+          <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right; color: #0F2420">{{lad.now.value}}</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #E6F8A8; color: #0F2420">
+          <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 150px; gap: 16px; align-items: center">
+            <div><div style="font-weight: 700">Gratis account</div><div style="font-size: 13px">{{lad.acc.text}}</div></div>
+            <sc-if value="{{lad.acc.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #FFFFFF"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.acc.left}}%; width: {{lad.acc.width}}%; border-radius: 999px; background: #CFF26A"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #0F2420"></div></div></sc-if><sc-if value="{{lad.acc.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+            <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right">{{lad.acc.value}}</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+            <a href="RP2LoginHandoff.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #0F2420; color: #FFFFFF; font-weight: 700; font-size: 15px; text-decoration: none">{{cta}}</a>
+            <span style="font-size: 13px">Gratis. Wat je hier invult nemen we mee.</span>
+          </div>
+        </div>
+        <sc-if value="{{lad.hasPaid}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 14px; padding: 18px 16px; border-radius: 16px; background: #0F2420; color: #FFFFFF">
+            <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 150px; gap: 16px; align-items: center">
+              <div><div style="display: flex; align-items: center; gap: 8px; font-weight: 700">Betaald<span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; background: #CFF26A; color: #0F2420">Meest precies</span></div><div style="font-size: 13px; color: #B9CCC6">{{lad.paid.text}}</div></div>
+              <sc-if value="{{lad.paid.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #2E4C45"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.paid.left}}%; width: {{lad.paid.width}}%; border-radius: 999px; background: #CFF26A"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #FFFFFF"></div></div></sc-if><sc-if value="{{lad.paid.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+              <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right; color: #CFF26A">{{lad.paid.value}}</div>
+            </div>
+            <ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; font-size: 14px; color: #E1F2EE">
+              <sc-for list="{{lad.perks}}" as="pk" hint-placeholder-count="2">
+                <li style="display: flex; gap: 10px; align-items: flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 9.5l3 3 7-7" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{pk.text}}</li>
+              </sc-for>
+            </ul>
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #17332D">
+              <div style="font-size: 13px; font-weight: 700; color: #FFFFFF">Zo ziet je betaalde advies eruit</div>
+              <sc-for list="{{lad.preview}}" as="pv" hint-placeholder-count="3">
+                <div style="display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 28px; font-size: 14px; color: #B9CCC6; border-top: 1px solid #2E4C45; padding-top: 6px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+                  <span>{{pv.text}}</span>
+                  <span style="font-family: 'DM Mono', monospace; color: #FFFFFF">{{pv.value}}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+              <a href="afsluiten/Kies.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; font-size: 15px; text-decoration: none">Ontgrendel met een losse meting · €13,50</a>
+              <a href="Pricing.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #FFFFFF; font-weight: 700; font-size: 14px">Bekijk wat betaald oplevert</a>
+              <span style="font-size: 13px; color: #B9CCC6">of het jaarabonnement: €21,50 per jaar, € 1,79 per maand</span>
+            </div>
+          </div>
+        </sc-if>
+      </section>
+
+      <section aria-label="Volgende calculator" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px 26px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">{{nextEyebrow}}</div>
+          <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 24px; color: #0F2420">{{nextTitle}}</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.45">{{nextText}}</p>
+        </div>
+        <a href="{{nextHref}}" style="flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 2px solid #0F2420; color: #0F2420; font-weight: 700; font-size: 15px; text-decoration: none">{{nextLabel}}<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="#0F2420" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </section>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"calc":{"editor":"enum","options":["bikefit","frame","crank","saddlewidth","speed","climb","ftp","gearing","fuel"],"default":"bikefit"},"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  // Usability-ronde 6 okt: routes, volgende calculator, accountreden per calculator, hergebruik gemarkeerd
+  ux(key, out) {
+    const routes = {
+      houding: [['SaddleHeight.dc.html', 'Zadelhoogte'], ['FrameSize.dc.html', 'Framemaat'], ['CrankLength.dc.html', 'Cranklengte'], ['SaddleWidth.dc.html', 'Zadelbreedte'], ['BikeFit.dc.html', 'Bike fit']],
+      rit: [['TirePressure.dc.html', 'Bandenspanning'], ['Gearing.dc.html', 'Verzet'], ['ClimbPlanner.dc.html', 'Klimplanner'], ['PowerSpeed.dc.html', 'Vermogen ↔ snelheid'], ['FtpWkg.dc.html', 'FTP / W/kg'], ['FuelHydration.dc.html', 'Voeding & drinken']]
+    };
+    const pm = out.results[0].pmText;
+    const map = {
+      frame: { route: 'houding', step: 2, prefilled: ['height', 'inseam'], reason: pm.indexOf('1 ') === 0 ? 'Je shortlist is 1 maat. Voeg je eigen fiets toe, dan controleren we stack en reach.' : 'Nu komen ' + pm + ' in aanmerking. Voeg je eigen fiets toe en we brengen het terug tot één maat.', cta: 'Vergelijk met mijn fiets', paid: 'Nieuwe fiets in gedachten? Met een abonnement zet je twee fietsen naast elkaar.' },
+      crank: { route: 'houding', step: 3, prefilled: ['height', 'inseam'], reason: 'Je bereik is nu ' + pm + '. Meet je dijbeen in je account en je houdt één of twee lengtes over.', cta: 'Meet mijn dijbeen' },
+      saddlewidth: { route: 'houding', step: 4, prefilled: ['height'], reason: 'Je bereik is nu ' + pm + '. Bewaar je zitbotmeting, dan hoef je bij een nieuw zadel niet opnieuw te meten.', cta: 'Bewaar mijn zitbotmeting' },
+      bikefit: { route: 'houding', step: 5, prefilled: ['height', 'inseam'], reason: 'Je zadelhoogte heeft nu een bereik van ' + pm + '. Bewaar je maten en meet je binnenbeen drie keer voor ± 18 mm.', cta: 'Bewaar mijn bike fit', paid: 'Wil je weten in welke volgorde je aanpast? Het stappenplan zit in de losse meting en het jaarabonnement.' },
+      gearing: { route: 'rit', step: 2, prefilled: ['weight'], reason: 'Je cadans heeft nu een bereik van ' + pm + '. Met de FTP uit je profiel wordt het ± 4 rpm.', cta: 'Gebruik mijn FTP' },
+      climb: { route: 'rit', step: 3, prefilled: ['weight'], reason: 'Je klimtijd heeft nu een bereik van ' + pm + '. Met een gemeten FTP in je profiel wordt het ± 5%.', cta: 'Gebruik mijn eigen FTP' },
+      speed: { route: 'rit', step: 4, prefilled: ['weight'], reason: 'Je snelheid heeft nu een bereik van ' + pm + '. Met je eigen fiets en houding wordt het smaller.', cta: 'Reken met mijn fiets' },
+      ftp: { route: 'rit', step: 5, prefilled: ['weight'], reason: 'Bewaar je FTP, dan rekenen klimplanner en verzet er voortaan mee.', cta: 'Bewaar mijn FTP' },
+      fuel: { route: 'rit', step: 6, prefilled: [], reason: 'Je vochtverlies heeft nu een bereik van ' + pm + '. Met een zweettest in je account wordt het ± 15%.', cta: 'Doe mijn zweettest' }
+    };
+    // Ladder Nu → Gratis account → Betaald (breedtes uit de betrouwbaarheidsrelease)
+    const r0 = out.results[0] || {};
+    const val = r0.v || 0, nowHalf = r0.half;
+    const f = (x, dec) => this.fmt(x, dec);
+    const pmv = (h, unit, dec) => '± ' + f(h, dec) + ' ' + unit;
+    const plan = ['Volledig stappenplan in de juiste volgorde', 'Opnieuw berekenen na elke aanpassing'];
+    const L = {
+      bikefit: { unit: 'mm', now: [nowHalf, 'Zadelhoogte, 1× gemeten'], acc: [18, 'Binnenbeen 3× gemeten'], paid: [13, 'Kniehoek gemeten op een foto'], perks: ['Aanpassingsplan in stappen van max. 5 mm, evaluatie na 7 dagen', 'Zadel, reach en stuur in de juiste volgorde'] },
+      frame: { now: [null, 'Alleen lengte en binnenbeen', pm], acc: [null, 'Stack en reach van je eigen fiets', 'gecontroleerd'], paid: [null, 'Twee fietsen of maten naast elkaar', 'in mm'], perks: ['Een nieuwe fiets beoordelen naast je huidige', 'Fit-tabel met stack, reach en cockpit'] },
+      crank: { now: [null, 'Binnenbeen 1× gemeten', pm], acc: [null, 'Dijbeen gemeten', '1–2 lengtes'], paid: [null, 'Crank, zadel en terugstand samen', 'in je plan'], perks: plan },
+      saddlewidth: { unit: 'mm', now: [nowHalf, 'Zitbotten geschat of gemeten'], acc: [null, 'Rijhouding en zitklachten', 'persoonlijker'], paid: [null, 'Zadelkeuze in je fit-notities', 'in je plan'], perks: plan },
+      speed: { unit: 'km/u', dec: 1, now: [nowHalf, 'Standaard houding'], acc: [val * 0.037, 'Je eigen fiets, houding en gewicht'], paid: [val * 0.019, 'Veldtest luchtweerstand'], perks: ['Je eigen luchtweerstand, gemeten op de weg', 'Fits vergelijken en volledige geschiedenis'] },
+      climb: { unit: 'min', now: [nowHalf, 'Opgegeven FTP'], acc: [val * 0.05, 'Gemeten FTP en gewicht'], paid: [val * 0.03, 'Geleide FTP-test'], perks: ['Klimprofiel per rit', 'Klimplanner met je eigen verzet'] },
+      ftp: { unit: 'W', now: [nowHalf, 'Testvermogen omgerekend'], acc: [val * 0.04, 'Gewicht gewogen en recent'], paid: [val * 0.03, 'Geleide test met protocol'], perks: ['Geleide FTP-test met protocol', 'Je FTP door het seizoen in je geschiedenis'] },
+      gearing: { unit: 'rpm', now: [nowHalf, 'Vermogen geschat'], acc: [4, 'FTP en gewicht uit je profiel'], paid: [null, 'Klimprofiel per rit', 'per klim'], perks: ['Klimprofiel en klimplanner per rit', 'Al je fietsen met hun eigen verzet'] },
+      fuel: { unit: 'ml/u', now: [nowHalf, 'Geschat uit inspanning en temperatuur'], acc: [val * 0.15, 'Zweettest: wegen voor en na een rit'], paid: null }
+    };
+    const lc = L[key] || L.bikefit;
+    const P = {
+      bikefit: [['Stap 1 · zadelhoogte', '•• mm'], ['Stap 2 · zadelterugstand', '•• mm'], ['Stap 3 · stuurhoogte', '•• mm']],
+      frame: [['Stack van je fiets tegen je advies', '•• mm'], ['Reach van je fiets tegen je advies', '•• mm'], ['Stuurpen die het verschil oplost', '•• mm']],
+      crank: [['Stap 1 · cranklengte', '•• mm'], ['Stap 2 · zadelhoogte na de wissel', '•• mm'], ['Controle na twee ritten', '•• dagen']],
+      saddlewidth: [['Stap 1 · zadelbreedte', '•• mm'], ['Stap 2 · zadelhoogte na de wissel', '•• mm'], ['Controle na twee ritten', '•• dagen']],
+      speed: [['Je luchtweerstand (CdA)', '•,•••'], ['Snelheid in je eigen houding', '•• km/u'], ['Winst met een lagere houding', '•,• km/u']],
+      climb: [['Klimtijd per stuk van de klim', '•• min'], ['Vermogen per stuk', '••• W'], ['Verzet per stijging', '•• / ••']],
+      ftp: [['FTP uit de geleide test', '••• W'], ['Watt per kilo, per maand', '•,• W/kg'], ['Je klimtijden met nieuwe FTP', '•• min']],
+      gearing: [['Cadans per klim', '•• rpm'], ['Klimprofiel van je rit', '•• %'], ['Twee cassettes naast elkaar', '•• rpm']]
+    };
+    const preview = (P[key] || []).map((p) => ({ text: p[0], value: p[1] }));
+    const row = (a) => {
+      if (!a) return { hasBar: false, noBar: true, left: 50, width: 0, text: '', value: '' };
+      const h = a[0];
+      if (h === null || h === undefined || !nowHalf) return { hasBar: false, noBar: true, left: 50, width: 0, text: a[1], value: a[2] || '' };
+      const w = Math.max(6, Math.min(80, h / nowHalf * 80));
+      return { hasBar: true, noBar: false, left: (50 - w / 2).toFixed(1), width: w.toFixed(1), text: a[1], value: pmv(h, lc.unit, lc.dec) };
+    };
+    const lad = { now: row(lc.now), acc: row(lc.acc), paid: row(lc.paid), hasPaid: !!lc.paid, perks: (lc.perks || []).map((t) => ({ text: t })), preview: preview };
+    const u = map[key] || map.bikefit;
+    const list = routes[u.route];
+    const routeName = u.route === 'houding' ? 'Mijn houding' : 'Mijn rit';
+    const last = u.step === list.length;
+    const nxt = last ? (u.route === 'houding' ? ['TirePressure.dc.html', 'Bandenspanning'] : ['SaddleHeight.dc.html', 'Zadelhoogte']) : list[u.step];
+    const nextTexts = {
+      'FrameSize.dc.html': 'Je lengte en binnenbeen staan al klaar.', 'CrankLength.dc.html': 'Je lengte en binnenbeen staan al klaar.',
+      'SaddleWidth.dc.html': 'Je lengte staat al klaar.', 'BikeFit.dc.html': 'Lengte en binnenbeen staan al klaar.',
+      'TirePressure.dc.html': 'Begin Mijn rit; je gewicht en fietstype gaan mee.', 'ClimbPlanner.dc.html': 'Je gewicht staat al klaar.',
+      'PowerSpeed.dc.html': 'Je gewicht staat al klaar.', 'FtpWkg.dc.html': 'Je gewicht staat al klaar.',
+      'FuelHydration.dc.html': 'Plan wat je meeneemt voor je volgende rit.', 'SaddleHeight.dc.html': 'Begin Mijn houding met je zadel.'
+    };
+    const routeSteps = list.map((it, i) => {
+      const n = i + 1, cur = n === u.step, done = n < u.step;
+      return { href: it[0], label: it[1], num: String(n), current: cur ? 'step' : 'false', done: done, notDone: !done,
+        bg: cur ? '#0F2420' : done ? '#FFFFFF' : 'transparent', fg: cur ? '#FFFFFF' : done ? '#0F2420' : '#3B4F4A',
+        border: cur ? '#0F2420' : done ? '#DCE6E1' : '#B9CCC6', borderStyle: done || cur ? 'solid' : 'dashed',
+        numBg: cur ? '#CFF26A' : done ? '#E1F2EE' : '#EEF3EF' };
+    });
+    return {
+      lad: lad, prefilled: u.prefilled, routeSteps: routeSteps, routeAria: 'Route ' + routeName + ', stap ' + u.step + ' van ' + list.length,
+      houdingCurrent: u.route === 'houding' ? 'true' : 'false', ritCurrent: u.route === 'rit' ? 'true' : 'false',
+      houdingBg: u.route === 'houding' ? '#0F2420' : 'transparent', houdingFg: u.route === 'houding' ? '#FFFFFF' : '#0F2420',
+      ritBg: u.route === 'rit' ? '#0F2420' : 'transparent', ritFg: u.route === 'rit' ? '#FFFFFF' : '#0F2420',
+      reason: u.reason, cta: u.cta, paid: u.paid || '', hasPaid: !!u.paid,
+      nextEyebrow: last ? 'Route klaar · volgende route' : 'Volgende · ' + routeName + ' ' + (u.step + 1) + ' van ' + list.length,
+      nextTitle: nxt[1], nextText: nextTexts[nxt[0]], nextHref: nxt[0],
+      nextLabel: last ? 'Start ' + (u.route === 'houding' ? 'Mijn rit' : 'Mijn houding') : { 'FrameSize.dc.html': 'Naar framemaat', 'CrankLength.dc.html': 'Naar cranklengte', 'SaddleWidth.dc.html': 'Naar zadelbreedte', 'BikeFit.dc.html': 'Naar de complete bike fit', 'Gearing.dc.html': 'Naar verzet', 'ClimbPlanner.dc.html': 'Naar de klimplanner', 'PowerSpeed.dc.html': 'Naar vermogen en snelheid', 'FtpWkg.dc.html': 'Naar FTP en W/kg', 'FuelHydration.dc.html': 'Naar voeding en drinken' }[nxt[0]]
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.state = { v: {}, done2: false, t: {} };
+  }
+  fmt(x, dec) { return (dec ? x.toFixed(dec) : String(Math.round(x))).replace('.', ','); }
+  speed(P, m, grade, cda, crr) {
+    const g = 9.81, rho = 1.225, eta = 0.975, th = Math.atan(grade);
+    const need = (v) => (m * g * (crr * Math.cos(th) + Math.sin(th)) * v + 0.5 * rho * cda * v * v * v) / eta;
+    let lo = 0.1, hi = 30;
+    for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (need(mid) > P) hi = mid; else lo = mid; }
+    return (lo + hi) / 2;
+  }
+  bar(o) {
+    const d = o.dec || 0;
+    const r = (x) => o.round5 ? Math.round(x / 5) * 5 : x;
+    const low = r(o.value - o.half), high = r(o.value + o.half), span = 1.25 * (o.widest || o.half);
+    return Object.assign({ isBar: true, isMaat: false, isNote: false, size: o.size || 'groot', dashed: false,
+      v: o.value, low, high, min: o.value - span, max: o.value + span,
+      lowLabel: this.fmt(low, d), highLabel: this.fmt(high, d), valueText: this.fmt(o.value, d),
+      pmText: '± ' + this.fmt(o.half, d) + ' ' + o.unit,
+      aria: o.title + ' ' + this.fmt(o.value, d) + ' ' + o.unit + ', bereik ' + this.fmt(low, d) + ' tot ' + this.fmt(high, d) }, o);
+  }
+  configs() {
+    const z = 1.96;
+    const cats = [['road', 'Race'], ['gravel', 'Gravel'], ['mtb', 'MTB'], ['city', 'Stad']];
+    const meaning = 'Je uitkomst hangt af van je invoer en van hoe goed onze formule bij jou past. Samen geeft dat een bereik waarin de juiste waarde in 19 van de 20 gevallen ligt. Betere gegevens maken het smaller.';
+    return {
+      bikefit: {
+        h: 1240, title: 'Bike-fit in vier waarden', intro: 'Je lengte geeft direct een eerste afstelling. Met je binnenbeen en je fiets worden de bereiken smaller.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }] },
+          { title: '2. Binnenbeen en fiets', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 89, unit: 'cm' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }], hint: 'Meet je binnenbeen op blote voeten met een boek tegen de muur.' }
+        ],
+        compute: (v, d) => {
+          const H = v.height * 10, B = d ? v.inseam * 10 : 0.47 * H, sB = d ? 10 : 0.03 * B, cat = d ? v.cat : 'road';
+          const M = { road: 0.883, gravel: 0.88, mtb: 0.875, city: 0.87 }[cat];
+          const sh = Math.round(B * M);
+          const half = (s) => Math.round(z * Math.sqrt(Math.pow(0.883 * s, 2) + Math.pow(0.01 * sh, 2)));
+          const wide = half(0.03 * 0.47 * H);
+          const drop = Math.round(H * { road: 0.051, gravel: 0.035, mtb: 0.015, city: -0.02 }[cat]);
+          const reach = Math.round(H * { road: 0.30, gravel: 0.29, mtb: 0.30, city: 0.25 }[cat]);
+          const basis = d ? 'lengte, binnenbeen 1× gemeten, ' + { road: 'racefiets', gravel: 'gravelfiets', mtb: 'mountainbike', city: 'stadsfiets' }[cat] : 'lengte (binnenbeen geschat), racefiets aangenomen';
+          return {
+            results: [
+              this.bar({ letter: 'A', title: 'Zadelhoogte', what: 'Midden trapas tot bovenkant zadel', value: sh, half: half(sB), widest: wide, unit: 'mm', size: 'compact', round5: true, basis: basis }),
+              this.bar({ letter: 'B', title: 'Zadelterugstand', what: 'Zadelpunt achter de trapas', value: Math.round(0.057 * B), half: d ? 15 : 18, widest: 18, unit: 'mm', size: 'compact', round5: true, basis: 'dijbeen geschat uit lengte' }),
+              this.bar({ letter: 'C', title: 'Stuurdrop', what: 'Hoogteverschil zadel en stuur', value: drop, half: 30, widest: 30, unit: 'mm', size: 'compact', round5: true, basis: 'gemiddelde lenigheid aangenomen' }),
+              this.bar({ letter: 'D', title: 'Reach', what: 'Zadel tot stuur, horizontaal', value: reach, half: d ? 25 : 28, widest: 28, unit: 'mm', size: 'compact', round5: true, basis: 'torso en arm geschat uit lengte' })
+            ],
+            next: d ? 'Bewaar je maten en meet torso en arm → reach ± 15 mm' : 'Vul je binnenbeen in → zadelhoogte ± ' + half(10) + ' mm',
+            refine: [['Account', 'Lenigheid en core in je stuurdrop', '± 20 mm'], ['Account', 'Torso en arm meten voor je reach', '± 15 mm'], ['Account', 'Binnenbeen 3× meten', '± 18 mm'], ['Betaald', 'Houdingsfoto op je eigen fiets', '± 10 mm']],
+            notIncluded: 'Lenigheid, core-stabiliteit, rijdoel en je torso- en armlengte nemen we hier niet mee. Ze verschuiven vooral drop en reach en horen bij je bewaarde profiel. Daarom zijn die bereiken hier nog breed.',
+            meaning: meaning
+          };
+        }
+      },
+      frame: {
+        h: 1040, title: 'Welke framemaat past bij jou?', intro: 'Je lengte geeft de maten die in aanmerking komen. Met je binnenbeen wordt het kleiner.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 185, unit: 'cm' }] },
+          { title: '2. Je binnenbeenlengte', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 87, unit: 'cm' }] }
+        ],
+        compute: (v, d) => {
+          const opts = ['XS', 'S', 'M', 'L', 'XL'];
+          let idx = (v.height - 157) / 10;
+          if (d) idx += (v.inseam / v.height - 0.47) / 0.02 * 0.3;
+          idx = Math.max(0, Math.min(4, idx));
+          const half = d ? 0.6 : 1.0;
+          const from = Math.max(0, idx - half), to = Math.min(4, idx + half);
+          let a = Math.ceil(from - 1e-9), b = Math.floor(to + 1e-9);
+          if (a > b) { a = Math.round(idx); b = a; }
+          const valueText = a === b ? opts[a] : opts[a] + (b - a > 1 ? '–' : ' of ') + opts[b];
+          return {
+            results: [{ isBar: false, isMaat: true, isNote: false, hasLetter: false, title: 'Framemaat', what: 'Maat in de tabel van je merk', valueText: valueText, unit: '', pmText: (b - a + 1) + (b === a ? ' maat' : ' maten'), options: opts.join(','), from: from, to: to, idx: idx, aria: 'Framemaat ' + valueText, basis: d ? 'lengte en binnenbeen, zonder je fiets' : 'alleen je lengte' }],
+            next: d ? 'Kies merk en model in je account → één maat via stack en reach' : 'Vul je binnenbeen in → minder maten',
+            refine: [['Account', 'Merk, model en maat van je fiets (stack en reach)', '1 maat'], ['Account', 'Torso en arm voor de reach-controle', ''], ['Betaald', 'Twee fietsen of maten naast elkaar', 'marge in mm']],
+            notIncluded: 'Maattabellen verschillen per merk. Zonder de geometrie van een concrete fiets (stack en reach) geven we daarom een bereik van maten, geen enkele maat.',
+            meaning: meaning
+          };
+        }
+      },
+      crank: {
+        h: 1040, title: 'Welke cranklengte past bij jou?', intro: 'Cranks gaan per 2,5 mm. Je lengte geeft een eerste keuze, je binnenbeen maakt het preciezer.',
+        steps: [
+          { title: '1. Je lengte', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }] },
+          { title: '2. Binnenbeen en fiets', two: true, fields: [{ key: 'inseam', label: 'Binnenbeenlengte', type: 'range', min: 65, max: 105, step: 0.5, def: 89, unit: 'cm' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }] }
+        ],
+        compute: (v, d) => {
+          const opts = ['165', '167,5', '170', '172,5', '175', '177,5'];
+          const B = d ? v.inseam * 10 : 0.47 * v.height * 10, sB = d ? 10 : 0.03 * B;
+          let idx = Math.max(0, Math.min(5, (B - 710) / 60));
+          if (d && v.cat === 'mtb' && B >= 820) idx = Math.max(0, idx - 1);
+          const half = z * Math.sqrt(Math.pow(sB / 60, 2) + 0.0625);
+          const from = Math.max(0, idx - half), to = Math.min(5, idx + half);
+          const i = Math.round(idx);
+          let a = Math.ceil(from - 1e-9), b = Math.floor(to + 1e-9);
+          if (a > b) { a = i; b = i; }
+          return {
+            results: [{ isBar: false, isMaat: true, isNote: false, hasLetter: false, title: 'Cranklengte', what: 'In stappen van 2,5 mm', valueText: a === b ? opts[i] : opts[i], unit: 'mm', pmText: a === b ? '1 lengte' : opts[a] + '–' + opts[b] + ' mm', options: '165,167.5,170,172.5,175,177.5', from: from, to: to, idx: idx, aria: 'Cranklengte ' + opts[i] + ' mm, bereik ' + opts[a] + ' tot ' + opts[b] + ' mm', basis: d ? 'binnenbeen 1× gemeten' : 'lengte (binnenbeen geschat)' }],
+            next: d ? 'Meet je dijbeen in je account → één of twee lengtes' : 'Vul je binnenbeen in → smaller bereik',
+            refine: [['Account', 'Dijbeenlengte meten', '1–2 lengtes'], ['Account', 'Rijstijl: hoge cadans of veel klimmen', ''], ['Account', 'Binnenbeen 3× meten', '']],
+            notIncluded: 'Je dijbeenlengte en rijstijl nemen we hier niet mee. Ze bepalen of je aan de korte of de lange kant van het bereik zit.',
+            meaning: meaning
+          };
+        }
+      },
+      saddlewidth: {
+        h: 1040, title: 'Welke zadelbreedte past bij jou?', intro: 'We schatten je zitbotbreedte uit lengte en gewicht. Meet je ze met een stuk karton, dan wordt het bereik drie keer zo smal.',
+        steps: [
+          { title: '1. Schatting', fields: [{ key: 'height', label: 'Lengte', type: 'range', min: 150, max: 205, step: 1, def: 190, unit: 'cm' }, { key: 'weight', label: 'Gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] },
+          { title: '2. Zitbotten meten', two: true, fields: [{ key: 'sit', label: 'Afstand tussen je zitbotten', type: 'range', min: 90, max: 170, step: 1, def: 122, unit: 'mm' }], hint: 'Ga 30 seconden op een stuk golfkarton zitten, voeten op de grond, en meet de afstand tussen de middens van de twee afdrukken.' }
+        ],
+        compute: (v, d) => {
+          const est = 0.06 * v.height * 10 + 0.3 * (v.weight - 75);
+          const sit = d ? v.sit : est;
+          const w = Math.round(sit + 25);
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Zadelbreedte', what: 'Breedte van het zadel', value: w, half: d ? 5 : 15, widest: 15, unit: 'mm', basis: d ? 'zitbotten gemeten met karton' : 'zitbotten geschat uit lengte en gewicht' })],
+            next: d ? 'Bewaar in je account; we houden rekening met je rijhouding' : 'Meet je zitbotten met karton → ± 5 mm',
+            refine: [['Account', 'Rijhouding: hoe verder voorover, hoe smaller', ''], ['Account', 'Zitklachten koppelen aan je zadelkeuze', '']],
+            notIncluded: 'Je rijhouding en eventuele zitklachten nemen we hier niet mee. Een sportieve houding past vaak bij een iets smaller zadel.',
+            meaning: meaning
+          };
+        }
+      },
+      speed: {
+        h: 1040, title: 'Hoe hard ga je met jouw vermogen?', intro: 'Vul je vermogen in. Met je gewicht en fiets rekenen we preciezer; de luchtweerstand blijft het grootste onbekende.',
+        steps: [
+          { title: '1. Je vermogen', fields: [{ key: 'power', label: 'Vermogen', type: 'range', min: 100, max: 400, step: 5, def: 220, unit: 'W' }] },
+          { title: '2. Gewicht en fiets', two: true, fields: [{ key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }, { key: 'cat', label: 'Fietstype', type: 'choice', options: cats, def: 'road' }] }
+        ],
+        compute: (v, d) => {
+          const cat = d ? v.cat : 'road', m = (d ? v.weight : 75) + 9;
+          const cda = { road: 0.32, gravel: 0.36, mtb: 0.45, city: 0.55 }[cat], crr = { road: 0.004, gravel: 0.006, mtb: 0.009, city: 0.007 }[cat];
+          const kmh = this.speed(v.power, m, 0, cda, crr) * 3.6;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Snelheid op vlak', what: 'Zonder wind, op asfalt', value: kmh, half: kmh * (d ? 0.062 : 0.075), widest: kmh * 0.075, unit: 'km/u', dec: 1, basis: d ? 'standaard houding voor je fietstype' : 'standaardrijder van 75 kg op een racefiets' })],
+            next: d ? 'Kies je eigen fiets en houding in je account → ± ' + this.fmt(kmh * 0.037, 1) + ' km/u' : 'Vul je gewicht en fiets in → ± ' + this.fmt(kmh * 0.062, 1) + ' km/u',
+            refine: [['Account', 'Je eigen fiets, houding en gewicht', '± ' + this.fmt(kmh * 0.037, 1) + ' km/u'], ['Betaald', 'Veldtest luchtweerstand', '± ' + this.fmt(kmh * 0.019, 1) + ' km/u']],
+            notIncluded: 'Je houding op de fiets bepaalt het grootste deel van je luchtweerstand. Die kennen we hier niet, daarom rekenen we met een standaardhouding.',
+            meaning: meaning
+          };
+        }
+      },
+      climb: {
+        h: 1080, title: 'Hoe lang doe je over deze klim?', intro: 'Kies de klim. Met je FTP en gewicht wordt de schatting persoonlijk.',
+        steps: [
+          { title: '1. De klim', fields: [{ key: 'km', label: 'Lengte', type: 'range', min: 2, max: 25, step: 0.5, def: 12, unit: 'km' }, { key: 'grade', label: 'Gemiddelde stijging', type: 'range', min: 3, max: 12, step: 0.5, def: 7, unit: '%' }] },
+          { title: '2. Jouw FTP en gewicht', two: true, fields: [{ key: 'ftp', label: 'FTP', type: 'range', min: 150, max: 400, step: 5, def: 260, unit: 'W' }, { key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const w = d ? v.weight : 75, ftp = d ? v.ftp : 3.0 * 75;
+          const vs = this.speed(0.9 * ftp, w + 9, v.grade / 100, 0.38, 0.004);
+          const min = v.km * 1000 / vs / 60;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Klimtijd', what: 'Op 90% van je FTP', value: min, half: min * (d ? 0.10 : 0.15), widest: min * 0.15, unit: 'min', basis: d ? 'opgegeven FTP en gewicht' : 'gemiddelde rijder: 75 kg, 3,0 W/kg' })],
+            next: d ? 'Bewaar een gemeten FTP in je account → ± ' + this.fmt(min * 0.05, 0) + ' min' : 'Vul je FTP en gewicht in → ± ' + this.fmt(min * 0.10, 0) + ' min',
+            refine: [['Account', 'Gemeten FTP en gewicht uit je profiel', '± 5%'], ['Betaald', 'Geleide FTP-test', '± 3%']],
+            notIncluded: 'Wind, wegdek en je dagvorm nemen we niet mee. Je FTP is meestal een schatting; daarom is het bereik hier nog ruim.',
+            meaning: meaning
+          };
+        }
+      },
+      ftp: {
+        h: 1180, title: 'Wat is je FTP en W/kg?', intro: 'Vul je testvermogen in. Met je gewicht berekenen we je watt per kilo.',
+        steps: [
+          { title: '1. Je test', fields: [{ key: 'method', label: 'Testmethode', type: 'choice', options: [['20', '20 minuten'], ['ramp', 'Ramptest'], ['known', 'Bekend']], def: '20' }, { key: 'watts', label: 'Testvermogen', type: 'range', min: 120, max: 450, step: 5, def: 290, unit: 'W' }] },
+          { title: '2. Je gewicht', two: true, fields: [{ key: 'weight', label: 'Gewicht', type: 'range', min: 45, max: 130, step: 0.5, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const f = { '20': 0.95, ramp: 0.75, known: 1 }[v.method], rel = { '20': 0.06, ramp: 0.10, known: 0.03 }[v.method];
+          const ftp = v.watts * f;
+          const basis = { '20': '20-minutentest × 0,95', ramp: 'ramptest × 0,75', known: 'opgegeven FTP' }[v.method];
+          const res = [this.bar({ hasLetter: false, title: 'FTP', what: 'Vermogen dat je een uur volhoudt', value: ftp, half: ftp * rel, widest: ftp * 0.10, unit: 'W', basis: basis })];
+          if (d) res.push(this.bar({ hasLetter: false, title: 'Watt per kilo', what: 'FTP gedeeld door je gewicht', value: ftp / v.weight, half: ftp / v.weight * rel, widest: ftp / v.weight * 0.10, unit: 'W/kg', dec: 1, basis: basis + ', gewicht ' + this.fmt(v.weight, 1) + ' kg' }));
+          else res.push({ isBar: false, isMaat: false, isNote: true, hasLetter: false, title: 'Watt per kilo', what: 'FTP gedeeld door je gewicht', valueText: '—', unit: '', pmText: '', note: 'Vul je gewicht in om je watt per kilo te zien.', basis: 'nog geen gewicht' });
+          return {
+            results: res,
+            next: d ? 'Doe in je account een geleide FTP-test → ± 3%' : 'Vul je gewicht in → watt per kilo',
+            refine: [['Account', 'Gewicht gewogen en recent', '± 4%'], ['Betaald', 'Geleide test met protocol', '± 3%']],
+            notIncluded: 'De omrekening van een test naar FTP verschilt per persoon. Een ramptest overschat vaak bij sprinters en onderschat bij duurrijders; daarom is dat bereik breder.',
+            meaning: meaning
+          };
+        }
+      },
+      gearing: {
+        h: 1080, title: 'Is je lichtste verzet licht genoeg?', intro: 'Vul je lichtste verzet in. Met je steilste klim en je gewicht zie je met welke cadans je boven komt.',
+        steps: [
+          { title: '1. Je lichtste verzet', fields: [{ key: 'ring', label: 'Kleinste voorblad', type: 'range', min: 28, max: 53, step: 1, def: 34, unit: 'tanden' }, { key: 'cog', label: 'Grootste tandwiel', type: 'range', min: 21, max: 52, step: 1, def: 32, unit: 'tanden' }] },
+          { title: '2. Klim en gewicht', two: true, fields: [{ key: 'grade', label: 'Steilste klim', type: 'range', min: 4, max: 15, step: 0.5, def: 10, unit: '%' }, { key: 'weight', label: 'Je gewicht', type: 'range', min: 45, max: 130, step: 1, def: 94, unit: 'kg' }] }
+        ],
+        compute: (v, d) => {
+          const grade = d ? v.grade : 10, w = d ? v.weight : 75;
+          const p = 0.85 * 3.0 * w;
+          const vs = this.speed(p, w + 9, grade / 100, 0.38, 0.004);
+          const dev = 2.1 * v.ring / v.cog;
+          const rpm = vs * 60 / dev;
+          return {
+            results: [this.bar({ hasLetter: false, title: 'Cadans op de klim', what: 'In je lichtste verzet, op ' + this.fmt(grade, 1) + '%', value: rpm, half: d ? 8 : 10, widest: 10, unit: 'rpm', basis: d ? 'vermogen geschat (3,0 W/kg), gewicht opgegeven' : 'klim van 10%, rijder van 75 kg, 3,0 W/kg' })],
+            next: d ? 'Vul in je account je FTP in → ± 4 rpm' : 'Vul je klim en gewicht in → ± 8 rpm',
+            refine: [['Account', 'FTP en gewicht uit je profiel', '± 4 rpm'], ['Account', 'Je fiets: verzet staat al in je fietsprofiel', '']],
+            notIncluded: 'Je echte klimvermogen kennen we hier niet; we rekenen met 3,0 W/kg. Onder 70 rpm wordt klimmen voor de meeste rijders zwaar.',
+            meaning: meaning
+          };
+        }
+      },
+      fuel: {
+        h: 1140, title: 'Hoeveel drink en eet je onderweg?', intro: 'Vul de duur en inspanning in. Met de temperatuur schatten we je vochtverlies.',
+        steps: [
+          { title: '1. Je rit', fields: [{ key: 'hours', label: 'Duur', type: 'range', min: 1, max: 6, step: 0.5, def: 3, unit: 'uur' }, { key: 'int', label: 'Inspanning', type: 'choice', options: [['easy', 'Rustig'], ['endurance', 'Duur'], ['tempo', 'Tempo'], ['race', 'Wedstrijd']], def: 'endurance' }] },
+          { title: '2. Temperatuur', two: true, fields: [{ key: 'temp', label: 'Temperatuur', type: 'range', min: 5, max: 35, step: 1, def: 22, unit: '°C' }] }
+        ],
+        compute: (v, d) => {
+          const base = { easy: 350, endurance: 500, tempo: 700, race: 900 }[v.int];
+          const t = d ? v.temp : 20;
+          const ml = Math.round(base * Math.max(0.6, 1 + 0.03 * (t - 20)) / 10) * 10;
+          const carbs = v.hours < 1.25 ? '30 g per uur' : v.hours < 2.5 ? '30–60 g per uur' : '60–90 g per uur';
+          return {
+            results: [
+              this.bar({ hasLetter: false, title: 'Vochtverlies', what: 'Per uur, te drinken', value: ml, half: ml * (d ? 0.5 : 0.55), widest: ml * 0.55, unit: 'ml/u', round5: true, basis: d ? 'geschat uit inspanning en temperatuur' : 'inspanning, temperatuur 20 °C aangenomen' }),
+              { isBar: false, isMaat: false, isNote: true, hasLetter: false, title: 'Koolhydraten', what: 'Richtlijn bij deze duur', valueText: carbs.replace(' per uur', ''), unit: '/u', pmText: 'richtlijn', note: 'Dit is een richtlijn, geen meting; daarom staat hier geen bereikbalk.', basis: 'duur van je rit' }
+            ],
+            next: d ? 'Weeg je in je account voor en na een rit → ± 15%' : 'Vul de temperatuur in → preciezer vochtadvies',
+            refine: [['Account', 'Zweettest: wegen voor en na een rit', '± 15%'], ['Account', 'Je eigen ritten en temperatuur onthouden', '']],
+            notIncluded: 'Hoeveel je zweet verschilt sterk per persoon: soms twee keer zoveel als gemiddeld. Zonder zweettest is het bereik daarom breed.',
+            meaning: meaning
+          };
+        }
+      }
+    };
+  }
+  renderVals() {
+    const key = this.props.calc ?? 'bikefit';
+    const all = this.configs();
+    const c = all[key] || all.bikefit;
+    const s = this.state;
+    const v = {};
+    c.steps.forEach((st) => st.fields.forEach((f) => { v[f.key] = s.v[f.key] !== undefined ? s.v[f.key] : f.def; }));
+    // Hergebruik: staat een veld van stap 2 al in je eerdere invoer, dan is stap 2 meteen ingevuld
+    const pre = this.ux(key, { results: [{ pmText: '' }] }).prefilled;
+    const stepTwoPrefilled = c.steps.some((st) => st.two && st.fields.some((f) => pre.indexOf(f.key) >= 0));
+    const d = s.done2 || stepTwoPrefilled;
+    const out = c.compute(v, d);
+    const ux = this.ux(key, out);
+    const examples = [];
+    const steps = c.steps.map((st) => ({
+      title: st.title, hint: st.hint || '', hasHint: !!st.hint,
+      status: st.two ? (d ? 'Ingevuld' : 'Nog niet ingevuld') : 'Ingevuld',
+      statusColor: st.two && !d ? '#4A5F5A' : '#0A7263',
+      fields: st.fields.map((f) => {
+        const val = v[f.key];
+        const touched = !st.two || d;
+        const pre = ux.prefilled.indexOf(f.key) >= 0;
+        const isExample = touched && !pre && !s.t[f.key];
+        if (isExample && f.type === 'range') examples.push((/^[A-Z]{2}/.test(f.label) ? f.label : f.label.charAt(0).toLowerCase() + f.label.slice(1)) + ' ' + this.fmt(val, f.step < 1 ? 1 : 0) + ' ' + f.unit);
+        const base = { id: key + '-' + f.key, label: f.label, isRange: f.type === 'range', isChoice: f.type === 'choice', prefilled: pre, isExample: isExample && f.type === 'range' };
+        if (f.type === 'range') return Object.assign(base, { min: f.min, max: f.max, step: f.step, value: val,
+          valueLabel: touched ? this.fmt(val, f.step < 1 ? 1 : 0) + ' ' + f.unit : 'schuif om in te vullen', valueColor: touched && !isExample ? '#0F2420' : '#4A5F5A',
+          onInput: (e) => this.setState({ v: Object.assign({}, s.v, { [f.key]: Number(e.target.value) }), done2: d || !!st.two, t: Object.assign({}, s.t, { [f.key]: true }) }) });
+        return Object.assign(base, { cols: f.options.length, options: f.options.map((o) => ({ label: o[1], pressed: String(val === o[0] && touched),
+          bg: val === o[0] && touched ? '#E6F8A8' : '#FFFFFF', border: val === o[0] && touched ? '#0A7263' : '#B9CCC6',
+          pick: () => this.setState({ v: Object.assign({}, s.v, { [f.key]: o[0] }), done2: d || !!st.two }) })) });
+      })
+    }));
+    const paidHalf = (r, i) => {
+      if (!r.isBar) return null;
+      if (key === 'bikefit') return [13, null, 12, 10][i];
+      if (key === 'speed') return r.v * 0.019;
+      if (key === 'climb' || key === 'ftp') return r.v * 0.03;
+      return null;
+    };
+    const results = out.results.map((r, i) => Object.assign({ hasPaidPm: paidHalf(r, i) != null, paidPm: paidHalf(r, i) != null ? '± ' + this.fmt(paidHalf(r, i), r.dec || 0) + ' ' + r.unit : '', hasLetter: !!r.letter, titleSize: r.letter ? 19 : 24, valueSize: r.letter ? 26 : 40,
+      divider: i === out.results.length - 1 ? 'transparent' : '#DCE6E1' }, r));
+    const tagBg = { Account: '#0F2420', Betaald: '#FFFFFF' };
+    const tagFg = { Account: '#CFF26A', Betaald: '#0F2420' };
+    const exampleLine = examples.length ? 'Voorbeeld met ' + (examples.length > 1 ? examples.slice(0, -1).join(', ') + ' en ' + examples.at(-1) : examples[0]) + ' · schuif naar jouw waarden' : '';
+    return Object.assign({
+      hasExample: examples.length > 0, exampleLine: exampleLine,
+      h: c.h + 760, title: c.title, intro: c.intro, steps: steps, results: results, next: out.next, meaning: out.meaning, notIncluded: out.notIncluded,
+      refine: out.refine.map((x) => ({ tier: x[0], text: x[1], gain: x[2], tagBg: tagBg[x[0]], tagFg: tagFg[x[0]] }))
+    }, ux);
+  }
+}
+</script>
+</body>
+</html>

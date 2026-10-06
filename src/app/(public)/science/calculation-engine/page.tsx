@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { EditorialCta } from "@/components/science/EditorialLayout";
@@ -58,7 +59,7 @@ export default async function CalculationEnginePage() {
     <PublicPageShell>
       <JsonLd schema={articleJsonLd} />
 
-      <PublicHero
+      <PublicHero answerLocale={locale}
         eyebrow={page.hero.eyebrow}
         title={page.hero.title}
         description={page.hero.description}
@@ -69,32 +70,34 @@ export default async function CalculationEnginePage() {
       />
 
       {page.sections.map((section, index) => (
-        <PublicSection
-          key={section.title}
-          className={index === 0 ? "pt-0" : undefined}
-          header={{
-            eyebrow: section.eyebrow,
-            title: section.title,
-            description: section.description,
-          }}
-        >
-          <div className="grid gap-4 lg:grid-cols-3">
-            {section.cards.map((card, cardIndex) => {
-              const Icon = [Ruler, Sigma, Gauge][cardIndex] ?? Calculator;
-              return (
-                <PublicSurfaceCard
-                  key={card.title}
-                  title={card.title}
-                  description={card.description}
-                  leading={<Icon aria-hidden="true" className="h-5 w-5" />}
-                />
-              );
-            })}
-          </div>
-        </PublicSection>
+        <ContentDisclosure key={section.title} title={section.title}>
+          <PublicSection
+            key={section.title}
+            className={index === 0 ? "pt-0" : undefined}
+            header={{
+              eyebrow: section.eyebrow,
+              title: section.title,
+              description: section.description,
+            }}
+          >
+            <div className="grid gap-4 lg:grid-cols-3">
+              {section.cards.map((card, cardIndex) => {
+                const Icon = [Ruler, Sigma, Gauge][cardIndex] ?? Calculator;
+                return (
+                  <PublicSurfaceCard
+                    key={card.title}
+                    title={card.title}
+                    description={card.description}
+                    leading={<Icon aria-hidden="true" className="h-5 w-5" />}
+                  />
+                );
+              })}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
       ))}
 
-      <RelatedLinksSection title={page.linksTitle} links={page.links} locale={locale} />
+      <RelatedLinksSection title={page.linksTitle} links={page.links.slice(0, 3)} locale={locale} />
       <EditorialCta
         title={scienceExtras[locale].ctaTitle}
         description={scienceExtras[locale].ctaDescription}

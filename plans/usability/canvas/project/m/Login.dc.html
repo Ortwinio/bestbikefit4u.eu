@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Inloggen · mobiel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+button,input{font-family:inherit}
+input{box-sizing:border-box;width:100%;min-width:0}
+input:focus-visible{outline:3px solid #9CC21F;outline-offset:1px}
+</style>
+</helmet>
+<div style="width: 390px; height: 1200px; box-sizing: border-box; display: flex; flex-direction: column; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<div aria-label="Ontwerpstaat" data-review-scroll="true" style="order: -1; display: flex; align-items: center; gap: 8px; flex-shrink: 0; height: 44px; box-sizing: border-box; padding: 0 16px; overflow-x: auto; scrollbar-width: none; background: #EEF3EF; border-bottom: 1px dashed #B9CCC6">
+<span style="flex-shrink: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #4A5F5A">Ontwerpstaat</span>
+<sc-for list="{{reviewStates}}" as="review" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{review.active}}" onClick="{{review.pick}}" style="flex-shrink: 0; display: flex; align-items: center; min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer"><span style="display: flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 999px; background: {{review.bg}}; color: {{review.fg}}; font-size: 13px">{{review.label}}</span></button>
+</sc-for>
+</div>
+
+<div style="display: contents">
+<header style="order: 0; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 64px; box-sizing: border-box; padding: 0 10px 0 16px; border-bottom: 1px solid #DCE6E1">
+<a href="Home.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: #0F2420">
+<svg width="44" height="34" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#0A7263" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em">BikeFit<span style="color: #0A7263">Boost</span></span>
+</a>
+<div style="display: flex; align-items: center; gap: 2px">
+<a href="Login.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; font-weight: 700; text-decoration: none; color: #0F2420">Inloggen</a>
+<button type="button" aria-label="Menu" aria-expanded="false" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+</header>
+<svg width="358" height="235" viewBox="0 0 520 340" fill="none" aria-hidden="true" style="order: 4; align-self: center; flex-shrink: 0; background: #CFF26A; width: 358px; height: 235px; border-radius: 0 0 24px 24px">
+<circle cx="120" cy="240" r="78" stroke="#0F2420" stroke-width="7"></circle>
+<circle cx="400" cy="240" r="78" stroke="#0F2420" stroke-width="7"></circle>
+<path d="M120 240L230 250L198 120L120 240M198 122L360 114M230 250L368 150M372 160L400 240M360 112L372 160" stroke="#0F2420" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M198 120L192 98M170 96L224 93" stroke="#0F2420" stroke-width="8" stroke-linecap="round"></path>
+<path d="M360 112L392 106q26 0 26 24q0 20-18 22" stroke="#0F2420" stroke-width="7" stroke-linecap="round"></path>
+<circle cx="230" cy="250" r="13" stroke="#0F2420" stroke-width="6"></circle>
+</svg>
+<div style="order: 3; display: flex; flex-direction: column; gap: 12px; margin: 0 16px; padding: 24px 20px 0; background: #CFF26A; border-radius: 24px 24px 0 0">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; line-height: 1.05; letter-spacing: -0.02em">Je fit, je fietsen en je voortgang op één plek.</div>
+<div style="font-size: 17px; line-height: 1.5; color: #3B4F4A">Bewaar je maten, vergelijk met je huidige afstelling en zie wat je als volgende aanpast.</div>
+</div>
+</div>
+
+<div style="order: 2; display: flex; align-items: center; justify-content: center; padding: 24px 16px 32px">
+<div style="width: 358px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.05; letter-spacing: -0.02em">{{title}}</h1>
+<p style="margin: 8px 0 0; color: #4A5F5A; font-size: 16px">{{sub}}</p>
+</div>
+<sc-if value="{{emailStep}}" hint-placeholder-val="{{true}}">
+<form onSubmit="{{sendCode}}" style="display: flex; flex-direction: column; gap: 16px">
+<button type="button" onClick="{{google}}" style="display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 54px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; color: #0F2420; font-size: 16px; font-weight: 600; cursor: pointer">
+<span aria-hidden="true" style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #0F2420; font-weight: 800; font-size: 14px">G</span>Ga verder met Google</button>
+<div style="display: flex; align-items: center; gap: 12px; color: #4A5F5A; font-size: 14px"><span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span>of met e-mail<span style="flex-grow: 1; height: 1px; background: #DCE6E1"></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="li-mail" style="font-weight: 600; font-size: 15px">E-mailadres</label>
+<input id="li-mail" type="email" autoComplete="email" required="required" value="{{email}}" onChange="{{setEmail}}" placeholder="jij@voorbeeld.nl" style="height: 52px; padding: 0 16px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; font-size: 16px; color: #0F2420">
+</div>
+<button type="submit" style="min-height: 56px; border: 0; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 17px; cursor: pointer">Stuur inlogcode</button>
+<p style="margin: 0; color: #4A5F5A; font-size: 14px; line-height: 1.5">Geen wachtwoord nodig. Nieuw hier? We maken je account aan zodra je de code bevestigt.</p>
+</form>
+</sc-if>
+<sc-if value="{{codeStep}}" hint-placeholder-val="{{false}}">
+<form onSubmit="{{verifyCode}}" style="display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; color: #3B4F4A; overflow-wrap: anywhere">Inlogcode voor <strong>{{email}}</strong></p>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="li-code" style="font-weight: 600; font-size: 15px">Inlogcode (<span style="font-family: 'DM Mono', monospace">6</span> cijfers)</label>
+<input id="li-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength="6" required="required" value="{{code}}" onChange="{{setCode}}" placeholder="000000" style="height: 60px; padding: 0 16px; border-radius: 14px; border: 1px solid #DCE6E1; background: #FFFFFF; font-family: 'DM Mono', monospace; font-size: 30px; letter-spacing: 0.3em; color: #0F2420">
+</div>
+<button type="submit" style="min-height: 56px; border: 0; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 17px; cursor: pointer">Bevestig code</button>
+<div style="display: flex; gap: 12px">
+<button type="button" onClick="{{resend}}" style="min-height: 44px; padding: 0 14px; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; font-weight: 600; cursor: pointer">Opnieuw sturen</button>
+<button type="button" onClick="{{changeEmail}}" style="min-height: 44px; padding: 0 14px; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; font-weight: 600; cursor: pointer">Ander e-mailadres</button>
+</div>
+</form>
+</sc-if>
+<p role="status" aria-live="polite" style="margin: 0; padding: 12px; border-radius: 12px; background: #E1F2EE; color: #0F2420; font-size: 14px; line-height: 1.5">{{notice}}</p>
+<sc-if value="{{previewReady}}" hint-placeholder-val="{{false}}">
+<a href="Dashboard.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 999px; border: 2px solid #0F2420; color: #0F2420; font-weight: 700; text-decoration: none">Open je dashboard</a>
+</sc-if>
+<p style="margin: 0; font-size: 14px; color: #4A5F5A; text-align: center">Nog aan het kijken? <a href="BikeFit.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; font-weight: 700">Probeer de calculator zonder account</a></p>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 'email', email: '', code: '', previewReady: false, notice: 'Meld je aan om je maten en afstelplan te bewaren.' };
+  }
+  renderVals() {
+    const state = this.state;
+    const reviewKey = state.previewReady ? 'ready' : state.notice === 'Vul een geldig e-mailadres in.' || state.notice === 'Vul een code van zes cijfers in.' ? 'error' : state.step;
+    const reviewStates = [
+      { key: 'email', label: 'E-mail', values: { step: 'email', email: '', code: '', previewReady: false, notice: 'Meld je aan om je maten en afstelplan te bewaren.' } },
+      { key: 'code', label: 'Code', values: { step: 'code', email: 'fietser@voorbeeld.nl', code: '', previewReady: false, notice: 'We hebben je een inlogcode gestuurd. Controleer ook je spammap.' } },
+      { key: 'ready', label: 'Ingelogd', values: { step: 'code', email: 'fietser@voorbeeld.nl', code: '123456', previewReady: true, notice: 'Je bent ingelogd. Ga verder naar je dashboard.' } },
+      { key: 'error', label: 'Fout', values: { step: 'email', email: 'fietser', code: '', previewReady: false, notice: 'Vul een geldig e-mailadres in.' } }
+    ].map(item => ({ label: item.label, active: String(reviewKey === item.key), bg: reviewKey === item.key ? '#0F2420' : '#FFFFFF', fg: reviewKey === item.key ? '#FFFFFF' : '#0F2420', pick: () => this.setState(item.values) }));
+    return {
+      reviewStates: reviewStates,
+      emailStep: state.step === 'email', codeStep: state.step === 'code',
+      email: state.email, code: state.code, notice: state.notice, previewReady: state.previewReady,
+      title: state.step === 'email' ? 'Maak je account of log in' : 'Voer je inlogcode in',
+      sub: state.step === 'email' ? 'Bewaar je maten en ga verder met je fit.' : 'Gebruik de code uit je e-mail.',
+      setEmail: (event) => this.setState({ email: event.target.value, previewReady: false }),
+      setCode: (event) => this.setState({ code: event.target.value.replace(/[^0-9]/g, '').slice(0, 6), previewReady: false }),
+      sendCode: (event) => {
+        event.preventDefault();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email.trim())) {
+          this.setState({ notice: 'Vul een geldig e-mailadres in.' });
+          return;
+        }
+        this.setState({ step: 'code', email: state.email.trim(), code: '', previewReady: false, notice: 'We hebben je een inlogcode gestuurd. Controleer ook je spammap.' });
+      },
+      resend: () => this.setState({ code: '', previewReady: false, notice: 'Nieuwe code verstuurd. Controleer je e-mail.' }),
+      changeEmail: () => this.setState({ step: 'email', code: '', previewReady: false, notice: 'Pas je e-mailadres aan en kies Stuur inlogcode.' }),
+      verifyCode: (event) => {
+        event.preventDefault();
+        this.setState({ previewReady: /^[0-9]{6}$/.test(state.code), notice: /^[0-9]{6}$/.test(state.code) ? 'Je bent ingelogd. Ga verder naar je dashboard.' : 'Vul een code van zes cijfers in.' });
+      },
+      google: () => this.setState({ previewReady: true, notice: 'Ga verder met je Google-account.' })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -36,7 +36,8 @@ export async function recordProfileObservations(
     const current = await ctx.db.query("profileObservations")
       .withIndex("by_user_field_bike_status", range => range.eq("userId", userId).eq("field", field)
         .eq("bikeId", undefined).eq("status", "current")).collect();
-    if (!options.confirm && equalProfileObservationValues(previous?.[field as keyof Doc<"profiles">], validated)) continue;
+    if (!options.confirm && equalProfileObservationValues(previous?.[field as keyof Doc<"profiles">], validated)
+      && (!options.kinds?.[field] || current.some(observation => observation.kind === options.kinds?.[field]))) continue;
     const kind = options.kinds?.[field] ?? PROFILE_OBSERVATION_FIELDS[field].kind;
     if (kind === "derived" && current.some(observation => observation.kind === "measured")) {
       throw new Error("A calculated value cannot replace a measurement");

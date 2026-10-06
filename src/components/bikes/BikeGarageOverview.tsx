@@ -1,5 +1,7 @@
 "use client";
 
+import { PressureDisplay } from "@/components/features/pressure/PressureDisplay";
+
 import Link from "next/link";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { Button, Card, CardContent, EmptyState, SectionHeader, InfoBox, StatRow } from "@/components/ui";
@@ -400,36 +402,20 @@ export function BikeGarageRow({
 
                 {bike.advisedPressureSummary ? (
                   <>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="rounded-[var(--radius-md)] px-3 py-3 bg-surface-secondary">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                          {messages.pressure.overview.frontPressure}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-foreground">
-                          {bike.advisedPressureSummary.recommendedFrontBar} {messages.pressure.result.bar}
-                        </p>
-                        {bike.advisedPressureSummary.currentFrontBar != null ? (
-                          <p className="mt-0.5 text-xs text-muted-foreground">
-                            {messages.bikeGarage.currentMeasurement}:{" "}
-                            {bike.advisedPressureSummary.currentFrontBar} {messages.pressure.result.bar}
-                          </p>
-                        ) : null}
-                      </div>
-                      <div className="rounded-[var(--radius-md)] px-3 py-3 bg-surface-secondary">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                          {messages.pressure.overview.rearPressure}
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-foreground">
-                          {bike.advisedPressureSummary.recommendedRearBar} {messages.pressure.result.bar}
-                        </p>
-                        {bike.advisedPressureSummary.currentRearBar != null ? (
-                          <p className="mt-0.5 text-xs text-muted-foreground">
-                            {messages.bikeGarage.currentMeasurement}:{" "}
-                            {bike.advisedPressureSummary.currentRearBar} {messages.pressure.result.bar}
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
+                    <PressureDisplay locale={locale} compact
+                      frontBar={bike.advisedPressureSummary.recommendedFrontBar}
+                      rearBar={bike.advisedPressureSummary.recommendedRearBar}
+                      frontPsi={bike.advisedPressureSummary.recommendedFrontPsi}
+                      rearPsi={bike.advisedPressureSummary.recommendedRearPsi} />
+                    {(["front", "rear"] as const).map(side => {
+                      const value = side === "front" ? bike.advisedPressureSummary?.currentFrontBar
+                        : bike.advisedPressureSummary?.currentRearBar;
+                      return value == null ? null : <p key={side} className="text-xs text-muted-foreground">
+                        {side === "front" ? messages.pressure.overview.frontPressure
+                          : messages.pressure.overview.rearPressure} · {messages.bikeGarage.currentMeasurement}:{" "}
+                        {new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value)} bar
+                      </p>;
+                    })}
                     {bike.pressureStateSummary.isStale ? (
                       <InfoBox variant="warning" icon={<AlertCircle className="h-4 w-4 text-warning" />}>
                         {messages.dashboardHome.pressureStale}

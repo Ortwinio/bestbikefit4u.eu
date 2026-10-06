@@ -1,4 +1,5 @@
 "use client";
+import { PressureDisplay } from "@/components/features/pressure/PressureDisplay";
 import { fitAuditCopy, localizeFitValue } from "@/i18n/account/fitAudit";
 
 import type { ReportTirePressureSection as ReportTirePressurePayload } from "@/lib/reports/reportV2Types";
@@ -28,20 +29,9 @@ export function TirePressureSection({
         {tirePressure.status === "ready" ? (
           <>
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <MetricTile
-                  label={copy.tirePressure.front}
-                  value={`${Math.round(tirePressure.frontPsi)} psi`}
-                  detail={`${tirePressure.frontBar.toFixed(1)} bar`}
-                  emphasis="primary"
-                />
-                <MetricTile
-                  label={copy.tirePressure.rear}
-                  value={`${Math.round(tirePressure.rearPsi)} psi`}
-                  detail={`${tirePressure.rearBar.toFixed(1)} bar`}
-                  emphasis="primary"
-                />
-              </div>
+              <PressureDisplay locale={copy.locale === "nl" ? "nl" : "en"}
+                frontBar={tirePressure.frontBar} rearBar={tirePressure.rearBar}
+                frontPsi={tirePressure.frontPsi} rearPsi={tirePressure.rearPsi} />
               <div className="grid gap-3 sm:grid-cols-2">
                 <MetricTile
                   label={copy.tirePressure.confidence}

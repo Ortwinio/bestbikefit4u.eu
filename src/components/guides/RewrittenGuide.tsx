@@ -1,4 +1,6 @@
 import { getGuideUpdatedDate } from "@/config/authorship";
+import { ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
+import { CollapsedArticle } from "@/components/content/CollapsedArticle";
 import { GuideAttribution } from "./GuideAttribution";
 import { Fragment } from "react";
 import Image from "next/image";
@@ -59,7 +61,7 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
             </h1>
             <section aria-labelledby="guide-quick-title" className="mt-6">
               <h2 id="guide-quick-title" className="text-lg font-semibold">{copy.quick}</h2>
-              <p>{article.quickAnswer}</p>
+              <ShortAnswer text={article.quickAnswer} locale={locale} />
             </section>
             <GuideAttribution locale={locale} updatedAt={guide.updatedAt} />
           </div>
@@ -69,7 +71,8 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
           />
         </header>
         <article id="guide-content" className="mx-auto max-w-3xl pb-12">
-          <GuideBodyMarkdown content={article.markdown} locale={locale} preserveLinkLabels />
+          <CollapsedArticle content={article.markdown} locale={locale}
+            render={content => <GuideBodyMarkdown content={content} locale={locale} preserveLinkLabels />} />
           <p className="mt-8 leading-relaxed text-muted-foreground">
             {bikeFittingLinks[locale].context}{" "}
             <Link href={switchLocalePathname("/bike-fitting", locale)}
@@ -78,7 +81,7 @@ export function RewrittenGuide({ guide, locale }: { guide: GuideRewrite; locale:
               {bikeFittingLinks[locale].guideLink}
             </Link>
           </p>
-          <div className="mt-12 rounded-3xl border border-border bg-card p-6 sm:p-8">
+          <div data-usability="next-step" className="mt-12 rounded-3xl border border-border bg-card p-6 sm:p-8">
             <p className="text-lg text-foreground">{article.cta}</p>
             <Link
               href={withLocalePrefix(article.ctaTarget, locale)}

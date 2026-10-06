@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import * as adapters from "@/lib/public-calculators/fitAdapters";
 import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
 import { crankLengthMessages } from "@/i18n/calculators/crankLength";
+import { journeyMessages } from "@/i18n/calculators/journey";
 import { handoffLoginHref } from "@/components/calculators/PersonalizeAdviceBlock";
 import { calculateSaddleHeight } from "../../../../../shared/reliability/saddleHeight";
 import { SaddleHeightCalculatorForm } from "./SaddleHeightCalculatorForm";
@@ -53,12 +54,12 @@ describe("public body calculator handoff", () => {
     expect(screen.getByRole("slider", { name: height }).getAttribute("aria-valuenow")).toBe("190");
     expect(screen.getByRole("slider", { name: inseam }).getAttribute("aria-valuenow")).toBe("89");
     expect(readHandoff().entries).toEqual([]);
-    expect(container.querySelector('a[href*="handoff=1"]')).toBeNull();
+    expect(container.querySelector('a[href*="handoff=1"]')).not.toBeNull();
     setSlider(height, 191);
     expect(readHandoff().entries).toEqual([expect.objectContaining({
       field: "heightCm", value: 191, unit: "cm", calculator: "saddle-height", method: "declared",
     })]);
-    expect(container.querySelector('a[href*="handoff=1"]')).toBeNull();
+    expect(container.querySelector('a[href*="handoff=1"]')).not.toBeNull();
   });
 
   it.each(["nl", "en"] as const)("carries edited saddle measurements through the login CTA in %s", (locale) => {
@@ -95,6 +96,20 @@ describe("public body calculator handoff", () => {
       expect.objectContaining({ field: "heightCm", value: 190, method: "declared" }),
       expect.objectContaining({ field: "inseamCm", value: 89.5, method: "measured" }),
     ]));
+    expect(container.querySelector('[data-usability="example"]')).toBeNull();
+    expect(container.querySelector("[data-calculator-example]")).toBeNull();
+  });
+
+  it.each(["nl", "en"] as const)("saves only explicitly confirmed height when inseam is missing in %s", locale => {
+    const { container } = render(<SaddleHeightCalculatorForm isNl={locale === "nl"} />);
+    expect(readHandoff().entries).toEqual([]);
+    expect(container.querySelector('[data-usability="next-step"]')).not.toBeNull();
+    const link = screen.getByRole("link", { name: journeyMessages[locale].reasons["saddle-height"].cta });
+    link.addEventListener("click", event => event.preventDefault());
+    fireEvent.click(link);
+    expect(readHandoff().entries).toEqual([expect.objectContaining({ field: "heightCm", value: 190, method: "declared" })]);
+    expect(container.querySelector('[data-usability="example"]')).toBeNull();
+    expect(screen.getByRole("slider", { name: locale === "nl" ? "Binnenbeenlengte" : "Inseam" }).getAttribute("aria-valuenow")).toBe("89");
   });
 
   it.each(["nl", "en"] as const)("withholds a warning inseam until confirmation and resets on edit in %s", (locale) => {
@@ -136,7 +151,7 @@ describe("public body calculator handoff", () => {
     fireEvent.click(screen.getByRole("button", { name: "Measure again" }));
     expect(readHandoff().entries).toEqual([expect.objectContaining({ field: "heightCm", value: 191 })]);
     expect(screen.getByRole("slider", { name: "Inseam" }).getAttribute("aria-valuenow")).toBe("89");
-    expect(container.querySelector('a[href*="handoff=1"]')).toBeNull();
+    expect(container.querySelector('a[href*="handoff=1"]')).not.toBeNull();
   });
 
   it.each([54, 106])("does not promote an invalid prefilled inseam of %s cm to a measurement", (value) => {
@@ -144,7 +159,7 @@ describe("public body calculator handoff", () => {
     const before = readHandoff();
     const { container } = render(<SaddleHeightCalculatorForm />);
     expect(screen.getByRole("slider", { name: "Inseam" }).getAttribute("aria-valuenow")).toBe("89");
-    expect(container.querySelector('a[href*="handoff=1"]')).toBeNull();
+    expect(container.querySelector('a[href*="handoff=1"]')).not.toBeNull();
     expect(readHandoff()).toEqual(before);
   });
 
@@ -169,7 +184,8 @@ describe("public body calculator handoff", () => {
     const calculate = vi.spyOn(adapters, "runFrameSizeCalculation");
     const frame = render(<FrameSizeCalculatorForm locale="en" />);
     expect(calculate).toHaveBeenCalledWith(expect.objectContaining({ inseamCm: 85 }));
-    expect(screen.getByText(/not yet confirmed as a measurement/)).toBeTruthy();
+    expect(screen.getByText(/your height and selected bike type/)).toBeTruthy();
+    expect(readHandoff().entries.find(entry => entry.field === "inseamCm")?.method).toBe(method);
     expect(readHandoff()).toEqual(before);
     frame.unmount();
     render(<SaddleHeightCalculatorForm />);
@@ -178,7 +194,7 @@ describe("public body calculator handoff", () => {
     expect(inseam.getAttribute("aria-valuetext")).toBe("85 cm");
     const expected = calculateSaddleHeight({ heightCm: 190, inseamCm: 85, provenance: { kind: method } });
     expect(screen.getByRole("img", { name: `Saddle height ${expected.adviceMm} mm, range ${expected.lowerMm} to ${expected.upperMm} mm` })).toBeTruthy();
-    const link = screen.getByRole("link", { name: "Save and refine for free" });
+    const link = screen.getByRole("link", { name: journeyMessages.en.reasons["saddle-height"].cta });
     link.addEventListener("click", event => event.preventDefault());
     fireEvent.click(link);
     expect(readHandoff().entries.find(entry => entry.field === "inseamCm"))
@@ -197,7 +213,7 @@ describe("public body calculator handoff", () => {
     const expected = calculateSaddleHeight({ heightCm: 190, inseamCm: 89,
       provenance: { kind: "measured", repeatCount: 3, withinTolerance: true } });
     expect(screen.getByRole("img", { name: `Saddle height ${expected.adviceMm} mm, range ${expected.lowerMm} to ${expected.upperMm} mm` })).toBeTruthy();
-    const link = screen.getByRole("link", { name: "Save and refine for free" });
+    const link = screen.getByRole("link", { name: journeyMessages.en.reasons["saddle-height"].cta });
     link.addEventListener("click", event => event.preventDefault());
     fireEvent.click(link);
     expect(readHandoff()).toEqual(before);

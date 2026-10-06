@@ -67,6 +67,7 @@ const nl: HandoffCopy = {
     rampWatts: "Rampvermogen", intensity: "Inspanning", hipCircumferenceCm: "Heupomtrek",
   },
   values: {
+    easy: "Rustig", endurance: "Duur", tempo: "Tempo", race: "Wedstrijd",
     road: "Racefiets", gravel: "Gravel", mtb: "MTB", mountain: "MTB", city: "Stadsfiets",
     hybrid: "Hybride fiets", tt_triathlon: "Tijdrit / triatlon", cyclocross: "Cyclocross", touring: "Toerfiets",
     comfort: "Comfort", balanced: "Gebalanceerd", performance: "Prestatie", aero: "Aerodynamisch",
@@ -153,6 +154,7 @@ const en: HandoffCopy = {
     rampWatts: "Ramp power", intensity: "Intensity", hipCircumferenceCm: "Hip circumference",
   },
   values: {
+    easy: "Easy", endurance: "Endurance", tempo: "Tempo", race: "Race",
     road: "Road bike", gravel: "Gravel", mtb: "MTB", mountain: "MTB", city: "City bike",
     hybrid: "Hybrid bike", tt_triathlon: "Time trial / triathlon", cyclocross: "Cyclocross", touring: "Touring bike",
     comfort: "Comfort", balanced: "Balanced", performance: "Performance", aero: "Aerodynamic",

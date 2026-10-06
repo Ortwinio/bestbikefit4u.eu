@@ -95,7 +95,7 @@ describe("direct profile page", () => {
     const copy = getDashboardMessages("en");
     render(<ProfilePage />);
     fireEvent.click(screen.getByRole("button", { name: "Change: Weight" }));
-    fireEvent.change(screen.getByRole("spinbutton", { name: "Weight (kg)" }), { target: { value: "75" } });
+    fireEvent.change(screen.getByRole("slider", { name: "Weight (kg)" }), { target: { value: "75" } });
     fireEvent.click(screen.getByRole("combobox", { name: "How was this value determined?" }));
     const option = await screen.findByRole("option", { name: "I measured this" });
     fireEvent.pointerDown(option, { pointerType: "mouse" });

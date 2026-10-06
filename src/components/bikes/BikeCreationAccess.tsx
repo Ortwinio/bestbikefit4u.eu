@@ -18,7 +18,7 @@ function EnforcedBikeCreationAccess({ children }: { children: ReactNode }) {
   const { locale, messages } = useDashboardMessages();
   if (!access || bikes === undefined) return <LoadingState label={messages.bikes.loading} />;
   if (access.enforced && access.maxBikes !== null && bikes.length >= access.maxBikes) {
-    return <BikeAccessNotice locale={locale} atLimit />;
+    return <BikeAccessNotice locale={locale} atLimit pageHeading />;
   }
   return children;
 }

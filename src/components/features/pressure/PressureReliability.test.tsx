@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import en from "@/i18n/messages/en";
 import nl from "@/i18n/messages/nl";
 import { reliabilityPressureMessages } from "@/i18n/calculators/reliabilityPressure";
-import { reliabilityMessages } from "@/i18n/calculators/reliability";
+import { journeyMessages } from "@/i18n/calculators/journey";
 import { tirePressureMessages } from "@/i18n/calculators/tirePressure";
 import { calculateBasicPressure } from "@/lib/pressure-engine";
 import { readHandoff, writeHandoffEntry, type HandoffEntry } from "@/lib/handoff/store";
@@ -31,10 +31,10 @@ describe.each(["en", "nl"] as const)("%s pressure reliability shell", (locale) =
     expect(screen.getByText(reliability.uncertainty)).toBeTruthy();
     expect(screen.getByText(copy.limit)).toBeTruthy();
     expect(screen.getByText(copy.excluded)).toBeTruthy();
-    expect(screen.getByText(reliability.refinement)).toBeTruthy();
+    expect(screen.getByText(journeyMessages[locale].reasons["tire-pressure"].text)).toBeTruthy();
     expect(screen.queryByRole("meter")).toBeNull();
     expect(screen.queryByText(copy.scale)).toBeNull();
-    expect(screen.getByRole("link", { name: reliabilityMessages[locale].save }).getAttribute("href"))
+    expect(screen.getByRole("link", { name: journeyMessages[locale].reasons["tire-pressure"].cta }).getAttribute("href"))
       .toContain("tire-pressure");
     const result = calculateBasicPressure(input);
     const number = new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -42,6 +42,17 @@ describe.each(["en", "nl"] as const)("%s pressure reliability shell", (locale) =
     expect(summary.textContent).toContain(`${number.format(result.frontBar)} bar`);
     expect(summary.textContent).toContain(`${number.format(result.rearBar)} bar`);
     expect(readHandoff().entries).toHaveLength(0);
+  });
+
+  it("labels untouched pressure defaults and removes the example after a deliberate edit", () => {
+    const { container } = render(<PressureCalculatorForm locale={locale}
+      labels={labels.form} resultLabels={labels.result} />);
+    expect(container.querySelector('[data-usability="example"]')?.textContent).toContain("75 kg");
+    expect(container.querySelector('[data-example-field="bodyWeightKg"]')).toBeTruthy();
+    fireEvent.keyDown(screen.getByRole("slider", { name: labels.form.bodyWeightLabel }), { key: "ArrowRight" });
+    expect(container.querySelector('[data-usability="example"]')).toBeNull();
+    expect(container.querySelector('[data-example-field="bodyWeightKg"]')).toBeNull();
+    expect(container.querySelector('[data-example-field="widthFrontMm"]')).toBeTruthy();
   });
 
   it("reuses every compatible handoff field without writing defaults or prefill", () => {
@@ -57,13 +68,15 @@ describe.each(["en", "nl"] as const)("%s pressure reliability shell", (locale) =
     ];
     for (const entry of entries) writeHandoffEntry({ ...entry, calculator: "tire-pressure", method: "declared", touchedAt: Date.now() });
     const before = readHandoff();
-    render(<PressureCalculatorForm locale={locale} labels={labels.form} resultLabels={labels.result} />);
+    const { container } = render(<PressureCalculatorForm locale={locale} labels={labels.form} resultLabels={labels.result} />);
     expect(screen.getByRole("slider", { name: labels.form.bodyWeightLabel }).getAttribute("aria-valuenow")).toBe("83");
     expect(screen.getByRole("slider", { name: labels.form.widthFrontLabel }).getAttribute("aria-valuenow")).toBe("40");
     expect(screen.getByRole("slider", { name: labels.form.widthRearLabel }).getAttribute("aria-valuenow")).toBe("42");
     expect(screen.getByRole("slider", { name: labels.form.bikeWeightLabel }).getAttribute("aria-valuenow")).toBe("11");
     expect(screen.getByRole("region", { name: copy.result })).toBeTruthy();
     expect(readHandoff()).toEqual(before);
+    expect(container.querySelector('[data-usability="example"]')).toBeNull();
+    expect(container.querySelector('[data-example-field="bodyWeightKg"]')).toBeNull();
     fireEvent.keyDown(screen.getByRole("slider", { name: labels.form.bikeWeightLabel }), { key: "End" });
     expect(readHandoff().entries.find(entry => entry.field === "bikeWeightKg")?.value).toBe(20);
     expect(readHandoff().entries).toHaveLength(entries.length);
@@ -77,8 +90,9 @@ describe.each(["en", "nl"] as const)("%s pressure reliability shell", (locale) =
       onValuesCommit={onValuesCommit} headerSlot={<p>Header slot</p>} statusSlot={<p>Status slot</p>} />);
     expect(container.querySelector("[data-reliability-calculator]")).toBeNull();
     for (const title of [copy.body, copy.tires, copy.route]) expect(screen.getByRole("heading", { name: title })).toBeTruthy();
-    expect(screen.getAllByRole("meter")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-component=PressureDisplay] .pressure-wheel")).toHaveLength(2);
     expect(screen.getByText(copy.scale)).toBeTruthy();
+    expect(container.querySelector('[data-usability="safety"]')?.textContent).toContain(copy.limit);
     expect(screen.getByText("Header slot")).toBeTruthy();
     expect(screen.getByText("Status slot")).toBeTruthy();
     expect(screen.queryByText(reliability.uncertainty)).toBeNull();

@@ -1,4 +1,6 @@
 import type { ComponentProps, HTMLAttributes, ReactNode } from "react";
+import { ShortAnswer, containsSafetyAdvice } from "@/components/calculators/CalculatorAnswerSection";
+import type { Locale } from "@/i18n/config";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -26,13 +28,14 @@ export function EditorialHero({
   className,
   image = "/illustrations/03-cockpit-afstellen.webp",
   imageAlt,
-}: ComponentProps<typeof PublicHero> & { image?: string; imageAlt: string }) {
+  answerLocale,
+}: ComponentProps<typeof PublicHero> & { image?: string; imageAlt: string; answerLocale?: Locale }) {
   return (
     <header className={`${styles.hero} ${className ?? ""}`}>
       <div>
         <p className={styles.eyebrow}>{eyebrow}</p>
         <h1>{title}</h1>
-        <p className={styles.intro}>{description}</p>
+        {answerLocale ? <ShortAnswer text={description} locale={answerLocale} /> : <p className={styles.intro}>{description}</p>}
         {actions && <div className={styles.actions}>{actions}</div>}
       </div>
       <div className={styles.heroArt}>
@@ -149,7 +152,12 @@ export function EditorialFaq({
         <h2 className="mt-3">{title}</h2>
       </div>
       <div className="space-y-3">
-        {items.map((item) => (
+        {items.map((item) => containsSafetyAdvice(item.a) ? (
+          <section key={item.q} data-usability="safety" className="rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-semibold">{item.q}</h3>
+            <p>{item.a}</p>
+          </section>
+        ) : (
           <details key={item.q}>
             <summary>{item.q}</summary>
             <p>{item.a}</p>

@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import Link from "next/link";
@@ -148,7 +149,7 @@ export default async function BikeSetupPage() {
           ]}
         />
 
-        <PublicHero
+        <PublicHero answerLocale={locale}
           imageAlt={editorialImageAlt[locale].cockpit}
           eyebrow={page.eyebrow}
           title={page.title}
@@ -189,294 +190,310 @@ export default async function BikeSetupPage() {
 
         <AnchorNav title={page.anchorTitle} items={page.anchors} />
 
-        <PublicSection
-          id={isNl ? "waar-begin-je" : "where-to-start"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.start.eyebrow,
-            title: page.sections.start.title,
-            description: page.sections.start.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.start.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {page.sections.start.steps.map((step, index) => {
-              const Icon = featureIcons[index] ?? Wrench;
-              return (
-                <PublicFeatureCard
-                  key={step.title}
-                  icon={<Icon className="h-5 w-5" />}
-                  title={step.title}
-                  description={step.body}
-                />
-              );
-            })}
-          </div>
-
-          <PublicInfoPanel
-            className="mt-6"
-            tone="primary"
-            icon={<Info />}
-            title={isNl ? "Belangrijk" : "Important"}
+        <ContentDisclosure title={page.sections.start.title}>
+          <PublicSection
+            id={isNl ? "waar-begin-je" : "where-to-start"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.start.eyebrow,
+              title: page.sections.start.title,
+              description: page.sections.start.description,
+            }}
           >
-            {isNl
-              ? "Werk van groot naar klein: eerst trapbeweging en bekkencontrole, daarna " +
-                "cockpitbalans, daarna pas detailafstelling."
-              : "Work from big to small: first pedaling and pelvic control, then cockpit " +
-                "balance, then the finer details."}
-          </PublicInfoPanel>
-        </PublicSection>
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.start.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
 
-        <PublicSection
-          id={isNl ? "afstelvolgorde" : "setup-order"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.order.eyebrow,
-            title: page.sections.order.title,
-            description: page.sections.order.description,
-          }}
-        >
-          <ol className="grid gap-4 md:grid-cols-2">
-            {page.sections.order.items.map((item, index) => (
-              <li
-                key={item}
-                className="rounded-[var(--radius-xl)] border border-border bg-background p-4 shadow-sm"
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {page.sections.start.steps.map((step, index) => {
+                const Icon = featureIcons[index] ?? Wrench;
+                return (
+                  <PublicFeatureCard
+                    key={step.title}
+                    icon={<Icon className="h-5 w-5" />}
+                    title={step.title}
+                    description={step.body}
+                  />
+                );
+              })}
+            </div>
+
+            <PublicInfoPanel
+              className="mt-6"
+              tone="primary"
+              icon={<Info />}
+              title={isNl ? "Belangrijk" : "Important"}
+            >
+              {isNl
+                ? "Werk van groot naar klein: eerst trapbeweging en bekkencontrole, daarna " +
+                  "cockpitbalans, daarna pas detailafstelling."
+                : "Work from big to small: first pedaling and pelvic control, then cockpit " +
+                  "balance, then the finer details."}
+            </PublicInfoPanel>
+          </PublicSection>
+        </ContentDisclosure>
+
+        <ContentDisclosure title={page.sections.order.title}>
+          <PublicSection
+            id={isNl ? "afstelvolgorde" : "setup-order"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.order.eyebrow,
+              title: page.sections.order.title,
+              description: page.sections.order.description,
+            }}
+          >
+            <ol className="grid gap-4 md:grid-cols-2">
+              {page.sections.order.items.map((item, index) => (
+                <li
+                  key={item}
+                  className="rounded-[var(--radius-xl)] border border-border bg-background p-4 shadow-sm"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-foreground">{item}</p>
+                </li>
+              ))}
+            </ol>
+          </PublicSection>
+        </ContentDisclosure>
+
+        <ContentDisclosure title={page.sections.saddleHeight.title}>
+          <PublicSection
+            id={isNl ? "zadelhoogte-afstellen" : "saddle-height"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.saddleHeight.eyebrow,
+              title: page.sections.saddleHeight.title,
+              description: page.sections.saddleHeight.description,
+            }}
+          >
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.saddleHeight.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+              <div className="rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
+                <h3 className="text-base font-semibold text-foreground">
+                  {isNl ? "Signalen dat je zadel te hoog staat" : "Signs your saddle is too high"}
+                </h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+                  {page.sections.saddleHeight.highSignals.map((signal) => (
+                    <li key={signal} className="flex gap-2">
+                      <span className="mt-1 text-destructive-text">•</span>
+                      <span>{signal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
+                <h3 className="text-base font-semibold text-foreground">
+                  {isNl ? "Signalen dat je zadel te laag staat" : "Signs your saddle is too low"}
+                </h3>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
+                  {page.sections.saddleHeight.lowSignals.map((signal) => (
+                    <li key={signal} className="flex gap-2">
+                      <span className="mt-1 text-success-text">•</span>
+                      <span>{signal}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/saddle-height", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="fiets_afstellen_saddle_height_cta"
+                    ctaLabel={page.sections.saddleHeight.inlineCta}
+                  />
+                }
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <p className="mt-2 text-base font-semibold text-foreground">{item}</p>
-              </li>
-            ))}
-          </ol>
-        </PublicSection>
+                {page.sections.saddleHeight.inlineCta}
+              </Button>
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
-        <PublicSection
-          id={isNl ? "zadelhoogte-afstellen" : "saddle-height"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.saddleHeight.eyebrow,
-            title: page.sections.saddleHeight.title,
-            description: page.sections.saddleHeight.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.saddleHeight.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
+        <ContentDisclosure title={page.sections.saddlePosition.title}>
+          <PublicSection
+            id="zadelpositie"
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.saddlePosition.eyebrow,
+              title: page.sections.saddlePosition.title,
+              description: page.sections.saddlePosition.description,
+            }}
+          >
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.saddlePosition.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
+            <PublicInfoPanel
+              className="mt-6"
+              tone="warning"
+              icon={<AlertTriangle />}
+              title={page.sections.saddlePosition.warningTitle}
+            >
+              {page.sections.saddlePosition.warningBody}
+            </PublicInfoPanel>
+          </PublicSection>
+        </ContentDisclosure>
+
+        <ContentDisclosure title={page.sections.cockpit.title}>
+          <PublicSection
+            id={isNl ? "stuur-afstellen-racefiets" : "road-handlebar-setup"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.cockpit.eyebrow,
+              title: page.sections.cockpit.title,
+              description: page.sections.cockpit.description,
+            }}
+          >
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.cockpit.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+
+            <div className="mt-6 rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
               <h3 className="text-base font-semibold text-foreground">
-                {isNl ? "Signalen dat je zadel te hoog staat" : "Signs your saddle is too high"}
+                {isNl
+                  ? "Signalen dat je cockpit te lang of te laag is"
+                  : "Signs your cockpit is too long or too low"}
               </h3>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
-                {page.sections.saddleHeight.highSignals.map((signal) => (
-                  <li key={signal} className="flex gap-2">
-                    <span className="mt-1 text-destructive-text">•</span>
-                    <span>{signal}</span>
+              <ul className="mt-3 grid gap-2 md:grid-cols-2">
+                {page.sections.cockpit.signs.map((sign) => (
+                  <li key={sign} className="flex gap-2 text-sm leading-6 text-muted-foreground">
+                    <span className="mt-1 text-primary">•</span>
+                    <span>{sign}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
-              <h3 className="text-base font-semibold text-foreground">
-                {isNl ? "Signalen dat je zadel te laag staat" : "Signs your saddle is too low"}
-              </h3>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
-                {page.sections.saddleHeight.lowSignals.map((signal) => (
-                  <li key={signal} className="flex gap-2">
-                    <span className="mt-1 text-success-text">•</span>
-                    <span>{signal}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          </PublicSection>
+        </ContentDisclosure>
 
-          <div className="mt-6">
-            <Button
-              variant="outline"
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/saddle-height", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="fiets_afstellen_saddle_height_cta"
-                  ctaLabel={page.sections.saddleHeight.inlineCta}
-                />
+        <ContentDisclosure title={page.sections.reachDrop.title}>
+          <PublicSection
+            id={isNl ? "reach-en-stuurdrop" : "reach-and-drop"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.reachDrop.eyebrow,
+              title: page.sections.reachDrop.title,
+              description: page.sections.reachDrop.description,
+            }}
+          >
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.reachDrop.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+              <p>
+                {isNl
+                  ? "Wil je de relatie tussen framevorm en cockpit nog scherper begrijpen? " + "Bekijk dan de "
+                  : "If you want to understand the frame-to-cockpit relationship in more detail, " + "see the "}
+                <Link
+                  href={withLocalePrefix("/science/stack-and-reach", locale)}
+                  className="font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {isNl ? "stack en reach-pagina" : "stack and reach page"}
+                </Link>
+                .
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <Button
+                variant="outline"
+                render={
+                  <TrackedCtaLink
+                    href={withLocalePrefix("/calculators/bike-fit", locale)}
+                    locale={locale}
+                    pagePath={pagePath}
+                    section="fiets_afstellen_reach_drop_cta"
+                    ctaLabel={page.sections.reachDrop.inlineCta}
+                  />
+                }
+              >
+                {page.sections.reachDrop.inlineCta}
+              </Button>
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
+
+        <ContentDisclosure title={page.sections.cleats.title}>
+          <PublicSection
+            id={isNl ? "schoenplaatjes-afstellen" : "cleat-setup"}
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.cleats.eyebrow,
+              title: page.sections.cleats.title,
+              description: page.sections.cleats.description,
+            }}
+          >
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.cleats.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+
+            <ul
+              className={
+                "mt-6 space-y-2 rounded-[var(--radius-xl)] border border-border " +
+                "bg-background p-4 text-sm leading-6 text-muted-foreground"
               }
             >
-              {page.sections.saddleHeight.inlineCta}
-            </Button>
-          </div>
-        </PublicSection>
-
-        <PublicSection
-          id="zadelpositie"
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.saddlePosition.eyebrow,
-            title: page.sections.saddlePosition.title,
-            description: page.sections.saddlePosition.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.saddlePosition.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <PublicInfoPanel
-            className="mt-6"
-            tone="warning"
-            icon={<AlertTriangle />}
-            title={page.sections.saddlePosition.warningTitle}
-          >
-            {page.sections.saddlePosition.warningBody}
-          </PublicInfoPanel>
-        </PublicSection>
-
-        <PublicSection
-          id={isNl ? "stuur-afstellen-racefiets" : "road-handlebar-setup"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.cockpit.eyebrow,
-            title: page.sections.cockpit.title,
-            description: page.sections.cockpit.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.cockpit.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <div className="mt-6 rounded-[var(--radius-xl)] border border-border bg-muted/40 p-4">
-            <h3 className="text-base font-semibold text-foreground">
-              {isNl
-                ? "Signalen dat je cockpit te lang of te laag is"
-                : "Signs your cockpit is too long or too low"}
-            </h3>
-            <ul className="mt-3 grid gap-2 md:grid-cols-2">
-              {page.sections.cockpit.signs.map((sign) => (
-                <li key={sign} className="flex gap-2 text-sm leading-6 text-muted-foreground">
+              {page.sections.cleats.bullets.map((bullet) => (
+                <li key={bullet} className="flex gap-2">
                   <span className="mt-1 text-primary">•</span>
-                  <span>{sign}</span>
+                  <span>{bullet}</span>
                 </li>
               ))}
             </ul>
-          </div>
-        </PublicSection>
+          </PublicSection>
+        </ContentDisclosure>
 
-        <PublicSection
-          id={isNl ? "reach-en-stuurdrop" : "reach-and-drop"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.reachDrop.eyebrow,
-            title: page.sections.reachDrop.title,
-            description: page.sections.reachDrop.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.reachDrop.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-            <p>
-              {isNl
-                ? "Wil je de relatie tussen framevorm en cockpit nog scherper begrijpen? " + "Bekijk dan de "
-                : "If you want to understand the frame-to-cockpit relationship in more detail, " + "see the "}
-              <Link
-                href={withLocalePrefix("/science/stack-and-reach", locale)}
-                className="font-medium text-primary underline-offset-4 hover:underline"
-              >
-                {isNl ? "stack en reach-pagina" : "stack and reach page"}
-              </Link>
-              .
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <Button
-              variant="outline"
-              render={
-                <TrackedCtaLink
-                  href={withLocalePrefix("/calculators/bike-fit", locale)}
-                  locale={locale}
-                  pagePath={pagePath}
-                  section="fiets_afstellen_reach_drop_cta"
-                  ctaLabel={page.sections.reachDrop.inlineCta}
-                />
-              }
-            >
-              {page.sections.reachDrop.inlineCta}
-            </Button>
-          </div>
-        </PublicSection>
-
-        <PublicSection
-          id={isNl ? "schoenplaatjes-afstellen" : "cleat-setup"}
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.cleats.eyebrow,
-            title: page.sections.cleats.title,
-            description: page.sections.cleats.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.cleats.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <ul
-            className={
-              "mt-6 space-y-2 rounded-[var(--radius-xl)] border border-border " +
-              "bg-background p-4 text-sm leading-6 text-muted-foreground"
-            }
+        <ContentDisclosure title={page.sections.context.title}>
+          <PublicSection
+            id="racefiets-afstellen"
+            className="mt-10 scroll-mt-28"
+            header={{
+              eyebrow: page.sections.context.eyebrow,
+              title: page.sections.context.title,
+              description: page.sections.context.description,
+            }}
           >
-            {page.sections.cleats.bullets.map((bullet) => (
-              <li key={bullet} className="flex gap-2">
-                <span className="mt-1 text-primary">•</span>
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </PublicSection>
-
-        <PublicSection
-          id="racefiets-afstellen"
-          className="mt-10 scroll-mt-28"
-          header={{
-            eyebrow: page.sections.context.eyebrow,
-            title: page.sections.context.title,
-            description: page.sections.context.description,
-          }}
-        >
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
-            {page.sections.context.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-            <p>
-              {isNl
-                ? "Wil je eerst begrijpen hoe de methode achter deze keuzes werkt? Lees dan " + "meer op "
-                : "If you want to understand the method behind these choices first, read more on "}
-              <Link
-                href={withLocalePrefix("/science/bike-fit-methods", locale)}
-                className="font-medium text-primary underline-offset-4 hover:underline"
-              >
-                {isNl ? "deze bikefitting-methodespagina" : "this bike-fitting methods page"}
-              </Link>
-              .
-            </p>
-          </div>
-        </PublicSection>
+            <div className="space-y-4 text-sm leading-7 text-muted-foreground sm:text-base">
+              {page.sections.context.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+              <p>
+                {isNl
+                  ? "Wil je eerst begrijpen hoe de methode achter deze keuzes werkt? Lees dan " + "meer op "
+                  : "If you want to understand the method behind these choices first, read more on "}
+                <Link
+                  href={withLocalePrefix("/science/bike-fit-methods", locale)}
+                  className="font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  {isNl ? "deze bikefitting-methodespagina" : "this bike-fitting methods page"}
+                </Link>
+                .
+              </p>
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <PublicSection
           id={isNl ? "zelf-afstellen-of-bikefitting" : "self-setup-or-bike-fitting"}
@@ -537,7 +554,7 @@ export default async function BikeSetupPage() {
           </div>
         </PublicSection>
 
-        <PublicSection
+        <PublicSection data-usability="safety"
           id="veiligheid"
           className="mt-10 scroll-mt-28"
           header={{

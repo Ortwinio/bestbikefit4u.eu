@@ -1,5 +1,6 @@
 import { AccountPerformanceCalculator } from "@/components/calculators/AccountPerformanceCalculator";
 import { AccountFitCalculator } from "@/components/calculators/AccountFitCalculator";
+import { AccountSaddleHeight } from "@/components/reliability/account/AccountSaddleHeight";
 import { AccountBikeFitCalculator } from "@/components/calculators/AccountBikeFitCalculator";
 import { Suspense } from "react";
 import { createRoot } from "react-dom/client";
@@ -23,7 +24,7 @@ const pages = {
   "/tools/fuel-hydration": <AccountPerformanceCalculator calculator="fuel-hydration" />,
 
   "/tools/bike-fit": <AccountBikeFitCalculator />,
-  "/tools/saddle-height": <AccountFitCalculator calculator="saddle-height" />,
+  "/tools/saddle-height": <AccountSaddleHeight />,
   "/tools/frame-size": <AccountFitCalculator calculator="frame-size" />,
   "/tools/crank-length": <AccountFitCalculator calculator="crank-length" />,
   "/pressure-calculator": (

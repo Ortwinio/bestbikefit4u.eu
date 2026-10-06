@@ -115,7 +115,7 @@ it("keeps the complete preview import graph pure and free of transport/lifecycle
     bundle: true, write: false, outdir: "unused", platform: "node", metafile: true,
   });
   for (const filename of Object.keys(result.metafile!.inputs)) {
-    expect(filename).toMatch(/^(convex\/emails\/(templates|i18n|layout)\/|convex\/emails\/format\.ts$|convex\/lib\/brand\.ts$|shared\/brand\.ts$|shared\/pricing\/products\.ts$)/);
+    expect(filename).toMatch(/^(convex\/emails\/(templates|i18n|layout)\/|convex\/emails\/format\.ts$|convex\/lib\/brand\.ts$|shared\/brand\.ts$|shared\/pricing\/products\.ts$|shared\/pressure\/display\.ts$)/);
     expect(readFileSync(resolve(filename), "utf8")).not.toMatch(/\b(fetch|XMLHttpRequest|Resend|runMutation|runAction|scheduler|setTimeout|setInterval)\s*\(/);
   }
 });

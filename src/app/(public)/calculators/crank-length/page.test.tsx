@@ -108,20 +108,19 @@ describe("crank length page", () => {
     expect(screen.getByText(crankLengthMessages.nl.faqs[0].q).tagName).toBe("SUMMARY");
     expect(screen.getByText(crankLengthMessages.nl.faqs[0].a)).toBeTruthy();
   });
-  it("keeps the calculator value-first next-step CTAs in English", async () => {
+  it("keeps explanations collapsed without duplicate next-step CTAs", async () => {
     const ui = await CrankLengthCalculatorPage({
       searchParams: Promise.resolve({}),
     });
     render(ui);
 
-    expect(screen.getByText("Practical component choice without fake certainty")).toBeTruthy();
+    expect(screen.getAllByText("Practical component choice without fake certainty")[0]).toBeTruthy();
     expect(screen.getByText("Crank Form")).toBeTruthy();
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit",
-    );
-    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing",
-    );
+    expect(document.querySelectorAll("details[data-usability=explanation]").length).toBeGreaterThan(0);
+    expect(document.querySelector("details[open]")).toBeNull();
+    expect(document.querySelector("[data-usability=short-answer]")).not.toBeNull();
+    expect(screen.queryByText("Start free bike fit")).toBeNull();
+    expect(screen.queryByText("Compare plans")).toBeNull();
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 });

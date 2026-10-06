@@ -272,7 +272,23 @@ describe("home page", () => {
 
     const pageText = container.textContent ?? "";
     expect(pageText.indexOf("your own dimensions")).toBeGreaterThan(-1);
-    expect(pageText.indexOf("From measuring to riding in three steps")).toBeGreaterThan(-1);
+    expect(screen.getByRole("heading", { name: "Choose your route" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "From measurements to your fit plan" })).toBeTruthy();
+    const routeLinks = [
+      screen.getByRole("link", { name: "Start with saddle height" }),
+      screen.getByRole("link", { name: "Start with tire pressure" }),
+    ];
+    expect(routeLinks.map(link => link.getAttribute("href"))).toEqual([
+      "/en/calculators/saddle-height", "/en/tire-pressure-calculator",
+    ]);
+    for (const link of routeLinks) {
+      expect(link.compareDocumentPosition(screen.getByRole("link", { name: "Create free account" }))
+        & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    }
+    const reportDetails = container.querySelector("#fit-report details");
+    expect(reportDetails?.hasAttribute("open")).toBe(false);
+    expect(reportDetails?.textContent).toContain("Item 1");
+    expect(reportDetails?.textContent).toContain("Item 2");
     expect(pageText.indexOf("Complete bike fit")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Make your next adjustment deliberately")).toBeGreaterThan(-1);
     expect(pageText.indexOf("Complete bike fit")).toBeLessThan(

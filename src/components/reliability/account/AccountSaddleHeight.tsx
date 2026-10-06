@@ -30,6 +30,7 @@ function SaddleEditor() {
   const copy = accountReliabilityMessages[locale];
   const selection = useAccountCalculatorBike();
   const state = useQuery(api.reliability.queries.getSaddleState, selection.ready ? { bikeId: selection.bikeId } : "skip");
+  const saveObservation = useMutation(api.profiles.mutations.saveObservation);
   const saveMeasurement = useMutation(api.reliability.mutations.saveInseamMeasurement);
   const savePreferences = useMutation(api.reliability.mutations.saveSaddlePreferences);
   const request = useMeasurementRequest();
@@ -50,6 +51,11 @@ function SaddleEditor() {
       core: preferences?.coreScore ?? profile?.coreStabilityScore,
       climbing: preferences?.climbing === "none" ? "low" : preferences?.climbing === "low" ? "medium" : preferences?.climbing === "medium" ? "high" : preferences?.climbing === "high" ? "veryHigh" : undefined,
       currentSaddleHeightMm: preferences?.currentSaddleHeightMm ?? bike?.currentSetup?.saddleHeightMm }}
+    onSaveEstimate={async (valueCm, confirmed) => {
+      const result = await saveObservation({ field: "inseamCm", value: valueCm, kind: "estimated",
+        method: "self_assessment", expectedCurrentValue: profile?.inseamCm ?? null, inseamConfirmed: confirmed });
+      if (result.status !== "saved") throw new Error("Profile changed");
+    }}
     onSaveMeasurement={async (valueCm, confirmed) => {
       const large = profile?.heightCm !== undefined && checkInseamPlausibility(profile.heightCm, valueCm).status === "large";
       const payload = { valueCm, confirmed: confirmed && !large, override: confirmed && large };

@@ -83,8 +83,8 @@ const loginCopy: Record<Locale, LoginCopy> = {
     uspSubtitle: "Your free account includes:",
     uspItems: [
       "Personalized saddle height, reach, and handlebar targets",
-      "Prioritized adjustment sequence so you know what to change first",
-      "Email report with your complete fit analysis",
+      "Save your measurements in your rider profile",
+      "Email the core values from your latest fit report",
     ],
     accountCreationHint:
       "New here? We create your account as soon as you confirm the code.",
@@ -134,8 +134,8 @@ const loginCopy: Record<Locale, LoginCopy> = {
     uspSubtitle: "Je gratis account bevat:",
     uspItems: [
       "Persoonlijke afstelwaarden voor zadelhoogte, reach en stuur",
-      "Een prioriteitsvolgorde zodat je weet wat je eerst aanpast",
-      "Een e-mailrapport met je complete fitanalyse",
+      "Bewaar je maten in je riderprofiel",
+      "Mail de kernwaarden van je laatste fitrapport",
     ],
     accountCreationHint:
       "Nieuw hier? We maken je account aan zodra je de code bevestigt.",

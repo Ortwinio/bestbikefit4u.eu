@@ -67,7 +67,7 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     const { container } = render(await FAQPage());
     const serialized = container.querySelector('script[type="application/ld+json"]')!.textContent!;
     const schema = JSON.parse(serialized);
-    const disclosures = Array.from(container.querySelectorAll("details"));
+    const disclosures = Array.from(container.querySelectorAll('details, section[data-usability="safety"]'));
     expect(disclosures).toHaveLength(13);
     expect(schema["@type"]).toBe("FAQPage");
     expect(screen.getByText(pricingFaq[language].personal.a)).toBeTruthy();
@@ -76,10 +76,14 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     expect(serialized).not.toMatch(/€9(?:\s|"|$)|€12[,.]50|€24[,.]50|€19[,.]50|\/ maand|Free vs Pro/);
     expect(serialized).toContain(language === "nl" ? "€9,50" : "€9.50");
     schema.mainEntity.forEach((question: { name: string; acceptedAnswer: { text: string } }, index: number) => {
-      expect(disclosures[index].querySelector("summary")?.textContent).toBe(question.name);
+      expect(disclosures[index].querySelector("summary, h3")?.textContent).toBe(question.name);
       expect(disclosures[index].querySelector("p")?.textContent).toBe(question.acceptedAnswer.text);
     });
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(serialized).not.toMatch(/DUUR AFSPRAAK|VOORWAARDEN AFSPRAAK|\[LOCATIE\]/);
+    const safety = container.querySelector('[data-usability="safety"]');
+    expect(safety).not.toBeNull();
+    expect(safety?.closest("details")).toBeNull();
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(
       language === "nl" ? "Veelgestelde vragen" : "Frequently Asked Questions"
     );
@@ -94,16 +98,16 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     const disclosures = Array.from(container.querySelectorAll("details"));
     for (const disclosure of disclosures) {
       const summary = disclosure.querySelector("summary")!;
-      expect(disclosure.open).toBe(true);
+      expect(disclosure.open).toBe(false);
       expect(document.getElementById(summary.getAttribute("aria-controls")!)).toBe(disclosure.querySelector("p"));
       fireEvent.click(summary);
-      expect(disclosure.open).toBe(false);
-      fireEvent.click(summary);
       expect(disclosure.open).toBe(true);
+      fireEvent.click(summary);
+      expect(disclosure.open).toBe(false);
     }
     fireEvent.click(disclosures[0].querySelector("summary")!);
-    expect(disclosures[0].open).toBe(false);
-    expect(disclosures.slice(1).every((disclosure) => disclosure.open)).toBe(true);
+    expect(disclosures[0].open).toBe(true);
+    expect(disclosures.slice(1).every((disclosure) => !disclosure.open)).toBe(true);
   });
 
   it("preserves metadata, canonical, language alternates and Open Graph", async () => {
@@ -143,10 +147,10 @@ describe.each(["nl", "en"] as const)("FAQ in %s", (language) => {
     locale = language;
     const { container } = render(await FAQPage());
     const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(8);
+    expect(links).toHaveLength(7);
     for (const path of [
       "/calculators/bike-fit", "/calculators/saddle-height", "/guides/bike-fitting-for-knee-pain",
-      "/guides/road-bike-fit-guide", "/pricing", "/contact", "/login",
+      "/pricing", "/contact", "/login",
     ]) {
       expect(links.some((link) => link.getAttribute("href") === `/${language}${path}`)).toBe(true);
     }

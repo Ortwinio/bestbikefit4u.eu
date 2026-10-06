@@ -52,6 +52,9 @@ export function LeaveDataNotice({ locale, hasEnteredData, isAuthenticated }: {
     return () => document.removeEventListener("mouseout", onExit);
   }, [eligible, trackNotice]);
 
+  // Eligibility changes end this presentation, even while the component stays mounted.
+  // Keep the session marker and handoff data so returning cannot reopen the notice.
+  if (!eligible && mode !== null) setMode(null);
   if (!eligible || mode === null) return null;
   const dismiss = () => {
     trackNotice("dismissed");

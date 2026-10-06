@@ -1,0 +1,319 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><title>Jouw bandenspanning</title><script src="./support.js"></script></head><body><x-dc><helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F5F8F3;color:#0F2420;font-family:Figtree,sans-serif}button,a{font-family:inherit}a{color:#0A7263;text-decoration:none}button{cursor:pointer}h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0}p{margin:0;line-height:1.5}.num{font-family:'DM Mono',monospace}.muted{color:#4A5F5A}.card{border:1px solid #DCE6E1;background:#FFFFFF;border-radius:24px;padding:24px}.chip{border-radius:999px;padding:7px 12px;background:#E1F2EE;font-weight:700;font-size:13px}.navlink{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 14px;border-radius:12px;color:#E1F2EE;font-size:15px;font-weight:600}.primary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;background:#0A7263;color:#FFFFFF;font-weight:700}button:focus-visible,a:focus-visible{outline:3px solid #0A7263;outline-offset:3px}.switch{border:1px solid #DCE6E1;border-radius:999px;min-height:44px;padding:0 16px;font-weight:700;font-size:14px}.exercise{width:100%;min-height:52px;text-align:left;padding:12px 16px;border:0;border-radius:14px;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600}
+</style><style>.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6;box-sizing:border-box;font-family:Figtree,sans-serif}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;height:44px}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-height:44px;min-width:44px;flex-shrink:0;padding:0 2px;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:13px;color:#4A5F5A;cursor:pointer}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}</style><style>.segments{display:flex;gap:6px;flex-wrap:wrap}.option{min-height:44px;border:1px solid #DCE6E1;border-radius:12px;padding:8px 14px;background:#FFFFFF;color:#0F2420;font-size:14px;font-weight:700}.option[aria-pressed="true"]{background:#E6F8A8;border-color:#0A7263}.stack{display:flex;flex-direction:column;gap:18px}.step{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#CFF26A;font-family:'DM Mono',monospace}.rng{appearance:none;background:transparent;width:100%;height:44px;margin:0;position:absolute;inset:0;cursor:pointer}.rng::-webkit-slider-thumb{appearance:none;width:28px;height:28px;border-radius:50%;background:#FFFFFF;border:4px solid #0A7263}.field{display:flex;justify-content:space-between;gap:12px;align-items:center}.field label{font-size:15px;font-weight:600}.track{position:relative;height:44px}.rail,.fill{position:absolute;top:18px;height:8px;border-radius:99px;left:0}.rail{width:100%;background:#DCE6E1}.fill{background:#0A7263}.input{font:inherit;width:100%;min-height:44px;border:1px solid #DCE6E1;border-radius:12px;padding:12px;background:#FFFFFF;color:#0F2420}.primary{border:0;cursor:pointer}.tiny{font-size:13px;color:#4A5F5A}.metric{font-family:'DM Mono',monospace;font-size:25px}.unit{font-size:13px;color:#4A5F5A}</style></helmet><div style="width:1440px;height:2244px;display:flex;flex-direction:column;background:#F5F8F3"><div class="review-strip" aria-label="Ontwerpstaat"><span class="review-label">Ontwerpstaat</span><div class="review-scroll" data-review-scroll="true"><sc-for list="{{variants}}" as="variant" hint-placeholder-count="5"><button type="button" class="review-pill" aria-pressed="{{variant.selected}}" onClick="{{variant.pick}}"><span>{{variant.label}}</span></button></sc-for></div></div><div style="width:1440px;height:2200px;display:grid;grid-template-columns:264px 1fr"><aside style="display: flex; flex-direction: column; gap: 24px; padding: 28px 20px; background: #0F2420; color: #FFFFFF; box-sizing: border-box; font-family: Figtree, sans-serif; font-size: 15px; font-weight: 400; line-height: 1.4"><a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="41" height="32" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#CFF26A" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BikeFit<span style="color: #CFF26A">Boost</span></span>
+</a><nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600"><a href="Dashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>Dashboard</a><a href="Profile.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M8 8a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21c0-8 16-8 16 0"></path></svg>Mijn profiel</a><a href="Bikes.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M6 17l4-10h6l2 10M10 7l4 10"></path></svg>Mijn fietsgarage</a><a href="BikeAdd.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fiets</a><a href="History.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12v17H6zM9 2h6v4H9zM9 10h6M9 15h6"></path></svg>Fietsafstelling</a><a href="FitStart.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fit-sessie</a><a href="PressureDashboard.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; background: #CFF26A; color: #0F2420; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 17a9 9 0 1 1 18 0M12 17l4-6"></path></svg>Bandenspanning</a><a href="GearingDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"></path></svg>Verzet</a><a href="SaddleSelector.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 7c0-5 18-5 18 0l-6 13H9z"></path></svg>Zadelkiezer</a><a href="Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"></path></svg>Instellingen</a><a href="Feedback.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 4h18v13H9l-6 4z"></path></svg>Feedback</a></nav><div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #17332D"><div style="font-size: 12px; color: #B9CCC6">Sanne</div><div style="display: flex; justify-content: space-between; align-items: center"><strong>Free</strong><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">1</span> van <span style="font-family: 'DM Mono', monospace">1</span> sessie</span></div><div role="img" aria-label="Eén van één sessie gebruikt" style="height: 8px; border-radius: 99px; background: #2E4C45"><div style="width: 100%; height: 8px; border-radius: 99px; background: #CFF26A"></div></div><p style="margin: 0; font-size: 13px; color: #B9CCC6; line-height: 1.4">Betalen is tijdelijk gepauzeerd.</p><a href="Settings.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk je account</a></div></aside><main style="padding:32px 48px;min-width:0">
+<header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><p class="muted" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">Jouw fietsen · jouw bandenspanning</p><div style="display:flex;align-items:center;gap:16px"><h1 style="font-size:44px;letter-spacing:-.03em;margin-top:8px">Meer grip, minder weerstand</h1><span style="flex-shrink:0;white-space:nowrap;border-radius:999px;padding:7px 12px;background:#E1F2EE;color:#0A7263;font-family:Figtree,sans-serif;font-size:12px;font-weight:700">Voorbeeldgegevens</span></div><p class="muted" style="margin-top:10px">Pas je startpunt aan op je banden, je gewicht en de rit.</p></div></header>
+<sc-if value="{{loading}}" hint-placeholder-val="{{false}}"><section class="card" role="status"><h2>Je fietsen worden geladen</h2><p class="muted">Even geduld. We halen je laatste bandenspanning op.</p></section></sc-if>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}"><section class="card stack"><h2>Voeg je eerste fiets toe</h2><p>Bewaar je banden en spanning bij je fiets. Je kunt ook zonder fiets verder rekenen.</p><div class="segments"><a class="primary" href="BikeAdd.dc.html">Voeg een fiets toe</a><button type="button" class="option" onClick="{{continueManual}}">Reken zonder fiets</button></div></section></sc-if>
+<sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+<div class="stack">
+<section><div class="field" style="margin-bottom:12px"><h2 style="font-size:23px">Kies je fiets</h2><a href="Bikes.dc.html" style="min-height:44px;display:flex;align-items:center;font-weight:700">Open je fietsgarage →</a></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px"><sc-for list="{{bikes}}" as="bike" hint-placeholder-count="3"><button type="button" class="option" aria-pressed="{{bike.selected}}" onClick="{{bike.pick}}" style="padding:18px;text-align:left"><strong style="display:block;font-size:17px">{{bike.name}}</strong><span class="tiny" style="display:block;margin-top:8px">{{bike.detail}}</span></button></sc-for></div></section>
+<section aria-label="Aanbevolen spanning"><dc-import name="Bandenspanning" front="{{frontBar}}" rear="{{rearBar}}" max-bar="{{maxBar}}" min-bar="{{minBar}}" size="groot" label="{{bikeLabel}}" hint-size="100%,330px"></dc-import></section>
+<div style="display:grid;grid-template-columns:520px minmax(0,1fr);gap:24px;align-items:start">
+<section class="card stack" style="padding:24px"><div class="segments"><sc-for list="{{panels}}" as="panel" hint-placeholder-count="3"><button type="button" class="option" aria-pressed="{{panel.selected}}" onClick="{{panel.pick}}"><span class="step">{{panel.number}}</span> {{panel.label}}</button></sc-for></div>
+<h2 style="font-size:26px">{{panelTitle}}</h2>
+<sc-for list="{{choices}}" as="choice" hint-placeholder-count="3"><div><h3 style="font-family:Figtree,sans-serif;font-size:15px;margin-bottom:8px">{{choice.label}}</h3><div class="segments"><sc-for list="{{choice.options}}" as="option" hint-placeholder-count="3"><button type="button" class="option" aria-pressed="{{option.selected}}" onClick="{{option.pick}}">{{option.label}}</button></sc-for></div></div></sc-for>
+<sc-for list="{{sliders}}" as="slider" hint-placeholder-count="3"><div><div class="field"><label for="{{slider.id}}">{{slider.label}}</label><span class="metric">{{slider.display}} <span class="unit">{{slider.unit}}</span></span></div><div class="track"><div class="rail"></div><div class="fill" style="{{slider.fill}}"></div><input class="rng" type="range" id="{{slider.id}}" min="{{slider.min}}" max="{{slider.max}}" step="{{slider.step}}" value="{{slider.value}}" onChange="{{slider.change}}"></div></div></sc-for>
+<sc-if value="{{tires}}" hint-placeholder-val="{{true}}"><div style="padding:16px;border-radius:16px;background:#EEF3EF"><h3 style="font-size:17px;margin-bottom:8px">Je opgeslagen wielset</h3><p class="tiny">Binnenmaat voor / achter: <span class="num">21 / 21 mm</span><br>Maximum band en velg: <span class="num">6 bar</span><br>Controleer de aanduiding op je materiaal.</p><a href="BikeDetail.dc.html" style="display:inline-flex;min-height:44px;align-items:center;font-weight:700">Bekijk je wielset →</a></div></sc-if>
+<sc-if value="{{route}}" hint-placeholder-val="{{false}}"><div style="padding:16px;border-radius:16px;background:#EEF3EF"><p>Afstand en hoogtemeters zijn nog niet ingevuld. Alleen je gekozen ondergrond en weer tellen nu mee.</p><p class="tiny" style="margin-top:8px">Het aandeel onverhard bewaart de context van je rit; het verandert je druk niet rechtstreeks.</p></div></sc-if>
+</section>
+<div class="stack">
+<section style="padding:20px 24px;border-radius:20px;background:#FFD66B"><h2 style="font-size:20px">Controleer je materiaal</h2><sc-for list="{{warnings}}" as="warning" hint-placeholder-count="1"><p style="margin-top:8px;font-size:14px">{{warning}}</p></sc-for><p style="margin-top:8px;font-size:14px">Blijf onder het maximum op band én velg. De getoonde spanning is een startpunt, geen garantie.</p></section>
+<section class="card"><h2 style="font-size:23px">Pas in deze volgorde aan</h2><ol style="padding-left:22px;line-height:1.65;margin-bottom:0"><li>Controleer band, velg en druklimiet.</li><li>Test grip en comfort vooraan.</li><li>Verfijn achteraan in stappen van <span class="num">0,1 bar</span>.</li></ol></section>
+<section class="card stack"><h2 style="font-size:23px">Bewaar je startpunt</h2><p class="tiny">Bewaar de berekening, of maak een drukprofiel bij je gekozen fiets en banden.</p><button type="button" class="primary" onClick="{{saveCalculation}}">Bewaar deze berekening</button><sc-if value="{{canSaveProfile}}" hint-placeholder-val="{{true}}"><label for="pressure-name" style="font-weight:700">Naam drukprofiel</label><input id="pressure-name" class="input" type="text" value="{{profileName}}" onChange="{{setName}}"><div class="segments"><sc-for list="{{useCases}}" as="useCase" hint-placeholder-count="6"><button type="button" class="option" aria-pressed="{{useCase.selected}}" onClick="{{useCase.pick}}">{{useCase.label}}</button></sc-for></div><button type="button" class="option" onClick="{{saveProfile}}">Bewaar als drukprofiel</button></sc-if><p role="status" class="muted">{{saveMessage}}</p></section>
+</div></div>
+<section class="card"><div class="field"><h2 style="font-size:24px">Je bewaarde bandenspanning</h2></div><sc-if value="{{hasHistory}}" hint-placeholder-val="{{true}}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px"><div><h3 style="font-size:19px">{{historyName}}</h3><p class="tiny" style="margin-top:8px">Laatst bewaard bij deze fiets</p><div style="margin-top:12px"><dc-import name="Bandenspanning" front="{{historyFrontNum}}" rear="{{historyRearNum}}" max-bar="{{maxBar}}" min-bar="{{minBar}}" size="compact" label="Bewaard · voor en achter" hint-size="100%,220px"></dc-import></div><p class="tiny" style="margin-top:8px">Profiel: {{savedProfile}}</p></div><div><label for="pressure-note" style="font-weight:700">Je notitie</label><textarea id="pressure-note" class="input" rows="2" maxlength="300" onChange="{{setNote}}" style="margin-top:8px">{{note}}</textarea><button type="button" class="option" onClick="{{saveNote}}" style="margin-top:8px">Bewaar je notitie</button><p role="status" class="tiny">{{noteStatus}}</p></div></div></sc-if><sc-if value="{{noHistory}}" hint-placeholder-val="{{false}}"><p class="muted" style="margin-top:14px">Je hebt nog geen spanning bewaard voor deze fiets.</p></sc-if></section>
+<section aria-label="Gratis en betaald vergeleken" class="card" style="display:flex;flex-direction:column;gap:18px"><div><p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0A7263">Meer dan één fiets of wielset?</p><h2 style="font-size:24px;margin-top:6px">Je gratis account bewaart de spanning van {{freeBikeName}}</h2></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px"><div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:18px;background:#FFFFFF;border:1px solid #DCE6E1"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:19px">Gratis</h3><span class="num" style="font-size:16px">1 fiets</span></div><ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15px"><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Startpunt voor één fiets en wielset</li><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Bewaard met je notitie</li><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Waarschuwingen voor band en velg</li></ul></div><div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:18px;background:#0F2420;color:#FFFFFF"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:19px;display:flex;align-items:center;gap:8px">Betaald<span style="font-family:Figtree,sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;background:#CFF26A;color:#0F2420">Meest precies</span></h3><span class="num" style="font-size:16px;color:#CFF26A">alle fietsen</span></div><ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15px;color:#E1F2EE"><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Spanning per fiets, wielset en ondergrond</li><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Alle fietsen in je garage (jaarabonnement)</li><li style="display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 9.5l3 3 7-7" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Controleplan: wanneer je opnieuw meet</li></ul></div></div><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><a href="Pricing.dc.html" style="display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:#0F2420;color:#FFFFFF;font-weight:700;font-size:15px">Bekijk wat betaald oplevert</a><span class="tiny">Jaarabonnement €21,50 per jaar, € 1,79 per maand · losse meting €13,50 voor 1 fiets</span></div></section>
+</div></sc-if></main></div></div></x-dc><script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2244}}'>const DISCIPLINE_MULTIPLIERS = {
+    road: 1,
+    gravel: 0.72,
+    mtb: 0.5,
+    tt: 1.05,
+};
+const SURFACE_ADJUSTMENTS = {
+    smooth_asphalt: 0.2,
+    average_asphalt: 0,
+    rough_asphalt: -0.2,
+    hardpack_gravel: -0.3,
+    loose_gravel: -0.5,
+    trail: -0.7,
+};
+const GOAL_ADJUSTMENTS = {
+    speed: 0.2,
+    balance: 0,
+    comfort: -0.2,
+};
+const CASING_ADJUSTMENTS = {
+    race_light: 0.1,
+    allround: 0,
+    reinforced: -0.1,
+};
+const TUBE_ADJUSTMENTS = {
+    tubeless: { front: -0.2, rear: -0.3 },
+    latex_tube: { front: -0.1, rear: -0.1 },
+    inner_tube: { front: 0, rear: 0 },
+};
+const PRESSURE_LIMITS = {
+    road: { min: 4, max: 9 },
+    gravel: { min: 1.5, max: 5 },
+    mtb: { min: 0.8, max: 3.5 },
+    tt: { min: 5, max: 9.5 },
+};
+const LOAD_COEFFICIENTS = {
+    front: 4.55,
+    rear: 3.32,
+};
+const GOAL_VALUES = ["speed", "balance", "comfort"];
+function roundBar(value) {
+    return Math.round(value * 10) / 10;
+}
+function roundPsi(value) {
+    return Math.round(value * 14.5038);
+}
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+function isProvidedNumber(value) {
+    return typeof value === "number" && Number.isFinite(value);
+}
+function calculateRawPressure(input) {
+    const totalSystemMassKg = input.bodyWeightKg + (input.bikeWeightKg ?? 8);
+    const rearLoadKg = totalSystemMassKg * 0.6;
+    const frontLoadKg = totalSystemMassKg * 0.4;
+    const multiplier = DISCIPLINE_MULTIPLIERS[input.discipline];
+    const tubeAdjustment = TUBE_ADJUSTMENTS[input.tubeType];
+    const goalAdjustment = input.ridingGoal
+        ? GOAL_ADJUSTMENTS[input.ridingGoal]
+        : 0;
+    const surfaceAdjustment = SURFACE_ADJUSTMENTS[input.surface];
+    let frontBar = ((frontLoadKg / input.widthFrontMm) * LOAD_COEFFICIENTS.front) * multiplier +
+        surfaceAdjustment +
+        tubeAdjustment.front +
+        goalAdjustment;
+    let rearBar = ((rearLoadKg / input.widthRearMm) * LOAD_COEFFICIENTS.rear) * multiplier +
+        surfaceAdjustment +
+        tubeAdjustment.rear +
+        goalAdjustment;
+    if ("isWet" in input && input.isWet) {
+        frontBar -= 0.2;
+        rearBar -= 0.2;
+    }
+    if ("casingType" in input && input.casingType) {
+        const casingAdjustment = CASING_ADJUSTMENTS[input.casingType];
+        frontBar += casingAdjustment;
+        rearBar += casingAdjustment;
+    }
+    if ("extraLuggageKg" in input && isProvidedNumber(input.extraLuggageKg)) {
+        rearBar += input.extraLuggageKg * 0.005;
+    }
+    if (("routeElevationM" in input &&
+        isProvidedNumber(input.routeElevationM) &&
+        input.routeElevationM > 1500) ||
+        ("routeDistanceKm" in input &&
+            isProvidedNumber(input.routeDistanceKm) &&
+            input.routeDistanceKm > 150)) {
+        frontBar -= 0.1;
+        rearBar -= 0.1;
+    }
+    if ("internalRimWidthFrontMm" in input &&
+        isProvidedNumber(input.internalRimWidthFrontMm)) {
+        frontBar += (input.internalRimWidthFrontMm - 19) * 0.01;
+    }
+    if ("internalRimWidthRearMm" in input &&
+        isProvidedNumber(input.internalRimWidthRearMm)) {
+        rearBar += (input.internalRimWidthRearMm - 19) * 0.01;
+    }
+    const limits = PRESSURE_LIMITS[input.discipline];
+    frontBar = clamp(frontBar, limits.min, limits.max);
+    rearBar = clamp(rearBar, limits.min, limits.max);
+    if (rearBar < frontBar) {
+        rearBar = frontBar;
+    }
+    return {
+        totalSystemMassKg,
+        frontBar: roundBar(frontBar),
+        rearBar: roundBar(rearBar),
+        limits,
+    };
+}
+function buildWarnings(input, frontBar, rearBar) {
+    const warnings = new Set();
+    const highestRecommendedBar = Math.max(frontBar, rearBar);
+    if ("maxPressureBar" in input && isProvidedNumber(input.maxPressureBar)) {
+        if (highestRecommendedBar > input.maxPressureBar) {
+            warnings.add("max_rim_pressure_exceeded");
+            if (input.rimType === "hookless") {
+                warnings.add("hookless_limit_exceeded");
+            }
+        }
+    }
+    if ("rimType" in input &&
+        input.rimType === "hookless" &&
+        !isProvidedNumber(input.maxPressureBar) &&
+        highestRecommendedBar > 3.5) {
+        warnings.add("hookless_max_pressure_unknown");
+    }
+    if (input.tubeType === "inner_tube" && Math.min(frontBar, rearBar) < 1.5) {
+        warnings.add("inner_tube_pinch_flat_risk");
+        warnings.add("pressure_too_low_for_setup");
+    }
+    if (rearBar > frontBar * 1.4) {
+        warnings.add("front_rear_pressure_mismatch");
+    }
+    if (input.discipline === "road" && (input.widthFrontMm < 20 || input.widthFrontMm > 40)) {
+        warnings.add("road_tire_width_unusual");
+    }
+    if (input.discipline === "gravel" &&
+        (input.widthFrontMm < 30 || input.widthFrontMm > 65)) {
+        warnings.add("gravel_tire_width_unusual");
+    }
+    if (input.discipline === "mtb" && input.widthFrontMm < 45) {
+        warnings.add("mtb_tire_width_unusual");
+    }
+    return [...warnings];
+}
+function buildExplanation(input, totalSystemMassKg, frontBar, rearBar, advanced) {
+    const tubeLabel = input.tubeType.replace("_", " ");
+    if (advanced) {
+        return `Based on ${Math.round(totalSystemMassKg)} kg total load and ${input.surface}, ${input.widthRearMm}mm ${tubeLabel} tyres work best near ${rearBar} bar rear / ${frontBar} bar front.`;
+    }
+    return `Recommended pressure for a ${input.widthFrontMm}mm ${tubeLabel} setup on ${input.surface}.`;
+}
+function buildScores(discipline, rearBar) {
+    const limits = PRESSURE_LIMITS[discipline];
+    const ratio = clamp((rearBar - limits.min) / (limits.max - limits.min), 0, 1);
+    return {
+        comfortScore: Math.round((1 - ratio) * 100),
+        gripScore: Math.round((1 - ratio) * 100),
+        efficiencyScore: Math.round(ratio * 100),
+    };
+}
+function calculateBasicPressure(input) {
+    const { totalSystemMassKg, frontBar, rearBar } = calculateRawPressure(input);
+    return {
+        frontBar,
+        rearBar,
+        frontPsi: roundPsi(frontBar),
+        rearPsi: roundPsi(rearBar),
+        warnings: buildWarnings(input, frontBar, rearBar),
+        explanation: buildExplanation(input, totalSystemMassKg, frontBar, rearBar, false),
+    };
+}
+function calculateAdvancedPressure(input) {
+    const { totalSystemMassKg, frontBar, rearBar } = calculateRawPressure(input);
+    return {
+        frontBar,
+        rearBar,
+        frontPsi: roundPsi(frontBar),
+        rearPsi: roundPsi(rearBar),
+        warnings: buildWarnings(input, frontBar, rearBar),
+        explanation: buildExplanation(input, totalSystemMassKg, frontBar, rearBar, true),
+        ...buildScores(input.discipline, rearBar),
+    };
+}
+function validatePressureInput(input) {
+    const errors = [];
+    if (!isProvidedNumber(input.bodyWeightKg)) {
+        errors.push({ field: "bodyWeightKg", message: "Body weight is required." });
+    }
+    else if (input.bodyWeightKg < 35 || input.bodyWeightKg > 160) {
+        errors.push({
+            field: "bodyWeightKg",
+            message: "Body weight must be between 35 and 160 kg.",
+        });
+    }
+    if (!isProvidedNumber(input.widthFrontMm)) {
+        errors.push({
+            field: "widthFrontMm",
+            message: "Front tyre width is required.",
+        });
+    }
+    else if (input.widthFrontMm < 18 || input.widthFrontMm > 80) {
+        errors.push({
+            field: "widthFrontMm",
+            message: "Front tyre width must be between 18 and 80 mm.",
+        });
+    }
+    if (!isProvidedNumber(input.widthRearMm)) {
+        errors.push({
+            field: "widthRearMm",
+            message: "Rear tyre width is required.",
+        });
+    }
+    else if (input.widthRearMm < 18 || input.widthRearMm > 80) {
+        errors.push({
+            field: "widthRearMm",
+            message: "Rear tyre width must be between 18 and 80 mm.",
+        });
+    }
+    if (isProvidedNumber(input.bikeWeightKg) &&
+        (input.bikeWeightKg < 3 || input.bikeWeightKg > 20)) {
+        errors.push({
+            field: "bikeWeightKg",
+            message: "Bike weight must be between 3 and 20 kg.",
+        });
+    }
+    if (input.ridingGoal && !GOAL_VALUES.includes(input.ridingGoal)) {
+        errors.push({
+            field: "ridingGoal",
+            message: "Riding goal must be speed, balance, or comfort.",
+        });
+    }
+    if (isProvidedNumber(input.currentFrontBar) &&
+        (input.currentFrontBar < 0.8 || input.currentFrontBar > 9)) {
+        errors.push({
+            field: "currentFrontBar",
+            message: "Current front pressure must be between 0.8 and 9.0 bar.",
+        });
+    }
+    if (isProvidedNumber(input.currentRearBar) &&
+        (input.currentRearBar < 0.8 || input.currentRearBar > 9)) {
+        errors.push({
+            field: "currentRearBar",
+            message: "Current rear pressure must be between 0.8 and 9.0 bar.",
+        });
+    }
+    return errors;
+}
+
+class Component extends DCLogic {
+constructor(props){super(props);this.state={view:"ready",panel:0,bikeId:0,discipline:"road",bodyWeightKg:75,bikeWeightKg:8,widthFrontMm:28,widthRearMm:28,tubeType:"tubeless",casingType:"allround",rimType:"hooked",surface:"average_asphalt",isWet:false,ridingGoal:"balance",extraLuggageKg:0,currentFrontBar:5.5,currentRearBar:5.7,offRoadPercent:0,profileName:"Mijn duurrit",useCase:"endurance",saveMessage:"",note:"Comfortabel op mijn laatste rit.",noteStatus:"",historyFront:5.2,historyRear:5.6,savedProfile:"Duurrit"};}
+renderVals(){
+const state=this.state;
+const navItems=[["Dashboard","Dashboard.dc.html","M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"],["Mijn profiel","Profile.dc.html","M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21c0-7 16-7 16 0"],["Mijn fietsgarage","Bikes.dc.html","M3 17a4 4 0 1 0 8 0 4 4 0 1 0-8 0M13 17a4 4 0 1 0 8 0 4 4 0 1 0-8 0M7 17l4-10 6 10M9 7h6"],["Nieuwe fiets","BikeAdd.dc.html","M12 4v16M4 12h16"],["Fietsafstelling","History.dc.html","M5 4h14v17H5zM9 2h6v4H9zM8 10h8M8 15h8"],["Nieuwe fit-sessie","FitStart.dc.html","M12 4v16M4 12h16"],["Bandenspanning","PressureDashboard.dc.html","M3 17a9 9 0 1 1 18 0M12 16l4-5"],["Verzet","GearingDashboard.dc.html","M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"],["Zadelkiezer","SaddleSelector.dc.html","M4 7c4-3 12-3 16 0l-4 5H8zM12 12v8"],["Instellingen","Settings.dc.html","M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3"],["Feedback","Feedback.dc.html","M3 3h18v14H8l-5 4z"]];
+const format=(value)=>Number(value).toFixed(1).replace(".",",");
+const input={...state,internalRimWidthFrontMm:state.bikeId<2?21:undefined,internalRimWidthRearMm:state.bikeId<2?21:undefined,maxPressureBar:state.bikeId<2?6:undefined};
+const result=calculateAdvancedPressure(input);
+const limits=PRESSURE_LIMITS[state.discipline];
+const choice=(key,label,options)=>({label,options:options.map(([value,text])=>({label:text,selected:state[key]===value,pick:()=>this.setState({[key]:value,saveMessage:""})}))});
+const slider=(key,label,min,max,step,unit)=>({id:"pressure-"+key,label,min,max,step,unit,value:state[key],display:step<1?format(state[key]):String(state[key]),fill:"width:"+((state[key]-min)/(max-min)*100)+"%",change:(event)=>this.setState({[key]:Number(event.target.value),saveMessage:""})});
+const panelChoices=[
+[choice("discipline","Soort fiets",[["road","Race"],["gravel","Gravel"],["mtb","MTB"],["tt","TT"]]),choice("tubeType","Band",[["tubeless","Tubeless"],["inner_tube","Binnenband"],["latex_tube","Latex"]]),choice("casingType","Karkas",[["race_light","Licht"],["allround","Allround"],["reinforced","Versterkt"]]),choice("rimType","Velg",[["hooked","Met haak"],["hookless","Hookless"]])],
+[choice("ridingGoal","Je rijdoel",[["speed","Snelheid"],["balance","Balans"],["comfort","Comfort"]])],
+[choice("surface","Ondergrond",[["smooth_asphalt","Glad asfalt"],["average_asphalt","Gemiddeld asfalt"],["rough_asphalt","Ruw asfalt"],["hardpack_gravel","Hard grind"],["loose_gravel","Los grind"],["trail","Trail"]]),choice("isWet","Omstandigheden",[[false,"Droog"],[true,"Nat"]])]
+];
+const panelSliders=[
+[slider("widthFrontMm","Bandbreedte voor",18,80,1,"mm"),slider("widthRearMm","Bandbreedte achter",18,80,1,"mm")],
+[slider("bodyWeightKg","Lichaamsgewicht",35,160,1,"kg"),slider("bikeWeightKg","Fietsgewicht",3,20,0.1,"kg"),slider("extraLuggageKg","Extra bagage",0,30,1,"kg"),slider("currentFrontBar","Huidige druk voor",0.8,9,0.1,"bar"),slider("currentRearBar","Huidige druk achter",0.8,9,0.1,"bar")],
+[slider("offRoadPercent","Aandeel onverhard",0,100,1,"%")]
+];
+const warningText={max_rim_pressure_exceeded:"Je advies ligt boven de opgegeven druklimiet. Pomp niet tot die waarde.",hookless_limit_exceeded:"Je advies overschrijdt de hookless-limiet.",hookless_max_pressure_unknown:"De maximale druk voor je hookless-velg is onbekend. Zoek deze eerst op.",inner_tube_pinch_flat_risk:"Risico op stootlek met binnenbanden.",pressure_too_low_for_setup:"De druk is te laag voor deze banden.",front_rear_pressure_mismatch:"Groot drukverschil voor en achter: controleer je banden.",road_tire_width_unusual:"Ongebruikelijke bandbreedte voor een racefiets.",gravel_tire_width_unusual:"Ongebruikelijke bandbreedte voor een gravelfiets.",mtb_tire_width_unusual:"Ongebruikelijke bandbreedte voor een MTB."};
+return {
+nav:navItems.map((item,index)=>({label:item[0],href:item[1],icon:item[2],current:index===6?"page":"false",style:index===6?"background:#CFF26A;color:#0F2420":""})),
+variants:[["ready","Ingevuld"],["loading","Laden"],["empty","Geen fietsen"],["saved","Bewaard"],["history-empty","Geen historie"],["error","Opslaan mislukt"]].map(([key,label])=>({label,selected:state.view===key,pick:()=>this.setState({view:key,saveMessage:key==="saved"?"Je drukprofiel is bewaard.":key==="error"?"Bewaren lukt niet. Probeer het opnieuw.":""})})),
+ready:state.view!=="loading"&&state.view!=="empty",loading:state.view==="loading",empty:state.view==="empty",
+continueManual:()=>this.setState({view:"ready",bikeId:2}),bikes:[["Canyon Endurace","Race"],["Gravelfiets","Gravel"],["Zonder fiets","Reken met losse bandgegevens"]].map(([name,detail],index)=>({name,detail,selected:state.bikeId===index,pick:()=>this.setState({bikeId:index,discipline:index===1?"gravel":"road",widthFrontMm:index===1?40:28,widthRearMm:index===1?40:28,surface:index===1?"hardpack_gravel":"average_asphalt",saveMessage:""})})),
+panels:["Banden","Gewicht","Rit"].map((label,index)=>({label,number:index+1,selected:state.panel===index,pick:()=>this.setState({panel:index})})),
+panelTitle:["Je banden en velgen","Jij en je fiets","Je volgende rit"][state.panel],choices:panelChoices[state.panel],sliders:panelSliders[state.panel],tires:state.panel===0&&state.bikeId<2,route:state.panel===2,
+frontBar:result.frontBar,rearBar:result.rearBar,maxBar:limits.max,minBar:limits.min,bikeLabel:["Canyon Endurace","Gravelfiets","Zonder fiets"][state.bikeId],freeBikeName:["je Canyon Endurace","je gravelfiets","één fiets"][state.bikeId],historyFrontNum:state.historyFront,historyRearNum:state.historyRear,warnings:result.warnings.map((key)=>warningText[key]),
+canSaveProfile:state.bikeId<2,profileName:state.profileName,setName:(event)=>this.setState({profileName:(!event.target.value||event.target.value==="undefined")?"":String(event.target.value)}),useCases:[["race","Wedstrijd"],["endurance","Duurrit"],["wet_weather","Nat weer"],["gravel_mixed","Gravel"],["comfort","Comfort"],["custom","Eigen keuze"]].map(([value,label])=>({label,selected:state.useCase===value,pick:()=>this.setState({useCase:value})})),
+saveCalculation:()=>this.setState({view:"saved",saveMessage:"Je berekening is bewaard.",historyFront:result.frontBar,historyRear:result.rearBar}),
+saveProfile:()=>this.setState({view:"saved",saveMessage:state.profileName.trim()?"Je drukprofiel is bewaard.":"Geef je drukprofiel eerst een naam.",savedProfile:state.profileName.trim()||state.savedProfile,historyFront:result.frontBar,historyRear:result.rearBar}),saveMessage:state.saveMessage,
+hasHistory:state.view!=="history-empty"&&state.bikeId<2,noHistory:state.view==="history-empty"||state.bikeId===2,historyName:state.bikeId===1?"Gravelfiets":"Canyon Endurace",historyFront:format(state.historyFront),historyRear:format(state.historyRear),savedProfile:state.savedProfile,note:state.note,setNote:(event)=>this.setState({note:(!event.target.value||event.target.value==="undefined")?"":String(event.target.value).slice(0,300),noteStatus:""}),saveNote:()=>this.setState({noteStatus:"Je notitie is bewaard."}),noteStatus:state.noteStatus
+};
+}}
+</script></body></html>

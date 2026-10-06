@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Zadelhoogte calculator</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0A7263}a:hover{color:#075A4E}
+input[type=range]{accent-color:#0A7263}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #9CC21F;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: {{h}}px; box-sizing: border-box; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A; display: flex; flex-direction: column">
+<header style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1; flex: none">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: #0F2420">
+<svg width="41" height="32" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#0A7263" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; color: #0F2420">BikeFit<span style="color: #0A7263">Boost</span></span>
+</a>
+<nav aria-label="Routes" style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 15px; font-weight: 700">
+<a href="SaddleHeight.dc.html" aria-current="{{houdingCurrent}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: {{houdingBg}}; color: {{houdingFg}}; text-decoration: none; white-space: nowrap">Mijn houding</a>
+<a href="TirePressure.dc.html" aria-current="{{ritCurrent}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: {{ritBg}}; color: {{ritFg}}; text-decoration: none; white-space: nowrap">Mijn rit</a>
+<a href="Main.dc.html#calculators" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; color: #3B4F4A; text-decoration: none; white-space: nowrap">Alle calculators</a>
+</nav>
+<a href="Login.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: #0F2420; text-decoration: none">Inloggen</a>
+</header>
+<div style="box-sizing: border-box; padding: 40px 64px 64px; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">{{eyebrow}}</div>
+    <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.03em; color: #0F2420">Hoe hoog moet je zadel?</h1>
+    <p style="margin: 0; font-size: 17px; max-width: 64ch">{{intro}}</p>
+    <nav aria-label="{{routeAria}}" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px">
+      <sc-for list="{{routeSteps}}" as="rs" hint-placeholder-count="5">
+        <a href="{{rs.href}}" aria-current="{{rs.current}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 6px; border-radius: 999px; background: {{rs.bg}}; border: 1px {{rs.borderStyle}} {{rs.border}}; color: {{rs.fg}}; font-size: 14px; font-weight: 600; text-decoration: none">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: {{rs.numBg}}; color: #0F2420; font-family: 'DM Mono', monospace; font-size: 13px">
+            <sc-if value="{{rs.done}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if>
+            <sc-if value="{{rs.notDone}}" hint-placeholder-val="{{true}}">{{rs.num}}</sc-if>
+          </span>{{rs.label}}</a>
+      </sc-for>
+    </nav>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+    <span id="modus-label" style="font-size: 15px; font-weight: 700; color: #0F2420">Kies je advies</span>
+    <div role="group" aria-labelledby="modus-label" style="display: inline-flex; gap: 4px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1">
+      <button type="button" aria-pressed="{{quickPressed}}" onClick="{{toQuick}}" style="font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; padding: 0 20px; border-radius: 999px; cursor: pointer; border: 0; background: {{quickBg}}; color: {{quickFg}}">Quick fix · zadel goed in 1 minuut</button>
+      <button type="button" aria-pressed="{{fullPressed}}" onClick="{{toFull}}" style="font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; padding: 0 20px; border-radius: 999px; cursor: pointer; border: 0; background: {{fullBg}}; color: {{fullFg}}">Volledig advies</button>
+    </div>
+    <span style="font-size: 14px; color: #4A5F5A">{{modeHint}}</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <section style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <label for="lengte" style="font-weight: 700; color: #0F2420; font-size: 17px">{{heightTitle}}</label>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><sc-if value="{{heightExample}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; background: #EEF3EF; color: #3B4F4A; font-size: 12px; font-weight: 700">voorbeeld</span></sc-if><span style="font-family: 'DM Mono', monospace; font-size: 22px; color: {{heightColor}}">{{heightLabel}}</span></span>
+        </div>
+        <input id="lengte" type="range" min="150" max="205" step="1" value="{{height}}" onInput="{{onHeight}}" style="width: 100%; min-height: 44px; margin: 0">
+        <sc-if value="{{isQuick}}" hint-placeholder-val="{{false}}">
+          <p style="margin: 0; font-size: 14px; color: #4A5F5A">Meer heb je niet nodig voor een eerste afstelling. Je advies staat hiernaast.</p>
+        </sc-if>
+      </section>
+
+      <sc-if value="{{showQuickInseamButton}}" hint-placeholder-val="{{false}}">
+        <button type="button" aria-expanded="false" aria-controls="binnenbeen-kaart" onClick="{{openQuickInseam}}" style="font: inherit; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; padding: 14px 24px; border-radius: 24px; cursor: pointer; background: #FFFFFF; border: 1.5px dashed #B9CCC6; color: #0F2420">
+          <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">Heb je nog 2 minuten? Meet je binnenbeen</span><span style="font-size: 14px; color: #4A5F5A">Je bereik wordt dan ongeveer twee keer zo smal.</span></span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke="#0A7263" stroke-width="2.2" stroke-linecap="round"></path></svg>
+        </button>
+      </sc-if>
+
+      <sc-if value="{{showInseamCard}}" hint-placeholder-val="{{true}}">
+        <section id="binnenbeen-kaart" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <label for="binnenbeen" style="font-weight: 700; color: #0F2420; font-size: 17px">{{inseamTitle}}</label>
+            <span style="font-family: 'DM Mono', monospace; font-size: 22px; color: {{inseamColor}}">{{inseamLabel}}</span>
+          </div>
+          <input id="binnenbeen" type="range" min="65" max="105" step="0.5" value="{{inseam}}" onInput="{{onInseam}}" style="width: 100%; min-height: 44px; margin: 0">
+          <p style="margin: 0; font-size: 14px; color: #4A5F5A">Sta op blote voeten tegen de muur, klem een boek stevig omhoog tussen je benen en meet van de bovenkant tot de vloer. <a href="#meetinstructie">Meetinstructie</a></p>
+          <sc-if value="{{noInseam}}" hint-placeholder-val="{{true}}">
+            <span style="font-size: 14px; color: #0A7263; font-weight: 600">Schuif om je meting in te vullen</span>
+          </sc-if>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{isQuick}}" hint-placeholder-val="{{false}}">
+        <section aria-labelledby="zo-instellen" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 16px">
+          <h2 id="zo-instellen" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; color: #0F2420">Zo stel je het nu in</h2>
+          <div style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; background: #E6F8A8; color: #0F2420; font-family: 'DM Mono', monospace; font-size: 14px">Advies {{sh}} mm · bereik {{low}}–{{high}} mm</div>
+          <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px">
+            <sc-for list="{{quickSteps}}" as="q" hint-placeholder-count="4">
+              <li style="display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start">
+                <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #E1F2EE; color: #075A4E; font-family: 'DM Mono', monospace; font-size: 14px">{{q.num}}</span>
+                <div style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-size: 16px; font-weight: 700; color: #0F2420">{{q.title}}</span>
+                  <span style="font-size: 14px; line-height: 1.45; color: #3B4F4A">{{q.description}}</span>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; font-size: 14px; line-height: 1.4; color: #0F2420">
+            <div style="background: #F5F8F3; border-radius: 14px; padding: 12px 14px"><strong>Te hoog?</strong> Je heupen wiegen of je tenen zoeken het pedaal onderaan.</div>
+            <div style="background: #F5F8F3; border-radius: 14px; padding: 12px 14px"><strong>Te laag?</strong> Je knie blijft sterk gebogen of je voelt druk voor op je knie.</div>
+          </div>
+          <div role="note" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #FFF0EA; border: 1.5px solid #FFB199; font-size: 15px; font-weight: 600; color: #0F2420">
+            <span>Pijn of tintelingen? Stop met fietsen en laat een bikefitter naar je houding kijken.</span>
+            <a href="#bikefitter" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700">Vind een bikefitter</a>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{isFull}}" hint-placeholder-val="{{true}}">
+        <section aria-labelledby="veilig-afstellen" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 24px 28px; display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.45; color: #0F2420">
+          <h2 id="veilig-afstellen" style="margin: 0; font-size: 17px; font-weight: 700">Te hoog of te laag?</h2>
+          <p style="margin: 0"><strong>Te hoog:</strong> je heupen wiegen op het zadel of je tenen zoeken het pedaal onderaan.</p>
+          <p style="margin: 0"><strong>Te laag:</strong> je knie blijft sterk gebogen en je voelt druk voor op je knie.</p>
+          <p style="margin: 0">Wijkt je huidige hoogte meer dan 10 mm af? Verstel dan maximaal 5 mm per rit.</p>
+          <div role="note" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #FFF0EA; border: 1.5px solid #FFB199; font-weight: 600">
+            <span>Pijn of tintelingen? Stop met fietsen en laat een bikefitter naar je houding kijken.</span>
+            <a href="#bikefitter" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700">Vind een bikefitter</a>
+          </div>
+        </section>
+      </sc-if>
+
+      <details style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 10px 28px; font-size: 15px">
+        <summary style="cursor: pointer; font-weight: 700; color: #0F2420; padding: 10px 0; line-height: 24px">Wat we hier nog niet meenemen</summary>
+        <p style="margin: 0 0 12px">Dit advies gebruikt alleen je lengte en binnenbeen, berekend voor een racefiets. Fietstype, rijdoel, lenigheid en core-stabiliteit verschuiven je zadelhoogte meestal maar een paar millimeter, binnen het bereik hiernaast. In een gratis account nemen we ze mee, bewaren we je maten en maak je het bereik smaller door nog twee keer te meten.</p>
+      </details>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <section aria-label="Je advies" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px">
+        <sc-if value="{{showExampleLine}}" hint-placeholder-val="{{true}}">
+          <p style="margin: 0 0 -8px; font-size: 14px; font-weight: 600; color: #3B4F4A">{{exampleLine}}</p>
+        </sc-if>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start">
+          <div style="display: flex; gap: 14px; align-items: center">
+            <span style="width: 44px; height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex: none">A</span>
+            <div>
+              <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; color: #0F2420; letter-spacing: -.01em">Zadelhoogte</div>
+              <div style="font-size: 15px; color: #4A5F5A">Midden trapas tot bovenkant zadel · berekend voor een racefiets</div>
+            </div>
+          </div>
+          <div style="text-align: right">
+            <div style="font-family: 'DM Mono', monospace; font-size: 48px; line-height: 1; color: #0F2420">{{sh}}<span style="font-size: 18px; margin-left: 6px">mm</span></div>
+            <div style="font-family: 'DM Mono', monospace; font-size: 16px; color: #0F2420; margin-top: 6px">± {{half}} mm</div>
+          </div>
+        </div>
+
+        <dc-import name="Bereikbalk" low="{{low}}" high="{{high}}" value="{{sh}}" min="{{barMin}}" max="{{barMax}}" low-label="{{lowLabel}}" high-label="{{highLabel}}" size="groot" dashed="{{dashed}}" aria="{{barLabel}}" hint-size="100%,80px"></dc-import>
+
+        <p style="margin: 0; font-size: 16px; color: #0F2420">{{sentence}}</p>
+
+        <sc-if value="{{showChange}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="align-self: flex-start; background: #E6F8A8; color: #0F2420; border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 14px">{{changeLabel}}</div>
+        </sc-if>
+
+        <sc-if value="{{isFull}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; gap: 12px; align-items: center; padding: 14px 18px; background: #E1F2EE; border-radius: 16px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            <span style="font-size: 15px; color: #075A4E; font-weight: 600">{{nextStep}}</span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isQuick}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 12px 12px 12px 18px; background: #E1F2EE; border-radius: 16px">
+            <span style="display: flex; gap: 12px; align-items: center; font-size: 15px; color: #075A4E; font-weight: 600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>{{quickNext}}</span>
+            <button type="button" onClick="{{toFull}}" style="font: inherit; flex: none; font-weight: 700; font-size: 15px; min-height: 44px; padding: 0 20px; border-radius: 999px; cursor: pointer; background: #0F2420; color: #FFFFFF; border: 2px solid #0F2420">Volledig advies</button>
+          </div>
+        </sc-if>
+
+        <details style="font-size: 15px">
+          <summary style="cursor: pointer; font-weight: 700; color: #0F2420; padding: 10px 0; line-height: 24px">Wat betekent dit bereik?</summary>
+          <p style="margin: 0; max-width: 64ch">We berekenen je zadelhoogte uit je maten. Elke maat heeft een meetfout en elk lichaam reageert iets anders op dezelfde formule. Samen geeft dat een bereik waarin je ideale hoogte in 19 van de 20 gevallen ligt; betere metingen maken het smaller.</p>
+          <a href="#methode" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 700">Hoe we rekenen</a>
+        </details>
+      </section>
+
+      <sc-if value="{{showCheck}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="background: #FFF7DB; border: 1.5px solid #FFD66B; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-weight: 700; color: #0F2420; font-size: 16px">Even controleren</div>
+          <p style="margin: 0; font-size: 15px; color: #0F2420">Je binnenbeen is wat {{direction}} dan gemiddeld bij jouw lengte ({{devLabel}}). Dat kan prima kloppen. Controleer even of je in centimeters hebt gemeten en het boek stevig omhoog hield.</p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap">
+            <button type="button" onClick="{{confirm}}" style="font: inherit; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer; background: #0F2420; color: #FFFFFF; border: 2px solid #0F2420">Klopt, ga verder</button>
+            <button type="button" onClick="{{remeasure}}" style="font: inherit; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer; background: transparent; color: #0F2420; border: 2px solid #0F2420">Opnieuw meten</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showLarge}}" hint-placeholder-val="{{false}}">
+        <div role="alert" style="background: #FFF0EA; border: 1.5px solid #FFB199; border-radius: 20px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-weight: 700; color: #0F2420; font-size: 16px">Meet je binnenbeen opnieuw</div>
+          <p style="margin: 0; font-size: 15px; color: #0F2420">Deze binnenbeenlengte wijkt sterk af van wat we bij jouw lengte verwachten ({{devLabel}}). Meet nog eens volgens de meetinstructie. Blijft de waarde zo, laat je dan meten door een erkende bikefitter. Tot dan rekenen we met je lengte.</p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+            <button type="button" onClick="{{remeasure}}" style="font: inherit; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer; background: #0F2420; color: #FFFFFF; border: 2px solid #0F2420">Opnieuw meten</button>
+            <button type="button" onClick="{{override}}" style="font: inherit; font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer; background: transparent; color: #0F2420; border: 2px solid #0F2420">Toch gebruiken</button>
+            <a href="#bikefitter" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 15px; padding: 0 6px">Vind een bikefitter</a>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFull}}" hint-placeholder-val="{{true}}">
+        <section aria-label="Zo wordt je advies preciezer" style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 26px 28px; display: flex; flex-direction: column; gap: 14px">
+          <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Zo wordt je advies preciezer</div>
+          <p style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.25; color: #0F2420">Je zadelhoogte heeft nu een bereik van ± {{half}} mm. Meet je binnenbeen drie keer in je account en het wordt ± 18 mm.</p>
+          <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 120px; gap: 16px; align-items: center; padding: 12px 16px; border-radius: 16px; background: #F5F8F3">
+            <div><div style="font-weight: 700; color: #0F2420">Nu</div><div style="font-size: 13px">{{lad.now.text}}</div></div>
+            <sc-if value="{{lad.now.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #DCE6E1"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.now.left}}%; width: {{lad.now.width}}%; border-radius: 999px; background: #B9CCC6"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #0F2420"></div></div></sc-if><sc-if value="{{lad.now.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+            <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right; color: #0F2420">{{lad.now.value}}</div>
+          </div>
+          <sc-if value="{{showAccount}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; flex-direction: column; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #E6F8A8; color: #0F2420">
+              <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 120px; gap: 16px; align-items: center">
+                <div><div style="font-weight: 700">Gratis account</div><div style="font-size: 13px">{{lad.acc.text}}</div></div>
+                <sc-if value="{{lad.acc.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #FFFFFF"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.acc.left}}%; width: {{lad.acc.width}}%; border-radius: 999px; background: #CFF26A"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #0F2420"></div></div></sc-if><sc-if value="{{lad.acc.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+                <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right">{{lad.acc.value}}</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+                <a href="RP2LoginHandoff.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #0F2420; color: #FFFFFF; font-weight: 700; font-size: 15px; text-decoration: none">Maak mijn bereik smaller</a>
+                <span style="font-size: 13px">Gratis. Wat je hier invult nemen we mee.</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{lad.hasPaid}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; flex-direction: column; gap: 14px; padding: 18px 16px; border-radius: 16px; background: #0F2420; color: #FFFFFF">
+              <div style="display: grid; grid-template-columns: 190px minmax(0, 1fr) 120px; gap: 16px; align-items: center">
+                <div><div style="display: flex; align-items: center; gap: 8px; font-weight: 700">Betaald<span style="font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 2px 8px; background: #CFF26A; color: #0F2420">Meest precies</span></div><div style="font-size: 13px; color: #B9CCC6">{{lad.paid.text}}</div></div>
+                <sc-if value="{{lad.paid.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 14px; border-radius: 999px; background: #2E4C45"><div style="position: absolute; top: 0; bottom: 0; left: {{lad.paid.left}}%; width: {{lad.paid.width}}%; border-radius: 999px; background: #CFF26A"></div><div style="position: absolute; top: -5px; left: 50%; width: 4px; height: 24px; margin-left: -2px; border-radius: 2px; background: #FFFFFF"></div></div></sc-if><sc-if value="{{lad.paid.noBar}}" hint-placeholder-val="{{false}}"><div></div></sc-if>
+                <div style="font-family: 'DM Mono', monospace; font-size: 18px; text-align: right; color: #CFF26A">{{lad.paid.value}}</div>
+              </div>
+              <ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; font-size: 14px; color: #E1F2EE">
+                <sc-for list="{{lad.perks}}" as="pk" hint-placeholder-count="2">
+                  <li style="display: flex; gap: 10px; align-items: flex-start"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 9.5l3 3 7-7" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{pk.text}}</li>
+                </sc-for>
+              </ul>
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #17332D"><div style="font-size: 13px; font-weight: 700; color: #FFFFFF">Zo ziet je betaalde advies eruit</div><div style="display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 28px; font-size: 14px; color: #B9CCC6; border-top: 1px solid #2E4C45; padding-top: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3"></path></svg><span>Stap 1 · zadelhoogte</span><span style="font-family: 'DM Mono', monospace; color: #FFFFFF">•• mm</span></div><div style="display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 28px; font-size: 14px; color: #B9CCC6; border-top: 1px solid #2E4C45; padding-top: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3"></path></svg><span>Stap 2 · zadelterugstand</span><span style="font-family: 'DM Mono', monospace; color: #FFFFFF">•• mm</span></div><div style="display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 28px; font-size: 14px; color: #B9CCC6; border-top: 1px solid #2E4C45; padding-top: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3"></path></svg><span>Stap 3 · stuurhoogte</span><span style="font-family: 'DM Mono', monospace; color: #FFFFFF">•• mm</span></div></div>
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+                <a href="afsluiten/Kies.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; font-size: 15px; text-decoration: none">Ontgrendel met een losse meting · €13,50</a>
+                <a href="Pricing.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #FFFFFF; font-weight: 700; font-size: 14px">Bekijk wat betaald oplevert</a>
+                <span style="font-size: 13px; color: #B9CCC6">of het jaarabonnement: €21,50 per jaar, € 1,79 per maand</span>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+
+        <section aria-label="Volgende calculator" style="display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 20px 26px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Volgende · Mijn houding 2 van 5</div>
+            <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 24px; color: #0F2420">Framemaat</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 1.45">{{nextText}}</p>
+          </div>
+          <a href="FrameSize.dc.html" style="flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 2px solid #0F2420; color: #0F2420; font-weight: 700; font-size: 15px; text-decoration: none">Naar framemaat<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="#0F2420" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        </section>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: 'full', quickInseam: false, height: 190, inseam: 89, hasInseam: false, confirmed: false, override: false, change: null, touchedHeight: false };
+  }
+  // Rekenregels uit de betrouwbaarheidsrelease (rel/Main.dc.html), ongewijzigd
+  calc(s) {
+    const exp = s.height * 0.47;
+    const dev = s.hasInseam ? (s.inseam - exp) / exp : 0;
+    const ad = Math.abs(dev);
+    const status = !s.hasInseam ? 'none' : ad > 0.12 ? 'large' : ad > 0.05 ? 'check' : 'ok';
+    let b = exp * 10, sB = 0.03 * exp * 10;
+    if (status === 'ok' || status === 'check') { b = s.inseam * 10; sB = 10; }
+    if (status === 'large' && s.override) { b = s.inseam * 10; }
+    const sh = Math.round(b * 0.883);
+    const half = Math.round(1.96 * Math.sqrt(Math.pow(0.883 * sB, 2) + Math.pow(0.01 * sh, 2)));
+    return { exp, dev, status, sh, half };
+  }
+  update(patch) {
+    const before = this.calc(this.state).half;
+    const next = Object.assign({}, this.state, patch);
+    const after = this.calc(next).half;
+    next.change = before !== after ? { from: before, to: after } : this.state.change;
+    this.setState(next);
+  }
+  routeSteps() {
+    const list = [['SaddleHeight.dc.html', 'Zadelhoogte'], ['FrameSize.dc.html', 'Framemaat'], ['CrankLength.dc.html', 'Cranklengte'], ['SaddleWidth.dc.html', 'Zadelbreedte'], ['BikeFit.dc.html', 'Bike fit']];
+    return list.map((it, i) => {
+      const n = i + 1, cur = n === 1, done = false;
+      return { href: it[0], label: it[1], num: String(n), current: cur ? 'step' : 'false', done: done, notDone: !done,
+        bg: cur ? '#0F2420' : 'transparent', fg: cur ? '#FFFFFF' : '#3B4F4A',
+        border: cur ? '#0F2420' : '#B9CCC6', borderStyle: cur ? 'solid' : 'dashed',
+        numBg: cur ? '#CFF26A' : '#EEF3EF' };
+    });
+  }
+  // Ladder Nu → Gratis account → Betaald; balkbreedte relatief aan de huidige ± (huidige = 80%)
+  ladder(nowHalf, nowText) {
+    const row = (h, text) => {
+      const w = Math.max(6, Math.min(80, h / nowHalf * 80));
+      return { hasBar: true, noBar: false, left: (50 - w / 2).toFixed(1), width: w.toFixed(1), text: text, value: '± ' + Math.round(h) + ' mm' };
+    };
+    return {
+      now: row(nowHalf, nowText),
+      acc: row(18, 'Binnenbeen 3× gemeten'),
+      paid: row(13, 'Kniehoek gemeten op een foto'),
+      hasPaid: true,
+      perks: [{ text: 'Aanpassingsplan in stappen van max. 5 mm, evaluatie na 7 dagen' }, { text: 'Zadel, reach en stuur in de juiste volgorde' }]
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    const r = this.calc(s);
+    const quick = s.mode === 'quick';
+    const r5 = (v) => Math.round(v / 5) * 5;
+    const low = r5(r.sh - r.half), high = r5(r.sh + r.half);
+    const halfAfter = (sB) => Math.round(1.96 * Math.sqrt(Math.pow(0.883 * sB, 2) + Math.pow(0.01 * r.sh, 2)));
+    let nextStep;
+    if (r.status === 'large' && !s.override) nextStep = 'Meet je binnenbeen opnieuw; tot dan rekenen we met je lengte.';
+    else if (r.status === 'large') nextStep = 'Breed bereik: je binnenbeenlengte is nog niet bevestigd. Meet opnieuw.';
+    else if (r.status === 'none') nextStep = 'Vul je binnenbeenlengte in → ± ' + halfAfter(10) + ' mm';
+    else nextStep = 'Bewaar je maten en meet nog 2 keer → ± ' + halfAfter(10 / Math.sqrt(3)) + ' mm';
+    const basis = r.status === 'none' ? 'je lengte (binnenbeen geschat)' : (r.status === 'large' && !s.override) ? 'je lengte, tot je binnenbeen opnieuw is gemeten' : 'je lengte en 1 meting van je binnenbeen';
+    const dashed = (r.status === 'check' && !s.confirmed) || r.status === 'large';
+    // Accountrij alleen als het binnenbeen ok of bevestigd is (zoals showSave in rel/Main.dc.html)
+    const showAccount = r.status === 'ok' || (r.status === 'check' && s.confirmed);
+    const inseamUsed = showAccount || (r.status === 'large' && s.override);
+    const quickSteps = [
+      ['Meet je huidige hoogte', 'Meet van het midden van de trapas langs de zitbuis tot de bovenkant van je zadel.'],
+      ['Stel je zadel af', 'Maak de zadelklem los. Zet je zadel op het advies binnen het bereik en markeer de zadelpen met tape. Draai de klem vast met het aanhaalmoment dat op de klem staat.'],
+      ['Doe de hielcheck', 'Zet je hiel op het pedaal in de onderste stand. Je been is dan net gestrekt. Met de bal van je voet op het pedaal blijft je knie licht gebogen.'],
+      ['Verstel in kleine stappen', 'Wijkt je huidige hoogte meer dan 10 mm af? Verstel dan maximaal 5 mm per rit.']
+    ].map((q, i) => ({ num: String(i + 1), title: q[0], description: q[1] }));
+    return {
+      h: 2240,
+      houdingCurrent: 'true', ritCurrent: 'false', houdingBg: '#0F2420', houdingFg: '#FFFFFF', ritBg: 'transparent', ritFg: '#0F2420',
+      routeSteps: this.routeSteps(), routeAria: 'Route Mijn houding, stap 1 van 5',
+      eyebrow: quick ? 'Quick fix · 1 stap · zonder account' : 'Gratis calculator · 2 stappen · zonder account',
+      intro: quick ? 'Alleen je lengte, en je ziet direct hoe je je zadel instelt.' : 'Je lengte geeft direct een eerste advies. Met je binnenbeenlengte wordt het bereik twee keer zo smal.',
+      isQuick: quick, isFull: !quick,
+      quickPressed: quick ? 'true' : 'false', fullPressed: quick ? 'false' : 'true',
+      quickBg: quick ? '#0F2420' : 'transparent', quickFg: quick ? '#FFFFFF' : '#0F2420',
+      fullBg: quick ? 'transparent' : '#0F2420', fullFg: quick ? '#0F2420' : '#FFFFFF',
+      modeHint: quick ? 'Alleen je lengte nodig, met direct de stappen om af te stellen.' : 'Lengte en binnenbeen, met controle op je meting.',
+      toQuick: () => this.setState({ mode: 'quick' }),
+      toFull: () => this.setState({ mode: 'full' }),
+      heightTitle: quick ? 'Je lengte' : '1. Je lengte',
+      inseamTitle: quick ? 'Binnenbeenlengte · optioneel' : '2. Je binnenbeenlengte',
+      showQuickInseamButton: quick && !s.quickInseam,
+      showInseamCard: !quick || s.quickInseam,
+      openQuickInseam: () => this.setState({ quickInseam: true }),
+      quickSteps: quickSteps,
+      quickNext: 'Wil je je meting laten controleren en je bereik smaller maken?',
+      height: s.height, inseam: s.inseam,
+      heightLabel: s.height + ' cm',
+      heightExample: !s.touchedHeight,
+      heightColor: s.touchedHeight ? '#0F2420' : '#4A5F5A',
+      showExampleLine: !s.touchedHeight && !s.hasInseam,
+      exampleLine: 'Voorbeeld voor iemand van ' + s.height + ' cm · schuif naar jouw maat',
+      inseamLabel: s.hasInseam ? String(s.inseam).replace('.', ',') + ' cm' : 'nog niet ingevuld',
+      inseamColor: s.hasInseam ? '#0F2420' : '#4A5F5A',
+      noInseam: !s.hasInseam,
+      sh: r.sh, half: r.half, low: low, high: high, lowLabel: String(low), highLabel: String(high),
+      barMin: r.sh - 60, barMax: r.sh + 60, dashed: dashed,
+      barLabel: 'Zadelhoogte ' + r.sh + ' mm, bereik ' + low + ' tot ' + high + ' mm',
+      sentence: 'Je ideale zadelhoogte ligt naar verwachting tussen ' + low + ' en ' + high + ' mm. Gebaseerd op ' + basis + '.',
+      showChange: !!s.change,
+      changeLabel: s.change ? (s.change.to < s.change.from ? 'Nauwkeuriger: ± ' + s.change.from + ' → ± ' + s.change.to + ' mm' : 'Bereik: ± ' + s.change.from + ' → ± ' + s.change.to + ' mm') : '',
+      nextStep: nextStep,
+      showCheck: r.status === 'check' && !s.confirmed,
+      showLarge: r.status === 'large' && !s.override,
+      direction: r.dev > 0 ? 'langer' : 'korter',
+      devLabel: (r.dev > 0 ? '+' : '−') + Math.abs(Math.round(r.dev * 100)) + '%',
+      showAccount: showAccount,
+      lad: this.ladder(r.half, inseamUsed ? 'Lengte en binnenbeen 1× gemeten' : 'Alleen je lengte'),
+      nextText: inseamUsed ? 'Je lengte en binnenbeen staan al klaar.' : 'Je lengte staat al klaar.',
+      onHeight: (e) => this.update({ height: Number(e.target.value), touchedHeight: true, confirmed: false, override: false }),
+      onInseam: (e) => this.update({ inseam: Number(e.target.value), hasInseam: true, confirmed: false, override: false }),
+      remeasure: () => this.update({ hasInseam: false, confirmed: false, override: false }),
+      confirm: () => this.update({ confirmed: true }),
+      override: () => this.update({ override: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

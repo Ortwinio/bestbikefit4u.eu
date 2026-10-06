@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Dashboard overzicht — mobiel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+button{font-family:inherit}
+
+*{box-sizing:border-box}
+h2,h3,p{margin:0}h2,h3{font-family:'Bricolage Grotesque',sans-serif}h2{font-size:24px}h3{font-size:20px}p{line-height:1.5}
+.num{font-family:'DM Mono',monospace}.muted{color:#4A5F5A}.eyebrow{color:#0A7263;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:999px;border:1px solid #DCE6E1;background:#FFFFFF;color:#0F2420;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}.primary{background:#0A7263;color:#FFFFFF;border-color:#0A7263}.link{display:inline-flex;align-items:center;min-height:44px;font-weight:700;font-size:14px}.chip{display:inline-flex;align-items:center;border-radius:999px;padding:4px 11px;background:#E1F2EE;color:#0F2420;font-size:12px;font-weight:700}
+.panel{padding:28px;border-radius:28px;background:#FFFFFF;border:1px solid #DCE6E1}.rows{display:flex;flex-direction:column;gap:18px}.actions{display:flex;flex-wrap:wrap;gap:8px}.bike-row{display:grid;grid-template-columns:1fr 1fr 1.12fr;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px;overflow:hidden}.cell{padding:24px;min-width:0;display:flex;flex-direction:column;gap:16px}.cell+.cell{border-left:1px solid #DCE6E1}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{padding:12px;background:#F5F8F3;border-radius:14px}.stat-label{font-size:12px;color:#4A5F5A;margin-bottom:8px}.stat .num{font-size:23px}.unit{font-size:12px!important;color:#4A5F5A}dl{margin:0}dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #DCE6E1;font-size:14px}dt{color:#4A5F5A}dd{margin:0;text-align:right;font-weight:600}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #0A7263;outline-offset:4px}
+.review-state-strip button{display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;height:44px;min-height:44px;padding:0 2px;border:0;border-radius:0;background:transparent;color:#0F2420;font-family:Figtree,sans-serif;font-size:13px;font-weight:600;cursor:pointer}.review-state-strip button span{display:inline-flex;align-items:center;height:32px;padding:0 10px;border:1px solid #B9CCC6;border-radius:999px;background:#FFFFFF;box-sizing:border-box}.review-state-strip button[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF;border-color:#0F2420}
+
+.mobile-main .panel{padding:20px;border-radius:24px}.mobile-main .bike-row{grid-template-columns:repeat(1,minmax(0,1fr))}.cell{padding:20px}.cell+.cell{border-left:0;border-top:1px solid #DCE6E1}
+.mobile-main header{flex-direction:column;align-items:flex-start!important}.mobile-main header .actions{justify-content:flex-start!important}.mobile-main header h1{font-size:44px!important}.mobile-main header>div>div{flex-wrap:wrap;gap:8px!important}
+.mobile-main .panel>div[style*="justify-content: space-between"],.mobile-main section.rows>div[style*="justify-content: space-between"]{flex-wrap:wrap;gap:12px}
+.mobile-main .panel>div[style*="grid-template-columns: repeat(2"]{grid-template-columns:repeat(1,minmax(0,1fr))!important}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{padding:12px}.stat-label{min-height:18px}.stat>.num{font-size:26px}.stat p .num{font-size:inherit;white-space:nowrap}
+.mobile-main section[role="dialog"],section[aria-label="Fitrapport"]{position:fixed!important;left:16px!important;top:112px!important;width:358px!important;max-height:calc(100vh - 206px);overflow-y:auto;z-index:5!important;padding:20px!important}
+input[type="file"]{width:100%;max-width:100%}.review-state-strip{flex-shrink:0}.review-state-strip button{min-width:44px}
+.bottom-tabs{position:fixed;left:0;bottom:0;width:390px;padding:8px 8px 12px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;z-index:6;background:#0F2420;border-top:1px solid #2E4C45}
+.bottom-tabs a,.bottom-tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:56px;padding:6px 2px;border:0;border-radius:12px;background:transparent;color:#E1F2EE;font:600 11px Figtree,sans-serif;text-decoration:none;cursor:pointer}.bottom-tabs [aria-current="page"]{background:#CFF26A;color:#0F2420}
+.more-sheet{position:fixed;bottom:90px;left:16px;width:358px;max-height:calc(100vh - 150px);overflow-y:auto;padding:20px;border:1px solid #B9CCC6;border-radius:24px;z-index:7;background:#0F2420;color:#FFFFFF;box-shadow:0 12px 36px rgba(15,36,32,.25)}.more-sheet h2{font-size:21px}.more-links{display:flex;flex-direction:column;gap:4px;margin-top:16px}.more-links a{min-height:48px!important}.more-sheet .btn{padding:8px 12px}
+</style>
+</helmet>
+<div style="width: 390px; height: 4960px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; background: #F5F8F3; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+<section aria-label="Ontwerpstaat" class="review-state-strip" style="grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; height: 44px; min-width: 0; padding: 0 16px; border-bottom: 1px dashed #B9CCC6; background: #EEF3EF; box-sizing: border-box"><strong style="flex-shrink: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #4A5F5A">Ontwerpstaat</strong><div role="group" aria-label="Kies een ontwerpstaat" style="display: flex; min-width: 0; gap: 4px; overflow-x: auto; white-space: nowrap; height: 44px"><sc-for list="{{reviewStates}}" as="review" hint-placeholder-count="17"><button type="button" aria-pressed="{{review.pressed}}" onClick="{{review.pick}}"><span>{{review.label}}</span></button></sc-for></div></section>
+
+<header style="display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 64px; padding: 0 10px 0 16px; border-bottom: 1px solid #DCE6E1; background: #F5F8F3">
+<a href="Home.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: #0F2420">
+<svg width="44" height="34" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#0A7263" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em">BikeFit<span style="color: #0A7263">Boost</span></span>
+</a>
+<div style="display: flex; align-items: center; gap: 8px">
+<button type="button" aria-label="Lisa Jansen: wijzig profielfoto" onClick="{{openPhoto}}" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #CFF26A; color: #0F2420; font-weight: 800; font-size: 17px; cursor: pointer">L</button>
+<button type="button" aria-label="Menu" onClick="{{toggleMore}}" aria-expanded="{{moreExpanded}}" aria-controls="account-more" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid #DCE6E1; border-radius: 12px; background: #FFFFFF; color: #0F2420; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+</header>
+
+<main class="mobile-main" style="display: flex; flex-direction: column; gap: 24px; padding: 24px 16px 108px; min-width: 0">
+<sc-if value="{{loading}}" hint-placeholder-val="{{false}}"><section class="panel rows" role="status" aria-busy="true"><div style="display:flex;align-items:center;gap:14px"><h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px">Dashboard laden…</h1><span style="display:inline-flex;padding:5px 10px;border-radius:999px;background:#E1F2EE;color:#075A4E;font-size:12px;white-space:nowrap">Voorbeeldgegevens</span></div><div style="height: 8px; background: #DCE6E1; border-radius: 99px"></div></section></sc-if>
+<sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+<div class="rows" style="gap: 24px">
+<sc-if value="{{message}}" hint-placeholder-val="{{false}}"><section class="panel rows" style="background: #E1F2EE"><h2>Vul je profiel aan</h2><p>Controleer je lichaamsmaten voordat je een nieuwe fit start.</p><div class="actions"><a class="btn" href="../Profile.dc.html">Bekijk je profiel</a><button class="btn" type="button" onClick="{{dismissMessage}}">Sluit bericht</button></div></section></sc-if>
+<header style="display: flex; justify-content: space-between; align-items: center; gap: 20px">
+<div><div style="font-size: 15px; color: #4A5F5A">Welkom terug</div><div style="display: flex; align-items: center; gap: 14px"><h1 style="margin: 4px 0 8px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; letter-spacing: -0.03em">Hoi Lisa</h1><span class="chip">Voorbeeldgegevens</span></div><p class="muted">Je rijdersprofiel, fietssetup en bandenspanningsadvies op een plek.</p></div>
+<div class="actions" style="justify-content: flex-end"><a class="btn primary" href="../FitStart.dc.html">Start fit</a><a class="btn" href="../BikeAdd.dc.html">Voeg een fiets toe</a></div>
+</header>
+<sc-if value="{{photoOpen}}" hint-placeholder-val="{{false}}"><section class="panel rows" role="dialog" aria-modal="true" aria-label="Wijzig profielfoto" style="position: absolute; top: 220px; left: 480px; width: 640px; z-index: 1; border: 2px solid #0F2420; box-shadow: 0 18px 40px rgba(15,36,32,.12)"><h2>Wijzig profielfoto</h2><label for="profile-photo">Kies een foto (JPEG, PNG of WebP)</label><input id="profile-photo" type="file" accept="image/jpeg,image/png,image/webp" onChange="{{selectPhoto}}" style="min-height: 44px"><p class="muted">De foto wordt in dit ontwerp niet geüpload of opgeslagen.</p><sc-if value="{{photoError}}" hint-placeholder-val="{{false}}"><p role="alert" style="padding: 12px; border-radius: 12px; background: #FFB199">Uploaden mislukt. Probeer het opnieuw.</p></sc-if><button class="btn" type="button" onClick="{{closePhoto}}" style="align-self: start">Sluit foto-invoer</button></section></sc-if>
+<sc-if value="{{hasFit}}" hint-placeholder-val="{{true}}"><section class="panel rows" aria-labelledby="fit-title" style="gap: 14px">
+<div><span class="eyebrow">Laatste fitadvies · <span class="num">15-02-2026</span></span><h2 id="fit-title" style="margin-top: 6px">Jouw afstelling</h2><p class="muted" style="font-size: 13px; margin-top: 4px">Canyon Endurace · bereik = <span class="num">95%</span> · {{fitPlanNote}}</p></div>
+<sc-for list="{{fitRows}}" as="r" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid #DCE6E1">
+<div style="display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 999px; background: #CFF26A; color: #0F2420; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">{{r.letter}}</span><div style="min-width: 0"><div style="font-weight: 700; font-size: 16px">{{r.name}}</div><div style="font-size: 12px; color: #4A5F5A">Gebaseerd op: {{r.basis}}</div></div><div style="text-align: right"><div class="num" style="font-size: 22px; line-height: 1.1">{{r.value}}<span style="font-size: 12px; margin-left: 3px">mm</span></div><div class="num" style="font-size: 13px; color: #3B4F4A">{{r.pm}}</div></div></div>
+<div role="img" aria-label="{{r.aria}}" style="display: flex; flex-direction: column; gap: 4px; padding-top: 6px; font-family: 'DM Mono', monospace"><div style="position: relative; height: 16px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box"><div style="position: absolute; top: -1.5px; bottom: -1.5px; left: {{r.left}}%; width: {{r.width}}%; background: #CFF26A; border: 1.5px solid #0F2420; border-radius: 999px; box-sizing: border-box"></div><div style="position: absolute; left: {{r.mark}}%; top: -6px; width: 4px; height: 26px; margin-left: -2px; background: #0F2420; border-radius: 3px"></div></div><div style="position: relative; height: 18px; font-size: 13px"><span style="position: absolute; left: {{r.left}}%; transform: translateX(-50%); white-space: nowrap">{{r.lowLabel}}</span><span style="position: absolute; left: {{r.right}}%; transform: translateX(-50%); white-space: nowrap">{{r.highLabel}}</span></div></div>
+<div aria-label="{{r.paidAria}}" style="display: flex; flex-direction: column; gap: 6px; padding: 10px 14px; border-radius: 14px; background: #0F2420; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 8px"><sc-if value="{{r.locked}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z"></path></svg></sc-if><sc-if value="{{r.unlocked}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12l4 4 10-10"></path></svg></sc-if><span style="font-size: 13px; font-weight: 700">{{r.paidLabel}}</span><span class="num" style="margin-left: auto; font-size: 17px; color: #CFF26A">{{r.paidText}}</span></div>
+<sc-if value="{{r.hasBar}}" hint-placeholder-val="{{true}}"><div aria-hidden="true" style="position: relative; height: 8px; border-radius: 99px; background: #2E4C45"><div style="position: absolute; top: 0; bottom: 0; left: {{r.paidLeft}}%; width: {{r.paidWidth}}%; border-radius: 99px; background: #CFF26A"></div><div style="position: absolute; top: -4px; left: 50%; width: 3px; height: 16px; margin-left: -1.5px; border-radius: 2px; background: #FFFFFF"></div></div></sc-if>
+<span style="font-size: 12px; color: #B9CCC6">{{r.paidBasis}}</span>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{climbing}}" hint-placeholder-val="{{false}}"><div style="background: #E1F2EE; padding: 12px; border-radius: 14px"><strong style="font-size: 13px">Klimprofiel inbegrepen</strong><p style="font-size: 12px; margin-top: 8px">Zadel <span class="num">752 mm</span> · drop <span class="num">90 mm</span> · reach <span class="num">532 mm</span></p></div></sc-if>
+<sc-if value="{{showUpsell}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 16px; background: #E6F8A8"><span style="font-size: 15px; font-weight: 700">Grootste winst: kniehoek meten · <span class="num" style="white-space: nowrap">± 18 → ± 13 mm</span></span><span style="font-size: 13px; color: #3B4F4A">Op je zadelhoogte, met een losse meting of het jaarabonnement.</span><a class="btn" href="../Pricing.dc.html" style="align-self: flex-start; background: #0F2420; color: #FFFFFF; border-color: #0F2420">Bekijk betaald</a></div></sc-if>
+<sc-if value="{{showPaid}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 16px; background: #E1F2EE"><span style="font-size: 15px; font-weight: 700; color: #075A4E">Volgende stap: evaluatie van stap 1 na <span class="num">7</span> dagen · <span class="num">22-02-2026</span></span><a class="btn" href="FitResults.dc.html" style="align-self: flex-start">Bekijk je stappenplan</a></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 16px; border-radius: 18px; background: #F5F8F3; border: 1px solid #DCE6E1">
+<h3 style="font-size: 18px">{{planTitle}}</h3>
+<sc-for list="{{planLines}}" as="pl" hint-placeholder-count="3"><div style="display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; gap: 10px; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid #DCE6E1; color: {{pl.color}}; font-size: 14px"><span style="font-weight: 600">{{pl.label}}</span><span class="num" style="font-size: 15px">{{pl.value}}</span><sc-if value="{{pl.locked}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5F5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Vergrendeld" role="img"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z"></path></svg></sc-if><sc-if value="{{pl.unlocked}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg></sc-if></div></sc-for>
+<sc-if value="{{showUpsell}}" hint-placeholder-val="{{true}}"><p style="font-size: 14px">De juiste volgorde, stappen van max. <span class="num">5 mm</span>, een fit-tabel en een evaluatie na <span class="num">7</span> dagen.</p><a class="btn primary" href="../afsluiten/Kies.dc.html">Ontgrendel met een losse meting · €13,50</a><p class="muted" style="font-size: 13px"><span class="num">1</span> fiets, <span class="num">3</span> maanden. Of het jaarabonnement: <span class="num">€21,50</span> per jaar (<span class="num">€ 1,79</span> per maand) voor al je fietsen.</p></sc-if>
+<sc-if value="{{showPaid}}" hint-placeholder-val="{{false}}"><p style="font-size: 14px">Verstel één stap tegelijk en rijd er <span class="num">7</span> dagen mee. Daarna rekenen we opnieuw met je evaluatie.</p><a class="btn primary" href="FitResults.dc.html">Open je stappenplan</a></sc-if>
+</div>
+</section></sc-if>
+<sc-if value="{{noFit}}" hint-placeholder-val="{{false}}"><section class="panel rows" style="gap: 10px"><h2>Jouw afstelling</h2><p class="muted">Nog geen fit-sessie. Start een fit-sessie om je zadelhoogte, terugstand, stuurdrop en reach met hun bereik te zien.</p><a class="btn primary" href="../FitStart.dc.html" style="align-self: start">Start nieuwe fit-sessie</a></section></sc-if>
+<section class="panel rows">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2>Rijdersprofiel</h2><a class="btn" href="../Profile.dc.html">Bewerk profiel</a></div>
+<sc-if value="{{hasProfile}}" hint-placeholder-val="{{true}}">
+<div class="stats"><div class="stat"><p class="stat-label">Lengte</p><span class="num">186</span> <span class="num unit">cm</span></div><div class="stat"><p class="stat-label">Binnenbeenlengte</p><span class="num">86</span> <span class="num unit">cm</span></div><sc-if value="{{hasWeight}}" hint-placeholder-val="{{true}}"><div class="stat"><p class="stat-label">Lichaamsgewicht</p><span class="num">75</span> <span class="num unit">kg</span></div></sc-if><div class="stat" style="background: #FFFFFF; border: 1.5px dashed #9FB2AC"><p class="stat-label">Extra maten</p><strong style="font-size: 15px">Niet ingevuld</strong></div></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 16px">
+<div class="rows" style="gap: 10px"><h3>Flexibiliteit</h3><div style="display: flex; justify-content: space-between"><strong>Goed</strong><span class="num">4/5</span></div><div role="img" aria-label="Flexibiliteit: 4 van 5" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px"><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #FFFFFF; border: 1px solid #9FB2AC"></span></div><p class="muted" style="font-size: 14px">Je raakt zittend je tenen aan.</p></div><div class="rows" style="gap: 10px"><h3>Rompstabiliteit</h3><div style="display: flex; justify-content: space-between"><strong>Gemiddeld</strong><span class="num">3/5</span></div><div role="img" aria-label="Rompstabiliteit: 3 van 5" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px"><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #FFFFFF; border: 1px solid #9FB2AC"></span><span style="height: 12px; border-radius: 3px; background: #FFFFFF; border: 1px solid #9FB2AC"></span></div><p class="muted" style="font-size: 14px">Plank <span class="num">40–60</span> seconden vasthouden.</p></div><div class="rows" style="gap: 10px"><h3>Comfort</h3><div style="display: flex; justify-content: space-between"><strong>Licht ongemak</strong><span class="num">4/5</span></div><div role="img" aria-label="Comfort: 4 van 5" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px"><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #0A7263; border: 1px solid #0A7263"></span><span style="height: 12px; border-radius: 3px; background: #FFFFFF; border: 1px solid #9FB2AC"></span></div><p class="muted" style="font-size: 14px">Af en toe lichte klachten.</p></div>
+</div>
+</sc-if>
+<sc-if value="{{missingProfile}}" hint-placeholder-val="{{false}}"><div class="rows" style="gap: 8px; padding: 20px; border-radius: 18px; background: #FFD66B"><h3>Vul je profiel aan</h3><p>Vul je lichaamsmaten in voor persoonlijk fitadvies.</p><a class="link" href="../Profile.dc.html">Vul je profiel in →</a></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 18px; background: #CFF26A"><div><strong style="font-size: 16px">Maak je advies nog scherper</strong><p style="font-size: 14px; margin-top: 4px">Vul je extra maten (romp, arm, schouder en bovenbeen) en je velgtype in. Dan stijgt de zekerheid van je advies.</p></div><div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700"><span>Profiel compleet</span><span class="num">14/19</span></div><div role="img" aria-label="Profiel voor 14 van 19 gegevens compleet" style="margin-top: 8px; height: 12px; border-radius: 99px; background: #FFFFFF; border: 1.5px solid #0F2420; overflow: hidden"><div style="width: 74%; height: 100%; background: #0F2420"></div></div></div></div>
+<a class="link" href="../FitStart.dc.html">Start nieuwe fit-sessie →</a>
+</section>
+<section class="rows">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2>Mijn fietsen</h2><a class="btn" href="../Bikes.dc.html">Bekijk mijn fietsgarage</a></div>
+<sc-if value="{{emptyBikes}}" hint-placeholder-val="{{false}}"><section class="panel rows" style="text-align: center; align-items: center; padding: 64px 28px"><h3>Nog geen fiets opgeslagen</h3><p class="muted">Voeg een fiets toe om druk- en fitcontext aan een echte setup te koppelen.</p><a class="btn primary" href="../BikeAdd.dc.html">Voeg een fiets toe</a></section></sc-if>
+<sc-if value="{{hasBikes}}" hint-placeholder-val="{{true}}"><article class="bike-row">
+<div class="cell">
+<div><span class="eyebrow">Racefiets</span><h2 style="margin-top: 6px">Canyon Endurace</h2></div>
+<div style="background: #F5F8F3; border-radius: 18px; padding: 6px; display: flex; justify-content: center">
+<img src="/_blob/f97f95df74480418d0ba68c1aaae7927" alt="Pentekening van de racefiets met maatlijnen A tot D" style="width: 294px; height: 195px; display: block; max-width: 100%">
+</div>
+<dl><div><dt>Doel</dt><dd>Prestaties</dd></div><div><dt>Framemaat nu</dt><dd class="num">L</dd></div><div><dt>Banden</dt><dd>28 mm tubeless</dd></div><div><dt>Velgtype</dt><dd style="color: #4A5F5A">Niet opgegeven</dd></div></dl>
+<div class="actions"><a class="btn" href="../BikeProfile.dc.html">Bekijk fiets</a><a class="btn primary" href="../FitStart.dc.html">Start fit</a></div>
+</div>
+<div class="cell">
+<h3>Fietsgebruik</h3><sc-if value="{{hasFit}}" hint-placeholder-val="{{true}}"><span class="chip" style="align-self: start; background: #CFF26A">Fitadvies beschikbaar</span>
+<p class="muted" style="font-size: 13px">Uit je laatste sessie met fitadvies</p>
+<dl><div><dt>Ervaring</dt><dd>Gevorderd</dd></div><div><dt>Per week</dt><dd><span class="num">6–10</span> uur</dd></div><div><dt>Ritafstand</dt><dd><span class="num">60–120</span> km</dd></div><div><dt>Houding</dt><dd>Sportief</dd></div><div><dt>Ritten</dt><dd>Groepsritten</dd></div></dl>
+<div><p class="muted" style="font-size: 12px; margin-bottom: 8px">Gemeld ongemak</p><span class="chip" style="background: #FFFFFF; border: 1.5px solid #0F2420">Voorkant knie</span></div>
+<div class="actions"><button class="btn" type="button" onClick="{{openReport}}">Bekijk rapport</button><button class="btn" type="button" onClick="{{previewDownload}}">Download PDF</button><button class="btn" type="button" onClick="{{previewEmail}}">E-mail rapport</button></div>
+<a class="link" href="../FitStart.dc.html">Herbereken fit →</a></sc-if><sc-if value="{{noFit}}" hint-placeholder-val="{{false}}"><p class="muted">Nog geen fit-sessie. Start een fit-sessie om je fietsgebruik en aanbevelingen hier te zien.</p><a class="btn primary" href="../FitStart.dc.html">Start nieuwe fit-sessie</a></sc-if>
+</div>
+<div class="cell">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><h3>Bandenspanning</h3></div>
+<sc-if value="{{hasPressure}}" hint-placeholder-val="{{true}}"><div role="img" aria-label="{{pressureAria}}" style="display: flex; flex-direction: column; gap: 8px"><div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Canyon Endurace · 28 mm tubeless</div><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{gauges}}" as="gg" hint-placeholder-count="2"><div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 8px; border-radius: 20px; background: {{gg.bg}}; color: {{gg.fg}}; box-sizing: border-box; min-width: 0">
+<div style="align-self: flex-start; padding-left: 4px; font-size: 13px; font-weight: 700">{{gg.label}}</div>
+<svg width="132" height="77" viewBox="0 0 220 128" fill="none" aria-hidden="true" style="max-width: 100%; height: auto"><path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.track}}" stroke-width="16" stroke-linecap="round"></path><path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.arc}}" stroke-width="16" stroke-linecap="round" stroke-dasharray="{{gg.dash}}"></path></svg>
+<div style="margin-top: -38px; font-family: 'DM Mono', monospace; font-size: 32px; line-height: 1">{{gg.bar}}</div>
+<div style="font-size: 13px; font-weight: 600; text-align: center">bar · <span style="font-family: 'DM Mono', monospace">{{gg.psi}}</span> psi<br><span style="font-family: Figtree, sans-serif; font-size: 11px">Schaal <span style="font-family: 'DM Mono', monospace">0–{{gg.maximum}}</span> bar · veilige marge <span style="font-family: 'DM Mono', monospace">{{gg.minimum}}–{{gg.maximum}}</span></span></div>
+</div></sc-for>
+</div></div>
+<p class="muted" style="font-size: 13px">Nu gemeten: voor <span class="num" style="color: #0F2420">5,4 bar</span> · achter <span class="num" style="color: #0F2420">5,9 bar</span></p><p style="padding: 10px 12px; border-radius: 12px; border: 1.5px solid #0F2420; font-size: 13px">Velgtype onbekend. Haakloze velg? Dan is het maximum meestal <span class="num">5,0 bar</span>.</p></sc-if>
+<sc-if value="{{stale}}" hint-placeholder-val="{{false}}"><p style="background: #FFD66B; border-radius: 12px; padding: 12px; font-size: 13px">Je setup is gewijzigd. Bereken je bandenspanning opnieuw.</p></sc-if>
+<sc-if value="{{noPressure}}" hint-placeholder-val="{{false}}"><p class="muted" style="font-size: 14px">Nog geen bandenspanning berekend voor deze fiets.</p></sc-if>
+<a class="link" href="../PressureDashboard.dc.html">{{pressureAction}} →</a>
+</div>
+</article></sc-if>
+</section>
+<sc-if value="{{noticeVisible}}" hint-placeholder-val="{{false}}"><div class="panel actions" role="status" style="background: #E1F2EE; align-items: center; justify-content: space-between"><p>{{notice}}</p><button class="btn" type="button" onClick="{{dismissNotice}}">Sluit melding</button></div></sc-if>
+</div>
+</sc-if>
+<div style="margin-top: 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 20px; background: #17332D; color: #FFFFFF"><div style="font-size: 12px; color: #B9CCC6">Lisa Jansen</div><strong>{{planName}}</strong><sc-if value="{{planFree}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; color: #E1F2EE">Gratis · <span style="font-family: 'DM Mono', monospace">1</span> fiets · profiel tot <span style="font-family: 'DM Mono', monospace">80%</span></span><div role="img" aria-label="Gratis profiel tot 80 procent, de laatste 20 procent is betaald" style="display: grid; grid-template-columns: 4fr 1fr; gap: 3px"><div style="height: 8px; border-radius: 99px 0 0 99px; background: #CFF26A"></div><div style="height: 8px; border-radius: 0 99px 99px 0; border: 1.5px dashed #B9CCC6; box-sizing: border-box"></div></div><span style="font-size: 13px; color: #B9CCC6">Betaald: stappenplan, kniehoek op een foto en alle fietsen. Vanaf <span style="font-family: 'DM Mono', monospace">€13,50</span>.</span><a href="../Pricing.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk betaald</a></sc-if><sc-if value="{{planSingle}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #B9CCC6">Canyon Endurace · tot <span style="font-family: 'DM Mono', monospace">3 jan 2027</span></span><span style="font-size: 13px; color: #B9CCC6">Alle fietsen en <span style="font-family: 'DM Mono', monospace">2</span> cadeaumetingen: upgrade naar het jaarabonnement voor <span style="font-family: 'DM Mono', monospace">€9,50</span>.</span><a href="../Pricing.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; border: 2px solid #CFF26A; color: #CFF26A; font-weight: 700; text-decoration: none">Bekijk jaarabonnement</a></sc-if><sc-if value="{{planYear}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">2</span> cadeaus over</span><a href="../Cadeau.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Geef een bikefit cadeau</a></sc-if></div></main>
+
+<sc-if value="{{reportOpen}}" hint-placeholder-val="{{false}}"><section role="dialog" aria-modal="true" aria-label="Fitrapport" style="position: absolute; top: 250px; left: 440px; width: 740px; padding: 32px; border: 2px solid #0F2420; border-radius: 24px; background: #FFFFFF; box-shadow: 0 18px 40px rgba(15,36,32,.12); display: flex; flex-direction: column; gap: 24px">
+<div class="actions" style="justify-content: space-between"><h2>Fitrapport</h2><button type="button" class="btn" onClick="{{closeReport}}">Sluit rapport</button></div>
+<sc-if value="{{reportError}}" hint-placeholder-val="{{false}}"><p role="alert" style="background: #FFB199; border-radius: 16px; padding: 24px">Rapport kon niet worden geladen.</p></sc-if>
+<sc-if value="{{reportReady}}" hint-placeholder-val="{{true}}"><div class="panel rows"><div><p class="muted" style="font-size: 13px">Fitrapport voor Lisa Jansen · <span class="num">15-02-2026</span> · 6 pagina's</p><h3 style="margin-top: 4px">Canyon Endurace · Prestaties</h3></div><dl><div><dt>A · Zadelhoogte</dt><dd class="num">754 <span class="unit">mm</span></dd></div><div><dt>B · Zadelterugstand</dt><dd class="num">49 <span class="unit">mm</span></dd></div><div><dt>C · Stuurdrop</dt><dd class="num">98 <span class="unit">mm</span></dd></div><div><dt>D · Stuurreach</dt><dd class="num">538 <span class="unit">mm</span></dd></div><div><dt>Banden voor / achter</dt><dd class="num">5,2 / 5,6 <span class="unit">bar</span></dd></div><div><dt>Zekerheid</dt><dd class="num">90%</dd></div></dl></div></sc-if>
+<div class="actions"><a class="btn" href="FitResults.dc.html">Open volledige weergave</a><a class="btn" href="../FitRapport1.dc.html">Bekijk PDF-ontwerp</a><button class="btn" type="button" onClick="{{previewDownload}}">Download PDF</button><button class="btn" type="button" onClick="{{previewEmail}}">E-mail rapport</button></div><p role="status">{{notice}}</p>
+</section></sc-if>
+<nav class="bottom-tabs" aria-label="Account"><a href="Dashboard.dc.html" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg><span>Overzicht</span></a><a href="../Profile.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M8 8a4 4 0 1 0 8 0a4 4 0 1 0-8 0M4 21c0-8 16-8 16 0"></path></svg><span>Profiel</span></a><a href="../Bikes.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 17a4 4 0 1 0 8 0a4 4 0 1 0-8 0M6 17l4-10h6l2 10M10 7l4 10"></path></svg><span>Fietsen</span></a><a href="../History.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M6 4h12v17H6zM9 2h6v4H9zM9 10h6M9 15h6"></path></svg><span>Afstelling</span></a><button type="button" onClick="{{toggleMore}}" aria-expanded="{{moreExpanded}}" aria-controls="account-more"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Meer</span></button></nav>
+<sc-if value="{{moreOpen}}" hint-placeholder-val="{{false}}"><section id="account-more" role="dialog" aria-modal="true" aria-label="Meer accountopties" class="more-sheet"><div class="actions" style="justify-content: space-between; align-items: center"><h2>Meer in je account</h2><button type="button" class="btn" onClick="{{toggleMore}}">Sluit</button></div><nav aria-label="Overige accountpagina’s" class="more-links"><a href="../BikeAdd.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fiets</a><a href="../FitStart.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"></path></svg>Nieuwe fit-sessie</a><a href="../PressureDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 17a9 9 0 1 1 18 0M12 17l4-6"></path></svg>Bandenspanning</a><a href="../GearingDashboard.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 3v18M3 7l4-4 4 4M17 21V3M13 17l4 4 4-4"></path></svg>Verzet</a><a href="../SaddleSelector.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 7c0-5 18-5 18 0l-6 13H9z"></path></svg>Zadelkiezer</a><a href="../Settings.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"></path></svg>Instellingen</a><a href="../Feedback.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; color: #E1F2EE; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M3 4h18v13H9l-6 4z"></path></svg>Feedback</a></nav></section></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":4960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'filled', report: 'closed', notice: '', photoOpen: false, messageDismissed: false, moreOpen: false, plan: 'free' };
+  }
+  renderVals() {
+    const current = this.state;
+    const definitions = [
+      ['filled', 'Gevuld'], ['empty', 'Nieuw account'], ['loading', 'Laden'],
+      ['missing-profile', 'Geen profiel'], ['no-bikes', 'Geen fietsen'],
+      ['no-fit', 'Geen fit'], ['missing-weight', 'Geen gewicht'],
+      ['stale', 'Druk verouderd'], ['no-pressure', 'Geen drukadvies'],
+      ['climbing', 'Klimprofiel'], ['report', 'Rapport'],
+      ['report-error', 'Rapportfout'], ['photo-error', 'Fotofout'], ['message', 'Bericht']
+    ];
+    const hasFit = !['empty', 'no-bikes', 'no-fit', 'loading'].includes(current.view);
+    const paid = (current.plan || 'free') !== 'free';
+    // Bereiken (95%) uit de vaste feiten: gratis account → betaald. Terugstand heeft geen betaalde ±.
+    const fitRow = (letter, name, v, freeHalf, freeBasis, paidHalf, paidBasis, widest, step) => {
+      const r5 = (x) => Math.round(x / 5) * 5;
+      const half = paid && paidHalf ? paidHalf : freeHalf;
+      const span = 1.25 * widest, min = v - span, max = v + span;
+      const low = r5(v - half), high = r5(v + half);
+      const pct = (x) => Math.max(0, Math.min(100, (x - min) / (max - min) * 100));
+      const pw = paidHalf ? Math.max(4, paidHalf / span * 100) : 0;
+      return {
+        letter, name, value: v, lowLabel: String(low), highLabel: String(high), pm: '± ' + half + ' mm',
+        left: pct(low).toFixed(1), right: pct(high).toFixed(1), width: (pct(high) - pct(low)).toFixed(1), mark: pct(v).toFixed(1),
+        basis: paid && paidHalf ? paidBasis.charAt(0).toLowerCase() + paidBasis.slice(1) : freeBasis,
+        aria: name + ' ' + v + ' mm, bereik ' + low + ' tot ' + high + ' mm',
+        locked: !paid, unlocked: paid,
+        paidLabel: paid ? 'Je stappenplan' : 'Betaald',
+        paidText: paid ? step[0] : (paidHalf ? '± ' + paidHalf + ' mm' : 'in je plan'),
+        paidBasis: paid ? step[1] : (paidHalf ? paidBasis : 'Volgorde en stappen van max. 5 mm'),
+        hasBar: !paid && !!paidHalf, paidLeft: (50 - pw / 2).toFixed(1), paidWidth: pw.toFixed(1),
+        paidAria: paid ? name + ': ' + step[0] + ', ' + step[1] : (paidHalf ? name + ' betaald: ± ' + paidHalf + ' mm, vergrendeld' : name + ' betaald: in je stappenplan, vergrendeld')
+      };
+    };
+    // Compacte meterkaarten, gelijk aan Bandenspanning.dc.html (size compact)
+    const front = 5.2, rear = 5.6, maxBar = 7, minBar = 4.5;
+    const fmt = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+    const fmt1 = (v) => (Math.round(v * 10) / 10).toFixed(1).replace('.', ',');
+    const gauge = (label, value, dark) => ({
+      label, bar: fmt1(value), psi: Math.round(value * 14.5038),
+      dash: (Math.max(0, Math.min(1, value / maxBar)) * 282.7).toFixed(1) + ' 400',
+      minimum: fmt(minBar), maximum: fmt(maxBar),
+      bg: dark ? '#0F2420' : '#CFF26A', fg: dark ? '#FFFFFF' : '#0F2420',
+      track: dark ? '#2E4C45' : '#B6D94C', arc: dark ? '#CFF26A' : '#0F2420'
+    });
+    return {
+      fitRows: [
+        fitRow('A', 'Zadelhoogte', 754, 18, 'binnenbeen 3× gemeten', 13, 'Kniehoek gemeten op een foto', 49, ['Stap 1 · + 5 mm', 'Zadelhoogte, evaluatie na 7 dagen']),
+        fitRow('B', 'Zadelterugstand', 49, 15, 'dijbeen geschat', 0, '', 15, ['Stap 2 · + 3 mm', 'Terugstand, na evaluatie van stap 1']),
+        fitRow('C', 'Stuurdrop', 98, 20, 'lenigheid zelf ingeschat', 12, 'Geleide lenigheidstest', 30, ['Stap 3 · − 5 mm', 'Stuurhoogte, na evaluatie van stap 2']),
+        fitRow('D', 'Reach', 538, 15, 'torso en arm gemeten', 10, 'Houdingsfoto', 28, ['Geen aanpassing', 'Binnen je bereik'])
+      ],
+      showUpsell: !paid, showPaid: paid,
+      fitPlanNote: paid ? 'jouw betaalde meting' : 'gratis account',
+      planTitle: paid ? 'Je stappenplan' : 'Zo ziet je betaalde stappenplan eruit',
+      planLines: [['Stap 1 · zadelhoogte', '+ 5 mm'], ['Stap 2 · terugstand', '+ 3 mm'], ['Stap 3 · stuurhoogte', '− 5 mm']].map((l) => ({
+        label: l[0], value: paid ? l[1] : '•• mm', locked: !paid, unlocked: paid, color: paid ? '#0F2420' : '#4A5F5A'
+      })),
+      gauges: [gauge('Voorband', front, false), gauge('Achterband', rear, true)],
+      pressureAria: 'Canyon Endurace: voorband ' + fmt1(front) + ' bar, achterband ' + fmt1(rear) + ' bar, veilige marge ' + fmt(minBar) + ' tot ' + fmt(maxBar) + ' bar',
+
+      moreOpen: current.moreOpen, moreExpanded: String(current.moreOpen),
+      toggleMore: () => this.setState({ moreOpen: !current.moreOpen }),
+      reviewStates: definitions.map((definition) => ({
+        label: definition[1], pressed: String(current.view === definition[0]),
+        pick: () => this.setState({ view: definition[0], report: definition[0] === 'report-error' ? 'error' : definition[0] === 'report' ? 'ready' : 'closed', notice: '', photoOpen: definition[0] === 'photo-error', messageDismissed: false })
+      })).concat([['free', 'Gratis account'], ['single', 'Losse meting actief'], ['year', 'Jaarabonnement']].map((plan) => ({
+        label: plan[1], pressed: String((current.plan || 'free') === plan[0]),
+        pick: () => this.setState({ plan: plan[0] })
+      }))),
+      planName: (current.plan || 'free') === 'year' ? 'Jaarabonnement' : (current.plan || 'free') === 'single' ? 'Losse meting' : 'Gratis account',
+      planFree: (current.plan || 'free') === 'free', planSingle: current.plan === 'single', planYear: current.plan === 'year',
+      loading: current.view === 'loading', ready: current.view !== 'loading',
+      hasProfile: !['empty', 'missing-profile'].includes(current.view),
+      missingProfile: ['empty', 'missing-profile'].includes(current.view),
+      hasWeight: current.view !== 'missing-weight',
+      emptyBikes: ['empty', 'no-bikes'].includes(current.view),
+      hasBikes: !['empty', 'no-bikes'].includes(current.view),
+      hasFit: hasFit, noFit: !hasFit,
+      used: current.view === 'empty' ? 0 : 1, usagePct: current.view === 'empty' ? 0 : 100,
+      coreSegments: [1, 2, 3, 4, 5].map((segment) => ({ color: segment <= 3 ? '#0A7263' : '#DCE6E1' })),
+      hasPressure: current.view !== 'no-pressure',
+      noPressure: current.view === 'no-pressure', stale: current.view === 'stale',
+      climbing: current.view === 'climbing',
+      pressureAction: current.view === 'no-pressure' ? 'Bereken bandenspanning' : 'Herbereken bandenspanning',
+      message: current.view === 'message' && !current.messageDismissed,
+      dismissMessage: () => this.setState({ messageDismissed: true }),
+      photoOpen: current.photoOpen, photoError: current.view === 'photo-error',
+      openPhoto: () => this.setState({ photoOpen: true }),
+      closePhoto: () => this.setState({ photoOpen: false }),
+      selectPhoto: () => this.setState({ notice: 'Je gekozen foto staat klaar om te bewaren.' }),
+      reportOpen: current.report !== 'closed',
+      reportError: current.report === 'error', reportReady: current.report === 'ready',
+      openReport: () => this.setState({ report: 'ready', notice: '' }),
+      closeReport: () => this.setState({ report: 'closed', notice: '' }),
+      previewDownload: () => this.setState({ notice: 'Je PDF staat klaar.' }),
+      previewEmail: () => this.setState({ notice: 'Je rapport is verstuurd naar je accountadres.' }),
+      notice: current.notice, noticeVisible: current.notice.length > 0,
+      dismissNotice: () => this.setState({ notice: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

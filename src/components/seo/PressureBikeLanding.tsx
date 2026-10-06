@@ -1,3 +1,5 @@
+import { PressureDisplay } from "@/components/features/pressure/PressureDisplay";
+import { ContentDisclosure, ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
 import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
@@ -28,13 +30,14 @@ export function PressureBikeLanding({ bikeType, locale }: { bikeType: EnBikeType
       <div className="space-y-5">
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">{copy.eyebrow}</p>
         <h1 className="font-display text-4xl font-bold sm:text-5xl">{copy.title(labels[locale])}</h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">{copy.intro}</p>
+        <ShortAnswer text={copy.intro} locale={locale} />
         <Link href={calculatorPath} className={button}>{copy.calculator}</Link>
       </div>
       <Image src="/illustrations/04-bandenspanning.webp" alt={copy.illustration} width={392} height={350}
         sizes="(max-width: 767px) 85vw, 392px" className="mx-auto h-auto w-full max-w-[392px]" />
     </header>
-    <section aria-labelledby="pressure-bike-assumptions" className="rounded-3xl bg-[var(--bbf-petrol-zacht)] p-6 text-[var(--bbf-inkt)]">
+    <ContentDisclosure title={copy.assumptions}>
+<section aria-labelledby="pressure-bike-assumptions" className="rounded-3xl bg-[var(--bbf-petrol-zacht)] p-6 text-[var(--bbf-inkt)]">
       <h2 id="pressure-bike-assumptions" className="font-display text-2xl font-bold">{copy.assumptions}</h2>
       <dl className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {[{ label: copy.width, value: `${defaults.widthFrontMm} / ${defaults.widthRearMm} mm` },
@@ -44,9 +47,16 @@ export function PressureBikeLanding({ bikeType, locale }: { bikeType: EnBikeType
             <dd className="mt-1 font-semibold">{item.value}</dd></div>)}
       </dl>
     </section>
+</ContentDisclosure>
     <section aria-labelledby="pressure-bike-table">
       <h2 id="pressure-bike-table" className="font-display text-3xl font-bold">{copy.table}</h2>
       <p className="mt-3 text-muted-foreground">{copy.tableHint}</p>
+      {rows[0] && <figure className="mt-5 max-w-xl">
+        <figcaption className="mb-3 text-sm text-muted-foreground">
+          {copy.weight}: {rows[0].weightKg} kg · {copy.tubeless}
+        </figcaption>
+        <PressureDisplay {...rows[0].tubeless} locale={locale} compact />
+      </figure>}
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {(["tubeless", "innerTube"] as const).map(setup => <div key={setup} className="overflow-hidden rounded-2xl border border-border">
           <table className="w-full text-left text-sm" data-pressure-setup={setup}>
@@ -65,7 +75,7 @@ export function PressureBikeLanding({ bikeType, locale }: { bikeType: EnBikeType
         </div>)}
       </div>
     </section>
-    <section className="rounded-3xl border border-border p-6" aria-labelledby="pressure-bike-limits">
+    <section data-usability="safety" className="rounded-3xl border border-border p-6" aria-labelledby="pressure-bike-limits">
       <h2 id="pressure-bike-limits" className="font-display text-2xl font-bold">{copy.limitsTitle}</h2>
       <p className="mt-3 leading-relaxed text-muted-foreground">{copy.limits}</p>
       {warnings.length > 0 && <div className="mt-4"><h3 className="font-semibold">{copy.warning}</h3>

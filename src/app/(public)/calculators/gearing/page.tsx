@@ -1,14 +1,11 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getEquipmentAnswer } from "@/lib/seo/calculatorAnswers/equipment";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { ArrowUpDown, Gauge, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
-  PublicCtaBand,
   PublicSection,
 } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -17,6 +14,7 @@ import { BRAND } from "@/config/brand";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
+import { gearingPageMessages } from "@/i18n/calculators/gearingPage";
 import {
   buildFaqPageSchema,
   buildHowToSchema,
@@ -72,24 +70,19 @@ const TRUST_POINT_COLORS: FeatureIconCardColor[] = ["teal", "primary", "green"];
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const copy = gearingPageMessages[locale];
   const alternates = buildLocaleAlternates("/calculators/gearing", locale);
 
   return {
     title: isNl ? "Verzet calculator | BikeFitBoost" : "Gearing Calculator | BikeFitBoost",
-    description: isNl
-      ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle " +
-        "kliminschatting op basis van kettingring, cassette en wielmaat."
-      : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb-" +
-        "readiness verdict from chainring, cassette, and wheel size.",
+    description: copy.description,
     keywords: isNl
       ? ["verzet calculator", "gear ratio calculator", "klimverzet calculator", "cassette calculator"]
       : ["gearing calculator", "gear ratio calculator", "climb gearing calculator", "cassette calculator"],
     openGraph: {
       images: [DEFAULT_SOCIAL_IMAGE],
       title: isNl ? "Verzet calculator" : "Gearing Calculator",
-      description: isNl
-        ? "Zie direct je lichtste versnelling, zwaarste versnelling en kliminschatting."
-        : "See your easiest gear, hardest gear, and climb-readiness verdict immediately.",
+      description: copy.description,
       type: "website",
       url: alternates.canonical,
     },
@@ -100,51 +93,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function GearingCalculatorPage() {
   const locale = await getRequestLocale();
   const isNl = locale === "nl";
+  const copy = gearingPageMessages[locale];
   const pagePath = withLocalePrefix("/calculators/gearing", locale);
   const pageUrl = new URL(pagePath, BRAND.siteUrl).toString();
   const faqs = buildFaqs(isNl);
-  const trustPoints = isNl
-    ? [
-        {
-          title: "Exacte drivetrain math",
-          description:
-            "Chainring, cassette en wielmaat worden direct in ratio, development en snelheid omgezet.",
-          icon: <ArrowUpDown className="h-5 w-5" />,
-        },
-        {
-          title: "Eerlijke kliminschatting",
-          description:
-            "De tool zegt niet meer dan ze weet: de klimuitkomst is een bruikbare vuistregel, geen vermogensmeter.",
-          icon: <ShieldCheck className="h-5 w-5" />,
-        },
-        {
-          title: "Directe upgrade-richting",
-          description:
-            "Je ziet meteen of een grotere cassette, kleiner binnenblad of ruimer 1x-bereik logischer is.",
-          icon: <Gauge className="h-5 w-5" />,
-        },
-      ]
-    : [
-        {
-          title: "Exact drivetrain math",
-          description:
-            "Chainring, cassette, and wheel size convert straight into ratio, development, and speed.",
-          icon: <ArrowUpDown className="h-5 w-5" />,
-        },
-        {
-          title: "Honest climb verdict",
-          description:
-            "The tool does not pretend to know more than it does: the climb readout is a " +
-            "practical rule, not a power meter.",
-          icon: <ShieldCheck className="h-5 w-5" />,
-        },
-        {
-          title: "Clear upgrade direction",
-          description:
-            "You can see right away whether a larger cassette, smaller inner ring, or wider 1x range makes more sense.",
-          icon: <Gauge className="h-5 w-5" />,
-        },
-      ];
+  const trustIcons = [ArrowUpDown, ShieldCheck, Gauge];
 
   return (
     <div className="text-foreground">
@@ -152,9 +105,7 @@ export default async function GearingCalculatorPage() {
         schema={[
           ...buildCalculatorPageSchemas({
             name: isNl ? "BikeFitBoost Verzet calculator" : "BikeFitBoost Gearing Calculator",
-            description: isNl
-              ? "Bereken je lichtste en zwaarste versnelling, snelheid bij cadans en een snelle kliminschatting."
-              : "Calculate your easiest and hardest gear, speed at cadence, and a quick climb verdict.",
+            description: copy.description,
             url: pageUrl,
             locale,
           }),
@@ -181,94 +132,52 @@ export default async function GearingCalculatorPage() {
       <CalculatorAnswerSection id="gearing" locale={locale} content={getEquipmentAnswer("gearing", locale)} />
       <div className="text-foreground">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <PublicSection
-            className="mt-10"
-            header={{
-              eyebrow: isNl ? "Waarom dit werkt" : "Why this works",
-              title: isNl ? "Exacte verzetmath, snelle route-check" : "Exact gearing math, fast route check",
-              description: isNl
-                ? "De public calculator legt de basis. In het dashboard koppel je daar later rijder en event aan."
-                : "The public calculator lays the groundwork. The dashboard later adds rider and event context.",
-            }}
-          >
-            <div className="grid gap-4 md:grid-cols-3">
-              {trustPoints.map((point, index) => (
-                <FeatureIconCard
-                  key={point.title}
-                  icon={point.icon}
-                  title={point.title}
-                  description={point.description}
-                  color={TRUST_POINT_COLORS[index] ?? "primary"}
-                />
-              ))}
-            </div>
-          </PublicSection>
+          <ContentDisclosure title={copy.sectionTitle}>
+            <PublicSection
+              className="mt-10"
+              header={{
+                eyebrow: isNl ? "Waarom dit werkt" : "Why this works",
+                title: copy.sectionTitle,
+                description: copy.sectionDescription,
+              }}
+            >
+              <div className="grid gap-4 md:grid-cols-3">
+                {copy.trustPoints.map((point, index) => {
+                  const Icon = trustIcons[index];
+                  return (
+                  <FeatureIconCard
+                    key={point.title}
+                    icon={<Icon className="h-5 w-5" />}
+                    title={point.title}
+                    description={point.description}
+                    color={TRUST_POINT_COLORS[index] ?? "primary"}
+                  />
+                  );
+                })}
+              </div>
+            </PublicSection>
+          </ContentDisclosure>
 
-          <PublicCtaBand
-            className="mt-10"
-            eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-            title={isNl ? "Vergelijk dit met je dashboard setup" : "Compare this with your dashboard setup"}
-            description={
-              isNl
-                ? "Maak een gratis account aan om deze setup naast je echte fiets te zetten en de " +
-                  "kliminschatting verder te verfijnen."
-                : "Create a free account to compare this setup with your real bike and refine the " +
-                  "climb verdict further."
-            }
-            actions={
-              <>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/calculators/bike-fit", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="gearing_result"
-                      ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                    />
-                  }
-                >
-                  {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                </Button>
-                <Button
-                  render={
-                    <TrackedCtaLink
-                      href={withLocalePrefix("/pricing", locale)}
-                      locale={locale}
-                      pagePath={pagePath}
-                      section="gearing_pricing_cta"
-                      ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                    />
-                  }
-                  variant="outline"
-                >
-                  {isNl ? "Bekijk prijzen" : "Compare plans"}
-                </Button>
-              </>
-            }
-            aside={
-              isNl
-                ? "De public versie is bedoeld voor snelle oriëntatie. Het dashboard gaat verder " +
-                  "met rijder, event en climb demand."
-                : "The public version is for quick orientation. The dashboard goes further with " +
-                  "rider, event, and climb demand."
-            }
-          />
 
-          <PublicSection className="mt-10" header={{ title: isNl ? "Veelgestelde vragen" : "Frequently asked questions" }}>
-            <div className="space-y-6">
-              {faqs.map((faq) => <article key={faq.q}>
-                <h3 className="text-lg font-semibold">{faq.q}</h3>
-                <p className="mt-2 text-muted-foreground">{faq.a}</p>
-              </article>)}
-            </div>
-          </PublicSection>
 
+          <ContentDisclosure title={isNl ? "Veelgestelde vragen" : "Frequently asked questions"}>
+            <PublicSection className="mt-10" header={{ title: isNl ? "Veelgestelde vragen" : "Frequently asked questions" }}>
+              <div className="space-y-6">
+                {faqs.map((faq) => <article key={faq.q}>
+                  <h3 className="text-lg font-semibold">{faq.q}</h3>
+                  <p className="mt-2 text-muted-foreground">{faq.a}</p>
+                </article>)}
+              </div>
+            </PublicSection>
+          </ContentDisclosure>
+
+          <ContentDisclosure title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}>
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-            links={getRelatedLinks("gearing", locale)}
+            links={getRelatedLinks("gearing", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </div>
       </div>
     </div>

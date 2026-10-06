@@ -1,3 +1,4 @@
+import { ContentDisclosure, ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,7 +69,7 @@ export default async function MeasurementGuidePage() {
           <div>
             <p className={styles.eyebrow}>{presentation.eyebrow}</p>
             <h1>{page.title}</h1>
-            <p className={styles.lead}>{page.subtitle}</p>
+            <ShortAnswer text={page.subtitle} locale={locale} />
             <div className={styles.actions}>
               <a className={styles.primary} href="#metingen">{presentation.begin}</a>
               <Link className={styles.secondary} href={localized("/calculators/bike-fit")}>{presentation.openTool}</Link>
@@ -90,7 +91,8 @@ export default async function MeasurementGuidePage() {
             <p>{presentation.measurementsIntro}</p>
           </div>
           <div className={styles.grid}>
-            {page.items.map((item, index) => (
+            {page.items.map((item, index) => {
+              const measurement = (
               <article key={item.id} id={item.id} className={styles.card}>
                 <div className={styles.cardTop}>
                   <div className={styles.cardTitle}>
@@ -116,7 +118,9 @@ export default async function MeasurementGuidePage() {
                 </ol>
                 <p className={styles.caution}><strong>{page.mistakesLabel}:</strong> {item.mistakes.join(" ")}</p>
               </article>
-            ))}
+              );
+              return item.required ? measurement : <ContentDisclosure key={item.id} title={item.name}>{measurement}</ContentDisclosure>;
+            })}
             <aside className={`${styles.card} ${styles.next}`}>
               <p className={styles.eyebrow}>{presentation.nextEyebrow}</p>
               <h3>{presentation.nextTitle}</h3>
@@ -130,14 +134,16 @@ export default async function MeasurementGuidePage() {
             </aside>
           </div>
         </section>
-        <section className={styles.recheck} aria-labelledby="recheck">
-          <div>
-            <p className={styles.eyebrow}>{presentation.recheck}</p>
-            <h2 id="recheck">{page.remeasureTitle}</h2>
-          </div>
-          <ul>{page.remeasureBullets.map((item) => <li key={item}><NumberText text={item} /></li>)}</ul>
-        </section>
-        <section className={styles.cta} aria-labelledby="next-step">
+        <ContentDisclosure title={page.remeasureTitle}>
+          <section className={styles.recheck} aria-labelledby="recheck">
+            <div>
+              <p className={styles.eyebrow}>{presentation.recheck}</p>
+              <h2 id="recheck">{page.remeasureTitle}</h2>
+            </div>
+            <ul>{page.remeasureBullets.map((item) => <li key={item}><NumberText text={item} /></li>)}</ul>
+          </section>
+        </ContentDisclosure>
+        <section data-usability="next-step" className={styles.cta} aria-labelledby="next-step">
           <div><h2 id="next-step">{page.ctaTitle}</h2><p>{page.ctaBody}</p></div>
           <div className={styles.actions}>
             <TrackedCtaLink className={styles.primary} href={localized("/login")} locale={locale} pagePath={pagePath}

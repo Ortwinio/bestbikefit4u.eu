@@ -3,11 +3,12 @@
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { profileText, measurementWarningNl } from "@/i18n/account/profileLanguage";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
 import { AlertCircle, Info, HelpCircle, Sparkles } from "lucide-react";
 import { IllustratedMeasurementHelp } from "./IllustratedMeasurementHelp";
+import { MeasurementKind } from "./MeasurementKind";
 import { NumberSlider } from "./NumberSlider";
 import Link from "next/link";
 import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
@@ -47,7 +48,6 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
   const { locale } = useDashboardMessages();
   const {
     watch,
-    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -56,26 +56,6 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
   const armLengthCm    = watch("armLengthCm")    as number | undefined;
   const shoulderWidthCm = watch("shoulderWidthCm") as number | undefined;
   const femurLengthCm  = watch("femurLengthCm")  as number | undefined;
-
-  // Track whether each field has been manually moved by the user
-  const userEditedTorso    = useRef(false);
-  const userEditedArm      = useRef(false);
-  const userEditedShoulder = useRef(false);
-  const userEditedFemur    = useRef(false);
-
-  // Auto-populate from height whenever height changes (unless user has manually set the field)
-  useEffect(() => {
-    if (!heightCm) return;
-    if (!userEditedTorso.current)
-      setValue("torsoLengthCm", predictedTorso(heightCm), { shouldValidate: true });
-    if (!userEditedArm.current)
-      setValue("armLengthCm", predictedArm(heightCm), { shouldValidate: true });
-    if (!userEditedShoulder.current)
-      setValue("shoulderWidthCm", predictedShoulder(heightCm), { shouldValidate: true });
-    if (!refinementsLocked && !userEditedFemur.current)
-      setValue("femurLengthCm", predictedFemur(heightCm), { shouldValidate: true });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heightCm, refinementsLocked]);
 
   // Warnings: >20% deviation from height-based prediction
   const torsoWarning = useMemo(() => {
@@ -136,6 +116,7 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
 
       {/* Torso Length */}
       <div className="space-y-2">
+        <MeasurementKind field="torsoLengthCm" label={profileText(locale, "Torso Length")} />
         <Controller
           name="torsoLengthCm"
           render={({ field }) => (
@@ -151,7 +132,6 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
                   : undefined
               }
               onChange={(v) => { field.onChange(v); field.onBlur(); }}
-              onUserInteract={() => { userEditedTorso.current = true; }}
               error={errors.torsoLengthCm?.message as string}
             />
           )}
@@ -178,6 +158,7 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
 
       {/* Arm Length */}
       <div className="space-y-2">
+        <MeasurementKind field="armLengthCm" label={profileText(locale, "Arm Length")} />
         <Controller
           name="armLengthCm"
           render={({ field }) => (
@@ -193,7 +174,6 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
                   : undefined
               }
               onChange={(v) => { field.onChange(v); field.onBlur(); }}
-              onUserInteract={() => { userEditedArm.current = true; }}
               error={errors.armLengthCm?.message as string}
             />
           )}
@@ -220,6 +200,7 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
 
       {/* Shoulder Width */}
       <div className="space-y-2">
+        <MeasurementKind field="shoulderWidthCm" label={profileText(locale, "Shoulder Width")} />
         <Controller
           name="shoulderWidthCm"
           render={({ field }) => (
@@ -235,7 +216,6 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
                   : undefined
               }
               onChange={(v) => { field.onChange(v); field.onBlur(); }}
-              onUserInteract={() => { userEditedShoulder.current = true; }}
               error={errors.shoulderWidthCm?.message as string}
             />
           )}
@@ -270,7 +250,7 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
             ? getPricingAccessCopy(locale).locked : getPricingAccessCopy(locale).retained}</p>
           <Link className="inline-flex min-h-11 items-center text-primary underline"
             href={withLocalePrefix("/pricing", locale)}>{getPricingAccessCopy(locale).options}</Link>
-        </div> : <Controller
+        </div> : <><MeasurementKind field="femurLengthCm" label={profileText(locale, "Femur Length")} /><Controller
           name="femurLengthCm"
           render={({ field }) => (
             <NumberSlider
@@ -285,11 +265,10 @@ export function StepAdvancedMeasurements({ refinementsLocked = false }: { refine
                   : undefined
               }
               onChange={(v) => { field.onChange(v); field.onBlur(); }}
-              onUserInteract={() => { userEditedFemur.current = true; }}
               error={errors.femurLengthCm?.message as string}
             />
           )}
-        />}
+        /></>}
         <InfoBox variant="secondary" icon={<Info className="h-4 w-4 text-[color:var(--primary)]" />}>
           <p className="font-medium text-[color:var(--foreground)]">{profileText(locale, "How to measure femur length")}</p>
           <ul className="mt-1 list-inside list-disc space-y-1 text-[color:var(--muted-foreground)]">

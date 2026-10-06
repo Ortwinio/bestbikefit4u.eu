@@ -51,7 +51,9 @@ export function sampleData(locale: EmailLocale) {
     transitionAnnouncement: { ...personal, launchAt: null, eligibleTransitionOffer: true, daysUntilLaunch: 14 },
     loginCode: { code: "482915" },
     resultsSummary: { ...sampleFit, actionUrl } satisfies ResultsSummaryData,
-    fitReport: { ...sampleFit, actionUrl } satisfies FitReportData,
+    fitReport: { ...sampleFit, actionUrl,
+      tirePressure: { frontBar: 5.2, rearBar: 5.6, frontPsi: 75, rearPsi: 81 },
+    } satisfies FitReportData,
     fitPassWelcome: purchase,
     caseStudyLead: {
       name: "Lisa Jansen", email: "lisa@example.test", ridingGoal: "Comfortabel langere ritten fietsen",

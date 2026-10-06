@@ -43,6 +43,15 @@ const pages = [
 ] as const;
 
 describe("editorial page SEO and localized content", () => {
+  it.each(["nl", "en"] as const)("keeps escalation guidance outside disclosures in %s", async language => {
+    locale = language;
+    const landing = await renderHtml(await (language === "nl" ? DutchLanding : EnglishLanding).default());
+    const visible = landing.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, "");
+    expect(visible).toContain(language === "nl" ? "Minder geschikt als enige stap" : "Know the limits early");
+    expect(visible).toContain('data-usability="safety"');
+    const why = (await renderHtml(await Why.default())).replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, "");
+    expect(why).toContain(language === "nl" ? "Blijf niet doorrijden" : "Do not keep riding");
+  });
   it.each(["nl", "en"] as const)("describes informative hero illustrations and leaves decorative art empty in %s", async (language) => {
     locale = language;
     const cases = [
@@ -133,7 +142,12 @@ describe("editorial page SEO and localized content", () => {
     const html = await renderHtml(await page.default());
     expect(html).toContain('"@type":"FAQPage"');
     expect(html).toContain('"@type":"BreadcrumbList"');
-    expect((html.match(/<details/g) ?? []).length).toBe(3);
+    expect((html.match(/<details/g) ?? []).length).toBeGreaterThan(3);
+    expect(html).not.toMatch(/<details[^>]*\sopen[\s=>]/);
+    const schemas = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+      .flatMap(match => JSON.parse(match[1]));
+    const faqSchema = schemas.find(schema => schema["@type"] === "FAQPage");
+    expect(faqSchema.mainEntity).toHaveLength(3);
     locale = language === "en" ? "nl" : "en";
     await expect(page.default()).rejects.toThrow("NEXT_NOT_FOUND");
     expect((await page.generateMetadata()).robots).toEqual({ index: false, follow: false });

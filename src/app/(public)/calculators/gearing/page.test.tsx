@@ -2,7 +2,8 @@
 
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import GearingCalculatorPage from "./page";
+import GearingCalculatorPage, { generateMetadata } from "./page";
+import { gearingPageMessages } from "@/i18n/calculators/gearingPage";
 
 let locale: "en" | "nl" = "en";
 
@@ -68,6 +69,40 @@ afterEach(() => {
 });
 
 describe("gearing calculator page", () => {
+  it.each(["nl", "en"] as const)("makes only supported calculator promises in %s", async language => {
+    locale = language;
+    const copy = gearingPageMessages[language];
+    const { container } = render(await GearingCalculatorPage());
+    for (const point of copy.trustPoints) {
+      expect(screen.getByText(point.title)).toBeTruthy();
+      expect(screen.getByText(point.description)).toBeTruthy();
+    }
+    expect(screen.getByText(copy.sectionDescription)).toBeTruthy();
+    expect(container.textContent).not.toMatch(
+      /upgrade-richting|upgrade direction|Exacte? drivetrain math|climb verdict|rijder en event|rider and event/i,
+    );
+    const metadata = await generateMetadata();
+    expect(metadata.description).toBe(copy.description);
+    expect(metadata.openGraph?.description).toBe(copy.description);
+    expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${language}/calculators/gearing`);
+    const schemas = Array.from(container.querySelectorAll('script[type="application/ld+json"]'))
+      .flatMap(script => JSON.parse(script.textContent ?? "[]"));
+    expect(schemas.find(schema => schema["@type"] === "WebPage").description).toBe(copy.description);
+    expect(JSON.stringify(metadata)).not.toMatch(/hardest gear|zwaarste versnelling|speed at cadence|snelheid bij cadans/);
+  });
+
+  it.each(["en", "nl"] as const)("explains the public FTP-derived cadence model in %s", async language => {
+    locale = language;
+    const { container } = render(await GearingCalculatorPage());
+    expect(container.textContent).toContain("85%");
+    expect(container.textContent).toContain("3 W/kg");
+    expect(container.textContent).toContain("9 kg");
+    expect(container.textContent).toContain(language === "nl" ? "2,1 m" : "2.1 m");
+    expect(container.textContent).toContain(language === "nl" ? "laat apart zien" : "separately shows");
+    expect(container.textContent).not.toContain("does not calculate required power");
+    expect(container.textContent).not.toContain("berekent niet je benodigde vermogen");
+  });
+
   it.each(["en", "nl"] as const)(
     "preserves page, breadcrumb and FAQ schemas without application or rating markup in %s",
     async (language) => {
@@ -89,10 +124,11 @@ describe("gearing calculator page", () => {
     render(ui);
 
     expect(screen.getByText("Gearing form")).toBeTruthy();
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit",
-    );
-    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe("/en/pricing");
+    expect(document.querySelectorAll("details[data-usability=explanation]").length).toBeGreaterThan(0);
+    expect(document.querySelector("details[open]")).toBeNull();
+    expect(document.querySelector("[data-usability=short-answer]")).not.toBeNull();
+    expect(screen.queryByText("Start free bike fit")).toBeNull();
+    expect(screen.queryByText("Compare plans")).toBeNull();
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 
@@ -102,10 +138,11 @@ describe("gearing calculator page", () => {
     render(ui);
 
     expect(screen.getByText("Gearing form")).toBeTruthy();
-    expect(screen.getByText("Start gratis bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/nl/calculators/bike-fit",
-    );
-    expect(screen.getByText("Bekijk prijzen").closest("a")?.getAttribute("href")).toBe("/nl/pricing");
+    expect(document.querySelectorAll("details[data-usability=explanation]").length).toBeGreaterThan(0);
+    expect(document.querySelector("details[open]")).toBeNull();
+    expect(document.querySelector("[data-usability=short-answer]")).not.toBeNull();
+    expect(screen.queryByText("Start gratis bike fit")).toBeNull();
+    expect(screen.queryByText("Bekijk prijzen")).toBeNull();
   });
 });
 

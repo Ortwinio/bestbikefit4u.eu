@@ -1,5 +1,7 @@
 "use client";
 
+import { PressureDisplay } from "@/components/features/pressure/PressureDisplay";
+
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
@@ -21,7 +23,6 @@ import { getReportV2Copy, PDF_SUMMARY_COPY } from "@/lib/reports/reportV2Copy";
 import { localizePdfValue } from "@/lib/reports/pdfShared";
 import { DashboardReliabilityReport } from "./DashboardReliabilityReport";
 import { mapDashboardGreatestGain, mapDashboardReliabilityRows } from "./DashboardReportReliabilityMapping";
-import { DashboardNumber } from "./DashboardNumber";
 
 type BikeSummary = FunctionReturnType<typeof api.bikes.queries.listSummariesByUser>[number];
 const linkClass = "inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-primary " +
@@ -145,23 +146,16 @@ export function DashboardReportBike({ bike, latestFit }: {
         <section className="space-y-3 border-t border-border pt-4" aria-label={reportCopy.sections.tirePressure}>
           <h3 className="font-display text-lg font-bold">{reportCopy.sections.tirePressure}</h3>
           {pressureValues ? <>
-            <dl className="grid grid-cols-2 gap-2">
-              {(["front", "rear"] as const).map((side) => {
-                const front = side === "front";
-                const bar = front ? pressureValues.recommendedFrontBar : pressureValues.recommendedRearBar;
-                const psi = front ? pressureValues.recommendedFrontPsi : pressureValues.recommendedRearPsi;
-                const current = source?.latestPressureCalculation ?? bike.advisedPressureSummary;
-                const currentBar = front ? current?.currentFrontBar : current?.currentRearBar;
-                return <div key={side} className="rounded-xl bg-muted p-3">
-                  <dt className="text-sm">{reportCopy.tirePressure[side]}</dt>
-                  <dd className="mt-1 text-xl"><DashboardNumber value={number(bar)} unit="bar" /></dd>
-                  <dd className="text-sm text-muted-foreground"><DashboardNumber value={number(psi)} unit="psi" /></dd>
-                  {currentBar != null && <dd className="mt-2 font-mono text-xs text-muted-foreground">
-                    {reportCopy.table.current}: <DashboardNumber value={number(currentBar)} unit="bar" />
-                  </dd>}
-                </div>;
-              })}
-            </dl>
+            <PressureDisplay locale={locale} compact
+              frontBar={pressureValues.recommendedFrontBar} rearBar={pressureValues.recommendedRearBar}
+              frontPsi={pressureValues.recommendedFrontPsi} rearPsi={pressureValues.recommendedRearPsi} />
+            {(["front", "rear"] as const).map(side => {
+              const current = source?.latestPressureCalculation ?? bike.advisedPressureSummary;
+              const value = side === "front" ? current?.currentFrontBar : current?.currentRearBar;
+              return value == null ? null : <p key={side} className="text-sm text-muted-foreground">
+                {reportCopy.tirePressure[side]} · {reportCopy.table.current}: {number(value)} bar
+              </p>;
+            })}
             {!rim && <p className="rounded-xl border border-border p-3 text-sm">
               {copy.rimUnknown}
             </p>}

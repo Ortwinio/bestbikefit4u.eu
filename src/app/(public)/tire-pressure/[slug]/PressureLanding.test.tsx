@@ -63,7 +63,9 @@ for (const locale of ["en", "nl"] as const) {
         request.locale = locale;
         const { container } = render(await Page({ params }));
         expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(result.title);
-        expect(screen.getByText(copy.intro)).toBeTruthy();
+        for (const sentence of new Intl.Segmenter(locale, { granularity: "sentence" }).segment(copy.intro)) {
+          expect(container.textContent).toContain(sentence.segment.trim());
+        }
         expect(screen.getByText(copy.limits)).toBeTruthy();
         expect(screen.getByAltText(copy.illustration)).toBeTruthy();
         for (const [setup, tubeType] of [["tubeless", "tubeless"], ["innerTube", "inner_tube"]] as const) {

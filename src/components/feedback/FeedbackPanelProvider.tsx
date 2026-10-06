@@ -123,7 +123,8 @@ export function FeedbackPanelProvider({ children }: PropsWithChildren) {
             <FeedbackFloatingButton
               onClick={() => contextValue.openPanel()}
               label={copy.page.floatingCta}
-              className={accountFeedbackPlacement(pathname)}
+              className={accountFeedbackPlacement(pathname) ?? "md:static md:flex md:w-fit md:ml-auto md:mr-8 md:mb-8"}
+              flowOnMobile
             />
           ) : null}
           {hasOpened ? (

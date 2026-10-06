@@ -1,10 +1,8 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
-import { Button } from "@/components/ui";
-import { PublicCtaBand, PublicSection } from "@/components/public";
+import { PublicSection } from "@/components/public";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
 import { BRAND } from "@/config/brand";
@@ -90,63 +88,31 @@ export default async function CrankLengthCalculatorPage({
       />
       <CalculatorAnswerSection id="crank-length" locale={locale} content={getFitAnswer("crank-length", locale)} />
       <div className="mx-auto max-w-[1440px] space-y-10 px-4 pb-16 sm:px-8 xl:px-16">
-        <PublicSection header={{ title: copy.trustTitle, description: copy.trustText }}>
-          <div className="grid gap-4 md:grid-cols-3">
-            {copy.trust.map((point) => (
-              <article key={point.title} className="rounded-3xl border border-border bg-card p-6">
-                <h3 className="font-display text-xl font-bold">{point.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {point.description}
-                </p>
-              </article>
-            ))}
-          </div>
-        </PublicSection>
-        <section className="rounded-3xl border border-border bg-card p-6">
-          <h2 className="font-display text-2xl font-bold">{copy.guidance}</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-muted-foreground">
-            {copy.guidancePoints.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-        </section>
-        <PublicCtaBand
-          eyebrow={copy.next}
-          title={copy.nextTitle}
-          description={copy.nextText}
-          aside={copy.aside}
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="crank_length_result"
-                    ctaLabel={copy.start}
-                  />
-                }
-              >
-                {copy.start}
-              </Button>
-              <Button
-                variant="outline"
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="crank_length_pricing_cta"
-                    ctaLabel={copy.pricing}
-                  />
-                }
-              >
-                {copy.pricing}
-              </Button>
-            </>
-          }
-        />
+        <ContentDisclosure title={copy.trustTitle}>
+          <PublicSection header={{ title: copy.trustTitle, description: copy.trustText }}>
+            <div className="grid gap-4 md:grid-cols-3">
+              {copy.trust.map((point) => (
+                <article key={point.title} className="rounded-3xl border border-border bg-card p-6">
+                  <h3 className="font-display text-xl font-bold">{point.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {point.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
+        <ContentDisclosure title={copy.guidance}>
+          <section className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="font-display text-2xl font-bold">{copy.guidance}</h2>
+            <ul className="mt-4 list-disc space-y-3 pl-5 text-muted-foreground">
+              {copy.guidancePoints.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          </section>
+        </ContentDisclosure>
+
         <section aria-labelledby="crank-faq">
           <h2 id="crank-faq" className="font-display text-3xl font-bold">
             {copy.faqTitle}
@@ -160,11 +126,13 @@ export default async function CrankLengthCalculatorPage({
             ))}
           </div>
         </section>
+        <ContentDisclosure title={copy.related}>
         <RelatedLinksSection
           title={copy.related}
-          links={getRelatedLinks("crank-length", locale)}
+          links={getRelatedLinks("crank-length", locale).slice(0, 3)}
           locale={locale}
         />
+        </ContentDisclosure>
       </div>
     </div>
   );

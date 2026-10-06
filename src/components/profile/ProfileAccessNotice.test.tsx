@@ -13,8 +13,8 @@ describe.each(["en", "nl"] as const)("ProfileAccessNotice %s", (locale) => {
     render(<ProfileAccessNotice locale={locale} capped={capped} inverse />);
     expect(screen.getByText(capped ? copy.cap : copy.uncapped).className).toBe("text-[var(--bbf-op-donker)]");
     if (capped) {
-      expect(screen.getByRole("link").className).toContain("text-[var(--bbf-lime)]");
-      expect(screen.getByRole("link").getAttribute("href")).toBe(`/${locale}/pricing`);
+      expect(document.querySelector('[data-boundary="profile-score"]')).toBeTruthy();
+      expect(screen.getAllByRole("link")[0].getAttribute("href")).toBe(`/${locale}/checkout?product=single`);
     } else {
       expect(screen.queryByRole("link")).toBeNull();
     }
@@ -23,6 +23,6 @@ describe.each(["en", "nl"] as const)("ProfileAccessNotice %s", (locale) => {
   it("preserves the default light-surface tokens", () => {
     render(<ProfileAccessNotice locale={locale} capped />);
     expect(screen.getByText(getPricingAccessCopy(locale).cap).className).toBe("text-muted-foreground");
-    expect(screen.getByRole("link").className).toContain("text-primary");
+    expect(screen.getAllByRole("link")[0].className).toContain("text-primary-foreground");
   });
 });

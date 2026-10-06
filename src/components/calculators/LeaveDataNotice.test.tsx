@@ -88,6 +88,38 @@ describe("LeaveDataNotice", () => {
     expect(sessionStorage.getItem(LEAVE_DATA_NOTICE_KEY)).toBeNull();
   });
 
+  it.each([
+    [false, "route"], [true, "route"],
+    [false, "authentication"], [true, "authentication"],
+    [false, "data"], [true, "data"],
+  ] as const)("does not reopen after eligibility changes (touch=%s, %s)", async (touch, reason) => {
+    state.touch = touch;
+    const handoff = JSON.stringify({ version: 1, fields: [{ field: "inseam", value: 82 }] });
+    sessionStorage.setItem("bbf.handoff", handoff);
+    const view = render(<LeaveDataNotice locale="nl" hasEnteredData isAuthenticated={false} />);
+    const role = touch ? "complementary" : "dialog";
+    fireEvent.mouseOut(document, { clientY: 0 });
+    expect(await screen.findByRole(role)).toBeTruthy();
+
+    if (reason === "route") state.path = "/nl/login";
+    view.rerender(<LeaveDataNotice
+      locale="nl"
+      hasEnteredData={reason !== "data"}
+      isAuthenticated={reason === "authentication"}
+    />);
+    expect(screen.queryByRole(role)).toBeNull();
+
+    state.path = "/nl/calculators/saddle-height";
+    view.rerender(<LeaveDataNotice locale="nl" hasEnteredData isAuthenticated={false} />);
+    fireEvent.mouseOut(document, { clientY: 0 });
+    await new Promise(resolve => setTimeout(resolve, 10));
+    expect(screen.queryByRole(role)).toBeNull();
+    expect(sessionStorage.getItem(LEAVE_DATA_NOTICE_KEY)).toBe("shown");
+    expect(sessionStorage.getItem("bbf.handoff")).toBe(handoff);
+    expect(state.log.mock.calls.filter(([event]) => event.eventType === "leave_data_notice_shown")).toHaveLength(1);
+    expect(state.log.mock.calls.filter(([event]) => event.eventType === "leave_data_notice_dismissed")).toHaveLength(0);
+  });
+
   it("never prompts authenticated visitors or visitors without data", () => {
     const view = render(<LeaveDataNotice locale="nl" hasEnteredData isAuthenticated />);
     fireEvent.mouseOut(document, { clientY: 0 });

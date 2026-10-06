@@ -41,3 +41,19 @@ it.each(["nl", "en"] as const)("shows real bike rings, setup percentage and one 
   const action=screen.getByRole("link",{name:locale==="nl"?/Vul je fietsprofiel aan/:/Complete your bike profile/});
   expect(action.getAttribute("href")).toMatch(new RegExp(`/${locale}/bikes/bike#bike-profile-`));
 });
+
+it.each(["nl", "en"] as const)("uses the shared pressure display and retains current measurements in %s", locale => {
+  const bike: BikeSummaryRow = { _id: "bike", name: "Road bike", bikeType: "road",
+    advisedPressureSummary: { createdAt: 1791244800000, recommendedFrontBar: 4.2,
+      recommendedRearBar: 4.5, recommendedFrontPsi: 61, recommendedRearPsi: 65, currentFrontBar: 4 },
+    pressureStateSummary: { isStale: false, hasCurrentPressure: true } };
+  const latestFit = { session: { _id: "session" }, responses: {},
+    recommendation: { calculatedFit: { saddleHeightMm: 733, handlebarDropMm: 55, handlebarReachMm: 480 } },
+  } as BikeSessionEntry;
+  const { container } = render(<BikeGarageRow bike={bike} latestFit={latestFit} locale={locale}
+    messages={getDashboardMessages(locale)} />);
+  expect(container.querySelector('[data-usability="tire-pressure"]')).toBeTruthy();
+  expect(container.textContent).toContain("61");
+  expect(container.textContent).toContain("65");
+  expect(container.textContent).toContain("4 bar");
+});

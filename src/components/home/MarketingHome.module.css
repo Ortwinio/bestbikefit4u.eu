@@ -98,3 +98,23 @@
 }
 .closing { color: var(--bbf-inkt); }
 .closing .secondary:hover { background: var(--bbf-lime-zacht); }
+.routeGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.routeCard { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; padding: 36px; border: 1px solid var(--home-border); border-radius: 28px; background: var(--home-card); }
+.routeCard h3 { font-size: 36px; margin: 0; }
+.routeCard p { margin: 0; color: var(--home-text); }
+.routeCard .primary { margin-top: auto; }
+.routeCard:last-child { background: var(--bbf-inkt); color: var(--bbf-wit); }
+.routeCard:last-child p { color: var(--bbf-op-donker); }
+.routeCard:last-child .primary { background: var(--bbf-lime); border-color: var(--bbf-lime); color: var(--bbf-inkt); }
+.routeSteps { display: flex; flex-wrap: wrap; gap: 8px; }
+.routeSteps a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; border: 1px solid var(--home-border); border-radius: 999px; padding: 4px 14px 4px 6px; background: var(--home-background); color: var(--home-foreground); font-size: 15px; font-weight: 600; text-decoration: none; }
+.routeSteps span { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: var(--primary-soft); color: var(--home-link); font-family: var(--bbf-font-cijfers); }
+.reportSteps { display: grid; gap: 16px; padding-left: 24px; margin-block: 24px; }
+.report .reportSteps li { display: list-item; }
+.reportDetails summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; font-size: 20px; font-weight: 700; }
+.reportDetails summary::before { content: "+"; padding-right: 12px; }
+.reportDetails[open] summary::before { content: "−"; }
+.example { color: var(--home-muted); }
+.example :global(.font-mono) { color: var(--home-muted); }
+.exampleLabel { display: inline-flex; align-items: center; min-height: 24px; border-radius: 999px; background: var(--home-background); color: var(--home-muted); padding: 2px 10px; font-size: 12px; font-weight: 700; align-self: flex-start; }
+@media (max-width: 760px) { .routeGrid { grid-template-columns: 1fr; } .routeCard { padding: 24px; } .routeCard h3 { font-size: 32px; } }

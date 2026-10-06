@@ -5,7 +5,8 @@ import { useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { api } from "../../../../convex/_generated/api";
-import { Button, Input, NumberInput, Select, Selectable, Textarea } from "@/components/ui";
+import { Button, Input, Select, Selectable, Textarea } from "@/components/ui";
+import { BikeNumberField as NumberInput, BikeCassetteField } from "@/components/bikes/BikeFormControls";
 import { bikeProfileFormMessages } from "@/i18n/account/bikeProfileForm";
 import { Field } from "@/components/ui/Field";
 import {
@@ -472,27 +473,29 @@ export function CreateBikeForm() {
                 />
                 <NumberInput
                   label={language.frontChainring}
+                  min={20} max={70}
                   value={frontChainring ? Number(frontChainring) : null}
                   onChange={(value) => setFrontChainring(value === null ? "" : String(value))}
                   unit="t"
                 />
                 <NumberInput
                   label={language.innerChainring}
+                  min={20} max={60}
                   value={innerChainring ? Number(innerChainring) : null}
                   onChange={(value) => setInnerChainring(value === null ? "" : String(value))}
                   unit="t"
                 />
                 <NumberInput
                   label={language.wheelCircumference}
+                  min={1000} max={3000}
                   value={wheelCircumferenceMm ? Number(wheelCircumferenceMm) : null}
                   onChange={(value) => setWheelCircumferenceMm(value === null ? "" : String(value))}
                   unit="mm"
                 />
-                <Textarea
+                <BikeCassetteField
                   label={language.cassetteTeeth}
                   value={cassetteTeethCsv}
-                  onChange={(event) => setCassetteTeethCsv(event.target.value)}
-                  placeholder="11, 12, 13, 15, 17, 19, 21, 24, 28, 32"
+                  onChange={setCassetteTeethCsv}
                 />
                 <Input
                   label={language.groupset}
@@ -502,6 +505,7 @@ export function CreateBikeForm() {
                 />
                 <NumberInput
                   label={language.rearDerailleurMaxCog}
+                  min={10} max={60}
                   value={derailleurMaxCog ? Number(derailleurMaxCog) : null}
                   onChange={(value) => setDerailleurMaxCog(value === null ? "" : String(value))}
                   unit="t"
@@ -578,11 +582,13 @@ export function CreateBikeForm() {
               </Field.Root>
               <NumberInput
                 label={messages.pressure.wizard.rimWidthFront}
+                  min={10} max={60}
                 value={internalRimWidthFrontMm ? Number(internalRimWidthFrontMm) : null}
                 onChange={(value) => setInternalRimWidthFrontMm(value === null ? "" : String(value))}
               />
               <NumberInput
                 label={messages.pressure.wizard.rimWidthRear}
+                  min={10} max={60}
                 value={internalRimWidthRearMm ? Number(internalRimWidthRearMm) : null}
                 onChange={(value) => setInternalRimWidthRearMm(value === null ? "" : String(value))}
               />
@@ -630,12 +636,14 @@ export function CreateBikeForm() {
               </Field.Root>
               <NumberInput
                 label={messages.pressure.wizard.widthFront}
+                  min={18} max={80}
                 value={widthFrontMm ? Number(widthFrontMm) : null}
                 onChange={(value) => setWidthFrontMm(value === null ? "" : String(value))}
                 error={widthFrontError}
               />
               <NumberInput
                 label={messages.pressure.wizard.widthRear}
+                  min={18} max={80}
                 value={widthRearMm ? Number(widthRearMm) : null}
                 onChange={(value) => setWidthRearMm(value === null ? "" : String(value))}
                 error={widthRearError}
@@ -657,6 +665,7 @@ export function CreateBikeForm() {
               />
               <NumberInput
                 label={messages.pressure.wizard.maxPressure}
+                  min={1} max={12}
                 step={0.1}
                 value={maxPressureBar ? Number(maxPressureBar) : null}
                 onChange={(value) => setMaxPressureBar(value === null ? "" : String(value))}

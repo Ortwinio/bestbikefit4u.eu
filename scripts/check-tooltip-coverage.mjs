@@ -85,6 +85,7 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const INPUT_SELECT_ENFORCED_FILES = new Set([
+  "src/components/measurements/MeasurementKind.tsx",
   "src/components/reliability/account/AccountSaddleHeight.tsx",
   "src/components/reliability/account/AccountKneeAngle.tsx",
   "src/components/reliability/account/InseamMeasurements.tsx",

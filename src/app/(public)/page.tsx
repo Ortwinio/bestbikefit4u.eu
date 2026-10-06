@@ -4,29 +4,21 @@ import Link from "next/link";
 import { Suspense } from "react";
 import {
   ArrowRight,
-  Bike,
   Check,
-  CircleGauge,
-  Cog,
-  Gauge,
-  MoveHorizontal,
-  Ruler,
 } from "lucide-react";
 import { LatestBlogSection } from "@/components/home/LatestBlogSection";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { SaddleHeightTeaser } from "@/components/home/SaddleHeightTeaser";
-import {
-  HOME_STEPPER_CONTENT,
-} from "@/components/home/homeRedesignContent";
+import { StickyConversionBar } from "@/components/home/StickyConversionBar";
 import { HOME_GUIDE_LINKS, HOME_SCENARIO_LINKS } from "@/components/home/homeGuideContent";
 import {
   getLocalizedPublicCalculatorPath,
-  type PublicCalculatorId,
 } from "@/lib/public-calculators";
 import { getDictionary } from "@/i18n/getDictionary";
 import { homeMarketing } from "@/i18n/marketing/home";
 import { homeTrust } from "@/i18n/marketing/homeTrust";
+import { homeRoutes } from "@/i18n/marketing/homeRoutes";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
 import { buildLocaleAlternates } from "@/i18n/metadata";
@@ -54,16 +46,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const calculators: Array<{ id: PublicCalculatorId | null; icon: typeof Bike }> = [
-  { id: "bike-fit", icon: Bike },
-  { id: "saddle-height", icon: Ruler },
-  { id: "frame-size", icon: MoveHorizontal },
-  { id: "tire-pressure", icon: Gauge },
-  { id: "saddle-width", icon: MoveHorizontal },
-  { id: "crank-length", icon: CircleGauge },
-  { id: "gearing", icon: Cog },
-  { id: null, icon: Ruler },
-];
 const painPaths = [
   "/guides/bike-fitting-for-knee-pain",
   "/guides/bike-fitting-for-lower-back-pain",
@@ -76,7 +58,11 @@ export default async function HomePage() {
   const { home } = await getDictionary(locale);
   const copy = homeMarketing[locale];
   const trust = homeTrust[locale];
-  const steps = HOME_STEPPER_CONTENT[locale];
+  const journey = homeRoutes[locale];
+  const routePaths = [
+    ["/calculators/saddle-height", "/calculators/frame-size", "/calculators/crank-length", "/calculators/saddle-width", "/calculators/bike-fit"],
+    [getLocalizedPublicCalculatorPath("tire-pressure", locale), "/calculators/gearing", "/calculators/climb-planner", "/calculators/power-speed", "/calculators/ftp-wkg", "/calculators/fuel-hydration"],
+  ];
   const local = (path: string) => withLocalePrefix(path, locale);
   const fitHref = local("/calculators/bike-fit");
 
@@ -91,7 +77,7 @@ export default async function HomePage() {
       <section className={`${styles.container} ${styles.hero}`}>
         <div className={styles.heroHeading}>
           <span className={styles.badge}>{copy.badge}</span>
-          <h1>{copy.title}</h1>
+          <h1 lang="en">{copy.title}</h1>
         </div>
         <SaddleHeightTeaser locale={locale} />
         <div className={styles.heroCopy}>
@@ -134,56 +120,34 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className={`${styles.container} ${styles.section}`}>
+      <section id="calculators" data-usability="home-routes" className={`${styles.container} ${styles.section}`}>
         <div className={styles.heading}>
           <div>
             <p className={styles.eyebrow}>{copy.toolsEyebrow}</p>
-            <h2>{copy.toolsTitle}</h2>
+            <h2>{journey.title}</h2>
           </div>
           <p>{copy.toolsDescription}</p>
         </div>
-        {/* TODO: Verify a source before restoring the most-popular badge or a measurement-duration claim (audit/11-notes.md). */}
-        <div className={styles.toolGrid}>
-          {calculators.map((tool, index) => {
-            const Icon = tool.icon;
-            return (
-              <Link
-                key={tool.id ?? "measurement-guide"}
-                className={styles.tool}
-                href={local(
-                  tool.id
-                    ? getLocalizedPublicCalculatorPath(tool.id, locale)
-                    : "/measurement-guide",
-                )}
-              >
-                <span className={styles.icon}>
-                  <Icon size={26} strokeWidth={2} aria-hidden="true" />
-                </span>
-                <h3>{copy.tools[index].title}</h3>
-                <p>{copy.tools[index].description}</p>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className={styles.stepsBand}>
-        <div className={`${styles.container} ${styles.section}`}>
-          <p className={styles.eyebrow}>{steps.eyebrow}</p>
-          <h2>{copy.stepsTitle}</h2>
-          <div className={styles.steps}>
-            {steps.steps.map((step) => (
-              <div key={step.number}>
-                <span className={styles.stepNumber}>{step.number}</span>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </div>
-            ))}
-          </div>
-          <Link className={styles.textLink} href={local("/how-it-works")}>
-            {steps.eyebrow}
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
+        <div className={styles.routeGrid}>
+          {journey.routes.map((route, routeIndex) => (
+            <div key={route.id} className={styles.routeCard}>
+              <p className={styles.eyebrow}>Route · {route.labels.length} {journey.steps}</p>
+              <h3>{route.title}</h3>
+              <p>{route.description}</p>
+              <nav aria-label={`${journey.navigation} ${route.title}`} className={styles.routeSteps}>
+                {route.labels.map((label, stepIndex) => (
+                  <Link key={label} href={local(routePaths[routeIndex][stepIndex])}>
+                    <span aria-hidden="true">{stepIndex + 1}</span>{label}
+                  </Link>
+                ))}
+              </nav>
+              <TrackedCtaLink className={styles.primary} href={local(routePaths[routeIndex][0])}
+                locale={locale} pagePath={local("/")} section={`route_${route.id}`} ctaLabel={route.start}
+                data-usability="route-start" data-route={route.id}>
+                {route.start}<ArrowRight size={20} aria-hidden="true" />
+              </TrackedCtaLink>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -208,38 +172,40 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className={styles.testimonials}>
-        <div className={`${styles.container} ${styles.section}`}>
-          <h2>{trust.title}</h2>
-          <div className={styles.quotes}>
-            {trust.cards.map((card) => (
-              <article key={card.label} className={styles.quote}>
-                <span className={styles.change}>{card.label}</span>
-                <p>{card.text}</p>
-                <div className={styles.cardContext}>
-                  <strong>{card.title}</strong>
-                  {card.context}
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="fit-report" className={`${styles.container} ${styles.section} ${styles.report}`}>
-        <h2>{copy.reportTitle}</h2>
-        <ul>
+        <div>
+          <h2>{journey.reportTitle}</h2>
+          <ol className={styles.reportSteps}>
+            {journey.reportLines.map((line) => <li key={line}>{line}</li>)}
+          </ol>
+          <Link className={styles.textLink} href={local("/pricing")}>{copy.reportLink}<ArrowRight size={18} aria-hidden="true" /></Link>
+        </div>
+        <details className={styles.reportDetails} data-usability="collapsed-explanation">
+          <summary>{copy.reportTitle}</summary>
+          <ul>
           {home.recommendationSection.items.map((item, index) => (
             <li key={item}>
               <Check size={20} aria-hidden="true" />
               {index === 4 ? copy.crankAdvice : item}
             </li>
           ))}
-        </ul>
+          </ul>
+          <h3>{trust.title}</h3>
+          {trust.cards.map((card) => (
+            <article key={card.label}>
+              <h4 className={styles.change}>{card.label}</h4>
+              <p>{card.text}</p>
+              <p className={styles.cardContext}>
+                <strong>{card.title}</strong>
+                {card.context}
+              </p>
+            </article>
+          ))}
+        </details>
       </section>
 
       <div className={styles.container}>
-        <section className={styles.closing}>
+        <section className={styles.closing} id="home-closing">
           <div>
             <h2>{copy.closingTitle}</h2>
             <p>{copy.paused}</p>
@@ -265,6 +231,14 @@ export default async function HomePage() {
       <Suspense fallback={null}>
         <LatestBlogSection locale={locale} />
       </Suspense>
+      <StickyConversionBar
+        copy={copy.sticky}
+        locale={locale}
+        pricingHref={local("/pricing")}
+        accountHref={local("/login")}
+        pagePath={local("/")}
+       
+      />
       <div className={styles.container}>
         <details className={styles.discovery}>
           <summary>{copy.discover}</summary>

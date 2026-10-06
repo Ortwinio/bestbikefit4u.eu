@@ -1,3 +1,4 @@
+import { pressureDisplayStyles, renderPressureDisplay } from "../../../../shared/pressure/display";
 import { PDF_TIRES_COPY, type ReportV2Copy } from "../reportV2Copy";
 import type { ReportV2Payload } from "../reportV2Types";
 import { escapeHtml, localizePdfValue, type PdfReportAssets } from "../pdfShared";
@@ -13,35 +14,15 @@ export function renderTiresPage(report: ReportV2Payload, copy: ReportV2Copy, ass
   const labels = PDF_TIRES_COPY[copy.locale === "nl" ? "nl" : "en"];
   const pressure = report.tirePressure;
   const number = new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
-  const integer = new Intl.NumberFormat(copy.locale, { maximumFractionDigits: 0 });
   let personal = "";
   if (pressure.status === "ready") {
     const valid = [pressure.frontBar, pressure.rearBar, pressure.frontPsi, pressure.rearPsi].every(
       (value) => Number.isFinite(value) && value > 0,
     );
     const surface = surfaceLabel(pressure.surface, copy);
-    const maximum = Math.max(8, Math.ceil(Math.max(pressure.frontBar, pressure.rearBar) / 2) * 2);
-    const gauges = valid
-      ? `<div class="pdf-tires-gauges">${[
-          { label: copy.tirePressure.front, bar: pressure.frontBar, psi: pressure.frontPsi },
-          { label: copy.tirePressure.rear, bar: pressure.rearBar, psi: pressure.rearPsi },
-        ]
-          .map(
-            (gauge, index) => `<section class="pdf-tires-gauge pdf-tires-gauge-${index}">
-      <h3>${escapeHtml(gauge.label)}</h3>
-      <svg width="180" height="100" viewBox="0 0 180 100" fill="none" aria-hidden="true">
-        <path d="M20 90A70 70 0 0 1 160 90" class="pdf-tires-track" />
-        <path d="M20 90A70 70 0 0 1 160 90" class="pdf-tires-value" pathLength="100"
-          stroke-dasharray="${(gauge.bar / maximum) * 100} 100" />
-      </svg>
-      <div class="pdf-tires-bar mono">${number.format(gauge.bar)}<span> bar</span></div>
-      <div class="pdf-tires-psi mono">${integer.format(gauge.psi)} psi</div>
-      <div class="pdf-tires-ticks mono"><span>0</span><span>${integer.format(maximum / 2)}</span>
-        <span>${integer.format(maximum)} bar</span></div>
-    </section>`,
-          )
-          .join("")}</div><p class="pdf-tires-scale">${escapeHtml(labels.scale)}</p>`
-      : "";
+    const gauges = valid ? `<div class="pdf-tires-shared">${renderPressureDisplay({
+      ...pressure, locale: copy.locale === "nl" ? "nl" : "en", compact: true,
+    })}</div><p class="pdf-tires-scale">${escapeHtml(labels.scale)}</p>` : "";
     const inputs = pressure.inputs.filter((input) => input.value && input.value !== "n/a");
     const meta = inputs.length
       ? `<dl class="pdf-tires-meta">${inputs
@@ -121,28 +102,15 @@ export function renderTiresPage(report: ReportV2Payload, copy: ReportV2Copy, ass
   </div>`;
 }
 
-export const tiresStyles = `
+export const tiresStyles = `${pressureDisplayStyles}
+.pdf-tires-shared { margin-top: 18px; }
+
 .pdf-tires-body { padding-top: 24px; }
 .pdf-tires-intro { display: grid; grid-template-columns: 1fr 200px; gap: 24px; align-items: center; }
 .pdf-tires-intro h1 { margin: 0; font-size: 40px; line-height: 1.05; letter-spacing: -.03em; font-weight: 800; }
 .pdf-tires-intro p { margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: var(--bbf-tekst); }
 .pdf-tires-intro .pdf-tires-bike { font-weight: 700; }
 .pdf-tires-intro img { width: 200px; height: 150px; object-fit: contain; border-radius: 16px; }
-.pdf-tires-gauges { margin-top: 18px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.pdf-tires-gauge { display: flex; flex-direction: column; align-items: center; padding: 16px 16px 14px;
-  border-radius: 20px; border: 1.5px solid var(--bbf-rand); }
-.pdf-tires-gauge-1 { background: var(--bbf-lime); border-color: var(--bbf-lime); }
-.pdf-tires-gauge h3 { margin: 0; align-self: flex-start; font-size: 15px; font-weight: 700; }
-.pdf-tires-gauge svg { margin-top: 4px; }
-.pdf-tires-track, .pdf-tires-value { stroke-width: 16; stroke-linecap: round; }
-.pdf-tires-track { stroke: var(--bbf-rand); }
-.pdf-tires-gauge-1 .pdf-tires-track { stroke: var(--bbf-lime-zacht); }
-.pdf-tires-value { stroke: var(--bbf-inkt); }
-.pdf-tires-bar { margin-top: -40px; font-size: 38px; line-height: 1; }
-.pdf-tires-bar span { font-size: 15px; color: var(--bbf-tekst); }
-.pdf-tires-psi { margin-top: 4px; font-size: 13px; color: var(--bbf-tekst); }
-.pdf-tires-ticks { margin-top: 8px; width: 180px; display: flex; justify-content: space-between;
-  font-size: 11px; color: var(--bbf-gedempt); }
 .pdf-tires-scale { margin: 6px 0 0; font-size: 11px; color: var(--bbf-gedempt); text-align: right; }
 .pdf-tires-meta { margin: 14px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .pdf-tires-meta > div { padding: 9px 12px; border-radius: 12px; background: var(--bbf-papier); }

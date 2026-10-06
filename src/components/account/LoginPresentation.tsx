@@ -38,8 +38,7 @@ export function LoginPresentation({
   );
 
   return (
-    <div className="grid min-h-dvh w-full min-w-0 bg-background text-foreground lg:grid-cols-2">
-      <div className="px-4 pt-3 lg:hidden">{logo}</div>
+    <div className="grid min-h-[calc(100dvh-64px)] w-full min-w-0 bg-background text-foreground lg:min-h-dvh lg:grid-cols-2">
       <div className="flex min-w-0 items-center justify-center px-4 py-6 lg:order-2 lg:p-12">
         <div className="w-full min-w-0 max-w-[440px] space-y-6">
           {children}

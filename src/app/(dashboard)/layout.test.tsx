@@ -18,11 +18,13 @@ vi.mock("@/components/profile/AccountProfileStrength", () => ({
     <div data-testid="profile-strength" data-locale={locale} data-placement={placement} />,
 }));
 
-it("mounts live profile strength in the mobile account header", () => {
+it("keeps live profile strength below the single-row mobile account header", () => {
   render(<DashboardLayout>Account page</DashboardLayout>);
   expect(screen.getByTestId("profile-strength").getAttribute("data-placement")).toBe("mobile");
-  expect(within(screen.getByRole("banner")).getByTestId("profile-strength")).toBeTruthy();
+  expect(within(screen.getByRole("banner")).queryByTestId("profile-strength")).toBeNull();
   expect(within(screen.getByRole("banner")).getByTestId("brand-logo")).toBeTruthy();
+  expect(screen.getByRole("banner").classList.contains("h-16")).toBe(true);
+  expect(screen.getByRole("banner").classList.contains("flex-wrap")).toBe(false);
 });
 
 const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.hoisted(() => ({
@@ -32,7 +34,9 @@ const { usePathnameMock, useRouterMock, useConvexAuthMock, useQueryMock } = vi.h
     isLoading: false,
     isAuthenticated: true,
   })),
-  useQueryMock: vi.fn((_reference: Parameters<typeof getFunctionName>[0], ..._args: unknown[]) => ({ _id: "user_1", adminRole: null })),
+  useQueryMock: vi.fn((_reference: Parameters<typeof getFunctionName>[0], ..._args: unknown[]): {
+    _id: string; adminRole: null; displayName?: string; name?: string; email?: string;
+  } => ({ _id: "user_1", adminRole: null })),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -96,7 +100,7 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
       nav: {
         dashboard: "Dashboard",
         feedback: "Feedback",
-        profile: "Profile",
+        profile: usePathnameMock()?.startsWith("/en/") ? "My Profile" : "Mijn profiel",
         myBikes: "Bikes",
         newBike: "New bike",
         bikeFitting: "Bike fitting",
@@ -134,6 +138,7 @@ vi.mock("@/i18n/useDashboardMessages", () => ({
 afterEach(() => {
   cleanup();
   useConvexAuthMock.mockReturnValue({ isLoading: false, isAuthenticated: true });
+  useQueryMock.mockReturnValue({ _id: "user_1", adminRole: null });
 });
 
 function renderLayout(pathname: string) {
@@ -194,11 +199,38 @@ describe("DashboardLayout feedback context integration", () => {
     );
   });
 
-  it("keeps locale and query when switching languages", () => {
-    const html = renderLayout("/nl/profile/improve/flexibility");
-    expect(html).toContain('/en/profile/improve/flexibility?from=test');
-    expect(html).toContain('Accountnavigatie');
-    expect(html).toContain('href="/nl/profile" aria-current="page"');
+  it("keeps locale and query when switching languages inside the mobile menu", () => {
+    usePathnameMock.mockReturnValue("/nl/profile/improve/flexibility");
+    render(<DashboardLayout>Content</DashboardLayout>);
+    expect(screen.getByRole("navigation", { name: "Accountnavigatie" })).toBeTruthy();
+    expect(within(screen.getByRole("banner")).queryByRole("navigation", { name: "Language" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Open dashboard menu" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByRole("link", { name: "English" }).getAttribute("href"))
+      .toBe("/en/profile/improve/flexibility?from=test");
+    expect(within(dialog).getByRole("link", { name: "Mijn profiel" }).getAttribute("aria-current")).toBe("page");
+  });
+
+  it.each(["nl", "en"])("offers localized profile access with the user's initial in the %s header", (locale) => {
+    usePathnameMock.mockReturnValue(`/${locale}/dashboard`);
+    useQueryMock.mockReturnValue({ _id: "user_1", adminRole: null, displayName: "  Sanne  ", name: "Old name" });
+    render(<DashboardLayout>Content</DashboardLayout>);
+    const header = screen.getByRole("banner");
+    const avatar = within(header).getByRole("link", { name: `${locale === "nl" ? "Mijn profiel" : "My Profile"}: Sanne` });
+    expect(avatar.getAttribute("href")).toBe(`/${locale}/profile`);
+    expect(avatar.textContent).toBe("S");
+    expect(avatar.classList.contains("size-11")).toBe(true);
+    expect(within(header).getByRole("button", { name: "Open dashboard menu" })).toBeTruthy();
+    expect(within(header).queryByTestId("profile-strength")).toBeNull();
+    expect(screen.getAllByTestId("profile-strength")).toHaveLength(1);
+  });
+
+  it("keeps profile access accessible when the user has no display name", () => {
+    usePathnameMock.mockReturnValue("/en/dashboard");
+    render(<DashboardLayout>Content</DashboardLayout>);
+    const avatar = within(screen.getByRole("banner")).getByRole("link", { name: "My Profile" });
+    expect(avatar.getAttribute("href")).toBe("/en/profile");
+    expect(avatar.querySelector('svg[aria-hidden="true"]')).toBeTruthy();
   });
 
   it("opens a labelled modal from More and closes after navigating", () => {
@@ -222,8 +254,8 @@ describe("DashboardLayout feedback context integration", () => {
     for (const tool of tools) expect(within(group).getByRole("link", { name: tool.label })).toBeTruthy();
     const allHrefs = within(dialog).getAllByRole("link").map((link) => link.getAttribute("href"));
     for (const tool of tools) expect(allHrefs.filter((href) => href === `/${locale}${tool.href}`)).toHaveLength(1);
-    expect(dialog.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
-    expect(dialog.querySelector('[aria-current="page"]')?.getAttribute("href"))
+    expect(group.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
+    expect(group.querySelector('[aria-current="page"]')?.getAttribute("href"))
       .toBe(`/${locale}/tools/frame-size`);
     await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
     expect(screen.queryByRole("button", { name: "Outside dialog" })).toBeNull();

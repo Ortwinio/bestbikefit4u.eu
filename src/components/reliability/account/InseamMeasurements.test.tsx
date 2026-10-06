@@ -16,7 +16,8 @@ describe.each(["nl", "en"] as const)("account measurements %s", (locale) => {
   it("does not turn profile hydration or typing into a saved measurement", async () => {
     const onSave = setup();
     expect(onSave).not.toHaveBeenCalled();
-    fireEvent.change(screen.getByLabelText(copy.newMeasurement), { target: { value: "89.1" } });
+    fireEvent.click(screen.getByRole("button", { name: `Add measurement: ${copy.newMeasurement}` }));
+    fireEvent.change(screen.getByRole("slider", { name: copy.newMeasurement }), { target: { value: "89.1" } });
     expect(onSave).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: copy.saveMeasurement }));
     await waitFor(() => expect(onSave).toHaveBeenCalledExactlyOnceWith(89.1, false));
@@ -24,7 +25,8 @@ describe.each(["nl", "en"] as const)("account measurements %s", (locale) => {
   });
   it("requires an explicit confirmation for a plausible but unusual value", async () => {
     const onSave = setup();
-    fireEvent.change(screen.getByLabelText(copy.newMeasurement), { target: { value: "95" } });
+    fireEvent.click(screen.getByRole("button", { name: `Add measurement: ${copy.newMeasurement}` }));
+    fireEvent.change(screen.getByRole("slider", { name: copy.newMeasurement }), { target: { value: "95" } });
     fireEvent.click(screen.getByRole("button", { name: copy.saveMeasurement }));
     expect(onSave).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: copy.confirm }));
@@ -32,7 +34,8 @@ describe.each(["nl", "en"] as const)("account measurements %s", (locale) => {
   });
   it("keeps failed input and allows a deliberate retry", async () => {
     const onSave = setup(vi.fn().mockRejectedValueOnce(new Error("offline")).mockResolvedValue(undefined));
-    const input = screen.getByLabelText(copy.newMeasurement) as HTMLInputElement;
+    const input = screen.getByRole("slider", { name: copy.newMeasurement }) as HTMLInputElement;
+    fireEvent.click(screen.getByRole("button", { name: `Add measurement: ${copy.newMeasurement}` }));
     fireEvent.change(input, { target: { value: "89" } });
     fireEvent.click(screen.getByRole("button", { name: copy.saveMeasurement }));
     expect(await screen.findByRole("alert")).toBeTruthy();
@@ -46,4 +49,24 @@ describe.each(["nl", "en"] as const)("account measurements %s", (locale) => {
     expect(screen.getAllByRole("listitem")).toHaveLength(4);
     expect(document.querySelector('input[type="file"]')).toBeNull();
   });
+});
+
+it("preselects measured without saving, and routes an explicit estimate only to the estimate writer", async () => {
+  const copy = accountReliabilityMessages.en;
+  const onSave = vi.fn();
+  const onSaveEstimate = vi.fn().mockResolvedValue(undefined);
+  render(<InseamMeasurements heightCm={190} measurements={[]} withinTolerance={false}
+    locale="en" copy={copy} onSave={onSave} onSaveEstimate={onSaveEstimate} />);
+  const method = screen.getByRole("combobox", { name: "How did you determine this?" });
+  expect(method.textContent).toContain("Measured");
+  expect(onSave).not.toHaveBeenCalled();
+  fireEvent.click(method);
+  const option = await screen.findByRole("option", { name: "Estimated" });
+  fireEvent.pointerDown(option, { pointerType: "mouse" });
+  fireEvent.click(option);
+  fireEvent.click(screen.getByRole("button", { name: `Add measurement: ${copy.newMeasurement}` }));
+  fireEvent.change(screen.getByRole("slider", { name: copy.newMeasurement }), { target: { value: "89" } });
+  fireEvent.click(screen.getByRole("button", { name: copy.saveMeasurement }));
+  await waitFor(() => expect(onSaveEstimate).toHaveBeenCalledWith(89, false));
+  expect(onSave).not.toHaveBeenCalled();
 });

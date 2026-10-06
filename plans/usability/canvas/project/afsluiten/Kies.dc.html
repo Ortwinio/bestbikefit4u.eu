@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Afsluiten · Kies je meting</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F8F3;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+.ck-mono{font-family:'DM Mono',monospace;font-weight:500}
+.ck-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.review-strip{height:44px;min-height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#EEF3EF;border-bottom:1px dashed #B9CCC6;box-sizing:border-box;font-family:Figtree,sans-serif}.review-label{font-size:12px;font-weight:700;text-transform:uppercase;color:#4A5F5A;flex-shrink:0}.review-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;height:44px}.review-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;min-height:44px;min-width:44px;flex-shrink:0;padding:0 2px;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:13px;color:#4A5F5A;cursor:pointer}.review-pill span{display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;white-space:nowrap}.review-pill[aria-pressed="true"] span{background:#0F2420;color:#FFFFFF}
+.ck-header{height:72px;min-height:72px;flex-shrink:0;padding:0 64px;background:#FFFFFF;border-bottom:1px solid #DCE6E1;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px}
+.ck-brand{display:flex;align-items:center;gap:20px}
+.ck-back{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;color:#0F2420;font-size:15px;font-weight:600;text-decoration:none}.ck-back:hover{color:#0A7263}
+.ck-sep{width:1px;height:28px;background:#DCE6E1}
+.ck-logo{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;white-space:nowrap;color:#0F2420}.ck-accent{color:#0A7263}
+.ck-steps{display:flex;align-items:center;gap:12px;margin:0;padding:0;list-style:none}
+.ck-step{display:flex;align-items:center;gap:10px}
+.ck-step-line{width:40px;height:2px;margin-right:2px;background:#DCE6E1}
+.ck-dot{width:28px;height:28px;border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:500 14px 'DM Mono',monospace}
+.ck-dot.is-active{background:#0F2420;color:#FFFFFF}.ck-dot.is-done{background:#CFF26A;color:#0F2420}.ck-dot.is-todo{background:#FFFFFF;border:2px solid #DCE6E1;color:#4A5F5A}
+.ck-step-label{font-size:14px;font-weight:600;color:#4A5F5A}.ck-step-label.is-current{color:#0F2420;font-weight:700}
+.ck-secure{justify-self:end;display:flex;align-items:center;gap:8px;font-size:14px;color:#4A5F5A;white-space:nowrap}
+.ck-main{flex:1 1 auto;display:flex;justify-content:center;align-items:flex-start;gap:64px;padding:48px 0 32px}
+.ck-col{flex:0 0 640px;width:640px;min-width:0}
+.ck-summary{flex:0 0 400px;width:400px;box-sizing:border-box;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:20px}
+.ck-sum-eyebrow{margin:0;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0A7263}
+.ck-sum-name{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;line-height:1.15;letter-spacing:-.02em}
+.ck-sum-bike{margin:4px 0 0;font-size:15px;color:#3B4F4A}
+.ck-sum-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px;padding:16px 0;border-top:1px solid #DCE6E1;border-bottom:1px solid #DCE6E1}
+.ck-sum-price .ck-mono{font-size:48px;line-height:1;letter-spacing:-.02em}
+.ck-sum-note{font-size:14px;color:#4A5F5A}
+.ck-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.ck-list li{display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:1.45}
+.ck-sum-renew{margin:0;padding:12px 14px;border-radius:14px;background:#F5F8F3;font-size:14px;line-height:1.5;color:#3B4F4A}
+.ck-sum-foot{margin:0;font-size:13px;line-height:1.5;color:#4A5F5A}
+.ck-foot{flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:8px;padding:0 0 12px;font-size:13px;color:#4A5F5A}
+.ck-foot a{display:inline-flex;align-items:center;min-height:44px;color:#4A5F5A;text-underline-offset:3px}.ck-foot a:hover{color:#0F2420}
+.ck-h1{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:48px;line-height:1.04;letter-spacing:-.035em}
+.ck-lead{margin:14px 0 0;font-size:18px;line-height:1.5;color:#3B4F4A}
+.ck-small{margin:0;font-size:14px;line-height:1.5;color:#4A5F5A}
+.ck-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:56px;min-height:56px;padding:0 32px;box-sizing:border-box;border:0;border-radius:999px;background:#0A7263;color:#FFFFFF;font-family:Figtree,sans-serif;font-size:17px;font-weight:700;text-decoration:none;cursor:pointer;white-space:nowrap}
+.ck-btn:hover{background:#075A4E;color:#FFFFFF}.ck-btn:disabled{background:#E1F2EE;color:#4A5F5A;cursor:not-allowed}
+.ck-btn.is-ink{background:#0F2420;color:#FFFFFF}.ck-btn.is-ink:hover{background:#0F2420;color:#CFF26A}
+.ck-btn.is-full{width:100%}
+.ck-btn-line{display:inline-flex;align-items:center;justify-content:center;height:56px;min-height:56px;padding:0 28px;box-sizing:border-box;border:2px solid #0F2420;border-radius:999px;background:transparent;color:#0F2420;font-size:17px;font-weight:700;text-decoration:none;white-space:nowrap}.ck-btn-line:hover{background:#FFFFFF;color:#0F2420}
+.ck-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:transparent;font-family:Figtree,sans-serif;font-size:16px;font-weight:700;color:#0A7263;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.ck-link:hover{color:#075A4E}
+.ck-wrap{width:1200px;margin:0 auto}
+.ck-intro{text-align:center;display:flex;flex-direction:column;align-items:center}
+.ck-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:stretch;margin-top:72px}
+.ck-plan{position:relative;display:flex;flex-direction:column;gap:18px;min-width:0;padding:32px 28px;box-sizing:border-box;border:2px solid #DCE6E1;border-radius:24px;background:#FFFFFF;color:#0F2420}
+.ck-plan.is-premium{border-color:#0A7263}
+.ck-plan.is-selected{border-color:#0F2420;background:#E6F8A8}
+.ck-plan.is-featured{margin:-24px 0;padding:48px 32px 40px;border:3px solid #0F2420;border-radius:28px;background:#0F2420;color:#FFFFFF}
+.ck-plan.is-featured.is-selected{border-color:#CFF26A;background:#0F2420}
+.ck-plan-flag{position:absolute;top:-17px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;height:34px;padding:0 18px;border-radius:999px;background:#CFF26A;color:#0F2420;font-size:15px;font-weight:700;white-space:nowrap}
+.ck-plan-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-height:30px}
+.ck-plan-name{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;line-height:1.15;letter-spacing:-.02em}
+.ck-plan.is-featured .ck-plan-name{font-size:30px}
+.ck-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:#0F2420;color:#FFFFFF;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.ck-plan.is-featured .ck-chip{background:#CFF26A;color:#0F2420}
+.ck-plan-price{display:flex;flex-direction:column;gap:4px}
+.ck-plan-price .ck-mono{font-size:48px;line-height:1;letter-spacing:-.02em;white-space:nowrap}
+.ck-plan.is-featured .ck-plan-price .ck-mono{font-size:60px;color:#CFF26A}
+.ck-plan-price small{font-size:14px;line-height:1.4;color:#3B4F4A}
+.ck-plan.is-featured .ck-plan-price small{color:#B9CCC6}
+.ck-plan-meta{margin:0;padding:12px 0;border-top:1px solid #DCE6E1;border-bottom:1px solid #DCE6E1;font-size:15px;font-weight:700}
+.ck-plan.is-featured .ck-plan-meta{border-color:#3B4F4A}
+.ck-plan.is-selected:not(.is-featured) .ck-plan-meta{border-color:#B9CCC6}
+.ck-plan .ck-list{flex:1 1 auto;gap:10px}
+.ck-plan .ck-list li{font-size:15px;line-height:1.45}
+.ck-plan.is-featured .ck-list li{color:#FFFFFF}
+.ck-pick{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;min-height:52px;box-sizing:border-box;border:2px solid #0F2420;border-radius:999px;background:#FFFFFF;color:#0F2420;font-family:Figtree,sans-serif;font-size:16px;font-weight:700;cursor:pointer}
+.ck-pick:hover{background:#F5F8F3}
+.ck-pick[aria-pressed="true"]{background:#0F2420;color:#FFFFFF}
+.ck-plan.is-featured .ck-pick{border-color:#CFF26A;background:transparent;color:#CFF26A}
+.ck-plan.is-featured .ck-pick:hover{background:#CFF26A;color:#0F2420}
+.ck-plan.is-featured .ck-pick[aria-pressed="true"]{background:#CFF26A;color:#0F2420}
+.ck-pick:focus-visible{outline:3px solid #0A7263;outline-offset:3px}
+.ck-plan.is-featured .ck-pick:focus-visible{outline-color:#CFF26A}
+.ck-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:40px;text-align:center}
+.ck-actions .ck-btn{min-width:320px}
+.ck-panel{margin-top:32px;padding:28px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px;display:flex;flex-direction:column;gap:20px}
+.ck-field{display:flex;flex-direction:column;gap:8px}
+.ck-label{font-size:15px;font-weight:700;color:#0F2420}
+.ck-input{height:56px;padding:0 18px;box-sizing:border-box;border:2px solid #B9CCC6;border-radius:16px;background:#FFFFFF;font-family:Figtree,sans-serif;font-size:18px;color:#0F2420;width:100%}
+.ck-input:focus{outline:3px solid #CFF26A;outline-offset:1px;border-color:#0F2420}
+.ck-input.is-code{font-family:'DM Mono',monospace;font-weight:500;font-size:26px;letter-spacing:.4em;max-width:280px}
+.ck-row-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ck-signed{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:18px;background:#E1F2EE}
+.ck-avatar{width:44px;height:44px;border-radius:50%;background:#0A7263;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0}
+.ck-reassure{display:flex;align-items:center;gap:10px;margin:20px 0 0;font-size:15px;color:#3B4F4A}
+.ck-rows{margin:32px 0 0;padding:4px 24px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px}
+.ck-rows div{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;padding:8px 0;border-top:1px solid #DCE6E1}
+.ck-rows div:first-child{border-top:0}
+.ck-rows dt{font-size:15px;color:#4A5F5A}
+.ck-rows dd{margin:0;display:flex;align-items:center;gap:16px;font-size:16px;font-weight:600;text-align:right}
+.ck-rows .is-total dt{font-weight:700;color:#0F2420;font-size:16px}
+.ck-rows .is-total dd .ck-mono{font-size:28px}
+.ck-consent{display:flex;gap:14px;align-items:flex-start;margin-top:20px;padding:16px 18px;border-radius:16px;background:#FFFFFF;border:1px solid #DCE6E1;font-size:16px;line-height:1.5;cursor:pointer}
+.ck-consent input{width:24px;height:24px;margin:0;flex-shrink:0;accent-color:#0A7263}
+.ck-done{padding:44px;border-radius:32px;background:#CFF26A;color:#0F2420;display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.ck-done-icon{width:64px;height:64px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center}
+.ck-done .ck-lead{margin:0;color:#0F2420}
+.ck-receipt{margin:24px 0 0;padding:20px 24px;border:1px solid #DCE6E1;border-radius:20px;background:#FFFFFF;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ck-receipt dt{font-size:13px;color:#4A5F5A}
+.ck-receipt dd{margin:4px 0 0;font-size:16px;font-weight:600}
+.ck-receipt .is-wide{grid-column:1 / -1;padding-top:14px;border-top:1px solid #DCE6E1;font-size:14px;color:#3B4F4A}
+.ck-fail{padding:44px;border-radius:32px;background:#FFFFFF;border:1px solid #DCE6E1;display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.ck-fail-icon{width:64px;height:64px;border-radius:20px;background:#FFD66B;color:#0F2420;display:flex;align-items:center;justify-content:center}
+.ck-fail .ck-lead{margin:0}
+.ck-badge{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;background:#CFF26A;color:#0F2420;font-family:Figtree,sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.ck-badge.is-petrol{background:#E1F2EE;color:#075A4E}
+.ck-note{margin:0;font-size:13px;line-height:1.5;color:#0F2420}
+.ck-range{display:flex;align-items:center;justify-content:space-between;gap:40px;margin-top:64px;padding:24px 28px;background:#FFFFFF;border:1px solid #DCE6E1;border-radius:24px}
+.ck-range-text{display:flex;flex-direction:column;gap:6px;max-width:400px}
+.ck-range-title{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;line-height:1.2;letter-spacing:-.02em}
+.ck-range-rows{display:flex;flex-direction:column;gap:8px;width:600px}
+.ck-range-row{display:grid;grid-template-columns:96px 300px minmax(0,1fr);align-items:center;gap:16px;min-height:48px;padding:0 16px;box-sizing:border-box;border:1px solid #DCE6E1;border-radius:14px;background:#FFFFFF}
+.ck-range-row.is-paid{border-color:#0F2420;background:#0F2420;color:#FFFFFF}
+.ck-range-label{font-size:15px;font-weight:700}
+.ck-range-track{position:relative;display:flex;justify-content:center;align-items:center;height:14px;border-radius:999px;background:#F5F8F3}
+.ck-range-row.is-paid .ck-range-track{background:#2E4C45}
+.ck-range-zone{height:14px;border-radius:999px;background:#E6F8A8;box-shadow:inset 0 0 0 1px #B6D94C}
+.ck-range-row.is-paid .ck-range-zone{background:#CFF26A;box-shadow:none}
+.ck-range-mid{position:absolute;left:50%;top:-4px;width:2px;height:22px;margin-left:-1px;background:#0F2420}
+.ck-range-row.is-paid .ck-range-mid{background:#FFFFFF}
+.ck-range-val{justify-self:end;font-size:14px;color:#3B4F4A;white-space:nowrap}
+.ck-range-val .ck-mono{font-size:22px;color:#0F2420}
+.ck-range-row.is-paid .ck-range-val{color:#B9CCC6}
+.ck-range-row.is-paid .ck-range-val .ck-mono{color:#CFF26A}
+</style>
+</helmet>
+<div style="width:1440px;height:1440px;display:flex;flex-direction:column;box-sizing:border-box;background:#F5F8F3;color:#0F2420;font-family:Figtree,system-ui,sans-serif">
+<div class="review-strip"><span class="review-label">Ontwerpstaat</span><div class="review-scroll"><sc-for list="{{reviews}}" as="review" hint-placeholder-count="4"><button type="button" class="review-pill" aria-pressed="{{review.selected}}" onClick="{{review.pick}}"><span>{{review.label}}</span></button></sc-for></div></div>
+<header class="ck-header"><div class="ck-brand"><a class="ck-back" href="../Pricing.dc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Terug</a><span class="ck-sep" aria-hidden="true"></span><div class="ck-logo"><svg width="44" height="34" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g class="ck-accent" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg><span>BikeFit<span class="ck-accent">Boost</span></span></div></div><div><sc-if value="{{showSteps}}" hint-placeholder-val="{{true}}"><ol class="ck-steps" aria-label="Stappen"><sc-for list="{{steps}}" as="step" hint-placeholder-count="3"><li class="ck-step" aria-current="{{step.current}}"><sc-if value="{{step.notFirst}}" hint-placeholder-val="{{true}}"><span class="ck-step-line" aria-hidden="true"></span></sc-if><span class="ck-dot {{step.dotClass}}" aria-hidden="true"><sc-if value="{{step.isDone}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></sc-if><sc-if value="{{step.showNum}}" hint-placeholder-val="{{true}}">{{step.num}}</sc-if></span><span class="ck-step-label {{step.labelClass}}">{{step.label}}<span class="ck-sr">{{step.srState}}</span></span></li></sc-for></ol></sc-if></div><div class="ck-secure"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg><span>Veilig betalen via Stripe</span></div></header>
+<main class="ck-main">
+<section class="ck-wrap" aria-labelledby="ck-title">
+<div class="ck-intro">
+<h1 class="ck-h1" id="ck-title">Kies je meting</h1>
+<p class="ck-lead">Je ziet de prijs voordat je iets invult. Alle bedragen zijn inclusief btw.</p>
+</div>
+<div class="ck-plans" role="group" aria-label="Kies je meting">
+<article class="ck-plan {{singleClass}}" aria-labelledby="ck-p1">
+<div class="ck-plan-top"><h2 class="ck-plan-name" id="ck-p1">Losse meting</h2><sc-if value="{{singlePressed}}" hint-placeholder-val="{{false}}"><span class="ck-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Gekozen</span></sc-if></div>
+<div class="ck-plan-price"><span class="ck-mono">€13,50</span><small>eenmalig, incl. btw</small></div>
+<p class="ck-plan-meta"><span class="ck-mono">1</span> fiets (Canyon Endurace) · <span class="ck-mono">3</span> maanden</p>
+<ul class="ck-list"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Volledig stappenplan in de juiste volgorde</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Controleplan en bandenspanning voor deze fiets</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span><span class="ck-mono">3</span> maanden opnieuw berekenen na elke aanpassing</span></li></ul>
+<button type="button" class="ck-pick" aria-pressed="{{singlePressed}}" aria-label="Kies losse meting" onClick="{{pickSingle}}">{{singleBtn}}</button>
+</article>
+<article class="ck-plan is-featured {{annualClass}}" aria-labelledby="ck-p2">
+<span class="ck-plan-flag">Favoriete keuze</span>
+<div class="ck-plan-top"><h2 class="ck-plan-name" id="ck-p2">Jaarabonnement</h2><sc-if value="{{annualPressed}}" hint-placeholder-val="{{true}}"><span class="ck-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Gekozen</span></sc-if></div>
+<div class="ck-plan-price"><span class="ck-mono">{{annualPrice}}</span><sc-if value="{{isEntry}}" hint-placeholder-val="{{false}}"><small>upgrade binnen <span class="ck-mono">6</span> maanden, daarna <span class="ck-mono">€21,50</span> per jaar</small></sc-if><sc-if value="{{notEntry}}" hint-placeholder-val="{{true}}"><small>per jaar, elk jaar hetzelfde · <span class="ck-mono">€1,79</span> per maand</small></sc-if></div>
+<p class="ck-plan-meta">Alle fietsen · <span class="ck-mono">12</span> maanden</p>
+<ul class="ck-list"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span><span class="ck-mono">12</span> maanden optimaliseren</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Al je fietsen afgesteld en vergeleken</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span><span class="ck-mono">2</span> cadeaumetingen per jaar</span></li></ul>
+<button type="button" class="ck-pick" aria-pressed="{{annualPressed}}" aria-label="Kies jaarabonnement" onClick="{{pickAnnual}}">{{annualBtn}}</button>
+</article>
+<article class="ck-plan is-premium {{personalClass}}" aria-labelledby="ck-p3">
+<div class="ck-plan-top"><h2 class="ck-plan-name" id="ck-p3">Jaarabonnement + persoonlijke bikefit</h2><sc-if value="{{personalPressed}}" hint-placeholder-val="{{false}}"><span class="ck-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Gekozen</span></sc-if></div>
+<div class="ck-plan-price"><span class="ck-mono">€234,50</span><small>eerste jaar, daarna <span class="ck-mono">€21,50</span> per jaar</small></div>
+<p class="ck-plan-meta">Alle fietsen · <span class="ck-mono">12</span> maanden · <span class="ck-mono">1</span> afspraak</p>
+<ul class="ck-list"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Alles van het jaarabonnement</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Persoonlijke bikefit-afspraak bij een fitter in [LOCATIE]</span></li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A7263" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M5 12l5 5 9-10"></path></svg><span>Je fitter start met jouw profiel en metingen</span></li></ul>
+<button type="button" class="ck-pick" aria-pressed="{{personalPressed}}" aria-label="Kies jaarabonnement met persoonlijke bikefit" onClick="{{pickPersonal}}">{{personalBtn}}</button>
+</article>
+</div>
+<section class="ck-range" aria-labelledby="ck-range-t">
+<div class="ck-range-text"><h2 class="ck-range-title" id="ck-range-t">Je zadelhoogte preciezer</h2><p class="ck-small">95%-bereik van je zadelhoogte. Betaald meet je je kniehoek op een foto, daardoor wordt de marge smaller.</p></div>
+<div class="ck-range-rows">
+<div class="ck-range-row"><span class="ck-range-label">Gratis</span><span class="ck-range-track" aria-hidden="true"><span class="ck-range-zone" style="width:252px"></span><span class="ck-range-mid"></span></span><span class="ck-range-val"><span class="ck-mono">± 18</span> mm</span></div>
+<div class="ck-range-row is-paid"><span class="ck-range-label">Betaald</span><span class="ck-range-track" aria-hidden="true"><span class="ck-range-zone" style="width:182px"></span><span class="ck-range-mid"></span></span><span class="ck-range-val"><span class="ck-mono">± 13</span> mm</span></div>
+</div>
+</section>
+<div class="ck-actions">
+<a class="ck-btn" href="Account.dc.html">Doorgaan</a>
+<sc-if value="{{sumRenewStd}}" hint-placeholder-val="{{true}}"><p class="ck-small">Elk jaar <span class="ck-mono">€21,50</span>, ook bij verlenging. <span class="ck-mono">30</span> dagen vooraf een herinnering, altijd online opzegbaar.</p></sc-if>
+<sc-if value="{{sumIsPersonal}}" hint-placeholder-val="{{false}}"><p class="ck-small">De afspraak is eenmalig. Daarna verlengt het als jaarabonnement voor <span class="ck-mono">€21,50</span> per jaar.</p></sc-if>
+<p class="ck-small">Twijfel je? Je kernwaarden blijven gratis in je account, en je gegevens blijven van jou.</p>
+</div>
+</section>
+</main>
+<footer class="ck-foot"><a href="../Legal.dc.html">Voorwaarden</a><span aria-hidden="true">·</span><a href="../Legal.dc.html">Privacy</a><span aria-hidden="true">·</span><a href="../Contact.dc.html">Hulp nodig? info@bikefitboost.eu</a></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1440}}'>
+class Component extends DCLogic {
+ constructor(props){super(props);this.state={source:'report',plan:'single'};}
+ ckSummary(plan){
+  const single=plan==='single',entry=plan==='entry',personal=plan==='personal';
+  const items=single?[['Volledig stappenplan in de juiste volgorde','',''],['Controleplan en bandenspanning voor deze fiets','',''],['','3',' maanden opnieuw berekenen na elke aanpassing']]:personal?[['Alles van het jaarabonnement','',''],['Persoonlijke bikefit-afspraak bij een fitter in [LOCATIE]','',''],['Je fitter start met jouw profiel en metingen','','']]:[['','12',' maanden optimaliseren'],['Al je fietsen afgesteld en vergeleken','',''],['','2',' cadeaumetingen per jaar']];
+  return {sumName:single?'Losse meting':(personal?'Jaarabonnement + persoonlijke bikefit':'Jaarabonnement'),sumIsSingle:single,sumIsPersonal:personal,sumPrice:personal?'€234,50':(single?'€13,50':(entry?'€9,50':'€21,50')),sumPriceNote:single?'eenmalig, incl. btw':(entry?'upgrade binnen 6 maanden, incl. btw':(personal?'eerste jaar, incl. btw':'per jaar, incl. btw')),sumItems:items.map(([a,n,b])=>({a,n,b})),sumRenews:!single,sumRenewStd:!single&&!personal};
+ }
+ ckSteps(active){
+  return {showSteps:active>0,steps:['Kies','Account','Bevestigen'].map((label,i)=>{const n=i+1,done=n<active,cur=n===active;return {label,num:String(n),notFirst:i>0,isDone:done,showNum:!done,dotClass:done?'is-done':(cur?'is-active':'is-todo'),labelClass:cur?'is-current':'',current:cur?'step':'false',srState:done?', voltooid':(cur?', huidige stap':'')};})};
+ }
+ renderVals(){
+  const source=this.state.source;
+  const entry=source==='entry';
+  const plan=this.state.plan;
+  const annual=plan==='annual';
+  const defaults={report:'single',pricing:'annual',entry:'annual',personal:'personal'};
+  return {
+   ...this.ckSteps(1),
+   ...this.ckSummary(annual?(entry?'entry':'annual'):plan),
+   reviews:[['report','Vanuit rapport'],['pricing','Vanuit prijzen'],['entry','Instap na losse meting'],['personal','Persoonlijke bikefit']].map(([id,label])=>({id,label,selected:id===source,pick:()=>this.setState({source:id,plan:defaults[id]})})),
+   singlePressed:plan==='single',annualPressed:annual,personalPressed:plan==='personal',
+   pickSingle:()=>this.setState({plan:'single'}),pickAnnual:()=>this.setState({plan:'annual'}),pickPersonal:()=>this.setState({plan:'personal'}),
+   isEntry:entry,notEntry:!entry,
+   singleClass:plan==='single'?'is-selected':'',annualClass:annual?'is-selected':'',personalClass:plan==='personal'?'is-selected':'',
+   singleBtn:plan==='single'?'Gekozen':'Kies losse meting',annualBtn:annual?'Gekozen':'Kies jaarabonnement',personalBtn:plan==='personal'?'Gekozen':'Kies met bikefit',
+   annualPrice:entry?'€9,50':'€21,50'
+  };
+ }
+}
+</script>
+</body>
+</html>

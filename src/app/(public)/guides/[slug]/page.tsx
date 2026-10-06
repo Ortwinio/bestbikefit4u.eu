@@ -1,4 +1,6 @@
 import { currentSiteUrl } from "@/lib/seo/siteUrl";
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
+import { CollapsedArticle } from "@/components/content/CollapsedArticle";
 import { getGuideUpdatedDate } from "@/config/authorship";
 import { GuideAttribution } from "@/components/guides/GuideAttribution";
 import { socialImage } from "@/lib/seo/social-image";
@@ -12,8 +14,7 @@ import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { FitDisclaimer } from "@/components/content/FitDisclaimer";
 import { GuideBodyMarkdown } from "@/components/content/GuideBodyMarkdown";
-import { GuideFaqAccordion } from "@/components/content/GuideFaqAccordion";
-import { GuideMidPageCta } from "@/components/content/GuideMidPageCta";
+import type { Locale } from "@/i18n/config";
 import { GuideSoftToolCta } from "@/components/content/GuideSoftToolCta";
 import {
   PublicBreadcrumbs,
@@ -70,6 +71,12 @@ interface GuidePageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
+function GuideFaqAccordion({ faqs, locale }: { faqs: { q: string; a: string }[]; locale: Locale }) {
+  return <div className="space-y-3">{faqs.map(faq => <ContentDisclosure key={faq.q} title={faq.q}>
+    <GuideBodyMarkdown content={faq.a} locale={locale} />
+  </ContentDisclosure>)}</div>;
+}
+
 function getSearchParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
 }
@@ -94,6 +101,8 @@ function LegacyGuideSections({
   return (
     <>
       {sections.map((section) => (
+        <ContentDisclosure key={section.title} title={section.title}
+          safety={/veilig|waarschuwing|medisch|aanhoudende|scherpe pijn|safety|warning|medical|persistent|sharp pain/i.test([section.title, ...section.items].join(" "))}>
         <PublicSection
           key={section.title}
           className="mt-10"
@@ -165,6 +174,7 @@ function LegacyGuideSections({
             </div>
           )}
         </PublicSection>
+        </ContentDisclosure>
       ))}
     </>
   );
@@ -383,7 +393,7 @@ export default async function GuidePage({
             { label: entry.h1 },
           ]}
         />
-        <GuideHero
+        <GuideHero answerLocale={locale}
           eyebrow={isHub ? copy.hub : copy.guide}
           title={entry.h1}
           description={heroDescription}
@@ -442,7 +452,8 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
+                <CollapsedArticle content={cleanedMarkdown} locale={locale}
+                  render={content => <GuideBodyMarkdown content={content} locale={locale} />} />
               </PublicSection>
             ) : null}
 
@@ -452,26 +463,17 @@ export default async function GuidePage({
               </PublicSection>
             ) : null}
 
-            <div className="mt-10">
-              <GuideMidPageCta
-                funnel={funnel}
-                cluster={entry.cluster}
-                locale={locale}
-                pagePath={pagePath}
-                slug={slug}
-              />
-            </div>
 
             <div id="guide-related">
             <RelatedLinksSection
               title={isNl ? "Verder verkennen" : "Explore next"}
-              links={relatedLinks}
+              links={relatedLinks.slice(0, 3)}
               locale={locale}
             />
 
             <RelatedLinksSection
               title={isNl ? "Gerelateerde blogartikelen" : "Related blog articles"}
-              links={relatedBlogLinks}
+              links={relatedBlogLinks.slice(0, Math.max(0, 3 - relatedLinks.length))}
               locale={locale}
             />
             </div>
@@ -493,21 +495,13 @@ export default async function GuidePage({
 
             {cleanedMarkdown ? (
               <PublicSection className="mt-10">
-                <GuideBodyMarkdown content={cleanedMarkdown} locale={locale} />
+                <CollapsedArticle content={cleanedMarkdown} locale={locale}
+                  render={content => <GuideBodyMarkdown content={content} locale={locale} />} />
               </PublicSection>
             ) : (
               <LegacyGuideSections sections={leafSections} />
             )}
 
-            <div className="mt-10">
-              <GuideMidPageCta
-                funnel={funnel}
-                cluster={entry.cluster}
-                locale={locale}
-                pagePath={pagePath}
-                slug={slug}
-              />
-            </div>
 
             {faqs.length > 0 ? (
               <PublicSection
@@ -525,13 +519,13 @@ export default async function GuidePage({
             <div id="guide-related">
             <RelatedLinksSection
               title={isNl ? "Gerelateerde gidsen en tools" : "Related guides and tools"}
-              links={relatedLinks}
+              links={relatedLinks.slice(0, 3)}
               locale={locale}
             />
 
             <RelatedLinksSection
               title={isNl ? "Gerelateerde blogartikelen" : "Related blog articles"}
-              links={relatedBlogLinks}
+              links={relatedBlogLinks.slice(0, Math.max(0, 3 - relatedLinks.length))}
               locale={locale}
             />
             </div>

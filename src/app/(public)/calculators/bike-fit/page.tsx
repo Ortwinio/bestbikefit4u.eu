@@ -1,4 +1,4 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
@@ -204,7 +204,10 @@ export default async function BikeFitCalculatorPage() {
       <BikeFitCalculatorForm isNl={isNl} copy={dictionary.bikeFitCalculator} />
       <CalculatorAnswerSection id="bike-fit" locale={locale} content={getFitAnswer("bike-fit", locale)} />
       <PublicPageShell className="pt-0 md:pt-0">
-        <PublicSection
+        <ContentDisclosure title={isNl
+              ? "Betrouwbaar genoeg om de juiste volgende stap te kiezen"
+              : "Reliable enough to choose the right next step"}>
+<PublicSection
           className="mt-10"
           header={{
             eyebrow: isNl ? "Waarom rijders hiermee starten" : "Why riders start here",
@@ -228,35 +231,40 @@ export default async function BikeFitCalculatorPage() {
             ))}
           </div>
         </PublicSection>
+</ContentDisclosure>
 
-        <PublicSection
-          className="mt-10"
-          header={{
-            title: "FAQ",
-            description: isNl
-              ? "Korte antwoorden op de belangrijkste vragen."
-              : "Short answers to the most common questions.",
-          }}
-        >
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
-              >
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-2 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </PublicSection>
+        <ContentDisclosure title={"FAQ"}>
+          <PublicSection
+            className="mt-10"
+            header={{
+              title: "FAQ",
+              description: isNl
+                ? "Korte antwoorden op de belangrijkste vragen."
+                : "Short answers to the most common questions.",
+            }}
+          >
+            <div className="space-y-4">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+                >
+                  <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                  <p className="mt-2 text-muted-foreground">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <section className="mt-10">
+          <ContentDisclosure title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}>
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-            links={getRelatedLinks("bike-fit", locale)}
+            links={getRelatedLinks("bike-fit", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </section>
       </PublicPageShell>
     </div>

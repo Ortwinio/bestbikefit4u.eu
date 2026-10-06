@@ -1,4 +1,4 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getEquipmentAnswer } from "@/lib/seo/calculatorAnswers/equipment";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RelatedLinksSection } from "@/components/seo/RelatedLinksSection";
@@ -46,13 +46,17 @@ export async function PressureCalculatorPageContent({ locale }: { locale: Locale
       />
       <CalculatorAnswerSection id="tire-pressure" locale={locale} content={getEquipmentAnswer("tire-pressure", locale)} />
       <div className="mx-auto max-w-[1440px] px-4 pb-12 sm:px-8 xl:px-16">
-        <PressureCalculatorFaq locale={locale} />
+        <ContentDisclosure title={getPressureCalculatorFaqContent(locale).title}>
+          <PressureCalculatorFaq locale={locale} />
+        </ContentDisclosure>
         <div className="mx-auto mt-10 max-w-4xl px-4 sm:px-6 lg:px-8">
+          <ContentDisclosure title={dictionary.tirePressureCalculator.related}>
           <RelatedLinksSection
             title={dictionary.tirePressureCalculator.related}
-            links={getRelatedLinks("tire-pressure", locale)}
+            links={getRelatedLinks("tire-pressure", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </div>
 
       </div>

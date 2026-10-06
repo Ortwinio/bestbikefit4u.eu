@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { EditorialCta } from "@/components/science/EditorialLayout";
@@ -58,7 +59,7 @@ export default async function BikeFitMethodsPage() {
     <PublicPageShell>
       <JsonLd schema={articleJsonLd} />
 
-      <PublicHero
+      <PublicHero answerLocale={locale}
         eyebrow={page.hero.eyebrow}
         title={page.hero.title}
         description={page.hero.description}
@@ -68,37 +69,39 @@ export default async function BikeFitMethodsPage() {
         illustration={<p>{page.hero.caption}</p>}
       />
 
-      <PublicSection
-        header={{
-          eyebrow: page.section.eyebrow,
-          title: page.section.title,
-          description: page.section.description,
-        }}
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          {page.methods.map((method) => (
-            <PublicSurfaceCard
-              key={method.name}
-              title={method.name}
-              description={method.focus}
-              leading={<Ruler className="h-5 w-5" />}
-            >
-              <div className="space-y-2 text-sm leading-6">
-                <p className="text-muted-foreground">
-                  <span className="font-semibold text-foreground">{page.section.strengthLabel}:</span>{" "}
-                  {method.strength}
-                </p>
-                <p className="text-muted-foreground">
-                  <span className="font-semibold text-foreground">{page.section.limitLabel}:</span>{" "}
-                  {method.limit}
-                </p>
-              </div>
-            </PublicSurfaceCard>
-          ))}
-        </div>
-      </PublicSection>
+      <ContentDisclosure title={page.section.title}>
+        <PublicSection
+          header={{
+            eyebrow: page.section.eyebrow,
+            title: page.section.title,
+            description: page.section.description,
+          }}
+        >
+          <div className="grid gap-5 md:grid-cols-2">
+            {page.methods.map((method) => (
+              <PublicSurfaceCard
+                key={method.name}
+                title={method.name}
+                description={method.focus}
+                leading={<Ruler className="h-5 w-5" />}
+              >
+                <div className="space-y-2 text-sm leading-6">
+                  <p className="text-muted-foreground">
+                    <span className="font-semibold text-foreground">{page.section.strengthLabel}:</span>{" "}
+                    {method.strength}
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span className="font-semibold text-foreground">{page.section.limitLabel}:</span>{" "}
+                    {method.limit}
+                  </p>
+                </div>
+              </PublicSurfaceCard>
+            ))}
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-      <RelatedLinksSection title={page.linksTitle} links={page.links} locale={locale} />
+      <RelatedLinksSection title={page.linksTitle} links={page.links.slice(0, 3)} locale={locale} />
       <EditorialCta
         title={scienceExtras[locale].ctaTitle}
         description={scienceExtras[locale].ctaDescription}

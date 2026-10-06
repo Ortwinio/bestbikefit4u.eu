@@ -44,7 +44,10 @@ describe.each(pages)("%s server answer content", (tool, Page) => {
     const section = document.querySelector(`[data-calculator-answer="${tool}"]`);
     expect(section).not.toBeNull();
     const content = getPerformanceAnswer(tool, locale);
-    for (const text of [content.answer, content.method, content.limits, ...content.mistakes]) {
+    for (const { segment } of new Intl.Segmenter(locale, { granularity: "sentence" }).segment(content.answer)) {
+      expect(section?.textContent).toContain(segment.trim());
+    }
+    for (const text of [content.method, content.limits, ...content.mistakes]) {
       expect(section?.textContent).toContain(text);
     }
     for (const row of [...content.example.inputs, ...content.example.results]) {

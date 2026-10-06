@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Vertrekmelding desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@400;500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button:focus-visible,a:focus-visible{outline:3px solid #9CC21F;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; overflow: hidden; box-sizing: border-box; background: #F5F8F3; font-family: Figtree, system-ui, sans-serif; color: #3B4F4A">
+  <div aria-hidden="true" style="display: flex; flex-direction: column; height: 100%">
+    <div style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 64px; border-bottom: 1px solid #DCE6E1; flex: none">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 21px; color: #0F2420">BikeFit<span style="color: #0A7263">Boost</span></span>
+      <div style="display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE6E1; font-size: 15px; font-weight: 700">
+        <span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: #0F2420; color: #FFFFFF">Mijn houding</span>
+        <span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; color: #0F2420">Mijn rit</span>
+        <span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; color: #3B4F4A">Alle calculators</span>
+      </div>
+      <span style="font-weight: 600; color: #0F2420">Inloggen</span>
+    </div>
+    <div style="padding: 40px 64px; display: flex; flex-direction: column; gap: 28px">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Gratis calculator · 2 stappen · zonder account</div>
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.03em; color: #0F2420">Hoe hoog moet je zadel?</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <div style="height: 120px; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px"></div>
+          <div style="height: 170px; background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px"></div>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #DCE6E1; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px">
+          <div style="display: flex; justify-content: space-between; align-items: start">
+            <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 26px; color: #0F2420">Zadelhoogte</div>
+            <div style="font-family: 'DM Mono', monospace; font-size: 48px; line-height: 1; color: #0F2420">759<span style="font-size: 18px; margin-left: 6px">mm</span></div>
+          </div>
+          <div style="position: relative; height: 28px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box">
+            <div style="position: absolute; top: -1.5px; bottom: -1.5px; left: 30.8%; width: 37.5%; background: #CFF26A; border: 1.5px solid #0F2420; border-radius: 999px; box-sizing: border-box"></div>
+            <div style="position: absolute; left: 50%; top: -9px; width: 5px; height: 44px; margin-left: -2.5px; background: #0F2420; border-radius: 3px"></div>
+          </div>
+          <div style="height: 16px; width: 70%; border-radius: 999px; background: #EEF3EF"></div>
+          <div style="height: 52px; border-radius: 16px; background: #E1F2EE"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; inset: 0; background: rgba(15,36,32,.55); display: flex; align-items: center; justify-content: center; padding: 32px; box-sizing: border-box">
+    <div role="dialog" aria-modal="true" aria-labelledby="vertrek-titel" aria-describedby="vertrek-tekst" style="position: relative; width: 100%; max-width: 560px; box-sizing: border-box; background: #FFFFFF; border-radius: 28px; padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 18px">
+      <button type="button" aria-label="Sluiten" style="position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 0; background: transparent; cursor: pointer; padding: 0"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="#0F2420" stroke-width="2.2" stroke-linecap="round"></path></svg></button>
+      <h2 id="vertrek-titel" style="margin: 0; padding-right: 40px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; line-height: 1.1; letter-spacing: -.02em; color: #0F2420">Bewaar je gegevens voor de volgende keer</h2>
+      <p id="vertrek-tekst" style="margin: 0; font-size: 16px; line-height: 1.5; color: #3B4F4A">Je gegevens blijven alleen bewaard in deze browsersessie. Met een gratis account bewaar je ze voor de volgende keer en verfijn je je advies.</p>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0A7263">Wat we bewaren · voorbeeld</span>
+        <ul style="margin: 0; padding: 0; list-style: none; display: flex; gap: 8px; flex-wrap: wrap">
+          <sc-for list="{{saved}}" as="c" hint-placeholder-count="2">
+            <li style="display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #E1F2EE; color: #075A4E; font-size: 14px; font-weight: 600">{{c.label}}<span style="font-family: 'DM Mono', monospace; color: #0F2420">{{c.value}}</span></li>
+          </sc-for>
+        </ul>
+      </div>
+      <p style="margin: 0; font-size: 15px; font-weight: 600; color: #0F2420">Met een gratis account wordt je bereik <span style="font-family: 'DM Mono', monospace">± 18 mm</span>; met betaald <span style="font-family: 'DM Mono', monospace">± 13 mm</span>.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 4px">
+        <a href="RP2LoginHandoff.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #0A7263; color: #FFFFFF; font-weight: 700; font-size: 15px; text-decoration: none">Maak een gratis account</a>
+        <button type="button" style="font: inherit; font-weight: 700; font-size: 15px; min-height: 48px; padding: 0 22px; border-radius: 999px; cursor: pointer; background: transparent; color: #0F2420; border: 2px solid #0F2420">Nee, bedankt</button>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #4A5F5A">We tonen dit één keer per sessie, niet als je bent ingelogd.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      saved: [{ label: 'Lengte', value: '184 cm' }, { label: 'Binnenbeen', value: '86 cm' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

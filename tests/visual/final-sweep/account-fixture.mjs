@@ -5,10 +5,12 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 import { extendRiderRuntime } from "./rider-fixtures.mjs";
+import { extendUsabilityAccountRuntime } from "../usability/extend-runtime.mjs";
 
 /** Actual account components with deterministic read-only Convex/auth fixtures from batch 20. */
 export async function prepareAccountFixtures({
-  root = process.cwd(), origin, fetch: previewFetch = fetch, port = 0, bikeRuntime,
+  root = process.cwd(), origin, fetch: previewFetch = fetch, port = 0, bikeRuntime, paidAccessEnforced = false,
+  staticDir = resolve(root, ".next-final-sweep/static"),
 } = {}) {
   if (!origin) throw new Error("Account fixtures require the running production origin");
   const loginResponse = await previewFetch(new URL("/nl/login", origin));
@@ -18,6 +20,7 @@ export async function prepareAccountFixtures({
     ...new Set([...loginHtml.matchAll(/href="([^" ]+\.css(?:\?[^" ]*)?)"/g)].map((match) => match[1])),
   ];
   if (!cssPaths.length) throw new Error("No production Next CSS found on /nl/login");
+  const pressureStyles = loginHtml.match(/<style\b[^>]*\bid="pressure-display-styles"[^>]*>([\s\S]*?)<\/style>/)?.[1] ?? "";
   const styles = (
     await Promise.all(
       cssPaths.map(async (path) => {
@@ -26,7 +29,7 @@ export async function prepareAccountFixtures({
         return response.text();
       }),
     )
-  ).join("\n");
+  ).concat(pressureStyles).join("\n");
   const htmlClass = loginHtml.match(/<html[^>]*class="([^"]+)"/)?.[1] || "";
   const bodyClass = loginHtml.match(/<body[^>]*class="([^"]+)"/)?.[1] || "font-sans";
   const folder = resolve(root, "tests/visual/final-sweep");
@@ -56,6 +59,8 @@ export async function prepareAccountFixtures({
         "process.env.NODE_ENV": '"production"',
         "process.env.STRIPE_BILLING_ENABLED": '"false"',
         "process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED": '"false"',
+        "process.env.PAID_ACCESS_ENFORCED": JSON.stringify(String(paidAccessEnforced)),
+        "process.env.NEXT_PUBLIC_PAID_ACCESS_ENFORCED": JSON.stringify(String(paidAccessEnforced)),
         "process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED": '"true"',
         "process.env.NEXT_PUBLIC_ENABLE_LOCALHOST_DEV_LOGIN": '"false"',
         "process.env.NEXT_PUBLIC_LOCALHOST_DEV_LOGIN_EMAIL": '""',
@@ -75,7 +80,14 @@ export async function prepareAccountFixtures({
             });
             builder.onLoad({ filter: /runtime\.jsx$/ }, async ({ path }) => {
               if (path !== runtime) return;
-              const contents = extendRiderRuntime(await readFile(path, "utf8"), resolve(folder, "rider-fixtures.mjs"));
+              let contents = extendRiderRuntime(await readFile(path, "utf8"), resolve(folder, "rider-fixtures.mjs"));
+              contents = extendUsabilityAccountRuntime(contents, { root, batch: key });
+              const queryFallback = 'if (!(name in values)) {';
+              if (!contents.includes(queryFallback)) throw new Error(`Missing read-only query adapter in ${path}`);
+              contents = `import { getAccess as fixtureAccess } from ${JSON.stringify(resolve(root, "shared/pricing/access.ts"))};\n`
+                + contents.replace(queryFallback,
+                  'if (name === "pricing/queries:getAccess" && !(name in values)) return fixtureAccess({ entitlements: [] }, args?.bikeId, { enforced: false, now: 1790985600000 });\n'
+                  + queryFallback);
               if (/export (?:function|const) usePaginatedQuery\b/.test(contents)) {
                 return { loader: "jsx", resolveDir: batch.folder, contents };
               }
@@ -94,6 +106,9 @@ export function usePaginatedQuery(_reference, args) {
               },
               () => ({ path: runtime }),
             );
+            builder.onResolve({ filter: /^server-only$/ }, () => ({
+              path: resolve(root, "tests/visual/marketing-batch3/empty.js"),
+            }));
             builder.onResolve({ filter: /^next\/link$/ }, () => ({ path: link }));
             builder.onResolve({ filter: /^next\/image$/ }, () => ({ path: image }));
             if (key === "tools") {
@@ -134,7 +149,7 @@ export function usePaginatedQuery(_reference, args) {
   }
   const server = createServer(async (request, response) => {
     try {
-      if (await serveQaAsset(request, response, { staticDir: resolve(root, ".next-final-sweep/static") })) return;
+      if (await serveQaAsset(request, response, { staticDir })) return;
       const url = new URL(request.url, "http://127.0.0.1");
       const asset = url.pathname.match(/^\/__account-fixture\/(profile|fit|tools|bikes)\.(js|css)$/);
       if (asset) {

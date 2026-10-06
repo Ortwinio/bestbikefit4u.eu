@@ -31,21 +31,24 @@ export function Header({ locale, labels }: HeaderProps) {
     { href: withLocalePrefix("/pricing", locale), label: labels.nav.pricing },
   ];
   return (
-    <header className="border-b border-border bg-background text-foreground">
+    <header data-usability="site-header" className="border-b border-border bg-background text-foreground">
       <div
+        data-usability="mobile-header"
         className={
-          "mx-auto flex min-h-[88px] max-w-[1440px] items-center justify-between gap-3 px-5 py-3 " +
-          "md:px-10 xl:px-[120px]"
+          "mx-auto flex h-[63px] max-w-[1440px] items-center justify-between gap-2 pl-4 pr-2.5 " +
+          "xl:h-auto xl:min-h-[88px] xl:gap-3 xl:px-[120px] xl:py-3"
         }
       >
         <MarketingLogo
           href={withLocalePrefix("/", locale)}
           priority
-          className="flex min-h-11 w-[195px] shrink-0 items-center"
+          className="flex min-h-11 w-[195px] min-w-0 shrink items-center [&_img]:max-w-full xl:shrink-0"
         />
         <MarketingNavigation items={items} label={copy.navigation} />
-        <div className="flex items-center gap-2 xl:gap-4">
-          <MarketingLanguageSwitch locale={locale} placement="menu" />
+        <div className="flex shrink-0 items-center gap-0.5 xl:gap-4">
+          <div className="hidden xl:block">
+            <MarketingLanguageSwitch locale={locale} placement="menu" />
+          </div>
           <MarketingAccountLink
             locale={locale}
             loginLabel={labels.nav.login}

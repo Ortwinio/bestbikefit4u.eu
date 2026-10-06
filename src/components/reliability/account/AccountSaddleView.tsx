@@ -16,17 +16,18 @@ export interface AccountSaddleViewProps {
   settingsUpdatedAt?: number;
   bikeId?: string;
   bikePicker?: React.ReactNode;
+  onSaveEstimate?: (valueCm: number, confirmed: boolean) => Promise<unknown>;
   onSaveMeasurement: (valueCm: number, confirmed: boolean) => Promise<unknown>;
   onSaveSettings: (values: SaddleSettingsValues) => Promise<unknown>;
 }
 
-export function AccountSaddleView({ locale, heightCm, measurements, model, settings, basis, settingsUpdatedAt, bikeId, bikePicker, onSaveMeasurement, onSaveSettings }: AccountSaddleViewProps) {
+export function AccountSaddleView({ locale, heightCm, measurements, model, settings, basis, settingsUpdatedAt, bikeId, bikePicker, onSaveMeasurement, onSaveEstimate, onSaveSettings }: AccountSaddleViewProps) {
   const copy = accountReliabilityMessages[locale];
   const hasBikeAndGoal = settings.bikeType !== undefined && settings.goal !== undefined;
   return <ReliabilityCalculatorTemplate locale={locale} calculator="saddle-height" title={copy.saddle} description={copy.intro} eyebrow={copy.fromProfile} canRefine={false}
-    notice={bikePicker} warnings={<p className="rounded-xl border border-border bg-muted p-4">{copy.safety}</p>}
+    notice={bikePicker} warnings={<p data-usability="safety" className="rounded-xl border border-border bg-muted p-4">{copy.safety}</p>}
     steps={[]} unframedResults inputContent={<>
-      <InseamMeasurements heightCm={heightCm} measurements={measurements} withinTolerance={model?.withinTolerance ?? false} locale={locale} copy={copy} onSave={onSaveMeasurement} />
+      <InseamMeasurements heightCm={heightCm} measurements={measurements} withinTolerance={model?.withinTolerance ?? false} locale={locale} copy={copy} onSave={onSaveMeasurement} onSaveEstimate={onSaveEstimate} />
       <SaddleSettings key={bikeId ?? "profile"} initial={settings} copy={copy} onSave={onSaveSettings} supportsClimbing savedStatus={settingsUpdatedAt !== undefined ? `${copy.updated}: ${new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(settingsUpdatedAt)}` : copy.unknownDate} />
     </>}
     results={model ? <SaddleResult result={model} copy={copy} locale={locale} basis={basis} currentSaddleHeightMm={settings.currentSaddleHeightMm} hasBikeAndGoal={hasBikeAndGoal} bikeId={bikeId} showNextStep={false} /> : <div><p>{copy.empty}</p><Link href={`/${locale}/profile`} className="underline">{copy.profile}</Link></div>}

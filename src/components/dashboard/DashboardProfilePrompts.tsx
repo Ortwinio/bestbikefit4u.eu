@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { makeFunctionReference } from "convex/server";
-import { Button, Input, Select } from "@/components/ui";
+import { Button, Input, Select, Slider } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getProfilePromptsCopy } from "@/i18n/account/profilePrompts";
@@ -80,7 +80,9 @@ function Question({ question, cardId, index, locale }: { question: PromptQuestio
   const skip = useMutation(skipProfilePrompt);
   const [text, setText] = useState(question.value === null ? "" : String(question.value));
   const [expected, setExpected] = useState(question.value);
-  const [method, setMethod] = useState<Method | "unknown" | "">("");
+  const defaultMethod: Method = question.field === "ftpWatts" || question.kind === "declared"
+    ? "self_report" : question.kind === "estimated" ? "self_assessment" : "single_measurement";
+  const [method, setMethod] = useState<Method | "unknown" | "">(defaultMethod);
   const [measurePoint, setMeasurePoint] = useState<"bb_center_to_saddle_top" | "">("");
   const [status, setStatus] = useState<"saved" | "skipped" | "error" | "discarded" | null>(null);
   const [conflict, setConflict] = useState<Extract<AnswerResult, { status: "conflict" }> | null>(null);
@@ -123,7 +125,7 @@ function Question({ question, cardId, index, locale }: { question: PromptQuestio
     if (!conflict) return;
     setExpected(conflict.currentValue);
     setText("");
-    setMethod("");
+    setMethod(defaultMethod);
     setMeasurePoint("");
     setConflict(null);
     setStatus("discarded");
@@ -144,9 +146,21 @@ function Question({ question, cardId, index, locale }: { question: PromptQuestio
       <form onSubmit={event => { event.preventDefault(); if (!conflict) void save(); }} className={styles.form}>
         {question.field === "armLengthCm" && <p>{copy.armInstruction}</p>}
         {method !== "unknown" && (question.options ? <Select label={label} tooltip={copy.valueHelp} tooltipLabel={label} placeholder={copy.choose} options={question.options.map(value => ({ value, label: labelValue(value) }))} value={text} disabled={pending || Boolean(conflict)} onChange={event => setText(event.target.value)} />
-          : <Input label={`${label}${unit ? ` (${unit})` : ""}`} tooltip={question.field === "birthDate" ? copy.dateHelp : copy.valueHelp} tooltipLabel={label} type={question.field === "birthDate" ? "date" : question.range ? "number" : "text"} min={question.range?.[0]} max={question.range?.[1]} step="any" maxLength={100} required value={text} disabled={pending || Boolean(conflict)} onChange={event => setText(event.target.value)} />)}
+          : question.range ? <div data-usability={!text ? "example" : undefined}>
+            <Slider label={`${label}${unit ? ` (${unit})` : ""}`} unit={unit}
+              tooltip={copy.valueHelp} tooltipLabel={label} min={question.range[0]} max={question.range[1]}
+              step={question.unit === "cm" || question.unit === "kg" ? 0.5 : 1}
+              value={text ? Number(text) : (question.range[0] + question.range[1]) / 2}
+              valueLabel={text || copy.example} disabled={pending || Boolean(conflict)}
+              onChange={value => setText(String(value))} />
+            {!text && <p className="text-sm text-muted-foreground">{copy.exampleHint}</p>}
+          </div>
+          : <Input label={label} tooltip={question.field === "birthDate" ? copy.dateHelp : copy.valueHelp}
+              tooltipLabel={label} type={question.field === "birthDate" ? "date" : "text"}
+              maxLength={100} required value={text} disabled={pending || Boolean(conflict)}
+              onChange={event => setText(event.target.value)} />)}
         {question.field === "ftpWatts" && <p>{copy.ftpHint}</p>}
-        <Select label={copy.methods} tooltip={copy.methodHelp} tooltipLabel={copy.methods} placeholder={copy.choose} options={[...methods.map(value => ({ value, label: question.field === "ftpWatts" ? copy.ftpMethods[value] : copy.saveMethods[value] })), ...(question.field === "ftpWatts" ? [{ value: "unknown", label: copy.unknownFtp }] : [])]} value={method} disabled={pending || Boolean(conflict)} onChange={event => setMethod(event.target.value as Method | "unknown")} />
+        <div data-usability="measurement-kind"><Select label={copy.methods} tooltip={copy.methodHelp} tooltipLabel={copy.methods} placeholder={copy.choose} options={[...methods.map(value => ({ value, label: question.field === "ftpWatts" ? copy.ftpMethods[value] : copy.saveMethods[value] })), ...(question.field === "ftpWatts" ? [{ value: "unknown", label: copy.unknownFtp }] : [])]} value={method} disabled={pending || Boolean(conflict)} onChange={event => setMethod(event.target.value as Method | "unknown")} /></div>
         {method === "unknown" && <div role="status"><p>{copy.unknownFtpHint}</p><Link className={styles.link} href={withLocalePrefix("/tools/ftp-wkg", locale)}>{copy.ftpLink}</Link></div>}
         {saddle && <><p>{copy.saddleInstruction}</p><Select label={copy.measurePoint} tooltip={copy.saddleInstruction} tooltipLabel={copy.measurePoint} placeholder={copy.choose} options={[{ value: "bb_center_to_saddle_top", label: copy.saddlePoint }]} value={measurePoint} disabled={pending || Boolean(conflict)} onChange={event => setMeasurePoint(event.target.value as "bb_center_to_saddle_top")} /></>}
         <div className={styles.actions}>{method !== "unknown" && <Button type="submit" isPending={pending} disabled={!text.trim() || !method || Boolean(conflict) || (saddle && !measurePoint)}>{question.stale && text === String(question.value) ? copy.confirm : copy.save}</Button>}<Button type="button" variant="ghost" disabled={pending || Boolean(conflict)} onClick={() => void skipQuestion()}>{copy.skip}</Button></div>

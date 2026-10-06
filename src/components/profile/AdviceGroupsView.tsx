@@ -1,5 +1,6 @@
 "use client";
 
+import { PressureDisplay } from "@/components/features/pressure/PressureDisplay";
 import { useState } from "react";
 import Link from "next/link";
 import { ADVICE_GROUPS, type AdviceGroup, type AdviceItem } from "../../../shared/advice/types";
@@ -72,6 +73,12 @@ export function AdviceGroupsView({ groups, locale, bikes, onOpenAdvice, onMarkPe
                   {date ? <time dateTime={date.toISOString()}>{item.status === "needs_calculation" ? copy.savedDate : copy.date} {date.toLocaleDateString(locale === "nl" ? "nl-NL" : "en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}</time> : <p>{copy.unknownDate}</p>}
                   <Link className={styles.link} href={sourceHref(item.sourceLink)} onClick={() => onOpenAdvice?.(item)}>{copy.open}</Link>
                 </div>
+                {item.key === "pressureFrontBar" && typeof item.value === "number" && (() => {
+                  const rear = items.find(other => other.key === "pressureRearBar"
+                    && other.recordId === item.recordId && other.bikeId === item.bikeId);
+                  return typeof rear?.value === "number" ? <PressureDisplay frontBar={item.value}
+                    rearBar={rear.value} locale={locale} compact className="col-span-full w-full max-w-xl" /> : null;
+                })()}
                 <dl className={styles.facts}>
                   <div><dt>{copy.target}</dt><dd>{value(item.value, item.unit)}</dd>{item.range && typeof item.value !== "string" && <><dt className={styles.rangeLabel}>{copy.range}</dt><dd className={styles.range}>{value(item.range.min, null)}–{value(item.range.max, item.unit)}</dd></>}</div>
                   <div><dt>{copy.current}</dt><dd>{value(item.current, item.unit)}</dd><dt className={styles.rangeLabel}>{copy.difference}</dt><dd>{value(item.difference, item.unit, true)}</dd></div>

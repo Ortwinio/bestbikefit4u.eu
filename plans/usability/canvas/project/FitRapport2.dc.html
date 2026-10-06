@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Fitrapport, pagina 3: afstelwaarden</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FFFFFF;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; display: flex; flex-direction: column; padding: 40px 64px 40px; background: #FFFFFF; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 4px solid #CFF26A">
+<img src="/_blob/c85a41bfb306fe7c5842911ecd3478e0" alt="BikeFitBoost" style="width: 172px; height: 30px; display: block">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Afstelwaarden</span>
+</header>
+
+<h2 style="margin: 24px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.05; letter-spacing: -0.03em">Je afstelwaarden</h2>
+<p style="margin: 8px 0 0; max-width: 580px; font-size: 15px; line-height: 1.5; color: #3B4F4A">Elke waarde heeft een doel en een testmarge. Meet je fiets zoals op pagina 6 en schrijf je huidige waarde in de kolom <strong style="color: #0F2420">Nu</strong>. Zo zie je meteen waar het verschil zit.</p>
+
+<div aria-hidden="true" style="margin-top: 14px; display: flex; gap: 22px; font-size: 12px; color: #3B4F4A">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 28px; height: 12px; border-radius: 4px; background: #CFF26A; border: 1.5px solid #0F2420"></span>Testmarge</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 4px; height: 18px; border-radius: 2px; background: #0F2420"></span>Doel</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #CFF26A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #0F2420">A</span>Zie tekening op pagina 1</span>
+</div>
+
+<div role="table" aria-label="Afstelwaarden" style="margin-top: 12px; display: flex; flex-direction: column">
+<div role="row" style="display: grid; grid-template-columns: 196px 1fr 84px 72px; gap: 16px; padding: 0 0 6px; font-size: 12px; font-weight: 700; color: #3B4F4A">
+<span role="columnheader">Onderdeel</span><span role="columnheader">Testmarge</span><span role="columnheader" style="text-align: right">Doel</span><span role="columnheader" style="text-align: center">Nu</span>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+<div role="row" style="display: grid; grid-template-columns: 196px 1fr 84px 72px; gap: 16px; align-items: center; padding: 11px 0; border-top: 1px solid #DCE6E1">
+<div role="cell">
+<div style="display: flex; align-items: center; gap: 8px">
+<sc-if value="{{r.hasLetter}}" hint-placeholder-val="{{false}}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #CFF26A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800">{{r.letter}}</span></sc-if>
+<span style="font-size: 16px; font-weight: 700">{{r.name}}</span>
+</div>
+<div style="margin-top: 2px; font-size: 12px; color: #4A5F5A">{{r.why}}</div>
+</div>
+<div role="cell" style="position: relative; height: 44px">
+<div style="position: absolute; left: 0; right: 0; top: 16px; height: 10px; border-radius: 99px; background: #F5F8F3; border: 1px solid #9FB2AC; box-sizing: border-box"></div>
+<div style="position: absolute; top: 13px; height: 16px; border-radius: 5px; background: #CFF26A; border: 1.5px solid #0F2420; box-sizing: border-box; left: {{r.zoneLeft}}%; width: {{r.zoneWidth}}%"></div>
+<div style="position: absolute; top: 8px; width: 4px; height: 26px; margin-left: -2px; border-radius: 2px; background: #0F2420; left: {{r.markLeft}}%"></div>
+<span style="position: absolute; top: 32px; font-family: 'DM Mono', monospace; font-size: 11px; color: #3B4F4A; transform: translateX(-100%); left: {{r.zoneLeft}}%; padding-right: 4px">{{r.lo}}</span>
+<span style="position: absolute; top: 32px; font-family: 'DM Mono', monospace; font-size: 11px; color: #3B4F4A; left: {{r.zoneRight}}%; padding-left: 4px">{{r.hi}}</span>
+</div>
+<div role="cell" style="text-align: right; font-family: 'DM Mono', monospace; font-size: 22px">{{r.target}}<span style="font-size: 12px; color: #4A5F5A"> {{r.unit}}</span></div>
+<div role="cell" aria-label="Zelf invullen" style="height: 36px; border: 1px solid #9FB2AC; border-radius: 8px; background: #FFFFFF"></div>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<section style="display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; padding: 16px; border-radius: 20px; background: #F5F8F3">
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" role="img" aria-label="Stuurpen onder een hoek van min 6 graden">
+<line x1="10" y1="60" x2="88" y2="60" stroke="#9FB2AC" stroke-width="1.5" stroke-dasharray="4 4"></line>
+<line x1="14" y1="60" x2="86" y2="68" stroke="#0F2420" stroke-width="10" stroke-linecap="round"></line>
+<path d="M70 60A56 56 0 0 1 69.6 66" stroke="#0A7263" stroke-width="2"></path>
+<circle cx="14" cy="60" r="9" fill="#CFF26A" stroke="#0F2420" stroke-width="2"></circle>
+</svg>
+<div>
+<h3 style="margin: 0; font-size: 14px; font-weight: 700">Stuurpenhoek</h3>
+<div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 30px; line-height: 1">−6°</div>
+<p style="margin: 6px 0 0; font-size: 12px; color: #4A5F5A">Bereik <span style="font-family: 'DM Mono', monospace">−6° tot +6°</span>. Draai om als je stuur hoger moet.</p>
+</div>
+</section>
+<section style="display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: center; padding: 16px; border-radius: 20px; background: #0F2420; color: #FFFFFF">
+<img src="/_blob/616a6fd4acae3b1b368623d2c7fb3270" alt="Pentekening van een frame met stack en reach" style="width: 112px; height: 84px; border-radius: 10px; object-fit: cover; display: block">
+<div>
+<h3 style="margin: 0; font-size: 14px; font-weight: 700; color: #B9CCC6">Framerichting</h3>
+<div style="margin-top: 4px; font-family: 'DM Mono', monospace; font-size: 30px; line-height: 1; color: #CFF26A">XL</div>
+<p style="margin: 6px 0 0; font-size: 12px; color: #E1F2EE">Circa <span style="font-family: 'DM Mono', monospace">59–62 cm</span>. Vergelijk merken op stack en reach.</p>
+</div>
+</section>
+</div>
+
+<footer style="margin-top: auto; display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #DCE6E1; font-size: 12px; color: #4A5F5A">
+<span>Fitrapport · Lisa Jansen · <span style="font-family: 'DM Mono', monospace">15-02-2026</span> · bikefitboost.eu</span>
+<span style="font-family: 'DM Mono', monospace">3 / 6</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const data = [
+      ['A', 'Zadelhoogte', 'Kniebelasting en trapritme', 754, 731, 774, 'mm'],
+      ['B', 'Zadelterugstand', 'Stabiel bekken en kniebeweging', 49, 39, 59, 'mm'],
+      ['C', 'Stuurdrop', 'Houding, nek- en rugbelasting', 98, 85, 110, 'mm'],
+      ['D', 'Stuurreach', 'Schouders en handdruk', 538, 525, 555, 'mm'],
+      ['', 'Stuurpenlengte', 'Verfijn pas na je zadel', 100, 90, 110, 'mm'],
+      ['', 'Cranklengte', 'Ruimte voor heup en knie', 172.5, 170, 172.5, 'mm'],
+      ['', 'Stuurbreedte', 'Ademruimte en schouders', 420, 400, 440, 'mm']
+    ];
+    const fmt = (n) => String(n).replace('.', ',');
+    const rows = data.map((d) => {
+      const [letter, name, why, t, lo, hi, unit] = d;
+      const span = Math.max(hi - lo, 1);
+      const min = lo - span * 0.7;
+      const max = hi + span * 0.7;
+      const pct = (v) => ((v - min) / (max - min)) * 100;
+      return {
+        letter: letter, hasLetter: letter !== '', name: name, why: why, unit: unit,
+        target: fmt(t), lo: fmt(lo), hi: fmt(hi),
+        zoneLeft: pct(lo).toFixed(1), zoneWidth: (pct(hi) - pct(lo)).toFixed(1),
+        zoneRight: pct(hi).toFixed(1), markLeft: pct(t).toFixed(1)
+      };
+    });
+    return { rows: rows };
+  }
+}
+</script>
+</body>
+</html>

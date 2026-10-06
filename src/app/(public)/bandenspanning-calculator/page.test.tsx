@@ -119,7 +119,7 @@ describe("bandenspanning calculator page", () => {
     render(ui);
 
     expect(screen.getByText("Tire pressure form")).toBeTruthy();
-    expect(screen.getByText("Frequently asked questions")).toBeTruthy();
+    expect(screen.getAllByText("Frequently asked questions").length).toBeGreaterThan(0);
     expect(screen.queryByText("Create account or sign in")).toBeNull();
   });
 

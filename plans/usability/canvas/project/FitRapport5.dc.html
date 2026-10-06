@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Fitrapport, pagina 4: banden en spanning</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FFFFFF;font-family:Figtree,system-ui,sans-serif;color:#0F2420}
+a{color:#0A7263}a:hover{color:#075A4E}
+</style>
+</helmet>
+<div style="width: 794px; height: 1123px; box-sizing: border-box; display: flex; flex-direction: column; padding: 40px 64px 40px; background: #FFFFFF; color: #0F2420; font-family: Figtree, system-ui, sans-serif">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 4px solid #CFF26A">
+<img src="/_blob/c85a41bfb306fe7c5842911ecd3478e0" alt="BikeFitBoost" style="width: 172px; height: 30px; display: block">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">Banden &amp; spanning</span>
+</header>
+
+<div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 200px; gap: 24px; align-items: center">
+<div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.05; letter-spacing: -0.03em">Je bandenspanning</h2>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: #3B4F4A">Een startpunt voor je Canyon Endurace, op basis van je gewicht en bandkeuze (pagina 2). Pomp je banden koud op, vóór de rit, en verfijn daarna in stappen van 0,1 bar.</p>
+</div>
+<img src="/_blob/3a2bdf1c78de6da9e979d7aff8c0598b" alt="Pentekening van een staande fietspomp met manometer aan een wiel" style="width: 200px; height: 150px; border-radius: 16px; display: block">
+</div>
+
+<div style="margin-top: 18px">
+<dc-import name="Bandenspanning" front="{{front}}" rear="{{rear}}" max-bar="{{maxBar}}" min-bar="{{minBar}}" size="compact" label="Canyon Endurace · gemiddeld asfalt" hint-size="100%,220px"></dc-import>
+</div>
+
+<dl style="margin: 14px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<div style="padding: 9px 12px; border-radius: 12px; background: #F5F8F3">
+<dt style="font-size: 12px; color: #4A5F5A">Bandbreedte</dt>
+<dd style="margin: 2px 0 0; font-family: 'DM Mono', monospace; font-size: 15px">28 / 28 mm</dd>
+</div>
+<div style="padding: 9px 12px; border-radius: 12px; background: #F5F8F3">
+<dt style="font-size: 12px; color: #4A5F5A">Type</dt>
+<dd style="margin: 2px 0 0; font-size: 15px; font-weight: 700">Tubeless</dd>
+</div>
+<div style="padding: 9px 12px; border-radius: 12px; background: #F5F8F3">
+<dt style="font-size: 12px; color: #4A5F5A">Ondergrond</dt>
+<dd style="margin: 2px 0 0; font-size: 15px; font-weight: 700">Gemiddeld asfalt</dd>
+</div>
+<div style="padding: 9px 12px; border-radius: 12px; background: #F5F8F3">
+<dt style="font-size: 12px; color: #4A5F5A">Rijder + fiets</dt>
+<dd style="margin: 2px 0 0; font-family: 'DM Mono', monospace; font-size: 15px">84 kg</dd>
+</div>
+</dl>
+
+<section style="margin-top: 20px">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em">Per ondergrond</h2>
+<span style="font-size: 12px; color: #4A5F5A">Schrijf op wat je meter aangeeft</span>
+</div>
+<div role="table" aria-label="Aanpassing per ondergrond" style="margin-top: 8px; border: 1px solid #9FB2AC; border-radius: 12px; overflow: hidden">
+<div role="row" style="display: grid; grid-template-columns: 1.6fr 1.4fr 1.1fr; font-size: 12px; font-weight: 700; color: #3B4F4A; background: #F5F8F3">
+<span role="columnheader" style="padding: 8px 12px">Ondergrond</span>
+<span role="columnheader" style="padding: 8px 12px; border-left: 1px solid #DCE6E1">Ten opzichte van je advies</span>
+<span role="columnheader" style="padding: 8px 12px; border-left: 1px solid #DCE6E1">Gemeten</span>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+<div role="row" style="display: grid; grid-template-columns: 1.6fr 1.4fr 1.1fr; align-items: stretch; border-top: 1px solid #DCE6E1; background: {{r.bg}}">
+<span role="cell" style="padding: 11px 12px; font-size: 14px; font-weight: {{r.weight}}">{{r.naam}}</span>
+<span role="cell" style="padding: 11px 12px; border-left: 1px solid #DCE6E1; font-size: 14px">{{r.delta}}</span>
+<span role="cell" aria-label="Zelf invullen" style="border-left: 1px solid #DCE6E1; background: #FFFFFF"></span>
+</div>
+</sc-for>
+</div>
+<p style="margin: 8px 0 0; font-size: 12px; line-height: 1.45; color: #4A5F5A">Achter staat hoger omdat daar het meeste gewicht rust. Niet meegenomen: binnenbreedte van de velg, karkas van de band en nat weer.</p>
+</section>
+
+<div style="margin-top: 18px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px">
+<section style="padding: 16px 18px; border-radius: 18px; background: #CFF26A">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -0.02em">Zo test je</h2>
+<ol style="margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.4">
+<li style="display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #0F2420; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px">1</span>Pomp op tot het advies en meet altijd met dezelfde meter.</li>
+<li style="display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #0F2420; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px">2</span>Rij een vast rondje en let eerst op grip en comfort van de voorband.</li>
+<li style="display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #0F2420; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 11px">3</span>Verander één band tegelijk, 0,1 bar per keer.</li>
+</ol>
+</section>
+<section style="padding: 16px 18px; border-radius: 18px; border: 2px solid #0F2420">
+<h2 style="margin: 0; display: flex; align-items: center; gap: 8px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -0.02em"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2420" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18v.5"></path></svg>Check het maximum</h2>
+<p style="margin: 8px 0 0; font-size: 13px; line-height: 1.45; color: #3B4F4A">Ga nooit boven de maximale druk op de zijkant van je band of op je velg. Bij een haakloze (hookless) velg is dat meestal <span style="font-family: 'DM Mono', monospace; color: #0F2420">5,0 bar</span> (<span style="font-family: 'DM Mono', monospace; color: #0F2420">72,5 psi</span>).</p>
+</section>
+</div>
+
+<footer style="margin-top: auto; display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #DCE6E1; font-size: 12px; color: #4A5F5A">
+<span>Fitrapport · Lisa Jansen · <span style="font-family: 'DM Mono', monospace">15-02-2026</span> · bikefitboost.eu</span>
+<span style="font-family: 'DM Mono', monospace">4 / 6</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":794,"height":1123}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rows = [
+      { naam: 'Glad asfalt', delta: 'voor en achter 0,2 bar hoger', bg: '#FFFFFF', weight: 400 },
+      { naam: 'Gemiddeld asfalt · jouw advies', delta: 'zoals hierboven', bg: '#E6F8A8', weight: 700 },
+      { naam: 'Ruw asfalt en klinkers', delta: 'voor en achter 0,3 bar lager', bg: '#FFFFFF', weight: 400 }
+    ];
+    return {
+      front: 5.2, rear: 5.6, maxBar: 9, minBar: 4,
+      rows: rows
+    };
+  }
+}
+</script>
+</body>
+</html>

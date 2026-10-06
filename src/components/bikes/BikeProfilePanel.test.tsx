@@ -28,6 +28,11 @@ vi.mock("@/components/ui", () => ({
     <label>{label}<select {...props}>{options.map(option =>
       <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>,
 }));
+vi.mock("./BikeFormControls", () => ({
+  BikeNumberField: ({ label, value, onChange }: { label: string; value: number | null;
+    onChange: (value: number | null) => void }) => <label>{label}<input type="range" value={value ?? 0}
+      min={-1000} max={2000} onChange={event => onChange(Number(event.target.value))} /></label>,
+}));
 vi.mock("@/components/profile/ProfileStrengthRings", () => ({
   ProfileStrengthRings: ({ score }: { score: { completeness: number } }) => <span>{score.completeness}%</span>,
 }));
@@ -121,7 +126,8 @@ describe("bike profile explicit changes", () => {
     render(<BikeProfilePanel bikeId={bikeId} locale="nl" detail={detail()} />);
     fireEvent.click(screen.getByRole("button", { name: "Meet nu: Zadelterugstand" }));
     const input = screen.getByLabelText("Zadelterugstand (mm)");
-    expect((input as HTMLInputElement).value).toBe("");
+    expect((input as HTMLInputElement).value).toBe("0");
+    expect(update).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Annuleer" }));
     expect(update).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Meet nu: Zadelterugstand" }));

@@ -1,14 +1,11 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import { Compass, Ruler, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
-  PublicCtaBand,
   PublicPageShell,
   PublicSection,
 } from "@/components/public";
@@ -153,7 +150,10 @@ export default async function FrameSizeCalculatorPage() {
       <FrameSizeCalculatorForm locale={locale} copy={dictionary.frameSizeCalculator} />
       <CalculatorAnswerSection id="frame-size" locale={locale} content={getFitAnswer("frame-size", locale)} />
       <PublicPageShell className="text-foreground">
-        <PublicSection
+        <ContentDisclosure title={isNl
+              ? "Goed om opties te filteren, eerlijk over wat nog ontbreekt"
+              : "Good at filtering options, honest about what is still missing"}>
+<PublicSection
           className="mt-10"
           header={{
             eyebrow: isNl ? "Wat deze tool betrouwbaar maakt" : "What makes this tool trustworthy",
@@ -178,86 +178,42 @@ export default async function FrameSizeCalculatorPage() {
             ))}
           </div>
         </PublicSection>
+</ContentDisclosure>
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-          title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
-          description={
-            isNl
-              ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke " +
-                "bikefit te starten en toekomstige aanpassingen bij te houden."
-              : "Create a free account to build your rider profile, start a personalized fit, and " +
-                "track future adjustments."
-          }
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="frame_size_result"
-                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                  />
-                }
-              >
-                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="frame_size_pricing_cta"
-                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Bekijk prijzen" : "Compare plans"}
-              </Button>
-            </>
-          }
-          aside={
-            isNl
-              ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde " +
-                "waarde bieden bij complexe biomechanische kwesties."
-              : "The calculator gives a practical starting point. An in-person fitter can add value " +
-                "for complex biomechanical issues."
-          }
-        />
 
-        <PublicSection
-          className="mt-10"
-          header={{
-            title: isNl ? "Veelgestelde vragen" : "FAQ",
-            description: isNl
-              ? "Korte antwoorden over framemaat en wat deze tool wel en niet doet."
-              : "Short answers about frame size and what this tool does and does not do.",
-          }}
-        >
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
-              >
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-2 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </PublicSection>
+
+        <ContentDisclosure title={isNl ? "Veelgestelde vragen" : "FAQ"}>
+          <PublicSection
+            className="mt-10"
+            header={{
+              title: isNl ? "Veelgestelde vragen" : "FAQ",
+              description: isNl
+                ? "Korte antwoorden over framemaat en wat deze tool wel en niet doet."
+                : "Short answers about frame size and what this tool does and does not do.",
+            }}
+          >
+            <div className="space-y-4">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+                >
+                  <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                  <p className="mt-2 text-muted-foreground">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <section className="mt-10">
+          <ContentDisclosure title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}>
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-            links={getRelatedLinks("frame-size", locale)}
+            links={getRelatedLinks("frame-size", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </section>
       </PublicPageShell>
     </>

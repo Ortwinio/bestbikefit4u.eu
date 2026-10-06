@@ -24,7 +24,8 @@ export function ProfileStrengthRings({ score, locale, size = "lg", compact = fal
   const completeness = percentage(score.completeness);
   const reliability = percentage(score.reliability);
   const heading = title ?? copy.title;
-  return <section aria-label={heading} className={`${styles.card} ${size === "sm" ? styles.small : ""} ${compact ? styles.compact : ""}`}>
+  return <section data-usability={capped ? "paid-presentation" : undefined}
+    data-presentation={capped ? "score-cap" : undefined} aria-label={heading} className={`${styles.card} ${size === "sm" ? styles.small : ""} ${compact ? styles.compact : ""}`}>
     <div className={styles.header}>
       <span className={styles.title}>{heading}</span>
       <strong className={styles.level}>{copy.levels[profileScoreLevel(completeness)]}</strong>
@@ -40,6 +41,9 @@ export function ProfileStrengthRings({ score, locale, size = "lg", compact = fal
               <circle className={`${styles.arc} ${meter.color}`} cx="60" cy="60" r="48" fill="none" strokeWidth="13"
                 pathLength="100" strokeDasharray="100 100" strokeDashoffset={100 - meter.value}
                 strokeLinecap={meter.value === 0 ? "butt" : "round"} transform="rotate(-90 60 60)" />
+              {capped && meter.key === "completeness" && <circle cx="60" cy="60" r="48"
+                fill="none" stroke="var(--bbf-op-donker)" strokeWidth="13" pathLength="100"
+                strokeDasharray="20 80" strokeDashoffset="0" transform="rotate(198 60 60)" />}
               {capped && meter.key === "completeness" && <line x1="60" y1="4" x2="60" y2="20"
                 stroke="currentColor" strokeWidth="3" transform="rotate(288 60 60)" />}
             </svg>

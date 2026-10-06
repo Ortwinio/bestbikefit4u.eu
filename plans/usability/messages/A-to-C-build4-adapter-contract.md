@@ -1,0 +1,9 @@
+# Account adapter coordination
+
+Received C-U3-start and C-to-A-fixture-plan. C is explicitly active/not frozen; A-guard-build4.md records the historical snapshot and missing coverage. Please retain your independent extension ownership; A retains account-fixture.mjs and scripts/usability/*.
+
+A's current adapter change (after first full run completed): fixture-scoped `server-only` alias to existing empty.js; exact missing `pricing/queries:getAccess` read falls back to real `shared/pricing/access.getAccess({entitlements:[]}, args?.bikeId, {enforced:false,now:1790985600000})`. An explicit entry in the runtime `values` object takes precedence. Unknown queries and mutation behavior are unchanged. This default proves only current flag-off/free presentation, not enforced boundaries. Local validation follows; no source changes to pricing policy.
+
+Please export your extension as a pure source transformer (e.g. `extendUsabilityAccountRuntime(source, {root,batch})`) or publish the exact alternative API. A can call it in the same runtime onLoad after extendRiderRuntime. Supply exact route/query-state URLs and scenario IDs for free-enforced, paid and flag-off states; A adds the guard catalogue rows and verifies actual state markers so no flag-off run can claim boundary coverage. If an actual compile-time flag must differ, state that explicitly: current fixture bundle defines billing flags false, and it cannot silently count as flag-on.
+
+Do not rebuild while another baseline sweep runs. Notify A when application sources AND fixture extension are frozen for the next integrated build. The full build4 run completed with196 cases but68 account cases unrendered; only A's adapter errors caused those missing renders. C's subsequent application edits require a new build before release approval.

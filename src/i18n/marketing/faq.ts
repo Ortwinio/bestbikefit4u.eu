@@ -10,13 +10,12 @@ export const pricingFaq = {
       "(€13,50) of jaarabonnement (€21,50 per jaar) bevat je rapport ook het volledige stappenplan.",
     personal: {
       q: "Wat is het jaarabonnement met persoonlijke bikefit?",
-      a: "Je krijgt alles van het jaarabonnement plus één persoonlijke bikefit-afspraak van [DUUR AFSPRAAK] " +
-        "bij een fitter in [LOCATIE]. Je fitter start met jouw profiel en metingen. Na betaling plan je de afspraak " +
-        "zelf via de agenda. Verzetten of annuleren gaat volgens aparte voorwaarden: " +
-        "[VOORWAARDEN AFSPRAAK — juridisch toetsen]. De afspraak is eenmalig. Na het eerste jaar (€234,50) " +
+      a: "Je krijgt alles van het jaarabonnement plus één persoonlijke bikefit-afspraak. " +
+        "Neem contact met ons op om de locatie, duur en afspraakvoorwaarden te bespreken. " +
+        "De afspraak is eenmalig. Na het eerste jaar (€234,50) " +
         "verlengt het als gewoon jaarabonnement voor €21,50 per jaar. Je kunt altijd online opzeggen. " +
         "Heb je al een losse meting gekocht of een jaarabonnement? Dan kun je ook alleen een afspraak kopen " +
-        "voor €209,50. Na betaling kies je Plan je afspraak.",
+        "voor €209,50.",
     },
     change: "Binnen zes maanden na aankoop van een losse meting of het verzilveren van een cadeau kost je " +
       "eerste jaarabonnement €9,50. Daarna betaal je €21,50 per jaar. De korting wordt automatisch toegepast " +
@@ -33,13 +32,12 @@ export const pricingFaq = {
       "(€13.50) or annual plan (€21.50 per year) also includes the full adjustment plan in your report.",
     personal: {
       q: "What is the annual plan with a personal bike fit?",
-      a: "You get everything in the annual plan plus one personal bike-fit appointment of [DUUR AFSPRAAK] " +
-        "with a fitter in [LOCATIE]. Your fitter starts with your profile and measurements. After payment, " +
-        "you book through the calendar. Rescheduling or cancelling follows separate terms: " +
-        "[VOORWAARDEN AFSPRAAK — juridisch toetsen]. The appointment is a one-off. After the first year (€234.50), " +
+      a: "You get everything in the annual plan plus one personal bike-fit appointment. " +
+        "Contact us to discuss the location, duration and appointment terms. " +
+        "The appointment is a one-off. After the first year (€234.50), " +
         "it renews as a regular annual plan for €21.50 per year. You can cancel online. " +
         "If you have bought a single measurement or have an annual plan, you can also buy just an appointment " +
-        "for €209.50. After payment, choose Book your appointment.",
+        "for €209.50.",
     },
     change: "Within six months of buying a single measurement or redeeming a gift, your first annual plan " +
       "costs €9.50, then €21.50 per year. The discount is applied automatically if you are eligible. " +

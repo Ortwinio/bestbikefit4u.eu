@@ -1,3 +1,5 @@
+import { pressureText } from "../../../shared/pressure/display";
+import { pressureEmailCopy } from "../i18n/pressure";
 import { BRAND } from "../../lib/brand";
 import { renderPurchaseConfirmation, renderExpiredOffer, renderRenewalReminder } from "./pricing";
 import { emailCopy } from "../i18n";
@@ -211,6 +213,16 @@ export function renderFitReport(data: FitReportData, locale: EmailLocale): Rende
   if (geometry.length) {
     mail.heading(copy.geometryHeading);
     mail.add(valueRows(geometry), plainRows(geometry));
+  }
+  const pressure = data.tirePressure;
+  if (pressure && [pressure.frontBar, pressure.rearBar].every(value => Number.isFinite(value) && value > 0)) {
+    const labels = pressureEmailCopy[locale];
+    const pressureRows = [
+      { label: labels.front, value: pressureText(pressure.frontBar, locale, pressure.frontPsi) },
+      { label: labels.rear, value: pressureText(pressure.rearBar, locale, pressure.rearPsi) },
+    ];
+    mail.heading(labels.heading);
+    mail.add(valueRows(pressureRows), plainRows(pressureRows));
   }
   const notes = data.fitNotes?.filter((note) => note.trim());
   if (notes?.length) {

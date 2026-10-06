@@ -20,7 +20,7 @@ async function chooseMethod(name = "I measured this") {
 }
 async function editInseam() {
   fireEvent.click(screen.getByRole("button", { name: "Change: Inseam" }));
-  fireEvent.change(screen.getByRole("spinbutton", { name: "Inseam (cm)" }), { target: { value: "84" } });
+  fireEvent.change(screen.getByRole("slider", { name: "Inseam (cm)" }), { target: { value: "84" } });
   await chooseMethod();
   fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
 }
@@ -63,11 +63,13 @@ describe("profile provenance", () => {
     await screen.findByText("Detail and provenance saved.");
     expect(state.save).toHaveBeenCalledWith({ field: "inseamCm", value: 84, kind: "measured", method: "single_measurement", expectedCurrentValue: 83 });
   });
-  it("starts missing measurements blank, requires method choice and sends null expected value", async () => {
+  it("starts missing measurements blank, preselects the logical method and sends null expected value", async () => {
     mount();
     fireEvent.click(screen.getByRole("button", { name: "Add detail: Torso length" }));
-    const input = screen.getByRole("spinbutton", { name: "Torso length (cm)" }) as HTMLInputElement;
-    expect(input.value).toBe("");
+    const input = screen.getByRole("slider", { name: "Torso length (cm)" }) as HTMLInputElement;
+    expect(input.disabled).toBe(true);
+    expect(screen.getByRole("combobox", { name: "How was this value determined?" }).textContent).toContain("I measured this");
+    fireEvent.click(screen.getByRole("button", { name: "Add measurement: Torso length (cm)" }));
     expect(state.save).not.toHaveBeenCalled();
     fireEvent.change(input, { target: { value: "58" } });
     await chooseMethod();
@@ -80,7 +82,7 @@ describe("profile provenance", () => {
     await screen.findByRole("alert");
     fireEvent.click(screen.getByRole("button", { name: choice }));
     expect(state.save).toHaveBeenCalledTimes(1);
-    expect(screen.queryByRole("spinbutton", { name: "Inseam (cm)" })).toBeNull();
+    expect(screen.queryByRole("slider", { name: "Inseam (cm)" })).toBeNull();
   });
   it("retries an accepted conflict against the returned current value", async () => {
     state.save.mockResolvedValueOnce({ status: "conflict", field: "inseamCm", currentValue: 85, incomingValue: 84 });
@@ -91,7 +93,7 @@ describe("profile provenance", () => {
   it("keeps edits on error and supports retry", async () => {
     state.save.mockRejectedValueOnce(new Error("private backend details"));
     mount(); await editInseam(); await screen.findByRole("alert");
-    expect((screen.getByRole("spinbutton", { name: "Inseam (cm)" }) as HTMLInputElement).value).toBe("84");
+    expect((screen.getByRole("slider", { name: "Inseam (cm)" }) as HTMLInputElement).value).toBe("84");
     expect(screen.queryByText("private backend details")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Save detail" }));
     await waitFor(() => expect(state.save).toHaveBeenCalledTimes(2));

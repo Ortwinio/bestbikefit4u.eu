@@ -89,3 +89,4 @@ plans/**/audit/*.log
 plans/seo-crawl-fixes/audit/crawl-*.json
 plans/migratie/audit/domain-migration-*.json
 plans/reliability/renders/
+plans/usability/renders/
