@@ -18,7 +18,11 @@ export type StickyConversionCopy = {
 const DISMISS_KEY = "bbf.homeConversionBarDismissed";
 const DISMISS_EVENT = "bbf-home-conversion-bar-dismissed";
 
+// Keeps the bar closed for this visit when sessionStorage is blocked.
+let dismissedInMemory = false;
+
 function readDismissed(): boolean {
+  if (dismissedInMemory) return true;
   try {
     return window.sessionStorage.getItem(DISMISS_KEY) === "1";
   } catch {
@@ -63,6 +67,7 @@ export function StickyConversionBar({
   }, [visible]);
 
   function dismiss() {
+    dismissedInMemory = true;
     try { window.sessionStorage.setItem(DISMISS_KEY, "1"); } catch { /* Storage is optional. */ }
     window.dispatchEvent(new Event(DISMISS_EVENT));
   }
