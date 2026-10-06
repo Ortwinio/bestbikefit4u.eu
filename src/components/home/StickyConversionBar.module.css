@@ -44,9 +44,7 @@
   white-space: nowrap;
 }
 .primary { background: var(--bbf-lime); color: var(--bbf-inkt); }
-.primary:hover { background: var(--bbf-wit); }
 .secondary { color: var(--bbf-wit); border: 1.5px solid var(--bbf-gedempt); }
-.secondary:hover { border-color: var(--bbf-wit); }
 .close {
   width: 44px;
   height: 44px;
@@ -58,7 +56,12 @@
   line-height: 1;
   cursor: pointer;
 }
-.close:hover { color: var(--bbf-wit); }
+/* Hover only for a real pointer, so the colour does not stick after a tap on touch screens. */
+@media (hover: hover) {
+  .primary:hover { background: var(--bbf-wit); }
+  .secondary:hover { border-color: var(--bbf-wit); }
+  .close:hover { color: var(--bbf-wit); }
+}
 .primary:focus-visible, .secondary:focus-visible, .close:focus-visible { outline: 3px solid var(--bbf-lime); outline-offset: 3px; }
 
 @media (max-width: 760px) {
