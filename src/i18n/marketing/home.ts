@@ -10,6 +10,7 @@ type HomeCopy = {
   closingTitle: string; paused: string; account: string; compare: string;
   discover: string; foundations: string; guides: string; scenarios: string; allGuides: string;
   foundationLinks: { href: string; title: string }[];
+  sticky: { title: string; detail: string; primary: string; secondary: string; close: string };
   teaser: { try: string; title: string; inseam: string; direction: string; context: string; refine: string; adjust: string };
 };
 
@@ -43,6 +44,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     account: "Maak gratis account", compare: "Bekijk prijzen",
     discover: "Verdiep je verder", foundations: "Fitfundament", guides: "Bikefitting gidsen", scenarios: "Rijsituaties en klachten", allGuides: "Bekijk alle gidsen",
     foundationLinks: [{ href: "/guides/road-bike-fit-guide", title: "Racefiets afstellen" }, { href: "/bikefitting", title: "Bikefitting uitgelegd" }, { href: "/measurement-guide", title: "Meetgids" }, { href: "/pain", title: "Bikefit bij veelvoorkomende klachten" }, { href: "/science/stack-and-reach", title: "Stack en reach uitgelegd" }],
+    sticky: { title: "Stel al je fietsen af met het jaarabonnement", detail: "€21,50 per jaar · begin gratis en upgrade wanneer je wilt", primary: "Bekijk het jaarabonnement", secondary: "Gratis account", close: "Sluiten" },
     teaser: { try: "Probeer het nu", title: "Startpunt voor je zadel", inseam: "Binnenbeenlengte", direction: "trapas → bovenkant zadel", context: "Racefiets · gebalanceerd · gemiddelde lenigheid en rompstabiliteit. Aanpassingsmarge:", refine: "Verfijn je zadelhoogte", adjust: "Schuif naar jouw maat" },
   },
   en: {
@@ -74,6 +76,7 @@ export const homeMarketing: Record<Locale, HomeCopy> = {
     account: "Create free account", compare: "View pricing",
     discover: "Explore further", foundations: "Fit foundations", guides: "Bike fitting guides", scenarios: "Riding scenarios and discomfort", allGuides: "View all guides",
     foundationLinks: [{ href: "/bike-fitting", title: "Bike fitting at home" }, { href: "/measurement-guide", title: "Measurement guide" }, { href: "/pain", title: "Bike fit for common pain points" }, { href: "/science/stack-and-reach", title: "Stack and reach explained" }, { href: "/guides/road-bike-fit-guide", title: "Road bike fit guide" }],
+    sticky: { title: "Fit all your bikes with the annual plan", detail: "€21.50 per year · start free and upgrade whenever you like", primary: "See the annual plan", secondary: "Free account", close: "Close" },
     teaser: { try: "Try it now", title: "A starting point for your saddle", inseam: "Inseam", direction: "bottom bracket → saddle top", context: "Road bike · balanced · average flexibility and core stability. Adjustment range:", refine: "Refine your saddle height", adjust: "Slide to your measurement" },
   },
 };

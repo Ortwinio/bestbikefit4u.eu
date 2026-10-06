@@ -10,6 +10,7 @@ import { LatestBlogSection } from "@/components/home/LatestBlogSection";
 import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEventTracker";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { SaddleHeightTeaser } from "@/components/home/SaddleHeightTeaser";
+import { StickyConversionBar } from "@/components/home/StickyConversionBar";
 import { HOME_GUIDE_LINKS, HOME_SCENARIO_LINKS } from "@/components/home/homeGuideContent";
 import {
   getLocalizedPublicCalculatorPath,
@@ -204,7 +205,7 @@ export default async function HomePage() {
       </section>
 
       <div className={styles.container}>
-        <section className={styles.closing}>
+        <section className={styles.closing} id="home-closing">
           <div>
             <h2>{copy.closingTitle}</h2>
             <p>{copy.paused}</p>
@@ -230,6 +231,14 @@ export default async function HomePage() {
       <Suspense fallback={null}>
         <LatestBlogSection locale={locale} />
       </Suspense>
+      <StickyConversionBar
+        copy={copy.sticky}
+        locale={locale}
+        pricingHref={local("/pricing")}
+        accountHref={local("/login")}
+        pagePath={local("/")}
+       
+      />
       <div className={styles.container}>
         <details className={styles.discovery}>
           <summary>{copy.discover}</summary>
