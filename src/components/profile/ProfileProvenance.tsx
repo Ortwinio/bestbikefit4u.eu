@@ -12,6 +12,7 @@ import { ProfileAccessNotice } from "./ProfileAccessNotice";
 import { ProfileRefinements } from "./ProfileRefinements";
 import { PROFILE_OBSERVATION_FIELDS, validateProfileObservationValue, type ProfileObservationValue } from "../../../shared/profileObservationFields";
 import { Button, Input, Select } from "@/components/ui";
+import { BikeNumberField } from "@/components/bikes/BikeFormControls";
 import { ProfileStrengthRings } from "./ProfileStrengthRings";
 import { NewsletterPreference } from "./NewsletterPreference";
 import { formatProfileBirthDate, getProfileProvenanceCopy, type ProvenanceField, type ProvenanceGroup } from "@/i18n/account/profileProvenance";
@@ -76,7 +77,10 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
   function startEdit(field: ProvenanceField) {
     if (field === "painAreas") { onEditDetails(); return; }
     const value = valueOf(field);
-    setEdit({ field, text: value === undefined ? "" : String(value), method: "", expected: value === undefined ? null : value as ProfileObservationValue });
+    setEdit({ field, text: value === undefined ? "" : String(value), method: PROFILE_OBSERVATION_FIELDS[field]?.kind === "declared" ? "self_report"
+      : PROFILE_OBSERVATION_FIELDS[field]?.kind === "estimated" ? "self_assessment"
+      : currentObservation(observations, field, value)?.kind === "estimated" ? "self_assessment"
+      : "single_measurement", expected: value === undefined ? null : value as ProfileObservationValue });
     setConflict(null);
     setStatus(null);
   }
@@ -165,8 +169,13 @@ export function ProfileProvenance({ profile, locale, onWeightSaved, onEditDetail
             {(field === "sex" || field === "birthDate") && <p>{copy.demographicReasons[field]} {copy.demographicNote}</p>}
             {editing && definition && <form className={styles.editor} onSubmit={event => { event.preventDefault(); if (!conflict) void submit(); }}>
               {definition.options ? <Select label={names[field]} tooltip={copy.valueHelp} tooltipLabel={names[field]} placeholder={copy.choose} value={edit.text} disabled={pending || Boolean(conflict)} options={definition.options.map(option => ({ value: option, label: labelValue(option) }))} onChange={event => setEdit({ ...edit, text: event.target.value })} />
+                : definition.range ? <BikeNumberField label={`${names[field]}${unit(field) ? ` (${unit(field)})` : ""}`}
+                    tooltip={copy.valueHelp} min={definition.range[0]} max={definition.range[1]}
+                    step={["coreStabilityScore", "painSeverity", "age"].includes(field) ? 1 : 0.1}
+                    value={edit.text === "" ? null : Number(edit.text)} disabled={pending || Boolean(conflict)}
+                    onChange={value => setEdit({ ...edit, text: value === null ? "" : String(value) })} />
                 : <Input label={`${names[field]}${unit(field) ? ` (${unit(field)})` : ""}`} tooltip={field === "birthDate" ? copy.dateHelp : copy.valueHelp} tooltipLabel={names[field]} type={field === "birthDate" ? "date" : definition.range ? "number" : "text"} min={definition.range?.[0]} max={definition.range?.[1]} step={["coreStabilityScore", "painSeverity", "age"].includes(field) ? 1 : "any"} maxLength={100} required value={edit.text} disabled={pending || Boolean(conflict)} onChange={event => setEdit({ ...edit, text: event.target.value })} />}
-              <Select label={copy.kind} tooltip={copy.methodHelp} tooltipLabel={copy.kind} value={edit.method} placeholder={copy.choose} disabled={pending || Boolean(conflict)} options={allowedMethods.map(method => ({ value: method, label: copy.saveMethods[method] }))} onChange={event => setEdit({ ...edit, method: event.target.value as ObservationDraft["method"] })} />
+              <div data-usability="measurement-kind"><Select label={copy.kind} tooltip={copy.methodHelp} tooltipLabel={copy.kind} value={edit.method} placeholder={copy.choose} disabled={pending || Boolean(conflict)} options={allowedMethods.map(method => ({ value: method, label: copy.saveMethods[method] }))} onChange={event => setEdit({ ...edit, method: event.target.value as ObservationDraft["method"] })} /></div>
               <div className={styles.actions}><Button type="submit" disabled={!edit.method || !edit.text.trim() || Boolean(conflict)} isPending={pending}>{copy.save}</Button><Button type="button" variant="ghost" disabled={pending} onClick={() => { setEdit(null); setConflict(null); setStatus(null); }}>{copy.cancel}</Button></div>
             </form>}
           </div>;

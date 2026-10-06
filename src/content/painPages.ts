@@ -40,7 +40,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       keywords: ["bike fit knee pain", "cycling knee pain setup", "saddle height knee pain"],
       categoryLabel: "Pain point",
       title: "Bike Fit for Knee Pain While Cycling",
-      intro: "Recurring knee pain is often a fit problem before it is a training problem. The fastest wins usually come from saddle height, saddle setback, cleat position, and workload pacing.",
+      intro: "Knee pain while cycling can have different causes. Use these checks to review saddle height, saddle setback, cleat position, and workload without treating them as a diagnosis.",
       symptomTitle: "What riders usually notice",
       symptomBullets: [
         "Pain at the front of the knee after steady efforts",
@@ -79,7 +79,7 @@ export const PAIN_PAGES: PainPageDefinition[] = [
       keywords: ["bikefit kniepijn", "kniepijn fietsen afstelling", "zadelhoogte kniepijn"],
       categoryLabel: "Klacht",
       title: "Bikefit bij kniepijn tijdens fietsen",
-      intro: "Terugkerende kniepijn is vaak eerst een fitprobleem en pas daarna een trainingsprobleem. De snelste winst zit meestal in zadelhoogte, zadelterugstand, schoenplaatjes en belasting.",
+      intro: "Kniepijn tijdens fietsen kan verschillende oorzaken hebben. Gebruik deze controles om zadelhoogte, zadelterugstand, schoenplaatjes en belasting te bekijken, niet als diagnose.",
       symptomTitle: "Wat rijders meestal merken",
       symptomBullets: [
         "Pijn aan de voorkant van de knie bij langere blokken",

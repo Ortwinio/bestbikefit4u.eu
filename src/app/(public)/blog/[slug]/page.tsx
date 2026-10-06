@@ -1,4 +1,6 @@
 import { currentSiteUrl } from "@/lib/seo/siteUrl";
+import { ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
+import { CollapsedArticle } from "@/components/content/CollapsedArticle";
 import { socialImage } from "@/lib/seo/social-image";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -201,9 +203,7 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
             {post.authorName ? <span>{copy.by} {post.authorName}</span> : null}
           </div>
           {localizeBlogText(post.excerpt, locale) ? (
-            <p className={styles.lead}>
-              {localizeBlogText(post.excerpt, locale)}
-            </p>
+            <ShortAnswer text={localizeBlogText(post.excerpt, locale)} locale={locale} />
           ) : null}
         </header>
 
@@ -223,7 +223,8 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
 
         <div className={`${styles.bodyGrid} ${!post.tableOfContents ? styles.bodyGridSingle : ""}`}>
           <div className={styles.body}>
-            <BlogBodyMarkdown content={body} />
+            <CollapsedArticle content={body} locale={locale}
+              render={(content, precedingContent) => <BlogBodyMarkdown content={content} precedingContent={precedingContent} />} />
           </div>
           {post.tableOfContents ? (
             <aside className={styles.toc}>
@@ -238,13 +239,13 @@ export default async function BlogArticlePage({ params }: BlogArticleProps) {
         <div className={styles.related}>
         <RelatedLinksSection
           title={copy.relatedPosts}
-          links={relatedPosts}
+          links={relatedPosts.slice(0, 3)}
           locale={locale}
         />
 
         <RelatedLinksSection
           title={copy.relatedGuides}
-          links={relatedGuides}
+          links={relatedGuides.slice(0, Math.max(0, 3 - relatedPosts.length))}
           locale={locale}
         />
         </div>

@@ -1,3 +1,4 @@
+import { ContentDisclosure, ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,7 +56,7 @@ export default async function PainIndexPage() {
           <div>
             <p className={styles.eyebrow}>{copy.eyebrow}</p>
             <h1>{copy.title}</h1>
-            <p className={styles.lead}>{copy.intro}</p>
+            <ShortAnswer text={copy.intro} locale={locale} />
             <div className={styles.actions}>
               <Link className={styles.primary} href="#klachten">
                 {copy.choose}<ArrowRight size={18} aria-hidden="true" />
@@ -71,7 +72,7 @@ export default async function PainIndexPage() {
             }
           />
         </section>
-        <aside className={styles.disclaimer}>
+        <aside data-usability="safety" className={styles.disclaimer}>
           <h2>{copy.disclaimerTitle}</h2><p>{copy.disclaimer}</p>
         </aside>
         <section id="klachten" className={styles.section}>
@@ -97,17 +98,19 @@ export default async function PainIndexPage() {
             </article>
           </div>
         </section>
-        <section className={styles.section}>
-          <p className={styles.eyebrow}>{copy.processEyebrow}</p><h2>{copy.processTitle}</h2>
-          <div className={styles.process}>
-            {copy.process.map((step, index) => (
-              <article key={step.title}>
-                <span className={styles.ordinal}>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{step.title}</h3><p>{step.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <ContentDisclosure title={copy.processTitle}>
+          <section className={styles.section}>
+            <p className={styles.eyebrow}>{copy.processEyebrow}</p><h2>{copy.processTitle}</h2>
+            <div className={styles.process}>
+              {copy.process.map((step, index) => (
+                <article key={step.title}>
+                  <span className={styles.ordinal}>{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{step.title}</h3><p>{step.body}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </ContentDisclosure>
         <section className={styles.section}>
           <p className={styles.eyebrow}>{copy.toolsEyebrow}</p><h2>{copy.toolsTitle}</h2>
           <div className={styles.tools}>
@@ -118,7 +121,7 @@ export default async function PainIndexPage() {
             ))}
           </div>
         </section>
-        <section className={styles.cta}>
+        <section data-usability="next-step" className={styles.cta}>
           <div><h2>{copy.ctaTitle}</h2><p>{copy.ctaIntro}</p></div>
           <div className={styles.actions}>
             {calculator("pain_index_band_primary_cta")}

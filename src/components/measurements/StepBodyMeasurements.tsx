@@ -2,12 +2,13 @@
 
 import { profileText, measurementWarningNl } from "@/i18n/account/profileLanguage";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { InfoBox } from "@/components/ui";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { AlertCircle, Info, Ruler, HelpCircle } from "lucide-react";
 import { IllustratedMeasurementHelp } from "./IllustratedMeasurementHelp";
+import { MeasurementKind } from "./MeasurementKind";
 import { NumberSlider } from "./NumberSlider";
 
 // Predicted values based on height
@@ -26,7 +27,6 @@ function deviation(actual: number, predicted: number) {
 export function StepBodyMeasurements() {
   const {
     watch,
-    setValue,
     formState: { errors },
   } = useFormContext();
   const { locale, messages } = useDashboardMessages();
@@ -34,22 +34,6 @@ export function StepBodyMeasurements() {
   const heightCm = watch("heightCm") as number | undefined;
   const inseamCm = watch("inseamCm") as number | undefined;
   const weightKg = watch("weightKg") as number | undefined;
-
-  // Track whether the user has manually moved inseam/weight sliders
-  const userEditedInseam = useRef(false);
-  const userEditedWeight = useRef(false);
-
-  // When height changes, auto-update inseam and weight if not yet manually set
-  useEffect(() => {
-    if (!heightCm) return;
-    if (!userEditedInseam.current) {
-      setValue("inseamCm", predictedInseam(heightCm), { shouldValidate: true });
-    }
-    if (!userEditedWeight.current) {
-      setValue("weightKg", predictedWeight(heightCm), { shouldValidate: true });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heightCm]);
 
   // Warnings: show when value deviates >20% from expected for the given height
   const inseamWarning = useMemo(() => {
@@ -88,6 +72,7 @@ export function StepBodyMeasurements() {
 
       {/* Height */}
       <div className="space-y-2">
+        <MeasurementKind field="heightCm" label={profileText(locale, "Height")} />
         <Controller
           name="heightCm"
           render={({ field }) => (
@@ -127,6 +112,7 @@ export function StepBodyMeasurements() {
 
       {/* Inseam */}
       <div className="space-y-2">
+        <MeasurementKind field="inseamCm" label={profileText(locale, "Inseam")} />
         <Controller
           name="inseamCm"
           render={({ field }) => (
@@ -144,9 +130,6 @@ export function StepBodyMeasurements() {
               onChange={(v) => {
                 field.onChange(v);
                 field.onBlur();
-              }}
-              onUserInteract={() => {
-                userEditedInseam.current = true;
               }}
               error={errors.inseamCm?.message as string}
             />
@@ -178,6 +161,7 @@ export function StepBodyMeasurements() {
 
       {/* Weight (optional) */}
       <div className="space-y-2">
+        <MeasurementKind field="weightKg" label={profileText(locale, "Weight")} />
         <Controller
           name="weightKg"
           render={({ field }) => (
@@ -195,9 +179,6 @@ export function StepBodyMeasurements() {
               onChange={(v) => {
                 field.onChange(v);
                 field.onBlur();
-              }}
-              onUserInteract={() => {
-                userEditedWeight.current = true;
               }}
               error={errors.weightKg?.message as string}
             />

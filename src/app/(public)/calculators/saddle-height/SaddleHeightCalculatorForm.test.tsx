@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { runSaddleHeightCalculation } from "@/lib/public-calculators/fitAdapters";
 import { saddleHeightMessages } from "@/i18n/calculators/saddleHeight";
 import { saddleReliabilityMessages } from "@/i18n/calculators/saddleReliability";
+import { journeyMessages } from "@/i18n/calculators/journey";
+import { calculatorExamples } from "@/i18n/calculators/examples";
 import { quickFixMessages } from "@/i18n/calculators/quickFix";
 import { readHandoff, writeHandoffEntry } from "@/lib/handoff/store";
 import * as saddleModel from "../../../../../shared/reliability/saddleHeight";
@@ -87,11 +89,49 @@ describe("SaddleHeightCalculatorForm", () => {
   describe.each([true, false])("public reliability (NL=%s)", (isNl) => {
     const copy = saddleReliabilityMessages[isNl ? "nl" : "en"];
     const legacy = saddleHeightMessages[isNl ? "nl" : "en"];
+    const action = journeyMessages[isNl ? "nl" : "en"].reasons["saddle-height"].cta;
+
+    function expectSafety() {
+      const safety = screen.getByRole("region", { name: copy.safety.title });
+      expect(safety.closest("details")).toBeNull();
+      for (const text of [copy.safety.high, copy.safety.low, copy.safety.adjustment, copy.safety.stop]) {
+        expect(safety.textContent).toContain(text);
+      }
+      const fitter = within(safety).getByRole("link", { name: copy.fitter });
+      expect(fitter.getAttribute("href")).toBe(`/${isNl ? "nl" : "en"}/bike-fitting`);
+      expect(fitter.classList.contains("min-h-11")).toBe(true);
+    }
+
+    it("keeps board safety visible in full mode without fabricating measurements", () => {
+      const { rerender } = render(<SaddleHeightCalculatorForm isNl={isNl} />);
+      expectSafety();
+      expect(copy.safety.adjustment).toContain("10 mm");
+      expect(copy.safety.adjustment).toContain("5 mm");
+      expect(readHandoff().entries).toEqual([]);
+      rerender(<SaddleHeightCalculatorForm isNl={isNl} mode="quick" />);
+      expect(screen.queryByRole("region", { name: copy.safety.title })).toBeNull();
+      rerender(<SaddleHeightCalculatorForm isNl={isNl} mode="full" />);
+      expectSafety();
+      expect(readHandoff().entries).toEqual([]);
+    });
+
+    it("shows the actual current range in the full-mode ladder and hides paid content in quick mode", () => {
+      const { container, rerender } = render(<SaddleHeightCalculatorForm isNl={isNl} />);
+      const chip = container.querySelector('[data-presentation="range-chip"]');
+      expect(chip?.getAttribute("href")).toBe(`/${isNl ? "nl" : "en"}/pricing`);
+      expect(chip?.classList.contains("min-h-11")).toBe(true);
+      const ladder = () => container.querySelector('[data-presentation="ladder"]');
+      expect(ladder()?.textContent).toContain("±49 mm");
+      fireEvent.keyDown(screen.getByRole("slider", { name: copy.inseam }), { key: "ArrowRight" });
+      expect(ladder()?.textContent).toContain("±23 mm");
+      rerender(<SaddleHeightCalculatorForm isNl={isNl} mode="quick" />);
+      expect(container.querySelector('[data-usability="paid-presentation"]')).toBeNull();
+    });
 
     it("starts with the unpersisted 190 cm example and an absent 89 cm inseam", () => {
       render(<SaddleHeightCalculatorForm isNl={isNl} />);
       expect(screen.getByRole("heading", { level: 1, name: copy.title })).toBeTruthy();
-      expect(screen.getByText(copy.example)).toBeTruthy();
+      expect(screen.getByText(calculatorExamples[isNl ? "nl" : "en"].height.replace("{height}", "190"))).toBeTruthy();
       expect(screen.getAllByText(copy.missing).length).toBeGreaterThan(0);
       expect(screen.getByRole("slider", { name: copy.height }).getAttribute("aria-valuenow")).toBe("190");
       expect(screen.getByRole("slider", { name: copy.inseam }).getAttribute("aria-valuenow")).toBe("89");
@@ -99,7 +139,7 @@ describe("SaddleHeightCalculatorForm", () => {
       expect(state.result).toMatchObject({ adviceMm: 789, halfWidthMm: 49, lowerMm: 740, upperMm: 840 });
       expectResult(copy, state, isNl);
       expect(screen.getByText(copy.nextSteps["add-inseam"].replace("{width}", "23"))).toBeTruthy();
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expect(screen.getByRole("link", { name: action })).toBeTruthy();
       expect(readHandoff().entries).toEqual([]);
     });
 
@@ -115,7 +155,7 @@ describe("SaddleHeightCalculatorForm", () => {
       expect(screen.queryByText(copy.missing)).toBeNull();
       expect(screen.getByText(copy.narrower.replace("{from}", "49").replace("{to}", "23"))).toBeTruthy();
       expect(screen.getByText(copy.nextSteps["save-and-repeat"].replace("{width}", "18"))).toBeTruthy();
-      expect(screen.getByRole("heading", { name: copy.refineTitle })).toBeTruthy();
+      expect(screen.getByRole("link", { name: action })).toBeTruthy();
     });
 
     it("removes legacy public controls", () => {
@@ -140,10 +180,12 @@ describe("SaddleHeightCalculatorForm", () => {
       const input = { heightCm: 190, inseamCm };
       expectResult(copy, saddleModel.calculatePublicSaddleHeight(input), isNl);
       expect(screen.getByText(copy.checkTitle)).toBeTruthy();
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expectSafety();
+      expect(screen.queryByRole("link", { name: action })).toBeNull();
       fireEvent.click(screen.getByRole("button", { name: copy.confirm }));
       expectResult(copy, saddleModel.calculatePublicSaddleHeight({ ...input, confirmed: true }), isNl);
-      expect(screen.getByRole("heading", { name: copy.refineTitle })).toBeTruthy();
+      expectSafety();
+      expect(screen.getByRole("link", { name: action })).toBeTruthy();
     });
 
     it("uses height for a large deviation, then keeps the override dashed and unresolved", () => {
@@ -154,12 +196,14 @@ describe("SaddleHeightCalculatorForm", () => {
       expect(screen.getByText(copy.largeBody)).toBeTruthy();
       expect(screen.getByText(copy.heightFallback)).toBeTruthy();
       expect(screen.getByRole("button", { name: copy.remeasure })).toBeTruthy();
-      expect(screen.getByRole("link", { name: copy.fitter })).toBeTruthy();
+      expect(within(screen.getByRole("alert")).getByRole("link", { name: copy.fitter })).toBeTruthy();
+      expectSafety();
       fireEvent.click(screen.getByRole("button", { name: copy.override }));
       expectResult(copy, saddleModel.calculatePublicSaddleHeight({ ...input, override: true }), isNl);
       expect(screen.getByText(copy.overridden)).toBeTruthy();
+      expectSafety();
       expect(within(screen.getByRole("region", { name: copy.result })).getByText(copy.nextSteps.remeasure)).toBeTruthy();
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expect(screen.queryByRole("link", { name: action })).toBeNull();
     });
 
     it.each(["height", "inseam"] as const)("resets confirmation when %s changes", (field) => {
@@ -172,7 +216,7 @@ describe("SaddleHeightCalculatorForm", () => {
         inseamCm: field === "inseam" ? 96.5 : 96,
       }), isNl);
       expect(screen.getByRole("button", { name: copy.confirm })).toBeTruthy();
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expect(screen.queryByRole("link", { name: action })).toBeNull();
     });
 
     it.each(["height", "inseam"] as const)("resets a large override when %s changes", (field) => {
@@ -193,8 +237,9 @@ describe("SaddleHeightCalculatorForm", () => {
       vi.spyOn(saddleModel, "calculatePublicSaddleHeight").mockReturnValue(invalid);
       render(<SaddleHeightCalculatorForm isNl={isNl} />);
       expect(screen.getByText(copy.error)).toBeTruthy();
+      expectSafety();
       expect(screen.queryByRole("img", { name: new RegExp(`^${copy.result} `) })).toBeNull();
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expect(screen.queryByRole("link", { name: action })).toBeNull();
       expect(readHandoff().entries).toEqual([]);
     });
 
@@ -208,13 +253,13 @@ describe("SaddleHeightCalculatorForm", () => {
       const entries = readHandoff().entries;
       rerender(<SaddleHeightCalculatorForm isNl={isNl} mode="quick" />);
       expectResult(copy, state, isNl);
-      expect(screen.queryByRole("heading", { name: copy.refineTitle })).toBeNull();
+      expect(screen.queryByRole("link", { name: action })).toBeNull();
       rerender(<SaddleHeightCalculatorForm isNl={isNl} mode="full" />);
       expectResult(copy, state, isNl);
       expect(screen.getByRole("slider", { name: copy.height }).getAttribute("aria-valuenow")).toBe("189");
       expect(screen.getByRole("slider", { name: copy.inseam }).getAttribute("aria-valuenow")).toBe(String(inseamCm));
       expect(readHandoff().entries).toEqual(entries);
-      expect(Boolean(screen.queryByRole("heading", { name: copy.refineTitle }))).toBe(kind === "confirmed");
+      expect(Boolean(screen.queryByRole("link", { name: action }))).toBe(kind === "confirmed");
     });
 
     it.each([

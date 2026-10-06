@@ -1,8 +1,10 @@
 "use client";
 
+import { PressureDisplay } from "./PressureDisplay";
+
 import Link from "next/link";
 import { useQuery } from "convex/react";
-import { ArrowRight, Gauge, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Gauge, ShieldCheck } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui";
@@ -72,7 +74,7 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/82 px-4 py-4">
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
               <Gauge className="h-4 w-4" />
@@ -96,18 +98,6 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
             </p>
             <p className="mt-2 text-base font-semibold text-[color:var(--foreground)]">
               {activeTireSetup?.name ?? messages.pressure.bikeDetail.noTireSetup}
-            </p>
-          </div>
-
-          <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/82 px-4 py-4">
-            <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">
-              <Sparkles className="h-4 w-4" />
-              {messages.pressure.bikeDetail.recommendedPressure}
-            </p>
-            <p className="mt-2 text-base font-semibold text-[color:var(--foreground)]">
-              {latestCalc
-                ? `${latestCalc.recommendedFrontBar} / ${latestCalc.recommendedRearBar} ${messages.pressure.result.bar}`
-                : messages.pressure.bikeDetail.noCalculation}
             </p>
           </div>
 
@@ -149,45 +139,20 @@ export function BikePressureSection({ bikeId }: BikePressureSectionProps) {
               {messages.pressure.bikeDetail.recommendedPressure}
             </h3>
             {latestCalc ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {messages.pressure.result.front}
-                    </p>
+              <div className="mt-4 space-y-4">
+                <PressureDisplay locale={locale}
+                  frontBar={latestCalc.recommendedFrontBar} rearBar={latestCalc.recommendedRearBar}
+                  frontPsi={latestCalc.recommendedFrontPsi} rearPsi={latestCalc.recommendedRearPsi} />
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {(["front", "rear"] as const).map(side => <div key={side}
+                    className="flex items-center justify-between gap-3 text-sm">
+                    <span>{messages.pressure.result[side]}</span>
                     <PressureStatusBadge
-                      currentBar={latestCalc.currentFrontBar}
-                      recommendedBar={latestCalc.recommendedFrontBar}
-                      labels={messages.pressure.status}
-                    />
-                  </div>
-                  <p className="mt-3 text-xl font-semibold text-[color:var(--foreground)]">
-                    {latestCalc.recommendedFrontBar} {messages.pressure.result.bar}
-                  </p>
-                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                    {latestCalc.recommendedFrontPsi} {messages.pressure.result.psi}
-                  </p>
+                      currentBar={side === "front" ? latestCalc.currentFrontBar : latestCalc.currentRearBar}
+                      recommendedBar={side === "front" ? latestCalc.recommendedFrontBar : latestCalc.recommendedRearBar}
+                      labels={messages.pressure.status} />
+                  </div>)}
                 </div>
-
-                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-semibold text-[color:var(--foreground)]">
-                      {messages.pressure.result.rear}
-                    </p>
-                    <PressureStatusBadge
-                      currentBar={latestCalc.currentRearBar}
-                      recommendedBar={latestCalc.recommendedRearBar}
-                      labels={messages.pressure.status}
-                    />
-                  </div>
-                  <p className="mt-3 text-xl font-semibold text-[color:var(--foreground)]">
-                    {latestCalc.recommendedRearBar} {messages.pressure.result.bar}
-                  </p>
-                  <p className="mt-1 text-sm text-[color:var(--muted-foreground)]">
-                    {latestCalc.recommendedRearPsi} {messages.pressure.result.psi}
-                  </p>
-                </div>
-
                 {(latestCalc.currentFrontBar !== undefined || latestCalc.currentRearBar !== undefined) ? (
                   <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--background)]/85 p-4 sm:col-span-2">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--muted-foreground)]">

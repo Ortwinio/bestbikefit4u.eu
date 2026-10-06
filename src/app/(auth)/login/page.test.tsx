@@ -33,6 +33,16 @@ vi.mock("@/i18n/request", () => ({
   getRequestLocale: async () => pathname.startsWith("/nl") ? "nl" : "en",
 }));
 
+vi.mock("@/i18n/getDictionary", () => ({
+  getDictionary: async (locale: string) => locale === "nl"
+    ? (await import("@/i18n/messages/nl")).default
+    : (await import("@/i18n/messages/en")).default,
+}));
+
+vi.mock("@/components/layout/Header", () => ({
+  Header: ({ locale }: { locale: string }) => <header data-usability="site-header"><a href={`/${locale}`}>BikeFitBoost</a></header>,
+}));
+
 vi.mock("@/components/providers/ThemeProvider", () => ({
   useTheme: () => ({ resolvedTheme: "light" }),
 }));
@@ -255,6 +265,15 @@ describe("calculator handoff login", () => {
 });
 
 describe("login page", () => {
+  it.each(["nl", "en"] as const)("describes the actual free account benefits in %s", locale => {
+    pathname = `/${locale}/login`;
+    render(<LoginPage />);
+    expect(screen.getByText(locale === "nl" ? "Bewaar je maten in je riderprofiel"
+      : "Save your measurements in your rider profile")).toBeTruthy();
+    expect(screen.getByText(locale === "nl" ? "Mail de kernwaarden van je laatste fitrapport"
+      : "Email the core values from your latest fit report")).toBeTruthy();
+    expect(screen.queryByText(/complete fit analysis|complete fitanalyse|prioriteitsvolgorde|Prioritized adjustment sequence/)).toBeNull();
+  });
   it("reframes auth as create-account plus sign-in and logs the page view with sourceTag", () => {
     render(<LoginPage />);
 
@@ -544,13 +563,14 @@ it("recovers from a rejected Google request and logs its error", async () => {
   expect(screen.getByRole("button", { name: "Send Login Code" })).toHaveProperty("disabled", false);
 });
 
-it("renders the login in one full-width main without a layout-owned logo", () => {
-  const { container } = render(<AuthLayout><LoginPage /></AuthLayout>);
+it("renders the shared mobile header before one full-width login main", async () => {
+  const { container } = render(await AuthLayout({ children: <LoginPage /> }));
   const main = screen.getByRole("main");
   expect(main.id).toBe("main-content");
   expect(main.tabIndex).toBe(-1);
   expect(main.parentElement).toBe(container);
   expect(main.className).not.toContain("max-w");
+  expect(screen.getByRole("banner").parentElement?.className).toBe("lg:hidden");
   expect(screen.getAllByRole("link", { name: "BikeFitBoost" })).toHaveLength(2);
   expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 });

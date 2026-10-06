@@ -50,7 +50,8 @@ describe("guides library presentation", () => {
     const { container } = render(await GuidesHubPage());
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(entry.h1);
-    expect(screen.getByText(entry.pageBrief)).toBeTruthy();
+    expect(screen.getByText(copy.introduction)).toBeTruthy();
+    expect(screen.queryByText(entry.pageBrief)).toBeNull();
     expect(screen.getByAltText(copy.image).getAttribute("src")).toBe("/illustrations/06-meetset.webp");
     for (const hub of hubs) {
       expect(screen.getByRole("heading", { name: hub.pageTitle }).closest("a")?.getAttribute("href")).toBe(`/${locale}${hub.path}`);
@@ -71,7 +72,7 @@ describe("guides library presentation", () => {
     expect(metadata.alternates?.canonical).toBe(`https://bikefitboost.com/${locale}/guides`);
   });
 
-  it("keeps localized related-blog filtering and the four-post limit", async () => {
+  it("keeps localized related-blog filtering and the three-post limit", async () => {
     locale = "nl";
     blogPosts.mockResolvedValue([
       { slug: "unrelated", title: { en: "Unrelated", nl: "Niet gerelateerd" }, excerpt: { en: "Other", nl: "Anders" }, relatedGuidePaths: ["/pain"] },
@@ -84,10 +85,10 @@ describe("guides library presentation", () => {
     ]);
     render(await GuidesHubPage());
     expect(screen.getByRole("heading", { name: "Gerelateerde blogartikelen" })).toBeTruthy();
-    for (let index = 0; index < 4; index++) {
+    for (let index = 0; index < 3; index++) {
       expect(screen.getByRole("link", { name: new RegExp(`Artikel ${index}`) }).getAttribute("href")).toBe(`/nl/blog/article-${index}`);
     }
-    expect(screen.queryByText("Artikel 4")).toBeNull();
+    expect(screen.queryByText("Artikel 3")).toBeNull();
     expect(screen.queryByText("Niet gerelateerd")).toBeNull();
   });
 });

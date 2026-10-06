@@ -82,6 +82,7 @@ export function MeasurementWizard({
   const methods = useForm<WizardFormData>({
     resolver: zodResolver(wizardSchema),
     defaultValues: {
+      measurementKinds: defaultValues?.measurementKinds ?? {},
       heightCm: defaultValues?.heightCm,
       inseamCm: defaultValues?.inseamCm,
       weightKg: defaultValues?.weightKg,

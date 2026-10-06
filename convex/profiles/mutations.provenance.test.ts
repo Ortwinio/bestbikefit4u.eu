@@ -245,3 +245,28 @@ describe("reliability metadata on existing profile saves", () => {
     expect(ctx.db.insert).not.toHaveBeenCalled(); expect(ctx.db.patch).not.toHaveBeenCalled();
   });
 });
+
+describe("wizard measurement provenance", () => {
+  it("records estimates atomically and leaves old callers compatible", async () => {
+    const ctx = context();
+    await invoke("upsert", ctx, { ...measurements,
+      measurementKinds: { inseamCm: "estimated", heightCm: "measured" } });
+    expect(current(ctx, "inseamCm")).toHaveLength(1);
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ kind: "estimated", method: "self_assessment" });
+    expect((ctx.tables.get("profileObservations") ?? []).filter(row => row.field === "inseamCm"))
+      .not.toContainEqual(expect.objectContaining({ kind: "measured" }));
+    expect(current(ctx, "heightCm")[0]).toMatchObject({ kind: "measured" });
+    await invoke("upsert", ctx, measurements);
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ kind: "estimated" });
+  });
+  it("applies an explicit same-value method correction without retaining a measured claim", async () => {
+    const ctx = context();
+    await invoke("upsert", ctx, measurements);
+    await invoke("upsert", ctx, { ...measurements, measurementKinds: { inseamCm: "estimated" } });
+    expect(current(ctx, "inseamCm")).toHaveLength(1);
+    expect(current(ctx, "inseamCm")[0]).toMatchObject({ kind: "estimated", value: 84 });
+    const count = (ctx.tables.get("profileObservations") ?? []).length;
+    await invoke("upsert", ctx, { ...measurements, measurementKinds: { inseamCm: "estimated" } });
+    expect(ctx.tables.get("profileObservations")).toHaveLength(count);
+  });
+});

@@ -18,13 +18,14 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/prototyper-ui/u
 import { stripLocalePrefix, withLocalePrefix } from "@/i18n/navigation";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
 import { cn } from "@/utils/cn";
-import { Menu, X } from "lucide-react";
+import { getEffectiveDisplayName } from "@/lib/userIdentity";
+import { Menu, UserRound, X } from "lucide-react";
 import { adminNavigationGroups, isAdminNavigationActive } from "@/components/admin/layout/admin-navigation";
 import { canAccessAdminRoute } from "@/components/admin/auth/admin-route-access";
 import { isAdminRole } from "@/components/admin/auth/admin-auth-shared";
 
 export const DASHBOARD_MOBILE_HEADER_CLASSNAME =
-  "sticky top-0 z-30 flex min-h-[76px] flex-wrap items-center justify-between gap-3 bg-[var(--bbf-inkt)] px-4 py-3 text-white md:hidden";
+  "sticky top-0 z-30 flex h-16 items-center justify-between gap-3 bg-[var(--bbf-inkt)] px-4 text-white md:hidden";
 
 export const DASHBOARD_MOBILE_MENU_OVERLAY_CLASSNAME =
   "panel-backdrop fixed inset-0 z-30 md:hidden";
@@ -56,6 +57,8 @@ export default function DashboardLayoutClient({
     [adminRole]
   );
   const { locale, messages } = useDashboardMessages();
+  const displayName = getEffectiveDisplayName(user);
+  const avatarInitial = Array.from(displayName)[0]?.toLocaleUpperCase(locale);
   const internalPathname = stripLocalePrefix(pathname ?? "/");
   const toLocalizedPath = (path: string) => withLocalePrefix(path, locale);
   const loginPath = toLocalizedPath("/login");
@@ -97,7 +100,7 @@ export default function DashboardLayoutClient({
         <DashboardSidebar />
       </div>
 
-      <header className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
+      <header data-usability="site-header" className={DASHBOARD_MOBILE_HEADER_CLASSNAME}>
         <BrandLogo
           href={toLocalizedPath("/")}
           asset="dark"
@@ -105,10 +108,18 @@ export default function DashboardLayoutClient({
           imageClassName="block"
         />
         <div className="flex items-center gap-2">
-          <AccountLanguageSwitch />
+          <Link
+            href={toLocalizedPath("/profile")}
+            aria-label={displayName ? `${messages.nav.profile}: ${displayName}` : messages.nav.profile}
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--bbf-lime)] text-base font-bold text-[var(--bbf-inkt)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--bbf-lime)]"
+          >
+            {avatarInitial ? <span aria-hidden="true">{avatarInitial}</span> : <UserRound aria-hidden="true" className="size-5" />}
+          </Link>
           <Button
             type="button"
+            data-usability="menu-trigger"
             variant="outline"
+            aria-controls="account-mobile-menu"
             aria-expanded={isMobileMenuOpen}
             aria-label={
               isMobileMenuOpen
@@ -121,14 +132,15 @@ export default function DashboardLayoutClient({
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
-        <div className="w-full"><AccountProfileStrength locale={locale} placement="mobile" /></div>
       </header>
-
       <Dialog open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <DialogContent showCloseButton={false} className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
+        <DialogContent id="account-mobile-menu" showCloseButton={false} className={DASHBOARD_MOBILE_MENU_PANEL_CLASSNAME}>
           <div className="mb-4 flex items-center justify-between gap-3">
             <DialogTitle className="font-display text-xl font-bold text-white">{locale === "nl" ? "Meer in je account" : "More in your account"}</DialogTitle>
             <Button variant="ghost" aria-label={messages.layout.mobileMenu.closeAria} onClick={() => setIsMobileMenuOpen(false)} className="min-h-11 min-w-11 text-white hover:bg-white/10"><X size={20} /></Button>
+          </div>
+          <div className="mb-5">
+            <AccountLanguageSwitch />
           </div>
           <nav>
             <div className="space-y-5">
@@ -226,6 +238,9 @@ export default function DashboardLayoutClient({
       </Dialog>
 
       <div className="min-w-0">
+        <div className="bg-[var(--bbf-inkt)] px-4 pb-3 text-white md:hidden">
+          <AccountProfileStrength locale={locale} placement="mobile" />
+        </div>
         <main
           id="main-content"
           tabIndex={-1}

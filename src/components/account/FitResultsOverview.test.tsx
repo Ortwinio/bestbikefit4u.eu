@@ -31,6 +31,15 @@ describe("fit results presentation", () => {
     expect(html).not.toContain("Nu naast je doel");
     expect(html).toContain("748 mm");
   });
+  it("labels paid ranges only when actual uncertainty evidence is available", () => {
+    const report = mapReportV2Payload(fitResultsSource as never);
+    const renderRange = () => renderToStaticMarkup(<FitResultsOverview locale="nl" copy={getReportV2Copy("nl")}
+      report={report} fit={fitResultsSource.recommendation.calculatedFit} profileLabel="Hoofdprofiel"
+      hasPaidAccess showAccessLabel />);
+    expect(renderRange()).toContain('data-presentation="range-chip"');
+    report.detailedFit.forEach(row => { row.reliability95 = null; });
+    expect(renderRange()).not.toContain('data-presentation="range-chip"');
+  });
   it("formats decimals by locale without changing precision", () => {
     expect(formatFitResultsNumber(172.5, "nl")).toBe("172,5");
     expect(formatFitResultsNumber(172.5, "en")).toBe("172.5");

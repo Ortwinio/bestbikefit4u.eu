@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { EditorialFaq } from "@/components/science/EditorialLayout";
 import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import {
@@ -6,7 +7,6 @@ import {
   nlLandingLinks as relatedLinks,
 } from "@/i18n/marketing/landing";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/prototyper-ui/ui/button";
@@ -87,7 +87,7 @@ export default async function BikefittingPage() {
         ]}
       />
 
-      <PublicHero
+      <PublicHero answerLocale={locale}
         imageAlt={editorialImageAlt.nl.cockpit}
         eyebrow={page.eyebrow}
         title={page.heroTitle}
@@ -125,55 +125,60 @@ export default async function BikefittingPage() {
         }
       />
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: page.text8,
-          title: page.text9,
-          description: page.text10,
-        }}
-      >
-        <div className="grid gap-5 lg:grid-cols-3">
-          <PublicSurfaceCard title={page.text11} description={page.text12} leading="01">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text13}</p>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text14} description={page.text15} leading="02">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text16}</p>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text17} description={page.text18} leading="03">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text19}</p>
-          </PublicSurfaceCard>
-        </div>
-      </PublicSection>
+      <ContentDisclosure title={page.text9}>
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: page.text8,
+            title: page.text9,
+            description: page.text10,
+          }}
+        >
+          <div className="grid gap-5 lg:grid-cols-3">
+            <PublicSurfaceCard title={page.text11} description={page.text12} leading="01">
+              <p className="text-sm leading-6 text-muted-foreground">{page.text13}</p>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard title={page.text14} description={page.text15} leading="02">
+              <p className="text-sm leading-6 text-muted-foreground">{page.text16}</p>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: page.text20,
-          title: page.text21,
-          description: page.text22,
-        }}
-      >
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <PublicSurfaceCard title={page.text23} leading={<ArrowRight className="h-5 w-5" />}>
-            <ul className="space-y-3 text-sm leading-6 text-foreground">
-              <li>{page.text24}</li>
-              <li>{page.text25}</li>
-              <li>{page.text26}</li>
-              <li>{page.text27}</li>
-            </ul>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text28} leading={<ShieldCheck className="h-5 w-5" />}>
-            <ul className="space-y-3 text-sm leading-6 text-foreground">
-              <li>{page.text29}</li>
-              <li>{page.text30}</li>
-              <li>{page.text31}</li>
-            </ul>
-          </PublicSurfaceCard>
-        </div>
-      </PublicSection>
+      <ContentDisclosure title={page.text21}>
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: page.text20,
+            title: page.text21,
+            description: page.text22,
+          }}
+        >
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <PublicSurfaceCard title={page.text23} leading={<ArrowRight className="h-5 w-5" />}>
+              <ul className="space-y-3 text-sm leading-6 text-foreground">
+                <li>{page.text24}</li>
+                <li>{page.text25}</li>
+                <li>{page.text26}</li>
+                <li>{page.text27}</li>
+              </ul>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-      <RelatedLinksSection locale="nl" title={page.text32} links={relatedLinks} />
+      <RelatedLinksSection locale="nl" title={page.text32} links={relatedLinks.slice(0, 3)} />
+
+      <section data-usability="safety" className="my-6 grid gap-5 lg:grid-cols-2">
+        <PublicSurfaceCard title={page.text17} description={page.text18} leading="03">
+          <p className="text-sm leading-6 text-muted-foreground">{page.text19}</p>
+        </PublicSurfaceCard>
+        <PublicSurfaceCard title={page.text28} leading={<ShieldCheck className="h-5 w-5" />}>
+          <ul className="space-y-3 text-sm leading-6 text-foreground">
+            <li>{page.text29}</li><li>{page.text30}</li><li>{page.text31}</li>
+          </ul>
+        </PublicSurfaceCard>
+      </section>
 
       <EditorialFaq eyebrow={page.text33} title={page.text34} items={faqItems} />
 
@@ -196,9 +201,6 @@ export default async function BikefittingPage() {
                 }
               >
                 {page.text39}
-              </Button>
-              <Button variant="outline" render={<Link href={withLocalePrefix("/login", "nl")} />}>
-                {page.text40}
               </Button>
             </>
           }

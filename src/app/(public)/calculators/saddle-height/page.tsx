@@ -1,16 +1,13 @@
-import { CalculatorAnswerSection } from "@/components/calculators/CalculatorAnswerSection";
+import { CalculatorAnswerSection, ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { getFitAnswer } from "@/lib/seo/calculatorAnswers/fit";
 import { DEFAULT_SOCIAL_IMAGE } from "@/lib/seo/social-image";
 import { fitPageDetails } from "@/i18n/calculators/fitPageDetails";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Gauge, Ruler, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/prototyper-ui/ui/button";
-import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import {
   FeatureIconCard,
   type FeatureIconCardColor,
-  PublicCtaBand,
   PublicPageShell,
   PublicSection,
 } from "@/components/public";
@@ -200,7 +197,10 @@ export default async function SaddleHeightCalculatorPage() {
       />
 
       <PublicPageShell className="pt-0 md:pt-0">
-        <PublicSection
+        <ContentDisclosure title={isNl
+              ? "Je lengte als begin, je binnenbeen voor een smaller bereik"
+              : "Start with height, add inseam for a narrower range"}>
+<PublicSection
           className="mt-10"
           header={{
             eyebrow: isNl ? "Waarom dit vertrouwen wekt" : "Why this builds trust",
@@ -239,86 +239,42 @@ export default async function SaddleHeightCalculatorPage() {
             </Link>
           </p>
         </PublicSection>
+</ContentDisclosure>
 
-        <PublicCtaBand
-          className="mt-10"
-          eyebrow={isNl ? "Hoe verder?" : "What's next?"}
-          title={isNl ? "Verfijn de uitkomst in je account" : "Refine the result in your account"}
-          description={
-            isNl
-              ? "Maak een gratis account aan om je rijdersprofiel op te bouwen, een persoonlijke " +
-                "bikefit te starten en toekomstige aanpassingen bij te houden."
-              : "Create a free account to build your rider profile, start a personalized fit, and " +
-                "track future adjustments."
-          }
-          actions={
-            <>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/calculators/bike-fit", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="saddle_height_result"
-                    ctaLabel={isNl ? "Start gratis bike fit" : "Start free bike fit"}
-                  />
-                }
-              >
-                {isNl ? "Start gratis bike fit" : "Start free bike fit"}
-              </Button>
-              <Button
-                render={
-                  <TrackedCtaLink
-                    href={withLocalePrefix("/pricing", locale)}
-                    locale={locale}
-                    pagePath={pagePath}
-                    section="saddle_height_pricing_cta"
-                    ctaLabel={isNl ? "Bekijk prijzen" : "Compare plans"}
-                  />
-                }
-                variant="outline"
-              >
-                {isNl ? "Bekijk prijzen" : "Compare plans"}
-              </Button>
-            </>
-          }
-          aside={
-            isNl
-              ? "De calculator geeft een praktisch startpunt. Een persoonlijke fitter kan toegevoegde " +
-                "waarde bieden bij complexe biomechanische kwesties."
-              : "The calculator gives a practical starting point. An in-person fitter can add value " +
-                "for complex biomechanical issues."
-          }
-        />
 
-        <PublicSection
-          className="mt-10"
-          header={{
-            title: isNl ? "Veelgestelde vragen" : "FAQ",
-            description: isNl
-              ? "Korte antwoorden op de belangrijkste meetvragen."
-              : "Short answers to the key measurement questions.",
-          }}
-        >
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <div
-                key={faq.q}
-                className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
-              >
-                <h3 className="font-semibold text-foreground">{faq.q}</h3>
-                <p className="mt-2 text-muted-foreground">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </PublicSection>
+
+        <ContentDisclosure title={isNl ? "Veelgestelde vragen" : "FAQ"}>
+          <PublicSection
+            className="mt-10"
+            header={{
+              title: isNl ? "Veelgestelde vragen" : "FAQ",
+              description: isNl
+                ? "Korte antwoorden op de belangrijkste meetvragen."
+                : "Short answers to the key measurement questions.",
+            }}
+          >
+            <div className="space-y-4">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.q}
+                  className="rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-sm"
+                >
+                  <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                  <p className="mt-2 text-muted-foreground">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <section className="mt-10">
+          <ContentDisclosure title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}>
           <RelatedLinksSection
             title={isNl ? "Gerelateerde tools en gidsen" : "Related tools and guides"}
-            links={getRelatedLinks("saddle-height", locale)}
+            links={getRelatedLinks("saddle-height", locale).slice(0, 3)}
             locale={locale}
           />
+          </ContentDisclosure>
         </section>
       </PublicPageShell>
     </div>

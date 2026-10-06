@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bereikbalk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div role="img" aria-label="{{aria}}" style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: {{gap}}px; font-family: 'DM Mono', monospace; color: #0F2420; padding-top: {{pad}}px">
+  <div style="position: relative; height: {{track}}px; border: 1.5px solid #4A5F5A; border-radius: 999px; background: #F3F5F2; box-sizing: border-box">
+    <div style="position: absolute; top: -1.5px; bottom: -1.5px; left: {{left}}%; width: {{width}}%; background: #CFF26A; border: 1.5px {{border}} #0F2420; border-radius: 999px; box-sizing: border-box"></div>
+    <div style="position: absolute; left: {{mark}}%; top: {{markTop}}px; width: {{markW}}px; height: {{markH}}px; margin-left: {{markShift}}px; background: #0F2420; border-radius: 3px"></div>
+  </div>
+  <div style="position: relative; height: {{labelH}}px; font-size: {{labelSize}}px">
+    <span style="position: absolute; left: {{left}}%; transform: translateX(-50%); white-space: nowrap">{{lowLabel}}</span>
+    <span style="position: absolute; left: {{right}}%; transform: translateX(-50%); white-space: nowrap">{{highLabel}}</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"low":{"editor":"float","default":765},"high":{"editor":"float","default":810},"value":{"editor":"float","default":787},"min":{"editor":"float","default":727},"max":{"editor":"float","default":847},"lowLabel":{"editor":"text","default":"765"},"highLabel":{"editor":"text","default":"810"},"size":{"editor":"enum","options":["groot","compact"],"default":"groot"},"dashed":{"editor":"boolean","default":false},"aria":{"editor":"text","default":"Zadelhoogte 787 mm, bereik 765 tot 810 mm"},"$preview":{"width":560,"height":80}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const low = Number(p.low ?? 765), high = Number(p.high ?? 810), value = Number(p.value ?? 787);
+    const min = Number(p.min ?? 727), max = Number(p.max ?? 847);
+    const pct = (v) => Math.max(0, Math.min(100, (v - min) / (max - min) * 100));
+    const big = (p.size ?? 'groot') === 'groot';
+    return {
+      left: pct(low).toFixed(1), right: pct(high).toFixed(1), width: (pct(high) - pct(low)).toFixed(1), mark: pct(value).toFixed(1),
+      border: p.dashed ? 'dashed' : 'solid',
+      track: big ? 28 : 16, markH: big ? 44 : 26, markTop: big ? -9 : -6, markW: big ? 5 : 4, markShift: big ? -2.5 : -2,
+      gap: big ? 8 : 4, pad: big ? 8 : 6, labelH: big ? 22 : 18, labelSize: big ? 16 : 13,
+      lowLabel: p.lowLabel ?? String(low), highLabel: p.highLabel ?? String(high),
+      aria: p.aria ?? ''
+    };
+  }
+}
+</script>
+</body>
+</html>

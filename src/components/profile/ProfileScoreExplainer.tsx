@@ -5,6 +5,7 @@ import { withLocalePrefix } from "@/i18n/navigation";
 import { BASE_BIKE_RULES, BASE_RIDER_RULES, BIKE_REFINEMENT_RULES, BIKE_RULES, REFINEMENT_RULES, RIDER_RULES, type ScoreRule } from "../../../shared/profileScore";
 import { isPaidAccessEnforced } from "../../../shared/pricing/flags";
 import { getPricingAccessCopy, getRefinementScoreLabel } from "@/i18n/account/pricingAccess";
+import { ProfileScorePaidBoundary } from "./ProfileScorePaidBoundary";
 import { ProfileStrengthRings } from "./ProfileStrengthRings";
 
 export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
@@ -62,7 +63,8 @@ export function ProfileScoreExplainer({ locale }: { locale: Locale }) {
       </figure>
     </header>
     <p className="rounded-2xl border border-border bg-muted p-5 font-medium leading-relaxed">{copy.disclaimer}</p>
-    {enforced && <p className="rounded-2xl border border-border p-5">{pricing.cap}</p>}
+    {enforced && <><p className="rounded-2xl border border-border p-5">{pricing.cap}</p>
+      <ProfileScorePaidBoundary locale={locale} /></>}
     <div className="grid gap-6 lg:grid-cols-2">
       <section className={panel}><h2 className={heading}>{copy.completenessTitle}</h2>
         <p className="mt-4 leading-relaxed text-muted-foreground">{copy.completenessText}</p></section>

@@ -1,3 +1,4 @@
+import { PressureDisplay } from "./PressureDisplay";
 import { Gauge } from "lucide-react";
 import { PublicCalculatorResultSummary, PublicSurfaceCard } from "@/components/public";
 import type { PublicResultEnvelope } from "@/lib/publicCalculatorLogic";
@@ -31,20 +32,7 @@ export function PressureResultCard({
       className="rounded-[1.75rem]"
     >
       <div className="space-y-5">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4">
-            <p className="text-sm text-muted-foreground">{labels.front}</p>
-            <p className="mt-1 text-2xl font-semibold text-foreground">
-              {result.frontBar} {labels.bar}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-primary/20 bg-primary-soft p-4">
-            <p className="text-sm text-muted-foreground">{labels.rear}</p>
-            <p className="mt-1 text-2xl font-semibold text-foreground">
-              {result.rearBar} {labels.bar}
-            </p>
-          </div>
-        </div>
+        <PressureDisplay {...result} locale={isNl ? "nl" : "en"} compact />
 
         <p className="text-sm leading-6 text-[color:var(--muted-foreground)]">
           {result.explanation}

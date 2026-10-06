@@ -158,17 +158,16 @@ describe("saddle height calculator page", () => {
     });
   });
 
-  it("keeps the value-first next-step CTAs visible in English", async () => {
+  it("keeps explanations collapsed without duplicate next-step CTAs", async () => {
     const ui = await SaddleHeightCalculatorPage();
     render(ui);
 
     expect(screen.getByText("Saddle height experience")).toBeTruthy();
-    expect(screen.getByText("Start free bike fit").closest("a")?.getAttribute("href")).toBe(
-      "/en/calculators/bike-fit",
-    );
-    expect(screen.getByText("Compare plans").closest("a")?.getAttribute("href")).toBe(
-      "/en/pricing",
-    );
+    expect(document.querySelectorAll("details[data-usability=explanation]").length).toBeGreaterThan(0);
+    expect(document.querySelector("details[open]")).toBeNull();
+    expect(document.querySelector("[data-usability=short-answer]")).not.toBeNull();
+    expect(screen.queryByText("Start free bike fit")).toBeNull();
+    expect(screen.queryByText("Compare plans")).toBeNull();
     expect(screen.queryByText("Donate via our Alpe d'HuZes page")).toBeNull();
   });
 });

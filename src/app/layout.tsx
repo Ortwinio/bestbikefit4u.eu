@@ -17,6 +17,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { TemplateSpeedInsights } from "@/components/analytics/TemplateSpeedInsights";
 import { NONCE_HEADER_NAME } from "@/lib/csp";
 import { buildOrganizationSchema, buildWebSiteSchema } from "@/lib/seo/jsonLd";
+import { pressureDisplayStyles } from "../../shared/pressure/display";
 
 const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -149,6 +150,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
+          <style id="pressure-display-styles" nonce={nonce}>{pressureDisplayStyles}</style>
           <script
             nonce={nonce}
             dangerouslySetInnerHTML={{
@@ -168,7 +170,7 @@ export default async function RootLayout({
         <body className="relative bg-background font-sans text-foreground antialiased">
           <a
             href="#main-content"
-            className="skip-link absolute left-4 top-3 z-[100] rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] shadow"
+            className="skip-link absolute left-4 top-3 z-[100] inline-flex min-h-11 min-w-11 items-center rounded-md border border-[color:var(--border)] bg-[color:var(--card)] px-3 py-2 text-sm font-medium text-[color:var(--foreground)] shadow"
           >
             {dictionary.common.skipToContent}
           </a>

@@ -22,12 +22,12 @@ export function ReliabilityResultRows({ rows, locale }: { rows: ReliabilityResul
       const labels = options.map((option, index) => optionLabels?.[index] ?? format.format(option));
       const selected = options.indexOf(range.value);
       const selectedLabel = labels[selected] ?? format.format(range.value);
-      return <article key={label} className="min-w-0 py-5 first:pt-0" data-reliability-result={range.metric}>
+      return <article key={label} className="min-w-0 py-3 first:pt-0" data-reliability-result={range.metric}>
         <h2 className="flex items-center gap-2 text-base font-semibold">
           {letter && <span className="rounded-full bg-muted px-2 font-mono">{letter}</span>}{label}
         </h2>
-        <div className="my-3 flex flex-wrap items-baseline justify-between gap-2 font-mono">
-          <p className="text-3xl font-medium tracking-tight sm:text-4xl">
+        <div className="my-2 flex flex-wrap items-baseline justify-between gap-2 font-mono">
+          <p data-usability="result-value" className="text-3xl font-medium tracking-tight sm:text-4xl">
             {range.kind === "size" ? selectedLabel : format.format(range.value)}
             {unit && <span className="ml-2 text-sm text-muted-foreground">{unit}</span>}
           </p>
@@ -55,7 +55,7 @@ export function ReliabilityResultRows({ rows, locale }: { rows: ReliabilityResul
               }>{text}</span>)}
             </div>
           </div>}
-        <p className="mt-3 text-sm text-muted-foreground">{copy.basedOn}: {basis}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{copy.basedOn}: {basis}</p>
       </article>;
     })}
   </div>;

@@ -25,5 +25,5 @@ const guides = {
 document.documentElement.lang = locale;
 const content = guides[pathname] ? await guides[pathname]() : pathname === "/profile" ? <Profile /> : <Dashboard />;
 const tree = pathname === "/login" ? await AuthLayout({ children: <Login /> }) : <DashboardLayout>{content}</DashboardLayout>;
-createRoot(document.getElementById("root")).render(<ThemeProvider><ToastProvider>{tree}<FeedbackFloatingButton label={getFeedbackCopy(locale).page.floatingCta} className={accountFeedbackPlacement(window.location.pathname)} onClick={() => {}} /></ToastProvider></ThemeProvider>);
+createRoot(document.getElementById("root")).render(<ThemeProvider><ToastProvider>{tree}<FeedbackFloatingButton flowOnMobile label={getFeedbackCopy(locale).page.floatingCta} className={accountFeedbackPlacement(window.location.pathname)} onClick={() => {}} /></ToastProvider></ThemeProvider>);
 window.__visualReady = true;

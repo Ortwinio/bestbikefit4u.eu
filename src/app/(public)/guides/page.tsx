@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -68,10 +69,10 @@ export default async function GuidesHubPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <GuideHero
+        <GuideHero answerLocale={locale}
           eyebrow={copy.library}
           title={entry.h1}
-          description={entry.pageBrief}
+          description={copy.introduction}
           image="/illustrations/06-meetset.webp"
           imageAlt={copy.image}
           illustration
@@ -81,19 +82,22 @@ export default async function GuidesHubPage() {
           </Button>
         </GuideHero>
 
-        <section className={styles.section}>
-          <div className={styles.principles}>
-            {copy.principles.map((item) => (
-              <div key={item.title}>
-                <h2>{item.title}</h2>
-                <p>{item.body}</p>
-              </div>
-            ))}
-          </div>
-          <p className={styles.intro}>{buildHubIntro(entry, locale).join(" ")}</p>
-        </section>
+        <ContentDisclosure title={locale === "nl" ? "Zo gebruik je de gidsen" : "How to use the guides"}>
+          <section className={styles.section}>
+            <div className={styles.principles}>
+              {copy.principles.map((item) => (
+                <div key={item.title}>
+                  <h2>{item.title}</h2>
+                  <p>{item.body}</p>
+                </div>
+              ))}
+            </div>
+            <p className={styles.intro}>{buildHubIntro(entry, locale).join(" ")}</p>
+          </section>
+        </ContentDisclosure>
 
         <section className={styles.section}>
+          <ContentDisclosure title={copy.toolsTitle}>
           <p className={styles.eyebrow}>{copy.toolsEyebrow}</p>
           <h2>{copy.toolsTitle}</h2>
           <div className={styles.tools}>
@@ -105,9 +109,11 @@ export default async function GuidesHubPage() {
               </Link>
             ))}
           </div>
+          </ContentDisclosure>
         </section>
 
         <section id="guide-topics" className={styles.section}>
+          <ContentDisclosure title={copy.topicsTitle}>
           <p className={styles.eyebrow}>{copy.topicsEyebrow}</p>
           <h2>{copy.topicsTitle}</h2>
           <div className={styles.topics}>
@@ -119,9 +125,10 @@ export default async function GuidesHubPage() {
               </Link>
             ))}
           </div>
+          </ContentDisclosure>
         </section>
 
-        <RelatedLinksSection title={copy.relatedBlog} links={relatedBlogPosts} locale={locale} />
+        <RelatedLinksSection title={copy.relatedBlog} links={relatedBlogPosts.slice(0, 3)} locale={locale} />
 
         <PublicCtaBand
           className={styles.cta}

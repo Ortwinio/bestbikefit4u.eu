@@ -19,7 +19,7 @@ describe.each(["nl", "en"] as const)("%s public performance reliability", (local
       expect(container.querySelectorAll("[data-reliability-next-step]")).toHaveLength(1);
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
       expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
-      expect(screen.getByText(copy.example)).toBeTruthy();
+      expect(container.querySelector("[data-calculator-example]")).toBeTruthy();
       expect(readHandoff().entries).toEqual([]);
       const initial = container.querySelector(`#${tool}-result`)?.textContent;
       fireEvent.keyDown(screen.getAllByRole("slider")[0], { key: tool === "fuel-hydration" ? "Home" : "End" });

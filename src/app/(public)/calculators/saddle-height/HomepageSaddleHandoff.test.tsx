@@ -101,7 +101,7 @@ describe("homepage saddle starting-point handoff", () => {
   it("uses an honest example if storage is absent instead of inventing a carried measurement", () => {
     window.history.replaceState(null, "", "/en/calculators/saddle-height#inseam");
     render(<SaddleHeightCalculatorForm />);
-    expect(screen.getByText(saddleReliabilityMessages.en.example)).toBeTruthy();
+    expect(screen.getByText("Example for someone 190 cm tall · slide to your height")).toBeTruthy();
     expect(screen.getByRole("slider", { name: "Height" }).getAttribute("aria-valuenow")).toBe("190");
     expect(document.activeElement).toBe(screen.getByRole("slider", { name: "Inseam" }));
     expect(readHandoff().entries).toEqual([]);

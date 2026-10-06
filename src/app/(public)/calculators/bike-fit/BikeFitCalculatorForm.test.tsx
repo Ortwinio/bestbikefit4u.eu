@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { BikeFitCalculatorForm } from "./BikeFitCalculatorForm";
 import { reliabilityBodyMessages } from "@/i18n/calculators/reliabilityBody";
+import { journeyMessages } from "@/i18n/calculators/journey";
 import { reliabilityMessages } from "@/i18n/calculators/reliability";
 import { readHandoff } from "@/lib/handoff/store";
 
@@ -14,9 +15,9 @@ describe("BikeFitCalculatorForm reliability public dispatch", () => {
     expect(screen.getByRole("heading", { level: 1, name: copy.pages["bike-fit"].title })).toBeTruthy();
     expect(container.querySelectorAll("[data-reliability-step]")).toHaveLength(2);
     expect(container.querySelectorAll("[data-reliability-next-step]")).toHaveLength(1);
-    expect(screen.getByText(reliabilityMessages[locale].example)).toBeTruthy();
+    expect(container.querySelector('[data-usability="example"]')?.textContent).toMatch(locale === "nl" ? /Voorbeeld/ : /Example/);
     expect(screen.getByText(reliabilityMessages[locale].omitted)).toBeTruthy();
-    expect(screen.getByRole("link", { name: reliabilityMessages[locale].save }).getAttribute("href")).toContain("handoff=1");
+    expect(screen.getByRole("link", { name: journeyMessages[locale].reasons["bike-fit"].cta }).getAttribute("href")).toContain("handoff=1");
     expect(readHandoff().entries).toHaveLength(0);
     expect(screen.queryByRole("slider", { name: /flexibility|lenigheid|rompstabiliteit|core stability/i })).toBeNull();
     const measurement = screen.getByRole("slider", { name: copy.inseam });

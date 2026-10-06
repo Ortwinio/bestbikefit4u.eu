@@ -1,4 +1,4 @@
-.calculator { max-width: 1200px; padding: 40px 24px; margin: 0 auto; color: var(--bbf-ui-foreground); }
+.calculator { width: 100%; min-width: 0; max-width: 1200px; padding: 40px 24px; margin: 0 auto; color: var(--bbf-ui-foreground); }
 .header { display: grid; gap: 10px; margin-bottom: 28px; }
 .header h1 { font-family: var(--bbf-font-display); font-weight: 800; font-size: clamp(32px, 4vw, 44px); line-height: 1.05; }
 .header > p:last-child { max-width: 64ch; font-size: 17px; }
@@ -30,4 +30,19 @@
   .card { padding: 20px; }
   .refine li { grid-template-columns: auto minmax(0, 1fr); }
   .gain { grid-column: 2; }
+}
+
+@media (max-width: 639px) {
+  .calculator[data-reliability-calculator="tire-pressure"] { padding-block: 12px; }
+  .calculator[data-reliability-calculator="tire-pressure"] > .header { margin-bottom: 12px; }
+  .calculator[data-reliability-calculator="tire-pressure"] .layout { margin-top: 12px; gap: 12px; }
+  .calculator[data-reliability-calculator="tire-pressure"] .card { padding-block: 12px; }
+  .calculator[data-reliability-calculator="tire-pressure"] .column { gap: 8px; }
+  .calculator[data-reliability-calculator="tire-pressure"] .fields > :global(.space-y-6) > :not(:last-child) {
+    margin-block-start: 0;
+    margin-block-end: 8px;
+  }
+  .calculator[data-reliability-calculator="tire-pressure"] .fields { gap: 12px; }
+  .calculator[data-reliability-calculator="tire-pressure"] .stepHeading { margin-bottom: 8px; }
+  .calculator[data-reliability-calculator="tire-pressure"] section[data-usability="safety"] { padding-block: 16px; }
 }

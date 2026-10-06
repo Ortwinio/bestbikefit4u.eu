@@ -15,7 +15,7 @@ import {
   Selectable,
   Textarea,
 } from "@/components/ui";
-import { BikeNumberField, BikeChoiceField, BikeCassetteField } from "./BikeFormControls";
+import { BikeNumberField, BikeChoiceField, BikeCassetteField, BikeFrameSizeField } from "./BikeFormControls";
 import { getBikesCopy } from "@/i18n/account/bikes";
 import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -630,13 +630,11 @@ export function BikeForm({
                 value={numberToInputValue(headTubeAngle)}
                 onChange={(value) => setHeadTubeAngle(value === null ? "" : String(value))}
               />
-              <Input
-                className="min-h-11"
+              <BikeFrameSizeField
                 label={messages.bikeForm.fields.geometry.frameSize.label}
                 tooltip={messages.bikeForm.fields.geometry.frameSize.tooltip}
                 value={frameSize}
-                onChange={(event) => setFrameSize(event.target.value)}
-                placeholder={messages.bikeForm.fields.geometry.frameSize.placeholder}
+                onChange={setFrameSize}
               />
             </CardContent>
           </Card>

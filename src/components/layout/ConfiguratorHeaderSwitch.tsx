@@ -37,7 +37,9 @@ export function ConfiguratorHeaderSwitch({
   const activeTool = approvedTools[path];
   if (!activeTool) return children;
   return (
-    <header className="border-b border-border bg-background text-foreground">
+    <>
+    <div className="xl:hidden">{children}</div>
+    <header data-usability="site-header" className="hidden border-b border-border bg-background text-foreground xl:block">
       <div
         className={
           "mx-auto flex max-w-[1440px] flex-wrap items-center gap-3 px-4 py-4 sm:px-8 " +
@@ -71,5 +73,6 @@ export function ConfiguratorHeaderSwitch({
         </div>
       </div>
     </header>
+    </>
   );
 }

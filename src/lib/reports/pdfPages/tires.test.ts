@@ -35,13 +35,13 @@ describe("PDF tire data fidelity", () => {
     const copy = getReportV2Copy(locale);
     const root = parse(renderTiresPage({ ...reportPdfFixture, tirePressure: ready() }, copy, assets));
     const decimal = locale === "nl" ? "," : ".";
-    expect([...root.querySelectorAll(".pdf-tires-bar")].map((node) => node.textContent)).toEqual([
-      `3${decimal}7 bar`,
-      `4${decimal}1 bar`,
+    expect([...root.querySelectorAll(".pressure-number")].map((node) => node.textContent)).toEqual([
+      `3${decimal}7`,
+      `4${decimal}1`,
     ]);
-    expect([...root.querySelectorAll(".pdf-tires-psi")].map((node) => node.textContent)).toEqual([
-      "54 psi",
-      "59 psi",
+    expect([...root.querySelectorAll(".pressure-unit")].map((node) => node.textContent)).toEqual([
+      "bar · 54 psi",
+      "bar · 59 psi",
     ]);
     expect(root.querySelectorAll("tbody tr")).toHaveLength(1);
     expect(root.querySelector("tbody th")?.textContent).toBe(copy.tirePressure.surfaceValues.averageAsphalt);

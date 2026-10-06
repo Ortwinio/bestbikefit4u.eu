@@ -186,6 +186,7 @@ export default function ProfilePage() {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const profileData = useQuery(api.profiles.queries.getMyProfile);
+  const profileProvenance = useQuery(api.profiles.queries.getMyProvenance, {});
   const recalculableBikeCount = useQuery(
     api.pressureCalculations.queries.getRecalculableBikeCount
   );
@@ -232,6 +233,7 @@ export default function ProfilePage() {
         : {};
 
       await upsertProfile({
+        measurementKinds: data.measurementKinds,
         heightCm: data.heightCm,
         inseamCm: data.inseamCm,
         weightKg: data.weightKg,
@@ -309,7 +311,7 @@ export default function ProfilePage() {
     [user]
   );
 
-  if (profileData === undefined && !isEditing) {
+  if (profileData === undefined || (profileData !== null && profileProvenance === undefined)) {
     return <LoadingState label={messages.profile.loading} />;
   }
 
@@ -338,7 +340,11 @@ export default function ProfilePage() {
         <MeasurementWizard
           refinementsLocked={isPaidAccessEnforced() && !access?.fullProfile}
           onComplete={handleSaveProfile}
-          defaultValues={profileData ? getDefaultValues(profileData) : undefined}
+          defaultValues={profileData ? { ...getDefaultValues(profileData), measurementKinds:
+            Object.fromEntries(["heightCm", "inseamCm", "weightKg", "torsoLengthCm", "armLengthCm",
+              "femurLengthCm", "shoulderWidthCm"].map(field => [field,
+                profileProvenance?.observations.find(entry => entry.field === field)?.kind === "measured"
+                  ? "measured" : "estimated"])) } : undefined}
         />
         {profileData ? (
           <div className="mt-4 text-center">

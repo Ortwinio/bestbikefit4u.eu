@@ -1,9 +1,10 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Locale } from "@/i18n/config";
 import { reliabilityMessages } from "@/i18n/calculators/reliability";
 import type { HandoffCalculator } from "@/lib/handoff/store";
-import { handoffLoginHref } from "@/components/calculators/PersonalizeAdviceBlock";
+import { PersonalizeAdviceBlock } from "@/components/calculators/PersonalizeAdviceBlock";
+import { CalculatorJourneyHeader } from "@/components/calculators/CalculatorJourney";
+import { CalculatorAdviceLadder, CalculatorPaidChip } from "@/components/calculators/CalculatorAdviceLadder";
 import styles from "./ReliabilityCalculatorTemplate.module.css";
 
 export interface ReliabilityCalculatorTemplateProps {
@@ -25,12 +26,14 @@ export interface ReliabilityCalculatorTemplateProps {
   warnings?: ReactNode;
   canRefine?: boolean;
   onSave?: () => void;
+  example?: ReactNode;
+  reasonValue?: string;
 }
 
 export function ReliabilityCalculatorTemplate({
   locale, calculator, title, description, steps, results, nextStep, omitted, meaning,
-  refinement = [], notice, warnings, canRefine = true, onSave, eyebrow, omittedTitle,
-  inputContent, unframedResults = false,
+  notice, warnings, canRefine = true, onSave, eyebrow, omittedTitle,
+  inputContent, unframedResults = false, example, reasonValue,
 }: ReliabilityCalculatorTemplateProps) {
   const copy = reliabilityMessages[locale];
   return (
@@ -38,6 +41,7 @@ export function ReliabilityCalculatorTemplate({
       <header className={styles.header}>
         <p className={styles.eyebrow}>{eyebrow ?? copy.eyebrow}</p>
         <h1>{title}</h1><p>{description}</p>
+        {canRefine && <CalculatorJourneyHeader calculator={calculator} locale={locale} />}
       </header>
       {notice}
       <div className={styles.layout}>
@@ -55,26 +59,20 @@ export function ReliabilityCalculatorTemplate({
         </div>
         <div className={styles.column}>
           <section className={unframedResults ? styles.column : styles.card} aria-label={title}>
+            {example}
             {results}
+            {canRefine && <CalculatorPaidChip locale={locale} />}
+            {canRefine && <PersonalizeAdviceBlock calculator={calculator} locale={locale}
+              onSave={onSave} reasonValue={reasonValue} />}
             {nextStep != null && <div className={styles.next} data-reliability-next-step="">
               <span aria-hidden="true">→</span><div>{nextStep}</div>
             </div>}
             <details className={styles.meaning}><summary>{copy.meaning}</summary>
               <div className={styles.hint}>{meaning ?? copy.meaningBody}</div>
             </details>
+            {canRefine && <CalculatorAdviceLadder locale={locale} currentRange={reasonValue} />}
           </section>
-          {warnings}
-          {canRefine && <section className={styles.refine}>
-            <h2>{copy.refine}</h2>
-            <ul>{refinement.map((item) => <li key={item.text}>
-              <span className={styles.tier}>{copy[item.tier ?? "account"]}</span>
-              <span>{item.text}</span><span className={styles.gain}>{item.gain}</span>
-            </li>)}</ul>
-            <Link className={styles.save} href={handoffLoginHref(calculator, locale)} onClick={onSave}>
-              {copy.save}
-            </Link>
-            <p>{copy.carry}</p>
-          </section>}
+          {warnings && <div data-usability="safety">{warnings}</div>}
         </div>
       </div>
     </section>

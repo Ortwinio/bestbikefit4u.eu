@@ -20,6 +20,7 @@
   margin-bottom: 14px;
 }
 .number { font-family: var(--font-mono); font-weight: 500; }
+.grid > details { align-self: start; }
 .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; padding-bottom: 44px; }
 .hero img { width: 100%; height: auto; mix-blend-mode: multiply; }
 .page .lead { font-size: 21px; max-width: 610px; margin-bottom: 26px; }
@@ -165,3 +166,8 @@
 .preparation { color: var(--bbf-inkt); }
 .page .required { color: var(--bbf-inkt); }
 .drawing { background: var(--bbf-papier); }
+
+@media (max-width: 600px) {
+  .grid { gap: 16px; }
+  .grid > details { margin-block: 0; }
+}

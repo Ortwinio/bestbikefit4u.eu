@@ -29,7 +29,7 @@ function MarkdownAnchor({
     return (
       <Link
         href={resolvedHref}
-        className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+        className="inline-flex min-h-11 min-w-11 items-center font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
       >
         {label}
       </Link>
@@ -41,7 +41,7 @@ function MarkdownAnchor({
       href={resolvedHref}
       target="_blank"
       rel="noopener noreferrer"
-      className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+      className="inline-flex min-h-11 min-w-11 items-center font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
     >
       {children}
     </a>

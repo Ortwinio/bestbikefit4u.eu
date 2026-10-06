@@ -6,6 +6,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import { getAccess, type PricingEntitlement } from "../../../shared/pricing/access";
 import { getDashboardMessages } from "@/i18n/dashboardMessages";
+import { getUsabilityPaidCopy } from "@/i18n/account/usabilityPaid";
 import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { BikeCreationAccess } from "@/components/bikes/BikeCreationAccess";
 import { LegacyReportBadge } from "@/components/bikes/LegacyReportBadge";
@@ -59,7 +60,7 @@ it.each(["nl", "en"] as const)("explains the one-bike limit and routes to annual
   state.locale = locale;
   render(<BikeCreationAccess><button>Create</button></BikeCreationAccess>);
   expect(screen.queryByRole("button", { name: "Create" })).toBeNull();
-  expect(screen.getByText(getPricingAccessCopy(locale).bikeLimit)).toBeTruthy();
+  expect(screen.getByText(getUsabilityPaidCopy(locale).boundaries["second-bike"].body)).toBeTruthy();
   expect(screen.getByRole("link").getAttribute("href")).toBe(`/${locale}/checkout?product=annual`);
 });
 
@@ -102,8 +103,9 @@ it.each(["nl", "en"] as const)("retains expired refinements without allowing edi
 it("saves a guided test through the existing mutation, including a measured zero", async () => {
   render(<ProfileRefinements locale="en" profile={{} as Doc<"profiles">} access={paid()} />);
   fireEvent.click(screen.getByRole("button", { name: /Guided flexibility test/ }));
-  fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "0" } });
-  fireEvent.submit(screen.getByRole("spinbutton").closest("form")!);
+  fireEvent.click(screen.getByRole("button", { name: /^Add measurement:/ }));
+  fireEvent.change(screen.getByRole("slider"), { target: { value: "0" } });
+  fireEvent.submit(screen.getByRole("slider").closest("form")!);
   await waitFor(() => expect(state.save).toHaveBeenCalledWith({ field: "flexibilityTestCm", value: 0,
     expectedCurrentValue: null, kind: "measured", method: "single_measurement" }));
 });

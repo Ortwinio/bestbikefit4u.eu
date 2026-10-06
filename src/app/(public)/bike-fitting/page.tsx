@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { EditorialFaq } from "@/components/science/EditorialLayout";
 import { editorialImageAlt } from "@/i18n/marketing/editorialImageAlt";
 import {
@@ -85,7 +86,7 @@ export default async function BikeFittingPage() {
         ]}
       />
 
-      <PublicHero
+      <PublicHero answerLocale={locale}
         imageAlt={editorialImageAlt.en.cockpit}
         eyebrow={page.eyebrow}
         title={page.heroTitle}
@@ -112,56 +113,63 @@ export default async function BikeFittingPage() {
         }
       />
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: page.text7,
-          title: page.text8,
-          description: page.text9,
-        }}
-      >
-        <div className="grid gap-5 lg:grid-cols-3">
-          <PublicSurfaceCard title={page.text10} description={page.text11} leading="01">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text12}</p>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text13} description={page.text14} leading="02">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text15}</p>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text16} description={page.text17} leading="03">
-            <p className="text-sm leading-6 text-muted-foreground">{page.text18}</p>
-          </PublicSurfaceCard>
-        </div>
-      </PublicSection>
+      <ContentDisclosure title={page.text8}>
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: page.text7,
+            title: page.text8,
+            description: page.text9,
+          }}
+        >
+          <div className="grid gap-5 lg:grid-cols-3">
+            <PublicSurfaceCard title={page.text10} description={page.text11} leading="01">
+              <p className="text-sm leading-6 text-muted-foreground">{page.text12}</p>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard title={page.text13} description={page.text14} leading="02">
+              <p className="text-sm leading-6 text-muted-foreground">{page.text15}</p>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-      <PublicSection
-        className="mt-10"
-        header={{
-          eyebrow: page.text19,
-          title: page.text20,
-          description: page.text21,
-        }}
-      >
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <PublicSurfaceCard title={page.text22} leading={<Gauge className="h-5 w-5" />}>
-            <ol className="space-y-3 text-sm leading-6 text-foreground">
-              <li>{page.text23}</li>
-              <li>{page.text24}</li>
-              <li>{page.text25}</li>
-              <li>{page.text26}</li>
-              <li>{page.text27}</li>
-            </ol>
-          </PublicSurfaceCard>
-          <PublicSurfaceCard title={page.text28} leading={<ClipboardList className="h-5 w-5" />}>
-            <ul className="space-y-3 text-sm leading-6 text-foreground">
-              <li>{page.text29}</li>
-              <li>{page.text30}</li>
-              <li>{page.text31}</li>
-            </ul>
-          </PublicSurfaceCard>
-        </div>
-      </PublicSection>
+      <ContentDisclosure title={page.text20}>
+        <PublicSection
+          className="mt-10"
+          header={{
+            eyebrow: page.text19,
+            title: page.text20,
+            description: page.text21,
+          }}
+        >
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <PublicSurfaceCard title={page.text22} leading={<Gauge className="h-5 w-5" />}>
+              <ol className="space-y-3 text-sm leading-6 text-foreground">
+                <li>{page.text23}</li>
+                <li>{page.text24}</li>
+                <li>{page.text25}</li>
+                <li>{page.text26}</li>
+                <li>{page.text27}</li>
+              </ol>
+            </PublicSurfaceCard>
+            <PublicSurfaceCard title={page.text28} leading={<ClipboardList className="h-5 w-5" />}>
+              <ul className="space-y-3 text-sm leading-6 text-foreground">
+                <li>{page.text29}</li>
+                <li>{page.text30}</li>
+                <li>{page.text31}</li>
+              </ul>
+            </PublicSurfaceCard>
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-      <RelatedLinksSection locale="en" title={page.text32} links={relatedLinks} />
+      <section data-usability="safety" className="my-6">
+        <PublicSurfaceCard title={page.text16} description={page.text17} leading="03">
+          <p className="text-sm leading-6 text-muted-foreground">{page.text18}</p>
+        </PublicSurfaceCard>
+      </section>
+
+      <RelatedLinksSection locale="en" title={page.text32} links={relatedLinks.slice(0, 3)} />
 
       <EditorialFaq eyebrow={page.text33} title={page.text34} items={faqItems} />
 

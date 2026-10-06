@@ -2,11 +2,11 @@ import { build } from "esbuild";
 import { mkdir, mkdtemp, symlink, readFile, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { tmpdir } from "node:os";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import { renderBoard } from "./board.mjs";
 
-const root = process.cwd();
+const root = fileURLToPath(new URL("../../../", import.meta.url));
 const output = resolve(root, process.env.PDF_RENDER_OUTPUT_DIR ?? "plans/reliability/renders/pdf");
 await mkdir(output, { recursive: true });
 const temp = await mkdtemp(join(tmpdir(), "bbf26-render-"));

@@ -43,6 +43,12 @@ export const sendFitReport = action({
       frameSize: recommendation.frameSizeRecommendations[0]?.size,
       confidenceScore: recommendation.confidenceScore,
       algorithmVersion: recommendation.algorithmVersion,
+      tirePressure: report.latestPressureCalculation ? {
+        frontBar: report.latestPressureCalculation.recommendedFrontBar,
+        rearBar: report.latestPressureCalculation.recommendedRearBar,
+        frontPsi: report.latestPressureCalculation.recommendedFrontPsi,
+        rearPsi: report.latestPressureCalculation.recommendedRearPsi,
+      } : undefined,
       fitNotes: localizePdfEngineNotes(recommendation.fitNotes, locale),
       actionUrl: emailActionUrl(locale, `/fit/${args.sessionId}/results`),
     }, locale);

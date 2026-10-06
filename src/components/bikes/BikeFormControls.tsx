@@ -148,3 +148,16 @@ export function BikeCassetteField({
     </fieldset>
   );
 }
+
+/** Preserve named manufacturer sizes; numeric frame measurements use the same slider control. */
+export function BikeFrameSizeField({ label, tooltip, value, onChange }: {
+  label: string; tooltip?: string; value: string; onChange: (value: string) => void;
+}) {
+  const named = value.trim() !== "" && !Number.isFinite(Number(value));
+  return <div className="space-y-3">
+    {named && <p className="text-sm font-semibold">{label}: {value}</p>}
+    <BikeNumberField label={label} tooltip={tooltip} min={35} max={75} step={0.5} unit="cm"
+      value={named || value === "" ? null : Number(value)}
+      onChange={next => onChange(next === null ? "" : String(next))} />
+  </div>;
+}

@@ -127,6 +127,8 @@
   .cards .card { min-height: auto; }
   .actions { flex-direction: column; }
   .section, .detail .section, .support { margin-top: 56px; }
+  .page:not(.detail) .section { margin-top: 32px; }
+  .page:not(.detail) .cta { margin-top: 40px; }
   .disclaimer, .checklist, .support, .cta { padding: 26px; }
   .cta h2, .support h2 { font-size: 32px; }
   .adjustments li { padding: 24px; gap: 16px; }

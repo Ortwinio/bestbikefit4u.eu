@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useConvexAuth } from "convex/react";
+import { UserRound } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { buildLocaleSwitchHref } from "@/i18n/switchHref";
@@ -17,8 +18,9 @@ export function MarketingAccountLink({ locale, loginLabel, dashboardLabel }: {
   const { isAuthenticated } = useConvexAuth();
   return (
     <Link href={withLocalePrefix(isAuthenticated ? "/dashboard" : "/login", locale)}
-      className="hidden min-h-11 items-center text-base font-semibold hover:underline xl:inline-flex">
-      {isAuthenticated ? dashboardLabel : loginLabel}
+      aria-label={isAuthenticated ? dashboardLabel : loginLabel}
+      className="inline-flex min-h-11 min-w-11 items-center justify-center whitespace-nowrap px-3 text-sm font-semibold hover:underline xl:px-0 xl:text-base">
+      {isAuthenticated ? <><UserRound aria-hidden="true" className="size-5 xl:hidden" /><span className="hidden xl:inline">{dashboardLabel}</span></> : loginLabel}
     </Link>
   );
 }

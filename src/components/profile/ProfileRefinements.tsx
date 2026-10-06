@@ -8,11 +8,12 @@ import { api } from "../../../convex/_generated/api";
 import type { getAccess } from "../../../shared/pricing/access";
 import { REFINEMENT_RULES } from "../../../shared/profileScore";
 import { PROFILE_OBSERVATION_FIELDS } from "../../../shared/profileObservationFields";
-import { Button, Input } from "@/components/ui";
+import { Button } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { getPricingAccessCopy } from "@/i18n/account/pricingAccess";
 import { getProfileProvenanceCopy } from "@/i18n/account/profileProvenance";
 import { withLocalePrefix } from "@/i18n/navigation";
+import { BikeNumberField } from "@/components/bikes/BikeFormControls";
 import { saveObservation } from "./ProfileProvenanceModel";
 
 export function ProfileRefinements({ locale, profile, access }: {
@@ -66,9 +67,10 @@ export function ProfileRefinements({ locale, profile, access }: {
             } catch { setError(copy.saveError); }
             finally { setPending(false); }
           }}>
-            <Input label={`${label} (${definition.unit})`} tooltip={provenance.valueHelp} tooltipLabel={label}
-              type="number" min={definition.range?.[0]} max={definition.range?.[1]} step="any" required
-              value={draft.value} disabled={pending} onChange={event => setDraft({ ...draft, value: event.target.value })} />
+            <BikeNumberField label={`${label} (${definition.unit})`} tooltip={provenance.valueHelp} tooltipLabel={label}
+              min={definition.range?.[0]} max={definition.range?.[1]} step={0.1}
+              value={draft.value === "" ? null : Number(draft.value)} disabled={pending}
+              onChange={value => setDraft({ ...draft, value: value === null ? "" : String(value) })} />
             <div className="flex flex-wrap gap-2"><Button type="submit" disabled={pending}>{provenance.save}</Button>
               <Button type="button" variant="ghost" disabled={pending} onClick={() => setDraft(null)}>{provenance.cancel}</Button></div>
           </form>}

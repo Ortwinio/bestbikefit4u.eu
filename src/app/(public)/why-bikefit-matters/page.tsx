@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import type { Metadata } from "next";
 import { Button } from "@/components/prototyper-ui/ui/button";
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
@@ -9,7 +10,7 @@ import {
   EditorialCard as PublicSurfaceCard,
 } from "@/components/science/EditorialLayout";
 import { EditorialLinks as RelatedLinksSection } from "@/components/science/EditorialLayout";
-import { whyCopy as copy } from "@/i18n/marketing/why";
+import { whyCopy as copy, whySafety } from "@/i18n/marketing/why";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getRequestLocale } from "@/i18n/request";
@@ -40,7 +41,7 @@ export default async function WhyBikeFitMattersPage() {
   return (
     <PublicPageShell>
       <div className="space-y-0">
-        <PublicHero
+        <PublicHero answerLocale={locale}
           eyebrow={page.hero.eyebrow}
           title={page.hero.title}
           image="/illustrations/01-racefiets.webp"
@@ -70,74 +71,80 @@ export default async function WhyBikeFitMattersPage() {
 
         {/* TODO: restore testimonials only after provenance is verified (audit/12-notes.md). */}
 
-        <PublicSection className="mt-10" header={{ title: page.whyTitle, description: page.whyIntro }}>
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <PublicSurfaceCard>
-              <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-                {page.contactPoints.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </PublicSurfaceCard>
-            <PublicSurfaceCard>
-              {page.whyParagraphs.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-7 text-muted-foreground">
-                  {paragraph}
-                </p>
-              ))}
-            </PublicSurfaceCard>
-          </div>
-        </PublicSection>
-
-        <PublicSection className="mt-10" header={{ title: page.benefitsTitle }}>
-          <div className="grid gap-5 md:grid-cols-2">
-            {page.benefits.map((block, index) => (
-              <PublicSurfaceCard
-                key={block.title}
-                title={block.title}
-                leading={String(index + 1).padStart(2, "0")}
-              >
-                {block.paragraphs.map((paragraph) => (
+        <ContentDisclosure title={page.whyTitle}>
+          <PublicSection className="mt-10" header={{ title: page.whyTitle, description: page.whyIntro }}>
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+              <PublicSurfaceCard>
+                <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
+                  {page.contactPoints.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </PublicSurfaceCard>
+              <PublicSurfaceCard>
+                {page.whyParagraphs.map((paragraph) => (
                   <p key={paragraph} className="text-sm leading-7 text-muted-foreground">
                     {paragraph}
                   </p>
                 ))}
-                {block.bullets ? (
-                  <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-                    {block.bullets.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
               </PublicSurfaceCard>
-            ))}
-          </div>
-        </PublicSection>
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
-        <PublicSection
-          className="mt-10"
-          header={{ title: page.adjustmentsTitle, description: page.adjustmentsIntro }}
-        >
-          <div className="grid gap-6 lg:grid-cols-2">
-            <PublicSurfaceCard title={locale === "nl" ? "Wat er wordt aangepast" : "What gets adjusted"}>
-              <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-                {page.fitAdjustmentItems.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </PublicSurfaceCard>
-            <PublicSurfaceCard
-              title={locale === "nl" ? "Veelgebruikte principes" : "Common principles"}
-              description={page.methodsIntro}
-            >
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-                {page.fitMethodItems.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </PublicSurfaceCard>
-          </div>
-        </PublicSection>
+        <ContentDisclosure title={page.benefitsTitle}>
+          <PublicSection className="mt-10" header={{ title: page.benefitsTitle }}>
+            <div className="grid gap-5 md:grid-cols-2">
+              {page.benefits.map((block, index) => (
+                <PublicSurfaceCard
+                  key={block.title}
+                  title={block.title}
+                  leading={String(index + 1).padStart(2, "0")}
+                >
+                  {block.paragraphs.map((paragraph) => (
+                    <p key={paragraph} className="text-sm leading-7 text-muted-foreground">
+                      {paragraph}
+                    </p>
+                  ))}
+                  {block.bullets ? (
+                    <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+                      {block.bullets.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </PublicSurfaceCard>
+              ))}
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
+
+        <ContentDisclosure title={page.adjustmentsTitle}>
+          <PublicSection
+            className="mt-10"
+            header={{ title: page.adjustmentsTitle, description: page.adjustmentsIntro }}
+          >
+            <div className="grid gap-6 lg:grid-cols-2">
+              <PublicSurfaceCard title={locale === "nl" ? "Wat er wordt aangepast" : "What gets adjusted"}>
+                <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
+                  {page.fitAdjustmentItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </PublicSurfaceCard>
+              <PublicSurfaceCard
+                title={locale === "nl" ? "Veelgebruikte principes" : "Common principles"}
+                description={page.methodsIntro}
+              >
+                <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+                  {page.fitMethodItems.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </PublicSurfaceCard>
+            </div>
+          </PublicSection>
+        </ContentDisclosure>
 
         <PublicSection
           className="mt-10"
@@ -154,6 +161,14 @@ export default async function WhyBikeFitMattersPage() {
             ))}
           </div>
         </PublicSection>
+
+        <section data-usability="safety" className="my-6 rounded-2xl border border-border bg-card p-6">
+          <h2>{whySafety[locale].title}</h2>
+          <p>{whySafety[locale].body}</p>
+          <a href={withLocalePrefix("/pain", locale)} className="inline-flex min-h-11 items-center underline">
+            {whySafety[locale].action}
+          </a>
+        </section>
 
         <RelatedLinksSection
           locale={locale}

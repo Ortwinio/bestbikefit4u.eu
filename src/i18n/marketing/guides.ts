@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/config";
 const messages = {
   nl: {
     library: "Gidsenbibliotheek",
+    introduction: "Begin bij je klacht, rijtype of afstelvraag. Kies de gids die je volgende stap uitlegt.",
     startFit: "Start gratis bikefit",
     midPainDescription: "Je begrijpt nu waarom deze klacht ontstaat. Controleer met de gratis fit of je maten binnen de aanbevolen bandbreedtes vallen.",
     midShoeDescription: "Je schoen- en cleatafstelling hangt samen met de rest van je fit. Controleer dit stap voor stap in je dashboard.",
@@ -50,6 +51,7 @@ const messages = {
   },
   en: {
     library: "Guide library",
+    introduction: "Start with your discomfort, riding style or setup question. Choose a guide for your next step.",
     startFit: "Start Free Fit",
     preview: "Preview mode: this is a draft version.",
     exitPreview: "Exit preview",

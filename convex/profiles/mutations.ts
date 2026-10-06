@@ -152,6 +152,15 @@ function validateProfileMeasurements(args: {
 // Create or update profile
 export const upsert = mutation({
   args: {
+    measurementKinds: v.optional(v.object({
+      heightCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      inseamCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      weightKg: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      torsoLengthCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      armLengthCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      femurLengthCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+      shoulderWidthCm: v.optional(v.union(v.literal("measured"), v.literal("estimated"))),
+    })),
     // Required measurements
     heightCm: v.number(),
     inseamCm: v.number(),
@@ -341,7 +350,13 @@ export const upsert = mutation({
     };
 
     const updates = Object.fromEntries(Object.entries(profileData).filter(([, value]) => value !== undefined));
-    await recordProfileObservations(ctx, userId, changedProfileValues(updates, existingProfile), existingProfile);
+    const provenanceUpdates = { ...changedProfileValues(updates, existingProfile) };
+    for (const field of Object.keys(args.measurementKinds ?? {})) {
+      if (updates[field] !== undefined) provenanceUpdates[field] = updates[field];
+    }
+    await recordProfileObservations(ctx, userId, provenanceUpdates, existingProfile, {
+      kinds: args.measurementKinds,
+    });
 
     if (existingProfile) {
       // Update existing profile

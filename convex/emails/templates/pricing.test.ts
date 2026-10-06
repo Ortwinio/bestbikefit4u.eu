@@ -174,3 +174,13 @@ it("keeps the existing welcome, 24h tips and upgrade lifecycle separate from pur
   expect(options.text).not.toContain("is afgelopen");
   expect(options.text).toContain("€21,50");
 });
+
+it.each(["nl", "en"] as const)("does not sell an unimplemented numerical bike comparison (%s)", locale => {
+  const data = sampleData(locale);
+  const mails = [templates.renderSubscriptionWelcome(data.subscriptionWelcome, locale),
+    templates.renderUpgradeNudge(data.upgradeNudge, locale)];
+  for (const mail of mails) {
+    expect(mail.text).not.toMatch(/vergelijk|compar(?:e|ison)/i);
+    expect(mail.text).toMatch(locale === "nl" ? /bewa(?:ar|ren)/ : /save/);
+  }
+});

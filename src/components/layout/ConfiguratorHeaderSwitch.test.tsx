@@ -16,12 +16,14 @@ vi.mock("./LanguageSwitch", () => ({ LanguageSwitch: () => <button>NL / EN</butt
 afterEach(cleanup);
 
 describe("configurator brand header", () => {
-  it("allows mobile controls to wrap without shrinking the 34px logo or hiding actions", () => {
+  it("uses the shared header on mobile and preserves desktop calculator navigation", () => {
     render(<ConfiguratorHeaderSwitch locale="nl" loginLabel="Inloggen"
       languageLabels={{ language: "Taal", english: "Engels", dutch: "Nederlands" }}>Fallback</ConfiguratorHeaderSwitch>);
     const logo = screen.getByRole("img", { name: "BikeFitBoost" });
     expect(logo.className).toContain("h-[34px]");
-    expect(logo.closest("header")?.firstElementChild?.className).toContain("flex-wrap");
+    expect(screen.getByText("Fallback").className).toContain("xl:hidden");
+    expect(logo.closest("header")?.className).toContain("hidden");
+    expect(logo.closest("header")?.className).toContain("xl:block");
     expect(screen.getByRole("navigation", { name: "Tools" }).className).toContain("basis-full");
     expect(screen.getByRole("link", { name: "Inloggen" }).className).toContain("min-h-11");
     expect(screen.getByRole("button", { name: "NL / EN" })).toBeTruthy();

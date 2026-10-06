@@ -1,3 +1,4 @@
+import { ContentDisclosure, ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
 import { bikeFittingOwnershipMessages } from "@/i18n/marketing/bikeFittingOwnership";
 import Image from "next/image";
 import Link from "next/link";
@@ -58,7 +59,7 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
         <section className={styles.hero}>
           <div>
             <p className={styles.eyebrow}>{copy.categoryLabel}</p>
-            <h1>{copy.title}</h1><p className={styles.lead}>{copy.intro}</p>{actions()}
+            <h1>{copy.title}</h1><ShortAnswer text={copy.intro} locale={locale} />{actions()}
           </div>
           <Image
             src="/illustrations/02-zadelhoogte-meten.webp" width={568} height={460}
@@ -69,7 +70,8 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
             }
           />
         </section>
-        <section className={styles.section}>
+        <ContentDisclosure title={copy.symptomTitle}>
+<section className={styles.section}>
           <p className={styles.eyebrow}>{presentation.detailEyebrow}</p><h2>{copy.symptomTitle}</h2>
           <div className={styles.symptoms}>
             {copy.symptomBullets.map((symptom) => (
@@ -83,7 +85,9 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
             <ul>{copy.riderChecklist.map((item) => <li key={item}>{item}</li>)}</ul>
           </aside>
         </section>
-        <section className={`${styles.section} ${styles.split}`}>
+</ContentDisclosure>
+        <ContentDisclosure title={presentation.checkTitle}>
+<section className={`${styles.section} ${styles.split}`}>
           <div>
             <p className={styles.eyebrow}>{presentation.checkEyebrow}</p>
             <h2>{presentation.checkTitle}</h2><p className={styles.intro}>{presentation.checkIntro}</p>
@@ -104,31 +108,34 @@ export function PainDetail({ locale, slug, copy }: { locale: Locale; slug: strin
             </ol>
           </div>
         </section>
-        <aside className={styles.support}>
+</ContentDisclosure>
+        <aside data-usability="safety" className={styles.support}>
           <div><p className={styles.eyebrow}>{presentation.supportEyebrow}</p><h2>{presentation.supportTitle}</h2></div>
           <p>{presentation.support}</p>
         </aside>
         <section className={`${styles.section} ${styles.split}`}>
           <h2>{copy.faqTitle}</h2>
           <div className={styles.faq}>
-            {copy.faqs.map((faq, index) => (
-              <details key={faq.q} open={index === 0}>
+            {copy.faqs.map((faq) => (
+              <details key={faq.q} >
                 <summary>{faq.q}</summary><p>{faq.a}</p>
               </details>
             ))}
           </div>
         </section>
-        <section className={styles.section}>
+        <ContentDisclosure title={copy.relatedTitle}>
+<section className={styles.section}>
           <h2>{copy.relatedTitle}</h2>
           <div className={styles.related}>
-            {copy.relatedLinks.map((link) => (
+            {copy.relatedLinks.slice(0, 3).map((link) => (
               <Link className={styles.textLink} key={link.href} href={withLocalePrefix(link.href, locale)}>
                 {link.label}<ArrowRight size={18} aria-hidden="true" />
               </Link>
             ))}
           </div>
         </section>
-        <section className={styles.cta}>
+</ContentDisclosure>
+        <section data-usability="next-step" className={styles.cta}>
           <div><h2>{presentation.detailCtaTitle}</h2><p>{presentation.detailCtaIntro}</p></div>{actions(true)}
         </section>
       </div>

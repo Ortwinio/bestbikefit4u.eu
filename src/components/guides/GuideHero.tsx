@@ -1,8 +1,10 @@
 import Image from "next/image";
+import { ShortAnswer } from "@/components/calculators/CalculatorAnswerSection";
+import type { Locale } from "@/i18n/config";
 import type { ReactNode } from "react";
 import styles from "./Guides.module.css";
 
-export function GuideHero({ eyebrow, title, description, image, imageAlt, illustration = false, children }: {
+export function GuideHero({ eyebrow, title, description, image, imageAlt, illustration = false, children, answerLocale }: {
   eyebrow: string;
   title: string;
   description: string;
@@ -10,13 +12,14 @@ export function GuideHero({ eyebrow, title, description, image, imageAlt, illust
   imageAlt: string;
   illustration?: boolean;
   children?: ReactNode;
+  answerLocale?: Locale;
 }) {
   return (
     <header className={styles.hero}>
       <div>
         <p className={styles.eyebrow}>{eyebrow}</p>
         <h1>{title}</h1>
-        <p>{description}</p>
+        {answerLocale ? <ShortAnswer text={description} locale={answerLocale} /> : <p>{description}</p>}
         {children}
       </div>
       <Image

@@ -18,6 +18,9 @@ import {
   DialogTrigger,
 } from "@/components/prototyper-ui/ui/dialog";
 import { MarketingLogo } from "./MarketingLogo";
+import { MarketingLanguageSwitch } from "./MarketingNavigation";
+import { calculatorNavigationMessages } from "@/i18n/account/calculatorNavigation";
+import { getLocalizedPublicCalculatorPath } from "@/lib/public-calculators/routes";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
 import { getMarketingLayoutMessages } from "@/i18n/marketing/layout";
@@ -47,9 +50,32 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
   const router = useRouter();
   const pathname = usePathname();
   const copy = getMarketingLayoutMessages(locale);
+  const calculatorLabels = calculatorNavigationMessages[locale].tools;
+  const calculatorGroups = [
+    {
+      title: locale === "nl" ? "Mijn houding" : "My position",
+      items: [
+        { path: "/calculators/saddle-height", label: calculatorLabels.saddleHeight },
+        { path: "/calculators/frame-size", label: calculatorLabels.frameSize },
+        { path: "/calculators/crank-length", label: calculatorLabels.crankLength },
+        { path: "/calculators/saddle-width", label: calculatorLabels.saddle },
+        { path: "/calculators/bike-fit", label: calculatorLabels.bikeFit },
+      ],
+    },
+    {
+      title: locale === "nl" ? "Mijn rit" : "My ride",
+      items: [
+        { path: getLocalizedPublicCalculatorPath("tire-pressure", locale), label: calculatorLabels.pressure },
+        { path: "/calculators/gearing", label: calculatorLabels.gearing },
+        { path: "/calculators/climb-planner", label: calculatorLabels.climb },
+        { path: "/calculators/power-speed", label: calculatorLabels.powerSpeed },
+        { path: "/calculators/ftp-wkg", label: calculatorLabels.ftp },
+        { path: "/calculators/fuel-hydration", label: calculatorLabels.fuel },
+      ],
+    },
+  ];
   const close = () => setIsOpen(false);
   const publicLinks = [
-    { path: "/calculators/bike-fit", label: copy.calculators },
     { path: "/how-it-works", label: labels.howItWorks },
     { path: "/guides", label: copy.guides },
     { path: "/pricing", label: labels.pricing },
@@ -75,11 +101,12 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
           render={
             <Button
               id="mobile-navigation-trigger"
+              data-usability="menu-trigger"
               type="button"
               variant="ghost"
               aria-label={isOpen ? copy.closeMenu : copy.openMenu}
               aria-expanded={isOpen}
-              className="size-11 rounded-full p-0 text-foreground"
+              className="size-11 rounded-xl border border-border bg-card p-0 text-foreground"
             />
           }
         >
@@ -89,7 +116,7 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
           side="top"
           showCloseButton={false}
           className={
-            "max-h-[90dvh] overflow-y-auto border-b border-border " +
+            "max-h-[100dvh] overflow-y-auto border-b border-border " +
             "bg-background p-5 text-foreground"
           }
         >
@@ -111,7 +138,26 @@ export function HeaderMobileMenu({ locale, labels }: HeaderMobileMenuProps) {
               <X className="size-6" />
             </button>
           </div>
+          <div className="mb-4">
+            <MarketingLanguageSwitch locale={locale} placement="menu" />
+          </div>
           <nav aria-label={copy.navigation} className="space-y-1">
+            {calculatorGroups.map((group) => (
+              <section key={group.title} aria-label={group.title} className="mb-4">
+                <h2 className="px-3 py-2 text-sm font-bold text-muted-foreground">{group.title}</h2>
+                {group.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    href={withLocalePrefix(item.path, locale)}
+                    onClick={close}
+                    aria-current={pathname === withLocalePrefix(item.path, locale) ? "page" : undefined}
+                    className="flex min-h-11 items-center rounded-xl px-3 font-semibold hover:bg-primary-soft aria-[current=page]:bg-[var(--bbf-lime)] aria-[current=page]:text-[var(--bbf-inkt)]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </section>
+            ))}
             {publicLinks.map((item) => (
               <Link
                 key={item.path}

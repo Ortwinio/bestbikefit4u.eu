@@ -1,0 +1,1213 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "About.dc.html": {
+      "h": 3720,
+      "is_interactive": true,
+      "title": "Over ons",
+      "w": 1440,
+      "x": 19760,
+      "y": 11024
+    },
+    "AppInstall.dc.html": {
+      "h": 1144,
+      "is_interactive": true,
+      "title": "App installeren",
+      "w": 1440,
+      "x": 33440,
+      "y": 6760
+    },
+    "Bandenspanning.dc.html": {
+      "h": 300,
+      "title": "Onderdeel · Bandenspanning (voor en achter)",
+      "w": 867,
+      "x": 20411,
+      "y": 2000
+    },
+    "Bereikbalk.dc.html": {
+      "h": 80,
+      "title": "Onderdeel · Bereikbalk",
+      "w": 552,
+      "x": 21910,
+      "y": 0
+    },
+    "BikeAdd.dc.html": {
+      "h": 1044,
+      "is_interactive": true,
+      "title": "Fiets toevoegen",
+      "w": 1440,
+      "x": 15200,
+      "y": 6760
+    },
+    "BikeCompare.dc.html": {
+      "h": 1120,
+      "is_interactive": true,
+      "title": "Fietsen vergelijken",
+      "w": 1440,
+      "x": 22800,
+      "y": 6760
+    },
+    "BikeFit.dc.html": {
+      "h": 2005,
+      "is_interactive": true,
+      "title": "Configurator · Bike fit",
+      "w": 1387,
+      "x": 3264,
+      "y": -17
+    },
+    "BikeFittingLanding.dc.html": {
+      "h": 2780,
+      "is_interactive": true,
+      "title": "Bikefitting (landing)",
+      "w": 1440,
+      "x": 9120,
+      "y": 11024
+    },
+    "BikeForm.dc.html": {
+      "h": 2744,
+      "is_interactive": true,
+      "title": "Fiets · formulier",
+      "w": 1440,
+      "x": 16720,
+      "y": 6760
+    },
+    "BikeImportMarktplaats.dc.html": {
+      "h": 2084,
+      "is_interactive": true,
+      "title": "Import · Marktplaats",
+      "w": 1440,
+      "x": 18240,
+      "y": 6760
+    },
+    "BikeImportPassport.dc.html": {
+      "h": 1724,
+      "is_interactive": true,
+      "title": "Import · fietspaspoort",
+      "w": 1440,
+      "x": 19760,
+      "y": 6760
+    },
+    "BikeProfile.dc.html": {
+      "h": 3664,
+      "is_interactive": true,
+      "title": "Fietsprofiel",
+      "w": 1440,
+      "x": 21280,
+      "y": 6760
+    },
+    "BikeSetup.dc.html": {
+      "h": 4340,
+      "is_interactive": true,
+      "title": "Fiets afstellen",
+      "w": 1440,
+      "x": 10640,
+      "y": 11024
+    },
+    "Bikes.dc.html": {
+      "h": 1760,
+      "is_interactive": true,
+      "title": "Fietsgarage",
+      "w": 1440,
+      "x": 13680,
+      "y": 6760
+    },
+    "BlogArticle.dc.html": {
+      "h": 2060,
+      "is_interactive": true,
+      "title": "Blog · artikel",
+      "w": 1440,
+      "x": 16720,
+      "y": 11024
+    },
+    "BlogIndex.dc.html": {
+      "h": 2600,
+      "is_interactive": true,
+      "title": "Blog",
+      "w": 1440,
+      "x": 15200,
+      "y": 11024
+    },
+    "Cadeau.dc.html": {
+      "h": 1380,
+      "is_interactive": true,
+      "title": "Cadeau geven",
+      "w": 1440,
+      "x": 34960,
+      "y": 6760
+    },
+    "CadeauOntvangen.dc.html": {
+      "h": 2300,
+      "is_interactive": true,
+      "title": "Cadeau ontvangen",
+      "w": 1440,
+      "x": 36480,
+      "y": 6760
+    },
+    "Calculator.dc.html": {
+      "h": 2000,
+      "is_interactive": true,
+      "title": "Onderdeel · calculatorsjabloon (alle publieke calculators)",
+      "w": 1420,
+      "x": 20411,
+      "y": 0
+    },
+    "CaseStudy.dc.html": {
+      "h": 2784,
+      "is_interactive": true,
+      "title": "Case study",
+      "w": 1440,
+      "x": 24320,
+      "y": 11024
+    },
+    "ClimbPlanner.dc.html": {
+      "h": 1840,
+      "is_interactive": true,
+      "title": "Configurator · Klimplanner",
+      "w": 1420,
+      "x": 15323,
+      "y": 0
+    },
+    "Contact.dc.html": {
+      "h": 2220,
+      "is_interactive": true,
+      "title": "Contact",
+      "w": 1440,
+      "x": 22800,
+      "y": 11024
+    },
+    "CrankLength.dc.html": {
+      "h": 1805,
+      "is_interactive": true,
+      "title": "Configurator · Cranklengte",
+      "w": 1387,
+      "x": 9123,
+      "y": -17
+    },
+    "Dashboard.dc.html": {
+      "h": 2760,
+      "is_interactive": true,
+      "title": "Dashboard · overzicht",
+      "w": 1440,
+      "x": 1520,
+      "y": 6760
+    },
+    "FAQ.dc.html": {
+      "h": 4560,
+      "is_interactive": true,
+      "title": "FAQ",
+      "w": 1440,
+      "x": 21280,
+      "y": 11024
+    },
+    "Feedback.dc.html": {
+      "h": 1544,
+      "is_interactive": true,
+      "title": "Feedback",
+      "w": 1440,
+      "x": 31920,
+      "y": 6760
+    },
+    "FitMethod.dc.html": {
+      "h": 1940,
+      "is_interactive": true,
+      "title": "Fit · hoe het werkt",
+      "w": 1440,
+      "x": 10640,
+      "y": 6760
+    },
+    "FitPass.dc.html": {
+      "h": 2300,
+      "is_interactive": true,
+      "title": "Kies je meting",
+      "w": 1440,
+      "x": 3040,
+      "y": 11024
+    },
+    "FitQuestionnaire.dc.html": {
+      "h": 1164,
+      "is_interactive": true,
+      "title": "Fit · vragenlijst",
+      "w": 1440,
+      "x": 7600,
+      "y": 6760
+    },
+    "FitRapport1.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 1 · samenvatting",
+      "w": 794,
+      "x": 0,
+      "y": 0
+    },
+    "FitRapport2.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 3 · afstelwaarden",
+      "w": 794,
+      "x": 1748,
+      "y": 0
+    },
+    "FitRapport3.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 5 · plan",
+      "w": 794,
+      "x": 3496,
+      "y": 0
+    },
+    "FitRapport4.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 6 · meten",
+      "w": 794,
+      "x": 4370,
+      "y": 0
+    },
+    "FitRapport5.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 4 · banden",
+      "w": 794,
+      "x": 2622,
+      "y": 0
+    },
+    "FitRapport6.dc.html": {
+      "h": 1123,
+      "page": "rapport",
+      "title": "Fitrapport · pagina 2 · basisgegevens",
+      "w": 794,
+      "x": 874,
+      "y": 0
+    },
+    "FitReport.dc.html": {
+      "h": 4536,
+      "is_interactive": true,
+      "paper": "a4",
+      "print": "flow",
+      "title": "Fitrapport (PDF, A4)",
+      "w": 794,
+      "x": 28880,
+      "y": 11024
+    },
+    "FitResults.dc.html": {
+      "h": 2260,
+      "is_interactive": true,
+      "title": "Fit · resultaten",
+      "w": 1440,
+      "x": 9120,
+      "y": 6760
+    },
+    "FitStart.dc.html": {
+      "h": 1444,
+      "is_interactive": true,
+      "title": "Fit · start",
+      "w": 1440,
+      "x": 6080,
+      "y": 6760
+    },
+    "FrameSize.dc.html": {
+      "h": 1805,
+      "is_interactive": true,
+      "title": "Configurator · Framemaat",
+      "w": 1387,
+      "x": 6194,
+      "y": -17
+    },
+    "FtpWkg.dc.html": {
+      "h": 1940,
+      "is_interactive": true,
+      "title": "Configurator · FTP / W/kg",
+      "w": 1420,
+      "x": 16821,
+      "y": 0
+    },
+    "FuelHydration.dc.html": {
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Configurator · Voeding & drinken",
+      "w": 1420,
+      "x": 18321,
+      "y": 0
+    },
+    "Gearing.dc.html": {
+      "h": 1840,
+      "is_interactive": true,
+      "title": "Configurator · Verzet",
+      "w": 1420,
+      "x": 12325,
+      "y": 0
+    },
+    "GearingDashboard.dc.html": {
+      "h": 2444,
+      "is_interactive": true,
+      "title": "Account · verzet",
+      "w": 1440,
+      "x": 25840,
+      "y": 6760
+    },
+    "GuideDetail.dc.html": {
+      "h": 3600,
+      "is_interactive": true,
+      "title": "Gids · detail",
+      "w": 1440,
+      "x": 13680,
+      "y": 11024
+    },
+    "Guides.dc.html": {
+      "h": 3740,
+      "is_interactive": true,
+      "title": "Gidsen",
+      "w": 1440,
+      "x": 12160,
+      "y": 11024
+    },
+    "History.dc.html": {
+      "h": 1764,
+      "is_interactive": true,
+      "title": "Sessies & rapporten",
+      "w": 1440,
+      "x": 12160,
+      "y": 6760
+    },
+    "HowItWorks.dc.html": {
+      "h": 3120,
+      "is_interactive": true,
+      "title": "Hoe het werkt",
+      "w": 1440,
+      "x": 0,
+      "y": 11024
+    },
+    "Illustraties.dc.html": {
+      "h": 2440,
+      "title": "Illustraties",
+      "w": 1440,
+      "x": 1520,
+      "y": 26264
+    },
+    "Legal.dc.html": {
+      "h": 3324,
+      "is_interactive": true,
+      "title": "Privacy & voorwaarden",
+      "w": 1440,
+      "x": 25840,
+      "y": 11024
+    },
+    "Login.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Inloggen",
+      "w": 1440,
+      "x": 0,
+      "y": 6760
+    },
+    "Logo.dc.html": {
+      "h": 1720,
+      "title": "Logo & gebruik",
+      "w": 1440,
+      "x": 0,
+      "y": 26264
+    },
+    "Maatbalk.dc.html": {
+      "h": 80,
+      "title": "Onderdeel · Bereikbalk voor maten",
+      "w": 552,
+      "x": 21910,
+      "y": 160
+    },
+    "Main.dc.html": {
+      "h": 4653,
+      "is_interactive": true,
+      "title": "Home",
+      "w": 1407,
+      "x": 0,
+      "y": -17
+    },
+    "MeasurementGuide.dc.html": {
+      "h": 2760,
+      "is_interactive": true,
+      "title": "Meetgids",
+      "w": 1440,
+      "x": 1520,
+      "y": 11024
+    },
+    "PainDetail.dc.html": {
+      "h": 3200,
+      "is_interactive": true,
+      "title": "Klacht · detail",
+      "w": 1440,
+      "x": 6080,
+      "y": 11024
+    },
+    "PainIndex.dc.html": {
+      "h": 2880,
+      "is_interactive": true,
+      "title": "Klachten · overzicht",
+      "w": 1440,
+      "x": 4560,
+      "y": 11024
+    },
+    "PowerSpeed.dc.html": {
+      "h": 1800,
+      "is_interactive": true,
+      "title": "Configurator · Vermogen ↔ snelheid",
+      "w": 1420,
+      "x": 13824,
+      "y": 0
+    },
+    "PressureDashboard.dc.html": {
+      "h": 2244,
+      "is_interactive": true,
+      "title": "Account · bandenspanning",
+      "w": 1440,
+      "x": 24320,
+      "y": 6760
+    },
+    "PressureLanding.dc.html": {
+      "h": 3080,
+      "is_interactive": true,
+      "title": "Bandenspanning · SEO-pagina",
+      "w": 1440,
+      "x": 27360,
+      "y": 11024
+    },
+    "Pricing.dc.html": {
+      "h": 6177,
+      "title": "Prijzen",
+      "w": 1387,
+      "x": 1800,
+      "y": -17
+    },
+    "Profile.dc.html": {
+      "h": 2664,
+      "is_interactive": true,
+      "title": "Profiel",
+      "w": 1440,
+      "x": 3040,
+      "y": 6760
+    },
+    "ProfileImprove.dc.html": {
+      "h": 1764,
+      "is_interactive": true,
+      "title": "Profiel verbeteren",
+      "w": 1440,
+      "x": 4560,
+      "y": 6760
+    },
+    "RP1PublicSaddle.dc.html": {
+      "h": 1784,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "1 · Publieke zadelhoogte met uitnodiging",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "RP2LoginHandoff.dc.html": {
+      "h": 1004,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "2 · Account aanmaken, gegevens liggen klaar",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "RP3Welcome.dc.html": {
+      "h": 1544,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "3 · Welkom: dit nemen we mee",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "RP4Dashboard.dc.html": {
+      "h": 1860,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "4 · Dashboard met scores en vragenkaart",
+      "w": 1440,
+      "x": 0,
+      "y": 2200
+    },
+    "RP5Profile.dc.html": {
+      "h": 2224,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "5 · Mijn profiel: volledigheid en herkomst",
+      "w": 1440,
+      "x": 1520,
+      "y": 2200
+    },
+    "RP6SaddleAccount.dc.html": {
+      "h": 1924,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "6 · Zadelhoogte vanuit het profiel",
+      "w": 1440,
+      "x": 3040,
+      "y": 2200
+    },
+    "RP7Advice.dc.html": {
+      "h": 2640,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "7 · Mijn adviezen, gegroepeerd",
+      "w": 1440,
+      "x": 4560,
+      "y": 2200
+    },
+    "RP8Bike.dc.html": {
+      "h": 2310,
+      "is_interactive": true,
+      "page": "riderprofiel",
+      "title": "8 · Fietsprofiel met volledigheid",
+      "w": 1440,
+      "x": 6080,
+      "y": 2200
+    },
+    "RPSidebar.dc.html": {
+      "h": 1400,
+      "page": "riderprofiel",
+      "title": "Component · zijbalk met profielscores",
+      "w": 264,
+      "x": 7600,
+      "y": 2200
+    },
+    "SaddleHeight.dc.html": {
+      "h": 2246,
+      "is_interactive": true,
+      "title": "Configurator · Zadelhoogte",
+      "w": 1387,
+      "x": 4730,
+      "y": -17
+    },
+    "SaddleSelector.dc.html": {
+      "h": 2944,
+      "is_interactive": true,
+      "title": "Zadelkiezer",
+      "w": 1440,
+      "x": 27360,
+      "y": 6760
+    },
+    "SaddleWidth.dc.html": {
+      "h": 1805,
+      "is_interactive": true,
+      "title": "Configurator · Zadelbreedte",
+      "w": 1387,
+      "x": 10589,
+      "y": -17
+    },
+    "ScienceArticle.dc.html": {
+      "h": 2180,
+      "is_interactive": true,
+      "title": "Wetenschap",
+      "w": 1440,
+      "x": 18240,
+      "y": 11024
+    },
+    "Settings.dc.html": {
+      "h": 1804,
+      "is_interactive": true,
+      "title": "Instellingen",
+      "w": 1440,
+      "x": 30400,
+      "y": 6760
+    },
+    "ShoeCleatFit.dc.html": {
+      "h": 1320,
+      "is_interactive": true,
+      "title": "Schoen & cleat",
+      "w": 1440,
+      "x": 28880,
+      "y": 6760
+    },
+    "TirePressure.dc.html": {
+      "h": 2005,
+      "is_interactive": true,
+      "title": "Configurator · Bandenspanning",
+      "w": 1387,
+      "x": 7659,
+      "y": -17
+    },
+    "Vertrekmelding.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "Vertrekmelding · desktop",
+      "w": 1420,
+      "x": 22540,
+      "y": 0
+    },
+    "WhyBikeFit.dc.html": {
+      "h": 2640,
+      "is_interactive": true,
+      "title": "Waarom bikefit",
+      "w": 1440,
+      "x": 7600,
+      "y": 11024
+    },
+    "afsluiten/Account.dc.html": {
+      "h": 820,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Desktop · 2 · Account",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "afsluiten/Bevestig.dc.html": {
+      "h": 860,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Desktop · 3 · Controleer en betaal",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "afsluiten/Gelukt.dc.html": {
+      "h": 920,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Desktop · Betaling gelukt",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "afsluiten/Kies.dc.html": {
+      "h": 1440,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Desktop · 1 · Kies je meting",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "afsluiten/Mislukt.dc.html": {
+      "h": 820,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Desktop · Betaling niet afgerond",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "afsluiten/m/Bevestig.dc.html": {
+      "h": 820,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Mobiel · 3 · Controleer en betaal",
+      "w": 390,
+      "x": 470,
+      "y": 1660
+    },
+    "afsluiten/m/Gelukt.dc.html": {
+      "h": 840,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Mobiel · Betaling gelukt",
+      "w": 390,
+      "x": 940,
+      "y": 1660
+    },
+    "afsluiten/m/Kies.dc.html": {
+      "h": 1400,
+      "is_interactive": true,
+      "page": "afsluiten",
+      "title": "Mobiel · 1 · Kies je meting",
+      "w": 390,
+      "x": 0,
+      "y": 1660
+    },
+    "m/BikeFit.dc.html": {
+      "h": 2920,
+      "is_interactive": true,
+      "title": "Mobiel · Bike fit",
+      "w": 390,
+      "x": 940,
+      "y": 18264
+    },
+    "m/Dashboard.dc.html": {
+      "h": 4960,
+      "is_interactive": true,
+      "title": "Mobiel · Dashboard",
+      "w": 390,
+      "x": 1880,
+      "y": 18264
+    },
+    "m/FitResults.dc.html": {
+      "h": 3540,
+      "is_interactive": true,
+      "title": "Mobiel · Fit resultaten",
+      "w": 390,
+      "x": 2350,
+      "y": 18264
+    },
+    "m/Home.dc.html": {
+      "h": 7400,
+      "is_interactive": true,
+      "title": "Mobiel · Home",
+      "w": 390,
+      "x": 0,
+      "y": 18264
+    },
+    "m/Login.dc.html": {
+      "h": 1200,
+      "is_interactive": true,
+      "title": "Mobiel · Inloggen",
+      "w": 390,
+      "x": 1410,
+      "y": 18264
+    },
+    "m/SaddleHeight.dc.html": {
+      "h": 3600,
+      "is_interactive": true,
+      "title": "Mobiel · Zadelhoogte",
+      "w": 390,
+      "x": 470,
+      "y": 18264
+    },
+    "mail/Bouwstenen.dc.html": {
+      "h": 1180,
+      "page": "emails",
+      "title": "E-mail · bouwstenen",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "mail/M01Inlogcode.dc.html": {
+      "h": 760,
+      "page": "emails",
+      "title": "Mail 1 · Inlogcode",
+      "w": 680,
+      "x": 0,
+      "y": 1580
+    },
+    "mail/M02Resultaten.dc.html": {
+      "h": 1260,
+      "page": "emails",
+      "title": "Mail 2 · Resultaten-samenvatting",
+      "w": 680,
+      "x": 760,
+      "y": 1580
+    },
+    "mail/M03Fitrapport.dc.html": {
+      "h": 1640,
+      "page": "emails",
+      "title": "Mail 3 · Fitrapport per e-mail",
+      "w": 680,
+      "x": 1520,
+      "y": 1580
+    },
+    "mail/M04FitPass.dc.html": {
+      "h": 1340,
+      "page": "emails",
+      "title": "Mail 4 · Aankoopbevestiging losse meting",
+      "w": 680,
+      "x": 2280,
+      "y": 1580
+    },
+    "mail/M06CaseStudy.dc.html": {
+      "h": 1020,
+      "page": "emails",
+      "title": "Mail 6 · Case study bevestiging",
+      "w": 680,
+      "x": 3040,
+      "y": 1580
+    },
+    "mail/M07FitHerinnering.dc.html": {
+      "h": 1200,
+      "page": "emails",
+      "title": "Mail 7 · Fit-herinnering",
+      "w": 680,
+      "x": 760,
+      "y": 3640
+    },
+    "mail/M08Upgrade.dc.html": {
+      "h": 1280,
+      "page": "emails",
+      "title": "Mail 8 · Aanbod na afloop",
+      "w": 680,
+      "x": 3040,
+      "y": 3640
+    },
+    "mail/M09Winback.dc.html": {
+      "h": 1100,
+      "page": "emails",
+      "title": "Mail 9 · Win-back",
+      "w": 680,
+      "x": 3800,
+      "y": 3640
+    },
+    "mail/M10ProUitleg.dc.html": {
+      "h": 1400,
+      "page": "emails",
+      "title": "Mail 10 · Verlengingsherinnering",
+      "w": 680,
+      "x": 4560,
+      "y": 3640
+    },
+    "mail/M11Cadeau.dc.html": {
+      "h": 1180,
+      "page": "emails",
+      "title": "Mail 11 · Cadeau ontvangen",
+      "w": 680,
+      "x": 5320,
+      "y": 3640
+    },
+    "mail/M12Evaluatie.dc.html": {
+      "h": 1360,
+      "page": "emails",
+      "title": "Mail 12 · Evaluatie en review",
+      "w": 680,
+      "x": 6080,
+      "y": 3640
+    },
+    "mail/M13Overgang.dc.html": {
+      "h": 1460,
+      "page": "emails",
+      "title": "Mail 13 · Aankondiging nieuwe prijzen",
+      "w": 680,
+      "x": 6840,
+      "y": 3640
+    },
+    "mail/N01Dag1Tips.dc.html": {
+      "h": 2000,
+      "page": "emails",
+      "title": "Nieuw · Dag 1 · Tips en app",
+      "w": 680,
+      "x": 0,
+      "y": 3640
+    },
+    "mail/N07Dag7.dc.html": {
+      "h": 1040,
+      "page": "emails",
+      "title": "Nieuw · Dag 7 · Check-in",
+      "w": 680,
+      "x": 1520,
+      "y": 3640
+    },
+    "mail/N14Dag14.dc.html": {
+      "h": 1140,
+      "page": "emails",
+      "title": "Nieuw · Dag 14 · Evaluatie",
+      "w": 680,
+      "x": 2280,
+      "y": 3640
+    },
+    "merk/BikeFitBoostLogos.dc.html": {
+      "h": 1960,
+      "page": "bikefitboost",
+      "title": "BikeFitBoost · logovoorstellen",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "merk/BikeFitBoostLogos2.dc.html": {
+      "h": 1960,
+      "page": "bikefitboost",
+      "title": "BikeFitBoost · ronde 2: de fiets in beweging",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "merk/BikeFitBoostLogos3.dc.html": {
+      "h": 2480,
+      "page": "bikefitboost",
+      "title": "BikeFitBoost · ronde 3: snelheid als raket",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "merk/BikeFitBoostLogos4.dc.html": {
+      "h": 2480,
+      "page": "bikefitboost",
+      "title": "BikeFitBoost · ronde 4: lancering",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-29T10:20:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "account": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Achter de login",
+      "w": 240,
+      "x": 0,
+      "y": 6460
+    },
+    "afsluiten-desktop": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "afsluiten",
+      "text": "Afsluiten zonder afleiding · desktop",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "afsluiten-mobiel": {
+      "kind": "title1",
+      "maxW": 1330,
+      "page": "afsluiten",
+      "text": "Afsluiten · mobiel",
+      "w": 240,
+      "x": 0,
+      "y": 1360
+    },
+    "afsluiten-uitgangspunt": {
+      "fill": "teal",
+      "maxH": 560,
+      "page": "afsluiten",
+      "size": 24,
+      "text": "Uitgangspunten\n• Geen hoofdmenu, geen footer, geen andere aanbiedingen\n• Maximaal 3 voordelen, in de samenvattingskaart\n• Eén primaire actie per scherm\n• Prijs inclusief btw altijd zichtbaar\n• Herroepingsvinkje verplicht vóór betalen\n• Betalen zelf gebeurt bij Stripe (niet ontworpen)\n\nDrie keuzes: jaarabonnement (favoriete keuze), losse meting €13,50, jaar + persoonlijke bikefit €234,50.\n\nIngang: knoppen op Prijzen en onder het gratis fitresultaat.",
+      "w": 420,
+      "x": 1490,
+      "y": 1660
+    },
+    "brand": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Merk",
+      "w": 240,
+      "x": 0,
+      "y": 25964
+    },
+    "configs": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Configurators",
+      "w": 240,
+      "x": 3264,
+      "y": -318
+    },
+    "content": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Content & SEO",
+      "w": 240,
+      "x": 0,
+      "y": 10724
+    },
+    "mails-rij0": {
+      "kind": "title1",
+      "maxW": 3720,
+      "page": "emails",
+      "text": "Account & resultaat",
+      "w": 240,
+      "x": 0,
+      "y": 1280
+    },
+    "mails-rij1": {
+      "kind": "title1",
+      "maxW": 7520,
+      "page": "emails",
+      "text": "Onboarding & herinneringen",
+      "w": 240,
+      "x": 0,
+      "y": 3340
+    },
+    "mobile": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "Mobiel",
+      "w": 240,
+      "x": 0,
+      "y": 17964
+    },
+    "pages": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Pagina's",
+      "w": 240,
+      "x": 0,
+      "y": -318
+    },
+    "rapport": {
+      "kind": "title1",
+      "maxW": 5164,
+      "page": "rapport",
+      "text": "Fitrapport · A4, 6 pagina's",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "rp-rij0": {
+      "kind": "title1",
+      "maxW": 4480,
+      "page": "riderprofiel",
+      "text": "Van publieke calculator naar account",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "rp-rij1": {
+      "kind": "title1",
+      "maxW": 7864,
+      "page": "riderprofiel",
+      "text": "Achter de login: het riderprofiel als hart",
+      "w": 240,
+      "x": 0,
+      "y": 1900
+    },
+    "usability-okt": {
+      "fill": "green",
+      "maxH": 1140,
+      "size": 24,
+      "text": "Usability-ronde 6 oktober, op basis van de betrouwbaarheidsrelease\n\n• Alle publieke calculators gebruiken één sjabloon (Onderdeel · calculatorsjabloon) met de bereikbalk: 2 stappen, ± per uitkomst, 'Gebaseerd op', één nauwkeuriger-stap.\n• Twee routes: Mijn houding (5) en Mijn rit (6), met voortgang onder de kop.\n• 'Uit je eerdere invoer' bij hergebruikte waarden; stap 2 is dan meteen ingevuld.\n• Onder elk resultaat: 'Zo wordt je advies preciezer' — Nu → Gratis account → Betaald, met je eigen ± en een balk die smaller wordt. Betaald toont echte voordelen en de prijs (€13,50 of €21,50 per jaar, € 1,79 per maand).\n• Zadelhoogte: Quick fix + volledig advies; homepagewidget met bereikbalk.\n• Prijzen: nieuwe sectie 'Wat betaald je oplevert'; alle prijzen op €21,50.\n• Vertrekmelding: één keer per sessie, niet bij ingelogd.\n\nRonde 2 (6 okt):\n• Betaald op meerdere manieren zichtbaar: 'Betaald ±'-chip bij elk resultaat, ladder met vergrendelde preview van het betaalde advies, vergrendelde 20% in de profielscore, vergrendelde tweede fiets, vergrendeld stappenplan in resultaten, rapport en geschiedenis.\n• Bandenspanning overal hetzelfde onderdeel (voor lime, achter inkt), zoals op 'Meer grip, minder weerstand'.\n• Getallen alleen nog met schuiven; gemeten/geschat staat standaard op de logische keuze.\n• Alle prijzen: €13,50 · €21,50 per jaar · upgrade €9,50 binnen 6 maanden.\n\nRonde 3: uitleg op content-pagina's ingeklapt, mobiele kop overal één regel, voorbeeldwaarden gemarkeerd tot je de schuif aanraakt, klikdoelen en contrast gemeten in beeld (0 fouten op 88 schermen).",
+      "w": 440,
+      "x": 19898,
+      "y": 0
+    }
+  },
+  "order": [
+    "FitRapport1.dc.html",
+    "FitRapport6.dc.html",
+    "FitRapport2.dc.html",
+    "FitRapport5.dc.html",
+    "FitRapport3.dc.html",
+    "FitRapport4.dc.html",
+    "mail/Bouwstenen.dc.html",
+    "mail/M01Inlogcode.dc.html",
+    "mail/M02Resultaten.dc.html",
+    "mail/M03Fitrapport.dc.html",
+    "mail/M04FitPass.dc.html",
+    "mail/M06CaseStudy.dc.html",
+    "mail/N01Dag1Tips.dc.html",
+    "mail/M07FitHerinnering.dc.html",
+    "mail/N07Dag7.dc.html",
+    "mail/N14Dag14.dc.html",
+    "mail/M08Upgrade.dc.html",
+    "mail/M09Winback.dc.html",
+    "mail/M10ProUitleg.dc.html",
+    "RP1PublicSaddle.dc.html",
+    "RP2LoginHandoff.dc.html",
+    "RP3Welcome.dc.html",
+    "RP4Dashboard.dc.html",
+    "RP5Profile.dc.html",
+    "RP6SaddleAccount.dc.html",
+    "RP7Advice.dc.html",
+    "RP8Bike.dc.html",
+    "RPSidebar.dc.html",
+    "mail/M11Cadeau.dc.html",
+    "mail/M12Evaluatie.dc.html",
+    "mail/M13Overgang.dc.html",
+    "afsluiten/Kies.dc.html",
+    "afsluiten/Account.dc.html",
+    "afsluiten/Bevestig.dc.html",
+    "afsluiten/Gelukt.dc.html",
+    "afsluiten/Mislukt.dc.html",
+    "afsluiten/m/Kies.dc.html",
+    "afsluiten/m/Bevestig.dc.html",
+    "afsluiten/m/Gelukt.dc.html",
+    "merk/BikeFitBoostLogos.dc.html",
+    "merk/BikeFitBoostLogos2.dc.html",
+    "merk/BikeFitBoostLogos3.dc.html",
+    "merk/BikeFitBoostLogos4.dc.html",
+    "Main.dc.html",
+    "Pricing.dc.html",
+    "BikeFit.dc.html",
+    "SaddleHeight.dc.html",
+    "FrameSize.dc.html",
+    "TirePressure.dc.html",
+    "CrankLength.dc.html",
+    "SaddleWidth.dc.html",
+    "Gearing.dc.html",
+    "PowerSpeed.dc.html",
+    "ClimbPlanner.dc.html",
+    "FtpWkg.dc.html",
+    "FuelHydration.dc.html",
+    "Login.dc.html",
+    "Dashboard.dc.html",
+    "BikeProfile.dc.html",
+    "History.dc.html",
+    "Profile.dc.html",
+    "ProfileImprove.dc.html",
+    "FitStart.dc.html",
+    "FitQuestionnaire.dc.html",
+    "FitResults.dc.html",
+    "FitMethod.dc.html",
+    "Bikes.dc.html",
+    "BikeAdd.dc.html",
+    "BikeForm.dc.html",
+    "BikeImportMarktplaats.dc.html",
+    "BikeImportPassport.dc.html",
+    "BikeCompare.dc.html",
+    "PressureDashboard.dc.html",
+    "GearingDashboard.dc.html",
+    "SaddleSelector.dc.html",
+    "ShoeCleatFit.dc.html",
+    "Settings.dc.html",
+    "Cadeau.dc.html",
+    "CadeauOntvangen.dc.html",
+    "Feedback.dc.html",
+    "AppInstall.dc.html",
+    "HowItWorks.dc.html",
+    "MeasurementGuide.dc.html",
+    "FitPass.dc.html",
+    "PainIndex.dc.html",
+    "PainDetail.dc.html",
+    "WhyBikeFit.dc.html",
+    "BikeFittingLanding.dc.html",
+    "BikeSetup.dc.html",
+    "Guides.dc.html",
+    "GuideDetail.dc.html",
+    "BlogIndex.dc.html",
+    "BlogArticle.dc.html",
+    "ScienceArticle.dc.html",
+    "About.dc.html",
+    "FAQ.dc.html",
+    "Contact.dc.html",
+    "CaseStudy.dc.html",
+    "Legal.dc.html",
+    "PressureLanding.dc.html",
+    "FitReport.dc.html",
+    "m/Home.dc.html",
+    "m/SaddleHeight.dc.html",
+    "m/BikeFit.dc.html",
+    "m/Login.dc.html",
+    "m/Dashboard.dc.html",
+    "m/FitResults.dc.html",
+    "Logo.dc.html",
+    "Illustraties.dc.html",
+    "Calculator.dc.html",
+    "Bereikbalk.dc.html",
+    "Maatbalk.dc.html",
+    "Vertrekmelding.dc.html",
+    "Bandenspanning.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "website",
+      "name": "Website"
+    },
+    {
+      "id": "rapport",
+      "name": "Fitrapport (PDF)"
+    },
+    {
+      "id": "emails",
+      "name": "E-mails"
+    },
+    {
+      "id": "riderprofiel",
+      "name": "Riderprofiel-reis"
+    },
+    {
+      "id": "afsluiten",
+      "name": "Abonnement afsluiten"
+    },
+    {
+      "id": "bikefitboost",
+      "name": "BikeFitBoost (verkenning)"
+    }
+  ],
+  "title": "BikeFitBoost redesign"
+}

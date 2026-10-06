@@ -8,11 +8,15 @@ type HomeSaddleWidgetCopy = {
   basis: string;
   refine: string;
   nextStep: string;
+  example: string;
+  exampleLine: string;
 };
 
 export const homeSaddleWidget: Record<Locale, HomeSaddleWidgetCopy> = {
   nl: {
     try: "Schuif naar jouw maat",
+    example: "voorbeeld",
+    exampleLine: "Voorbeeld voor iemand van {height} cm · schuif naar jouw maat",
     title: "Startpunt voor je zadel",
     height: "Lengte",
     heightHelp: "Je lichaamslengte zonder schoenen. We schatten je binnenbeenlengte op basis van je lengte.",
@@ -22,6 +26,8 @@ export const homeSaddleWidget: Record<Locale, HomeSaddleWidgetCopy> = {
   },
   en: {
     try: "Slide to your size",
+    example: "example",
+    exampleLine: "Example for someone who is {height} cm · slide to your size",
     title: "Your saddle starting point",
     height: "Height",
     heightHelp: "Your body height without shoes. We estimate your inseam from your height.",

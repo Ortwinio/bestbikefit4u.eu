@@ -19,6 +19,21 @@ function seed(method: "measured" | "declared" = "measured", inseam = 89) {
 }
 
 describe("Public body calculator integration", () => {
+  it.each(["nl", "en"] as const)("describes the frame-size height/category basis in %s with or without measured inseam", locale => {
+    const copy = reliabilityBodyMessages[locale];
+    const initial = render(<PublicBodyReliabilityCalculator calculator="frame-size" locale={locale} />);
+    const initialRow = initial.container.querySelector('[data-reliability-result="frameSize"]')!;
+    expect(initialRow.textContent).toContain(copy.frameSizeBasis);
+    expect(initialRow.textContent).not.toContain(copy.derived);
+    initial.unmount();
+    seed();
+    const reused = render(<PublicBodyReliabilityCalculator calculator="frame-size" locale={locale} />);
+    const reusedRow = reused.container.querySelector('[data-reliability-result="frameSize"]')!;
+    expect(reusedRow.textContent).toContain(copy.frameSizeBasis);
+    expect(reusedRow.textContent).not.toContain(copy.measured);
+    expect(reusedRow.textContent).not.toContain(copy.declared);
+  });
+
   it.each(["bike-fit", "frame-size", "crank-length"] as const)("reuses measured height/inseam in %s", calculator => {
     seed();
     render(<PublicBodyReliabilityCalculator calculator={calculator} locale="nl" />);
@@ -56,6 +71,9 @@ describe("Public body calculator integration", () => {
     fireEvent.click(screen.getByRole("radio", { name: "Gravel" }));
     expect(readHandoff().entries.find(entry => entry.field === "inseamCm")?.method).toBe("declared");
     fireEvent.keyDown(screen.getByRole("slider", { name: "Inseam" }), { key: "ArrowRight" });
+    expect(readHandoff().entries.find(entry => entry.field === "inseamCm")?.method).toBe("estimated");
+    expect(row().textContent).toContain("±49");
+    fireEvent.click(screen.getByRole("radio", { name: "Measured" }));
     expect(readHandoff().entries.find(entry => entry.field === "inseamCm")?.method).toBe("measured");
     expect(row().textContent).toContain("±23");
   });

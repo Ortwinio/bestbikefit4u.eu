@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Bandenspanning</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div role="img" aria-label="{{aria}}" style="width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: {{gap}}px; font-family: Figtree, system-ui, sans-serif; color: #0F2420">
+<sc-if value="{{hasLabel}}" hint-placeholder-val="{{false}}">
+<div style="font-size: {{labelSize}}px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0A7263">{{label}}</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: {{cols}}; gap: {{gap}}px">
+<sc-for list="{{gauges}}" as="gg" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: {{gg.pad}}; border-radius: {{gg.radius}}px; background: {{gg.bg}}; color: {{gg.fg}}; box-sizing: border-box; min-width: 0">
+<div style="align-self: flex-start; font-size: {{gg.titleSize}}px; font-weight: 700">{{gg.label}}</div>
+<svg width="{{gg.w}}" height="{{gg.h}}" viewBox="0 0 220 128" fill="none" aria-hidden="true" style="max-width: 100%; height: auto">
+<path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.track}}" stroke-width="16" stroke-linecap="round"></path>
+<path d="M20 118A90 90 0 0 1 200 118" stroke="{{gg.arc}}" stroke-width="16" stroke-linecap="round" stroke-dasharray="{{gg.dash}}"></path>
+</svg>
+<div style="margin-top: {{gg.lift}}px; font-family: 'DM Mono', monospace; font-size: {{gg.numSize}}px; line-height: 1">{{gg.bar}}</div>
+<div style="font-size: {{gg.unitSize}}px; font-weight: 600; text-align: center">bar · <span style="font-family: 'DM Mono', monospace">{{gg.psi}}</span> psi<br><span style="font-family: Figtree, sans-serif; font-size: {{gg.scaleSize}}px">Schaal <span style="font-family: 'DM Mono', monospace">0–{{gg.maximum}}</span> bar · veilige marge <span style="font-family: 'DM Mono', monospace">{{gg.minimum}}–{{gg.maximum}}</span></span></div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"front":{"editor":"float","default":5.2},"rear":{"editor":"float","default":5.6},"maxBar":{"editor":"float","default":7},"minBar":{"editor":"float","default":4.5},"size":{"editor":"enum","options":["groot","compact"],"default":"groot"},"label":{"editor":"text","default":""},"$preview":{"width":880,"height":300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const num = (v, d) => { const n = Number(v); return isFinite(n) && v !== '' && v !== null && v !== undefined ? n : d; };
+    const front = num(p.front, 5.2), rear = num(p.rear, 5.6);
+    const maxBar = num(p.maxBar, 7) > 0 ? num(p.maxBar, 7) : 7;
+    const minBar = num(p.minBar, 4.5);
+    const big = (p.size ?? 'groot') !== 'compact';
+    const label = p.label ? String(p.label) : '';
+    const fmt = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+    const fmt1 = (v) => (Math.round(v * 10) / 10).toFixed(1).replace('.', ',');
+    // Halve cirkel met straal 90: lengte 282,7
+    const gauge = (name, value, dark) => ({
+      label: name,
+      bar: fmt1(value),
+      psi: Math.round(value * 14.5038),
+      dash: (Math.max(0, Math.min(1, value / maxBar)) * 282.7).toFixed(1) + ' 400',
+      minimum: fmt(minBar), maximum: fmt(maxBar),
+      bg: dark ? '#0F2420' : '#CFF26A',
+      fg: dark ? '#FFFFFF' : '#0F2420',
+      track: dark ? '#2E4C45' : '#B6D94C',
+      arc: dark ? '#CFF26A' : '#0F2420',
+      pad: big ? '28px 24px' : '16px 14px',
+      radius: big ? 28 : 22,
+      titleSize: big ? 16 : 14,
+      w: big ? 300 : 200, h: big ? 170 : 114,
+      lift: big ? -84 : -56,
+      numSize: big ? 64 : 40,
+      unitSize: big ? 16 : 14,
+      scaleSize: big ? 13 : 11
+    });
+    return {
+      gauges: [gauge('Voorband', front, false), gauge('Achterband', rear, true)],
+      cols: big ? 'repeat(2, minmax(0, 1fr))' : 'repeat(2, minmax(0, 260px))',
+      gap: big ? 20 : 12,
+      hasLabel: label.length > 0, label: label, labelSize: big ? 14 : 12,
+      aria: (label ? label + ': ' : '') + 'voorband ' + fmt1(front) + ' bar, achterband ' + fmt1(rear) + ' bar, veilige marge ' + fmt(minBar) + ' tot ' + fmt(maxBar) + ' bar'
+    };
+  }
+}
+</script>
+</body>
+</html>

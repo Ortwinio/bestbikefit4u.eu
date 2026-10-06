@@ -231,7 +231,7 @@ describe("welcome handoff review", () => {
     writeHandoffEntry(entry({ field: "heightCm", value: 179 }));
     render(<WelcomeClient />);
     fireEvent.click(screen.getByRole("button", { name: "Adjust: Inseam" }));
-    fireEvent.change(screen.getByRole("spinbutton", { name: "Inseam" }), { target: { value: "82.5" } });
+    fireEvent.change(screen.getByRole("slider", { name: "Inseam" }), { target: { value: "82.5" } });
     fireEvent.click(screen.getByRole("button", { name: "Omit: Body height" }));
     submit();
     await waitFor(() => expect(runtime.save).toHaveBeenCalled());

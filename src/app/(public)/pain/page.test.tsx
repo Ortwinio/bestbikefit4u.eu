@@ -47,7 +47,8 @@ describe("pain marketing routes", () => {
         expect(html).toContain(renderToStaticMarkup(<p>{value}</p>).slice(3, -4));
       }
       expect(html).toContain(renderToStaticMarkup(<p>{painPresentation[locale].support}</p>).slice(3, -4));
-      expect(html.match(/<details/g)).toHaveLength(copy.faqs.length);
+      expect(html.match(/<details/g)?.length).toBeGreaterThan(copy.faqs.length);
+      expect(html).not.toMatch(/<details[^>]*\sopen[\s=>]/);
       for (const faq of copy.faqs) {
         expect(html).toContain(renderToStaticMarkup(<p>{faq.a}</p>).slice(3, -4));
       }

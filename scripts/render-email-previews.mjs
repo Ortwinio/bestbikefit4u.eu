@@ -2,10 +2,10 @@ import { build } from "esbuild";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { tmpdir } from "node:os";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
-const root = process.cwd();
+const root = fileURLToPath(new URL("../", import.meta.url));
 const outputArg = process.argv.find(arg => arg.startsWith("--output="))?.slice("--output=".length)
   ?? process.argv.slice(2).find(arg => !arg.startsWith("--"));
 const output = resolve(root, outputArg ?? process.env.EMAIL_PREVIEW_OUTPUT ?? "artifacts/email-previews");

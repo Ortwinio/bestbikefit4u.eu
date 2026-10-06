@@ -11,6 +11,7 @@ describe("equipment calculator answers", () => {
   it.each(["nl", "en"] as const)("uses actual engine results and exposes all assumptions in %s", locale => {
     const format = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
     const saddle = calculateSaddleWidth(equipmentExamples.saddle);
+    expect(getEquipmentAnswer("saddle-width", locale).answer).not.toMatch(/\d+\s*mm/);
     const gearing = calculateGearing(equipmentExamples.gearing, locale === "nl");
     const pressure = calculateBasicPressure(equipmentExamples.pressure);
     expect(getEquipmentAnswer("saddle-width", locale).example.results.map(row => row.value)).toEqual([

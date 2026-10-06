@@ -11,9 +11,7 @@ import {
   AdjustOrder,
   Button,
   ConfiguratorLayout,
-  Gauge,
   OptionCard,
-  ResultHero,
   Slider,
   StepCard,
 } from "@/components/ui";
@@ -25,6 +23,8 @@ import {
   type TubeType,
 } from "@/lib/pressure-engine";
 import { tirePressureMessages, type TirePressureCopy } from "@/i18n/calculators/tirePressure";
+import { calculatorExamples, calculatorExampleLine } from "@/i18n/calculators/examples";
+import { PressureDisplay } from "./PressureDisplay";
 import type { PressureResultLabels } from "./shared";
 
 export type PressureCalculatorValues = {
@@ -147,6 +147,7 @@ export function PressureCalculatorForm({
   const [bikeWeightKg, setBikeWeightKg] = useState(initialValues?.bikeWeightKg ?? 8);
   const [advanced, setAdvanced] = useState(initialValues?.bikeWeightKg !== undefined);
   const [edited, setEdited] = useState(false);
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<keyof PressureCalculatorValues, boolean>>>({});
   const handoff = usePublicHandoff("tire-pressure", !accountMode);
   const rimCopy = pressureHandoffMessages[locale];
   const [rimType, setRimType] = useState<"hooked" | "hookless" | "">("");
@@ -238,6 +239,7 @@ export function PressureCalculatorForm({
   ) {
     return (value: NonNullable<PressureCalculatorValues[Key]>) => {
       setter(value);
+      setTouchedFields(fields => ({ ...fields, [key]: true }));
       if (key === "bodyWeightKg") handoff.touch("weightKg", value, "kg");
       if (key === "surface") handoff.touch("surface", value, "none", "bike");
       if (key === "discipline") handoff.touch("bikeCategory", value, "none", "bike");
@@ -256,7 +258,20 @@ export function PressureCalculatorForm({
   ];
   const tubeLabels = [labels.tubeTypeInnerTube, labels.tubeTypeLatex, labels.tubeTypeTubeless];
   const goalLabels = [labels.ridingGoalSpeed, labels.ridingGoalBalance, labels.ridingGoalComfort];
-  const resultTitle = accountMode || edited ? copy.result : copy.example;
+  const showExample = !accountMode && !edited && !prefilledFields.length
+    && ![initialValues?.bodyWeightKg, initialValues?.widthFrontMm, initialValues?.widthRearMm,
+      initialValues?.bikeWeightKg].some(value => value !== undefined);
+  const resultTitle = showExample ? copy.example : copy.result;
+  function exampleProps(field: "bodyWeightKg" | "widthFrontMm" | "widthRearMm" | "bikeWeightKg", handoffField: HandoffField) {
+    const untouched = !accountMode && !touchedFields[field] && initialValues?.[field] === undefined
+      && !(field === "widthRearMm" && linked && initialValues?.widthFrontMm !== undefined)
+      && !prefilledFields.includes(handoffField);
+    return untouched ? {
+      "data-example-field": field,
+      helperText: calculatorExamples[locale].label,
+      className: "[&>div>span[aria-hidden=true]]:text-muted-foreground",
+    } : {};
+  }
   const bodyInputs = (
             <div className="space-y-6">
               <Choices
@@ -271,6 +286,7 @@ export function PressureCalculatorForm({
               />
               <Slider
                 label={labels.bodyWeightLabel}
+                {...exampleProps("bodyWeightKg", "weightKg")}
                 value={bodyWeightKg}
                 onChange={update("bodyWeightKg", setBodyWeightKg)}
                 onPointerUp={commitValues}
@@ -288,9 +304,11 @@ export function PressureCalculatorForm({
             <div className="space-y-6">
               <Slider
                 label={labels.widthFrontLabel}
+                {...exampleProps("widthFrontMm", "tireWidthFrontMm")}
                 value={widthFrontMm}
                 onChange={(value) => {
                   setWidthFrontMm(value);
+                  setTouchedFields(fields => ({ ...fields, widthFrontMm: true, ...(linked ? { widthRearMm: true } : {}) }));
                   handoff.touch("tireWidthFrontMm", value, "mm", "bike");
                   if (linked) handoff.touch("tireWidthRearMm", value, "mm", "bike");
                   setEdited(true);
@@ -310,6 +328,7 @@ export function PressureCalculatorForm({
                   if (linked) setManualWidthRearMm(widthFrontMm);
                   setLinked(!linked);
                   if (!linked) {
+                    setTouchedFields(fields => ({ ...fields, widthRearMm: true }));
                     handoff.touch("tireWidthRearMm", widthFrontMm, "mm", "bike");
                     setEdited(true);
                     notifyChange({ widthRearMm: widthFrontMm });
@@ -321,10 +340,12 @@ export function PressureCalculatorForm({
               </Button>
               <Slider
                 label={labels.widthRearLabel}
+                {...exampleProps("widthRearMm", "tireWidthRearMm")}
                 value={widthRearMm}
                 onChange={(value) => {
                   setLinked(false);
                   setManualWidthRearMm(value);
+                  setTouchedFields(fields => ({ ...fields, widthRearMm: true }));
                   handoff.touch("tireWidthRearMm", value, "mm", "bike");
                   setEdited(true);
                   notifyChange({ widthRearMm: value });
@@ -399,6 +420,7 @@ export function PressureCalculatorForm({
                 />
                 <Slider
                   label={labels.bikeWeightLabel}
+                {...exampleProps("bikeWeightKg", "bikeWeightKg")}
                   value={bikeWeightKg}
                   valueLabel={weightNumber.format(bikeWeightKg)}
                   onChange={update("bikeWeightKg", setBikeWeightKg)}
@@ -418,37 +440,12 @@ export function PressureCalculatorForm({
           {result ? (
             <section
               id="pressure-result"
+              data-usability="result-value"
               aria-label={resultTitle}
-              className="rounded-[2rem] bg-[var(--bbf-lime)] p-5 text-[var(--bbf-inkt)] sm:p-7"
+              className="rounded-[2rem] border border-border bg-card p-5 sm:p-7"
             >
-              <h2 className="font-display text-2xl font-bold text-[var(--bbf-inkt)]">{resultTitle}</h2>
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                {[
-                  { label: resultLabels.front, bar: result.frontBar, psi: result.frontPsi },
-                  { label: resultLabels.rear, bar: result.rearBar, psi: result.rearPsi },
-                ].map((wheel) => (
-                  <div key={wheel.label} className="min-w-0">
-                    <ResultHero
-                      label={wheel.label}
-                      value={number.format(wheel.bar)}
-                      unit={resultLabels.bar}
-                      className="p-0 sm:p-0 [&_dd]:text-[clamp(2.5rem,5vw,4.5rem)]"
-                    />
-                    <p className="mt-2 font-mono text-sm">
-                      {wheel.psi} {resultLabels.psi}
-                    </p>
-                    {accountMode && <Gauge
-                      label={`${wheel.label}: ${copy.gauge}`}
-                      value={wheel.bar}
-                      min={DOMAINS[discipline][0]}
-                      max={DOMAINS[discipline][1]}
-                      unit="bar"
-                      locale={locale}
-                      className="mt-3 [--gauge-accent:var(--bbf-petrol)]"
-                    />}
-                  </div>
-                ))}
-              </div>
+              <h2 className="font-display text-2xl font-bold">{resultTitle}</h2>
+              <PressureDisplay {...result} locale={locale} maxBar={DOMAINS[discipline][1]} className="mt-5" />
               {accountMode && <p className="mt-4 text-sm leading-relaxed">{copy.scale}</p>}
               <p role="status" aria-label={copy.summary} className="sr-only">
                 {resultLabels.front}: {number.format(result.frontBar)} bar; {resultLabels.rear}:{" "}
@@ -461,7 +458,7 @@ export function PressureCalculatorForm({
     </>
   );
   const warnings = (
-          <section className="rounded-3xl border border-border bg-card p-6">
+          <section data-usability="safety" className="rounded-3xl border border-border bg-card p-6">
             <h2 className="font-display text-2xl font-bold">{resultLabels.warningsTitle}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy.limit}</p>
             {result && result.warnings.length > 0 && (
@@ -494,6 +491,10 @@ export function PressureCalculatorForm({
           { title: copy.body, content: bodyInputs },
           { title: reliabilityCopy.tiresAndRoute, content: <>{tireInputs}{routeInputs}</> },
         ]}
+        example={showExample && <p data-usability="example" data-calculator-example
+          className="mb-4 rounded-xl bg-muted p-3 text-sm text-muted-foreground">
+          {calculatorExampleLine(locale, [`${bodyWeightKg} kg`, `${widthFrontMm} mm`])}
+        </p>}
         results={<>{pressureResult}<p className="mt-4 text-sm">{reliabilityCopy.uncertainty}</p></>}
         nextStep={copy.steps[0]}
         omitted={<p>{copy.excluded}</p>}

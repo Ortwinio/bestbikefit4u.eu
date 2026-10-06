@@ -1,3 +1,4 @@
+import { ContentDisclosure } from "@/components/calculators/CalculatorAnswerSection";
 import { StackReachFigure } from "@/components/science/StackReachFigure";
 import Link from "next/link";
 import { Button } from "@/components/ui";
@@ -59,7 +60,7 @@ export default async function StackAndReachPage() {
     <PublicPageShell>
       <JsonLd schema={articleJsonLd} />
 
-      <PublicHero
+      <PublicHero answerLocale={locale}
         eyebrow={page.hero.eyebrow}
         title={page.hero.title}
         description={page.hero.description}
@@ -69,38 +70,40 @@ export default async function StackAndReachPage() {
         illustration={<p>{page.hero.caption}</p>}
       />
 
-      <PublicSection
-        header={{
-          eyebrow: page.section.eyebrow,
-          title: page.section.title,
-          description: page.section.description,
-        }}
-      >
-        <StackReachFigure locale={locale} />
-        <div className="grid gap-5 md:grid-cols-2">
-          {page.cards.map((card, index) => {
-            const icon =
-              index === 0 ? (
-                <ArrowUpDown className="h-5 w-5" />
-              ) : index === 1 ? (
-                <MoveHorizontal className="h-5 w-5" />
-              ) : (
-                <Bike className="h-5 w-5" />
+      <ContentDisclosure title={page.section.title}>
+        <PublicSection
+          header={{
+            eyebrow: page.section.eyebrow,
+            title: page.section.title,
+            description: page.section.description,
+          }}
+        >
+          <StackReachFigure locale={locale} />
+          <div className="grid gap-5 md:grid-cols-2">
+            {page.cards.map((card, index) => {
+              const icon =
+                index === 0 ? (
+                  <ArrowUpDown className="h-5 w-5" />
+                ) : index === 1 ? (
+                  <MoveHorizontal className="h-5 w-5" />
+                ) : (
+                  <Bike className="h-5 w-5" />
+                );
+
+              return (
+                <PublicSurfaceCard
+                  key={card.title}
+                  title={card.title}
+                  description={card.description}
+                  leading={icon}
+                />
               );
+            })}
+          </div>
+        </PublicSection>
+      </ContentDisclosure>
 
-            return (
-              <PublicSurfaceCard
-                key={card.title}
-                title={card.title}
-                description={card.description}
-                leading={icon}
-              />
-            );
-          })}
-        </div>
-      </PublicSection>
-
-      <RelatedLinksSection title={page.linksTitle} links={page.links} locale={locale} />
+      <RelatedLinksSection title={page.linksTitle} links={page.links.slice(0, 3)} locale={locale} />
       <EditorialCta
         title={scienceExtras[locale].ctaTitle}
         description={scienceExtras[locale].ctaDescription}

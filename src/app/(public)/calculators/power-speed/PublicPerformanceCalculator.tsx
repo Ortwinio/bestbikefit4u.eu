@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import Link from "next/link";
 import { HandoffPrefillNotice } from "@/components/calculators/HandoffPrefillNotice";
-import { handoffLoginHref } from "@/components/calculators/PersonalizeAdviceBlock";
 import { ReliabilityCalculatorTemplate } from "@/components/reliability/ReliabilityCalculatorTemplate";
 import { Slider } from "@/components/ui";
 import type { Locale } from "@/i18n/config";
 import { performanceMessages } from "@/i18n/calculators/performance";
 import { reliabilityPerformance } from "@/i18n/calculators/reliabilityPerformance";
+import { calculatorExamples, calculatorExampleLine } from "@/i18n/calculators/examples";
 import type { HandoffField } from "@/lib/handoff/store";
 import { ftpEstimate } from "@/lib/public-calculators/performance";
 import { performanceInputRanges, usePerformanceInputs, type PerformanceNumericField, type PublicPerformanceTool } from "./usePerformanceInputs";
@@ -18,6 +17,7 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
   const copy = reliabilityPerformance[locale];
   const input = usePerformanceInputs(tool);
   const [mode, setMode] = useState<"power" | "speed">("power");
+  const [modeEdited, setModeEdited] = useState(false);
   const config = tool === "power-speed" ? copy.speedTool : tool === "climb-planner" ? copy.climbTool
     : tool === "ftp-wkg" ? copy.ftpTool : tool === "gearing" ? copy.gearingTool : copy.fuelTool;
   const format = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
@@ -35,7 +35,8 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
     : tool === "ftp-wkg" || tool === "power-speed" ? input.has("weightKg")
       : tool === "climb-planner" ? input.has("ftpWatts") && input.has("weightKg")
         : input.has("gradientPercent") && input.has("weightKg");
-  const active = activeFields.some(input.has);
+  const exampleValues: string[] = [];
+  const showExample = !modeEdited && Object.keys(input.edits).length === 0 && !activeFields.some(input.has);
   const nextField: PerformanceNumericField = tool === "fuel-hydration" ? "temperatureC"
     : tool === "climb-planner" && !input.has("ftpWatts") ? "ftpWatts"
       : tool === "gearing" && !input.has("gradientPercent") ? "gradientPercent" : "weightKg";
@@ -55,10 +56,13 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
     const range = performanceInputRanges[field];
     const divisor = field === "durationMinutes" ? 60 : 1;
     const value = input.number(field) / divisor;
-    return <div key={field} id={`${tool}-${field}`} className="min-w-0 space-y-2">
+    const isExample = !input.has(field);
+    if (isExample) exampleValues.push(`${label} ${format(value)} ${unit}`);
+    return <div key={field} id={`${tool}-${field}`} className="min-w-0 space-y-2" data-example-field={isExample ? field : undefined}>
+      {isExample && <span data-usability="example-label" className="inline-block rounded-full bg-muted px-2 py-1 text-xs font-semibold text-muted-foreground">{calculatorExamples[locale].label}</span>}
       <Slider label={label} min={range.min / divisor} max={range.max / divisor} step={range.step / divisor}
+        className={isExample ? "[&>div>span[aria-hidden=true]]:text-muted-foreground" : undefined}
         value={value} valueLabel={format(value)} unit={unit}
-        helperText={!input.has(field) && !optional ? copy.exampleValue : undefined}
         aria-valuetext={`${format(value)} ${unit}${optional && !input.has(field) ? ` · ${copy.pending}` : ""}`}
         onChange={(next) => changeNumber(field, next * divisor)} />
       {optional && !input.has(field) && <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -83,7 +87,10 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
   let first: ReactNode;
   let second: ReactNode;
   if (tool === "power-speed") {
-    first = <>{choices(copy.speed, { power: copy.powerMode, speed: copy.speedMode }, mode, (value) => setMode(value as "power" | "speed"))}
+    first = <>{choices(copy.speed, { power: copy.powerMode, speed: copy.speedMode }, mode, (value) => {
+      setMode(value as "power" | "speed");
+      setModeEdited(true);
+    })}
       {mode === "power" ? slider("powerWatts", copy.power, "W") : slider("speedKph", copy.speed, copy.kmh)}</>;
     second = <>{slider("weightKg", copy.weight, "kg", true)}
       {choices(copy.bike, copy.bikes, bike, (value) => input.change("bikeCategory", value))}</>;
@@ -106,8 +113,8 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
   return <ReliabilityCalculatorTemplate locale={locale} calculator={tool}
     title={tool === "gearing" ? copy.gearingTool.title : performanceMessages[locale].titles[tool]}
     description={config.intro}
-    notice={<><HandoffPrefillNotice calculator={tool} locale={locale} fields={prefilledFields} />
-      {!active && <p className="text-sm text-muted-foreground">{copy.example}</p>}</>}
+    notice={<HandoffPrefillNotice calculator={tool} locale={locale} fields={prefilledFields} />}
+    example={showExample && exampleValues.length > 0 && <p data-usability="example" data-calculator-example className="mb-4 rounded-xl bg-muted p-3 text-sm text-muted-foreground">{calculatorExampleLine(locale, exampleValues)}</p>}
     steps={[
       { title: `1. ${config.steps[0]}`, content: first },
       { title: `2. ${config.steps[1]}`, content: second, status: completed ? copy.entered : copy.pending },
@@ -115,7 +122,7 @@ export function PublicPerformanceCalculator({ tool, locale }: { tool: PublicPerf
     results={<PerformanceReliabilityResults tool={tool} locale={locale} mode={mode} method={method}
       bike={bike} intensity={intensity} number={input.number} has={input.has} />}
     nextStep={completed
-      ? <Link href={handoffLoginHref(tool, locale)} className="underline underline-offset-4">{config.nextAccount}</Link>
+      ? null
       : <button type="button" className="min-h-11 text-left underline underline-offset-4"
         onClick={() => document.getElementById(`${tool}-${nextField}`)?.querySelector<HTMLElement>('[role="slider"], input[type="range"]')?.focus()}>{config.next}</button>}
     meaning={copy.meaning} omitted={tool === "gearing" && input.has("ftpWatts") ? copy.gearingTool.knownOmitted : config.omitted}

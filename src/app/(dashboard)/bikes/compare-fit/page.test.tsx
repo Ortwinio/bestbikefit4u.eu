@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { getBikesCopy } from "@/i18n/account/bikes";
 import CompareBikeFitPage from "./page";
 
+vi.mock("convex/react", () => ({ useQuery: () => undefined }));
+
 let locale: "nl" | "en" = "en";
 
 vi.mock("@/i18n/useDashboardMessages", () => ({

@@ -1,5 +1,12 @@
 import type { Locale } from "@/i18n/config";
 
+export const whySafety = {
+  nl: { title: "Een startpunt, geen diagnose", body: "Blijf niet doorrijden op een houding die pijn doet.",
+    action: "Bekijk hulp bij klachten" },
+  en: { title: "A starting point, not a diagnosis", body: "Do not keep riding in a position that causes pain.",
+    action: "Find help with discomfort" },
+} satisfies Record<Locale, { title: string; body: string; action: string }>;
+
 type BenefitBlock = {
   title: string;
   paragraphs: readonly string[];

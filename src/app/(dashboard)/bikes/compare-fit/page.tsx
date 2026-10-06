@@ -1,6 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
+import { isPaidAccessEnforced } from "../../../../../shared/pricing/flags";
+import { PaidBoundary } from "@/components/billing/PaidBoundary";
 import { ArrowRight, Bike, Ruler } from "lucide-react";
 import { Button, Card, CardContent } from "@/components/ui";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -10,6 +14,7 @@ import { getBikesCopy } from "@/i18n/account/bikes";
 export default function CompareBikeFitPage() {
   const { locale } = useDashboardMessages();
   const copy = getBikesCopy(locale);
+  const access = useQuery(api.pricing.queries.getAccess, isPaidAccessEnforced() ? {} : "skip");
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <header className="space-y-3">
@@ -17,6 +22,7 @@ export default function CompareBikeFitPage() {
         <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{copy.compare}</h1>
         <p className="max-w-2xl text-muted-foreground">{copy.compareIntro}</p>
       </header>
+      {access?.enforced && access.maxBikes === 1 && <PaidBoundary locale={locale} boundary="compare" />}
       <Card variant="bordered" className="overflow-hidden">
         <CardContent className="grid gap-8 p-6 md:p-8 lg:grid-cols-[1fr_2fr] lg:items-center">
           <div className="flex min-h-44 items-center justify-center rounded-3xl bg-primary-soft text-primary">

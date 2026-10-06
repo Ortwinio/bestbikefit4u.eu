@@ -4,6 +4,7 @@ import { getFitResultsCopy } from "@/i18n/account/fitResults";
 import type { ReportV2Copy } from "@/lib/reports/reportV2Copy";
 import type { ReportV2Payload } from "@/lib/reports/reportV2Types";
 import { FitResultsValue, formatFitResultsNumber } from "./FitResultsValue";
+import { getUsabilityPaidCopy } from "@/i18n/account/usabilityPaid";
 import { reportAccessCopy } from "@/i18n/account/reportAccess";
 
 type FitResultsOverviewProps = {
@@ -71,7 +72,17 @@ export function FitResultsOverview({
           {report.prioritySummary.slice(0, 4).map((row, index) => <li key={row.key} className="flex flex-wrap items-center gap-3 py-4">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--bbf-lime)] font-mono text-[var(--bbf-inkt)]">{formatFitResultsNumber(index + 1, locale)}</span>
             <div className="min-w-0 flex-1 basis-36"><h3 className="font-bold">{copy.parameters[row.key].label}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy.parameters[row.key].measurementReference}</p></div>
-            <p className="text-xl font-semibold"><FitResultsValue value={row.targetLabel} locale={locale} /></p>
+            <div className="space-y-1 text-right">
+              <p className="text-xl font-semibold"><FitResultsValue value={row.targetLabel} locale={locale} /></p>
+              {hasPaidAccess && showAccessLabel && (() => {
+                const range = report.detailedFit.find(detail => detail.key === row.key)?.reliability95;
+                return range && range.kind === "continuous" ? <span data-usability="paid-presentation"
+                  data-presentation="range-chip"
+                  className="inline-flex rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
+                  {getUsabilityPaidCopy(locale).paid} ± {formatFitResultsNumber(range.halfWidth, locale)} mm
+                </span> : null;
+              })()}
+            </div>
           </li>)}
         </ol>
       </Card>

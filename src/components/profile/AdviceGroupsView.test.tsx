@@ -187,3 +187,16 @@ it.each(["__proto__", "constructor", "future_reason"])("handles an untrusted rel
   expect(screen.getByText(getAdviceCopy("nl").reliability.unknown)).toBeTruthy();
   expect(screen.queryByText(reason)).toBeNull();
 });
+
+it.each(["nl", "en"] as const)("pairs pressure only from the same saved record and bike (%s)", locale => {
+  const front = item({ id: "front", key: "pressureFrontBar", value: 5.2, unit: "bar", range: null });
+  const rear = item({ id: "rear", key: "pressureRearBar", value: 5.6, unit: "bar", range: null });
+  const view = render(<AdviceGroupsView groups={groups([front, rear])} locale={locale} bikes={bikes} />);
+  expect(view.container.querySelectorAll('[data-component="PressureDisplay"]')).toHaveLength(1);
+  expect(view.container.querySelector(".pressure-wheel-front")?.textContent).toContain("75 psi");
+  expect(view.container.querySelector('[data-component="PressureDisplay"]')?.parentElement?.parentElement?.className)
+    .toContain("col-span-full");
+  view.rerender(<AdviceGroupsView groups={groups([front, { ...rear, recordId: "different" }])}
+    locale={locale} bikes={bikes} />);
+  expect(view.container.querySelector('[data-component="PressureDisplay"]')).toBeNull();
+});

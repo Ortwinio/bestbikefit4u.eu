@@ -21,10 +21,10 @@ export const performanceAnswerMessages = {
         "Een asfaltinstelling gebruiken voor een gravelroute."],
     },
     "climb-planner": {
-      answer: "Plan een klim met afstand, gemiddelde helling, FTP, gewicht en fietstype. De calculator geeft " +
-        "een richtvermogen en geschatte klimtijd. Gebruik die als startpunt voor je tempo.",
+      answer: "Plan een klim met afstand, gemiddelde helling, FTP en gewicht. De calculator schat de klimtijd " +
+        "en toont de gebruikte inspanning als percentage van je FTP. Gebruik die als startpunt voor je tempo.",
       method: "De klimafstand bepaalt de duurcategorie. Het model kiest daaruit een factor voor je FTP " +
-        "en rekent met het richtvermogen terug naar snelheid en tijd. Het fietstype levert het standaard fietsgewicht.",
+        "en rekent met het richtvermogen terug naar snelheid en tijd. Deze calculator neemt een racefiets van 8,5 kg aan.",
       limits: "Een gemiddelde helling verbergt steile stukken. Wind, wegdek, vermoeidheid en een onjuiste FTP " +
         "maken de tijd minder betrouwbaar. De duurcategorie is een modelregel, geen meting van je belastbaarheid.",
       mistakes: ["De afstand van de hele route gebruiken in plaats van de klimafstand.",
@@ -44,10 +44,10 @@ export const performanceAnswerMessages = {
     },
     "fuel-hydration": {
       answer: "Plan eten en drinken op basis van je ritduur. De calculator geeft een koolhydraatadvies " +
-        "en een vochtbandbreedte. Temperatuur en je gekozen zweetprofiel plaatsen een richtpunt binnen die band.",
-      method: "De ritduur kiest de koolhydraatcategorie. De vochtband wordt vermenigvuldigd met de ritduur " +
-        "en omgerekend naar je bidoninhoud. Bij langere ritten toont het model ook natriumconcentratie.",
-      limits: "Het zweetprofiel is je inschatting, geen zweetmeting. Het richtpunt is een modelregel. " +
+        "en een bandbreedte voor vochtverlies. Inspanning en temperatuur bepalen de geschatte hoeveelheid per uur.",
+      method: "De ritduur kiest de koolhydraatcategorie in gram per uur. Inspanning en temperatuur bepalen " +
+        "het geschatte vochtverlies in milliliter per uur. Zonder eigen temperatuur neemt het model 20 °C aan.",
+      limits: "Het vochtverlies is een modelschatting, geen zweetmeting. Persoonlijke verschillen blijven onzeker. " +
         "De bandbreedte is geen verplicht drinkdoel; pas je plan aan je ervaring en omstandigheden aan.",
       mistakes: ["Een hoeveelheid per uur verwarren met het totaal voor de rit.",
         "Bidons tellen zonder hun inhoud te controleren.",
@@ -76,10 +76,10 @@ export const performanceAnswerMessages = {
         "Using asphalt settings for a gravel route."],
     },
     "climb-planner": {
-      answer: "Plan a climb using distance, average gradient, FTP, weight and bike type. The calculator " +
-        "provides target power and estimated climbing time. Use them as a starting point for pacing.",
+      answer: "Plan a climb using distance, average gradient, FTP and weight. The calculator estimates " +
+        "climbing time and shows the effort used as a percentage of your FTP. Use them as a starting point for pacing.",
       method: "Climb distance selects a duration category. The model chooses an FTP factor for that category " +
-        "and converts target power into speed and time. Bike type supplies the default bike weight.",
+        "and converts target power into speed and time. This calculator assumes an 8.5 kg road bike.",
       limits: "An average gradient hides steep sections. Wind, surface, fatigue and an inaccurate FTP " +
         "reduce the estimate’s reliability. The duration category is a model rule, not a measurement of your capacity.",
       mistakes: ["Using the whole route distance instead of the climb distance.",
@@ -99,10 +99,10 @@ export const performanceAnswerMessages = {
     },
     "fuel-hydration": {
       answer: "Plan food and drink around ride duration. The calculator provides carbohydrate guidance " +
-        "and a fluid range. Temperature and your chosen sweat profile position a reference point within that range.",
-      method: "Ride duration selects the carbohydrate category. The fluid range is multiplied by duration " +
-        "and converted into bottles using your bottle capacity. For longer rides, the model also shows sodium concentration.",
-      limits: "Your sweat profile is an estimate, not a sweat measurement. The reference point is a model rule. " +
+        "and a fluid-loss range. Effort and temperature determine the estimated hourly amount.",
+      method: "Ride duration selects the carbohydrate category in grams per hour. Effort and temperature determine " +
+        "estimated fluid loss in millilitres per hour. Without your own temperature, the model assumes 20 °C.",
+      limits: "Fluid loss is a model estimate, not a sweat measurement. Individual differences remain uncertain. " +
         "The range is not a compulsory drinking target; adapt your plan to your experience and conditions.",
       mistakes: ["Confusing an hourly amount with the total for the ride.",
         "Counting bottles without checking their capacity.",

@@ -1,7 +1,6 @@
 const nl = {
   saddle: {
-    answer: "Begin bij je zitbotbreedte en rijhouding. In het voorbeeld hieronder geeft de calculator {width} "
-      + "mm als startpunt, met een bereik van {range} mm.",
+    answer: "Begin bij je zitbotbreedte en rijhouding. De calculator geeft een startbreedte en een bereik om op de fiets te testen.",
     method: "De calculator gebruikt je gemeten zitbotbreedte of schat die uit lengte, gewicht en heupomtrek. "
       + "Rijhouding en fietstype passen de steunbreedte aan. Daarna kiest de tool een praktisch "
       + "breedtebereik.",
@@ -19,12 +18,14 @@ const nl = {
     answer: "Je lichtste verzet combineert het kleinste kettingblad met de grootste krans. Met 50/34 voor en "
       + "11–34 achter is de lichtste verhouding {ratio}. Bij {cadence} omwentelingen per minuut rijdt dit "
       + "voorbeeld {speed} km/u.",
-    method: "De verhouding is het aantal tanden voor gedeeld door het aantal tanden achter. Vermenigvuldig die "
-      + "verhouding met de wielomtrek voor de afstand per pedaalomwenteling. Met je cadans volgt daaruit de "
-      + "snelheid.",
-    limits: "De snelheid is een kinematische berekening, geen voorspelling van wat je kunt volhouden. De "
-      + "kliminschatting gebruikt helling, fietstype en klimlengte als vuistregel. Ze berekent niet je "
-      + "benodigde vermogen of persoonlijke belastbaarheid.",
+    method: "Voor de cadansschatting gebruiken we 85% van je eerder ingevulde FTP, of schatten we FTP op "
+      + "3 W/kg als die ontbreekt. Met je gewicht, helling en vaste aannames voor fietsgewicht (9 kg), "
+      + "rolweerstand en luchtweerstand berekenen we een modelsnelheid. De wielomtrek (2,1 m) en het aantal "
+      + "tanden voor gedeeld door achter zetten die snelheid om in cadans. Het rekenvoorbeeld hieronder "
+      + "laat apart zien hoe verzet en een vaste cadans de snelheid bepalen.",
+    limits: "De cadans is een modelschatting, geen voorspelling van wat je kunt volhouden. Zonder eigen "
+      + "invoer nemen we 75 kg en 10% helling aan. Wind, je werkelijke fietsweerstand, vermoeidheid en "
+      + "klimduur worden niet gemeten. Het losse snelheidsvoorbeeld beoordeelt geen persoonlijke belastbaarheid.",
     mistakes: [
       "Banddiameter invullen waar wielomtrek wordt gevraagd.",
       "De lichtste verhouding verwarren met de grootste krans alleen.",
@@ -77,8 +78,7 @@ const nl = {
 type EquipmentCopy = { [K in keyof typeof nl]: { [P in keyof typeof nl[K]]: typeof nl[K][P] } };
 const en: EquipmentCopy = {
   saddle: {
-    answer: "Start with your sit-bone width and riding posture. In the example below, the calculator gives a "
-      + "starting width of {width} mm and a range of {range} mm.",
+    answer: "Start with your sit-bone width and riding posture. The calculator gives a starting width and a range to test on your bike.",
     method: "The calculator uses your measured sit-bone width or estimates it from height, weight and hip "
       + "circumference. Posture and riding type adjust the support width. The tool then selects a practical "
       + "width range.",
@@ -96,11 +96,14 @@ const en: EquipmentCopy = {
     answer: "Your easiest gear pairs the smallest chainring with the largest cassette cog. With 50/34 "
       + "chainrings and an 11–34 cassette, the easiest ratio is {ratio}. At {cadence} rpm, this example gives "
       + "{speed} km/h.",
-    method: "Divide the front tooth count by the rear tooth count to find the ratio. Multiply the ratio by "
-      + "wheel circumference for distance per pedal revolution. Cadence then determines speed.",
-    limits: "Speed is a kinematic calculation, not a prediction of what you can sustain. The climbing verdict "
-      + "uses gradient, bike type and climb length as a rule of thumb. It does not calculate required power "
-      + "or your personal capacity.",
+    method: "To estimate cadence, we use 85% of your previously entered FTP, or estimate FTP at 3 W/kg "
+      + "when it is missing. Your weight, gradient and fixed assumptions for bike weight (9 kg), rolling "
+      + "resistance and aerodynamic drag give a modelled speed. Wheel circumference (2.1 m) and the front "
+      + "tooth count divided by the rear tooth count convert that speed to cadence. The worked example "
+      + "below separately shows how gearing and a fixed cadence determine speed.",
+    limits: "Cadence is a model estimate, not a prediction of what you can sustain. Without your own input, "
+      + "we assume 75 kg and a 10% gradient. Wind, your actual bike resistance, fatigue and climb duration "
+      + "are not measured. The separate speed example does not assess personal capacity.",
     mistakes: [
       "Entering wheel diameter instead of wheel circumference.",
       "Treating the largest cassette cog alone as the easiest gear ratio.",

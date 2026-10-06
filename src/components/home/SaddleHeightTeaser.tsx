@@ -23,6 +23,7 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
   const savedHeight = typeof prefill?.value === "number" && Number.isFinite(prefill.value)
     ? Math.min(220, Math.max(130, Math.round(prefill.value))) : null;
   const height = editedHeight ?? savedHeight ?? 175;
+  const isExample = editedHeight === null && savedHeight === null;
   const { trackHomeSaddleWidgetUsed } = useHomeSaddleWidgetAnalytics(useMarketingEventLogger());
   const copy = homeSaddleWidget[locale];
   const result = calculateSaddleHeight({ heightCm: height });
@@ -46,6 +47,8 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
         <p className={styles.eyebrow}>{copy.try}</p>
         <h2>{copy.title}</h2>
       </div>
+      {isExample && <span className={styles.exampleLabel} data-usability="example-label">{copy.example}</span>}
+      <div className={isExample ? styles.example : undefined}>
       <Slider
         id="home-height" label={copy.height} tooltip={copy.heightHelp} tooltipLabel={copy.height}
         min={130} max={220} step={1} value={height} valueLabel={value} unit="cm"
@@ -55,7 +58,9 @@ export function SaddleHeightTeaser({ locale, onUsed }: { locale: Locale; onUsed?
           used();
         }}
       />
-      <div className={styles.result}>
+      </div>
+      {isExample && <p className={styles.context} data-usability="example">{copy.exampleLine.replace("{height}", value)}</p>}
+      <div className={`${styles.result} ${isExample ? styles.example : ""}`}>
         <output aria-label={copy.title} aria-live="polite" htmlFor="home-height">
           {result.adviceMm}<small> mm · ±{result.halfWidthMm} mm</small>
         </output>

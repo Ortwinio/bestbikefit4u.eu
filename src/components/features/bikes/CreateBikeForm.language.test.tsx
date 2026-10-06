@@ -19,7 +19,7 @@ describe("manual bike form language", () => {
     expect(screen.getByRole("heading", { name: "Versnellingen" })).toBeTruthy();
     for (const label of ["Buitenste kettingblad", "Binnenste kettingblad", "Wielomtrek",
       "Grootste tandwiel voor achterderailleur"]) {
-      expect(screen.getByRole("textbox", { name: label })).toBeTruthy();
+      expect(screen.getByRole("slider", { name: label })).toBeTruthy();
     }
     expect(screen.getByText("Racestuur, geometrie voor lange ritten of wedstrijden")).toBeTruthy();
   });
@@ -27,8 +27,8 @@ describe("manual bike form language", () => {
     state.locale = "en";
     render(<CreateBikeForm />);
     expect(screen.getByRole("heading", { name: "Gearing" })).toBeTruthy();
-    expect(screen.getByRole("textbox", { name: "Front chainring" })).toBeTruthy();
-    expect(screen.getByRole("textbox", { name: "Wheel circumference" })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: "Front chainring" })).toBeTruthy();
+    expect(screen.getByRole("slider", { name: "Wheel circumference" })).toBeTruthy();
   });
 });
 

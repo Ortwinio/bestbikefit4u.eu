@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "convex/react";
+import { PressureDisplay } from "./PressureDisplay";
 import { Bike, PencilLine } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import type { Doc } from "../../../../convex/_generated/dataModel";
 import { getBikeTypeLabel } from "@/lib/bikes";
 import { reportClientError } from "@/lib/telemetry";
 import { useDashboardMessages } from "@/i18n/useDashboardMessages";
-import { Button, Card, CardContent, InfoBox, MeasurementTile, SectionHeader, Textarea, useToast } from "@/components/ui";
+import { Button, Card, CardContent, InfoBox, SectionHeader, Textarea, useToast } from "@/components/ui";
 
 interface BikePressureCardProps {
   bike: Doc<"bikes">;
@@ -124,16 +125,9 @@ export function BikePressureCard({
         </p>
         {latestCalculation ? (
           <>
-            <div className="grid grid-cols-2 gap-3">
-              <MeasurementTile
-                label={messages.pressure.overview.frontPressure}
-                value={`${latestCalculation.recommendedFrontBar} ${messages.pressure.result.bar}`}
-              />
-              <MeasurementTile
-                label={messages.pressure.overview.rearPressure}
-                value={`${latestCalculation.recommendedRearBar} ${messages.pressure.result.bar}`}
-              />
-            </div>
+            <PressureDisplay locale={locale} compact
+              frontBar={latestCalculation.recommendedFrontBar} rearBar={latestCalculation.recommendedRearBar}
+              frontPsi={latestCalculation.recommendedFrontPsi} rearPsi={latestCalculation.recommendedRearPsi} />
 
             <p className="text-sm text-[color:var(--muted-foreground)]">
               {messages.pressure.overview.lastCalculated}:{" "}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { BikeNumberField } from "@/components/bikes/BikeFormControls";
 import { Slider } from "@/components/ui/Slider";
 import type { AccountReliabilityCopy } from "@/i18n/account/reliability";
 
@@ -57,7 +57,9 @@ export function SaddleSettings({ initial, copy, onSave, supportsClimbing = false
           value={score ?? 3} valueLabel={score === undefined ? copy.scoreUnknown : `${score}/5 · ${levels[score - 1]}`}
           disabled={pending} onChange={(value) => change(key, value)} />;
       })}
-      {hasBike && <Input label={copy.current} tooltip={copy.reference} type="number" min={300} max={1200} step={1} value={values.currentSaddleHeightMm ?? ""} disabled={pending} onChange={(event) => change("currentSaddleHeightMm", event.target.value === "" ? undefined : Number(event.target.value))} />}
+      {hasBike && <BikeNumberField label={copy.current} tooltip={copy.reference} min={300} max={1200} step={1}
+        value={values.currentSaddleHeightMm ?? null} disabled={pending}
+        onChange={value => change("currentSaddleHeightMm", value === null ? undefined : value)} />}
       <Button type="submit" disabled={pending || !Object.keys(changes).length}>{pending ? copy.saving : copy.save}</Button>
       {status && <p role={status === "error" ? "alert" : "status"}>{copy[status]}</p>}
     </Card>

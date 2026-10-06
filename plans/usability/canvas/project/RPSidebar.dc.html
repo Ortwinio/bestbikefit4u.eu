@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Zijbalk met profielscores</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=DM+Mono:wght@500&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<aside style="width: 264px; min-height: 1400px; display: flex; flex-direction: column; gap: 22px; padding: 28px 20px; box-sizing: border-box; background: #0F2420; color: #FFFFFF; font-family: Figtree, system-ui, sans-serif; font-size: 15px; line-height: 1.4">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 8px; text-decoration: none; color: #FFFFFF">
+<svg width="41" height="32" viewBox="-8 -12 82 64" fill="none" aria-hidden="true"><circle cx="42" cy="20" r="30" fill="#CFF26A"></circle><g stroke="#0F2420" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 -2) rotate(-10 24 38)"><circle cx="24" cy="28" r="10"></circle><circle cx="56" cy="28" r="10"></circle><path d="M24 28H38L34 14H52L56 28M24 28L34 14M38 28L52 14M34 14V11M31 11H37M52 14l2-4h4"></path></g><g stroke="#CFF26A" stroke-width="3.4" stroke-linecap="round" transform="translate(4 -2) rotate(-10 24 38)"><path d="M-2 18H11M-8 24H9M-2 30H11"></path></g></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 20px">BikeFit<span style="color: #CFF26A">Boost</span></span>
+</a>
+
+<a href="RP5Profile.dc.html" aria-label="Riderprofiel: {{vol}} procent volledig{{lockNote}}, {{betr}} procent betrouwbaar. Open Mijn profiel" style="display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 20px; background: #17332D; color: #FFFFFF; text-decoration: none">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B9CCC6">Riderprofiel</span>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px; color: #CFF26A">{{level}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="position: relative; width: 76px; height: 76px">
+<svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="31" fill="none" stroke="#2E4C45" stroke-width="8"></circle><circle cx="38" cy="38" r="31" fill="none" stroke="#7FD3C2" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{volDash}}" transform="rotate(-90 38 38)"></circle><path d="{{lockArc}}" fill="none" stroke="{{lockStroke}}" stroke-width="8" stroke-dasharray="3 4"></path></svg>
+<sc-if value="{{planFree}}" hint-placeholder-val="{{true}}"><span aria-hidden="true" style="position: absolute; left: 11px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: #0F2420; border: 1.5px solid #B9CCC6; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z"></path></svg></span></sc-if>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 18px">{{vol}}<span style="font-size: 11px; color: #B9CCC6">%</span></div>
+</div>
+<span style="font-size: 12px; color: #B9CCC6">Volledig</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="position: relative; width: 76px; height: 76px">
+<svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true"><circle cx="38" cy="38" r="31" fill="none" stroke="#2E4C45" stroke-width="8"></circle><circle cx="38" cy="38" r="31" fill="none" stroke="#CFF26A" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{betrDash}}" transform="rotate(-90 38 38)"></circle></svg>
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 18px">{{betr}}<span style="font-size: 11px; color: #B9CCC6">%</span></div>
+</div>
+<span style="font-size: 12px; color: #B9CCC6">Betrouwbaar</span>
+</div>
+</div>
+<sc-if value="{{planFree}}" hint-placeholder-val="{{true}}"><div style="display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: #B9CCC6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CFF26A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z"></path></svg><span>Laatste <span style="font-family: 'DM Mono', monospace">20%</span> betaald: kniehoek, geleide lenigheidstest en houdingsfoto.</span></div></sc-if>
+<div style="padding-top: 12px; border-top: 1px solid #2E4C45; font-size: 13px; color: #E1F2EE">Volgende stap: <strong style="color: #FFFFFF">{{nextStep}}</strong></div>
+</a>
+
+<nav aria-label="Account" style="display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 600">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+<a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 12px; text-decoration: none; background: {{n.bg}}; color: {{n.fg}}"><span>{{n.label}}</span><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="font-family: 'DM Mono', monospace; font-size: 12px; min-width: 24px; height: 22px; padding: 0 7px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #FFD66B; color: #0F2420">{{n.badge}}</span></sc-if></a>
+</sc-for>
+</nav>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 20px; background: #17332D">
+<span style="font-size: 13px; color: #B9CCC6">Sanne</span><strong>{{planName}}</strong><sc-if value="{{planFree}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; color: #E1F2EE">Gratis · <span style="font-family: 'DM Mono', monospace">1</span> fiets · profiel tot <span style="font-family: 'DM Mono', monospace">80%</span></span><div role="img" aria-label="Gratis profiel tot 80 procent, de laatste 20 procent is betaald" style="display: grid; grid-template-columns: 4fr 1fr; gap: 3px"><div style="height: 8px; border-radius: 99px 0 0 99px; background: #CFF26A"></div><div style="height: 8px; border-radius: 0 99px 99px 0; border: 1.5px dashed #B9CCC6; box-sizing: border-box"></div></div><span style="font-size: 13px; color: #B9CCC6">Betaald: stappenplan, kniehoek op een foto en alle fietsen. Vanaf <span style="font-family: 'DM Mono', monospace">€13,50</span>.</span><a href="Pricing.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Bekijk betaald</a></sc-if><sc-if value="{{planSingle}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #B9CCC6">Canyon Endurace · tot <span style="font-family: 'DM Mono', monospace">3 jan 2027</span></span><span style="font-size: 13px; color: #B9CCC6">Alle fietsen en <span style="font-family: 'DM Mono', monospace">2</span> cadeaumetingen: upgrade naar het jaarabonnement voor <span style="font-family: 'DM Mono', monospace">€9,50</span>.</span><a href="Pricing.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; border: 2px solid #CFF26A; color: #CFF26A; font-weight: 700; text-decoration: none">Bekijk jaarabonnement</a></sc-if><sc-if value="{{planYear}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #B9CCC6"><span style="font-family: 'DM Mono', monospace">2</span> cadeaus over</span><a href="Cadeau.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 999px; background: #CFF26A; color: #0F2420; font-weight: 700; text-decoration: none">Geef een bikefit cadeau</a></sc-if>
+</div>
+</aside>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["dashboard","profile","advice","bike","saddle"],"default":"dashboard"},"vol":{"editor":"int","min":0,"max":100,"default":68},"betr":{"editor":"int","min":0,"max":100,"default":57},"nextStep":{"editor":null,"default":"meet je armlengte"},"plan":{"editor":"enum","options":["free","single","year"],"default":"free"},"$preview":{"width":264,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'dashboard';
+    const plan = this.props.plan ?? 'free';
+    // Gratis account: profiel tot 80%, de laatste 20% is betaald
+    const vol = Math.min(plan === 'free' ? 80 : 100, Math.round(this.props.vol ?? 68));
+    const pt = (f) => (38 + 31 * Math.sin(f * 2 * Math.PI)).toFixed(1) + ' ' + (38 - 31 * Math.cos(f * 2 * Math.PI)).toFixed(1);
+    const betr = Math.round(this.props.betr ?? 57);
+    const c = 2 * Math.PI * 31;
+    const level = vol >= 90 ? 'Compleet' : vol >= 70 ? 'Sterk' : vol >= 40 ? 'Goed op weg' : 'Basis';
+    const items = [
+      ['dashboard', 'Dashboard', 'RP4Dashboard.dc.html', ''],
+      ['profile', 'Mijn profiel', 'RP5Profile.dc.html', ''],
+      ['advice', 'Mijn adviezen', 'RP7Advice.dc.html', '1'],
+      ['bike', 'Mijn fietsen', 'RP8Bike.dc.html', ''],
+      ['saddle', 'Zadelhoogte', 'RP6SaddleAccount.dc.html', ''],
+      ['fit', 'Bike fit', 'FitStart.dc.html', ''],
+      ['pressure', 'Bandenspanning', 'PressureDashboard.dc.html', ''],
+      ['gearing', 'Verzet', 'GearingDashboard.dc.html', ''],
+      ['settings', 'Instellingen', 'Settings.dc.html', '']
+    ];
+    return {
+      vol, betr, level,
+      lockNote: plan === 'free' ? ' van maximaal 80 procent gratis' : '',
+      lockArc: 'M' + pt(0.8) + 'A31 31 0 0 1 ' + pt(0.999), lockStroke: plan === 'free' ? '#B9CCC6' : 'none',
+      planName: plan === 'year' ? 'Jaarabonnement' : plan === 'single' ? 'Losse meting' : 'Gratis account',
+      planFree: plan === 'free', planSingle: plan === 'single', planYear: plan === 'year',
+      nextStep: this.props.nextStep ?? 'meet je armlengte',
+      volDash: (vol / 100 * c).toFixed(1) + ' 999',
+      betrDash: (betr / 100 * c).toFixed(1) + ' 999',
+      nav: items.map(([key, label, href, badge]) => ({
+        label, href, badge, hasBadge: badge !== '',
+        current: key === active ? 'page' : 'false',
+        bg: key === active ? '#CFF26A' : 'transparent',
+        fg: key === active ? '#0F2420' : '#E1F2EE'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -87,3 +87,20 @@ describe("profile wizard presentation", () => {
     expect(onComplete).not.toHaveBeenCalled();
   });
 });
+
+it("never derives or overwrites measurements when opening a step, and keeps method choices preselected", async () => {
+  locale = "en";
+  const onComplete = vi.fn();
+  render(<MeasurementWizard onComplete={onComplete} defaultValues={{ heightCm: 175, inseamCm: 89,
+    measurementKinds: { inseamCm: "estimated" } }} />);
+  expect(screen.getByRole("slider", { name: "Inseam" }).getAttribute("aria-valuenow")).toBe("89");
+  expect(screen.getByRole("combobox", { name: "Inseam: How did you determine this?" }).textContent)
+    .toContain("Estimated");
+  expect(screen.getByRole("combobox", { name: "Height: How did you determine this?" }).textContent)
+    .toContain("Measured");
+  expect(screen.getByRole("slider", { name: /weight/i }).getAttribute("aria-valuetext")).toContain("—");
+  fireEvent.click(screen.getByRole("button", { name: getDashboardMessages(locale).questionnaire.actions.next }));
+  await screen.findByRole("slider", { name: "Torso Length" });
+  expect(screen.getByRole("slider", { name: "Torso Length" }).getAttribute("aria-valuetext")).toContain("—");
+  expect(onComplete).not.toHaveBeenCalled();
+});

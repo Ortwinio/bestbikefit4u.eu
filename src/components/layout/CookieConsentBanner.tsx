@@ -63,14 +63,14 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
   }
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-[95] p-3 sm:top-auto sm:bottom-0 sm:p-4">
+    <div data-usability="cookie-banner" className="pointer-events-none fixed inset-x-0 bottom-0 z-40 max-h-[calc(100dvh-64px)] overflow-y-auto p-3 sm:p-4">
       <div className="pointer-events-auto mx-auto max-w-5xl rounded-[1.5rem] border border-[var(--bbf-gedempt)] bg-[var(--bbf-inkt)] p-4 text-[var(--bbf-wit)] shadow-[0_22px_60px_-30px_rgba(15,36,32,0.55)] sm:rounded-[1.75rem] sm:p-5">
         <h2 className="text-sm font-semibold text-[var(--bbf-wit)]">{copy.title}</h2>
         <p className="mt-2 text-sm leading-6 text-[var(--bbf-op-donker)]">
           {copy.body}{" "}
           <Link
             href={withLocalePrefix("/privacy", locale)}
-            className="font-medium text-[var(--bbf-lime)] underline underline-offset-2 hover:text-[var(--bbf-wit)]"
+            className="inline-flex min-h-11 items-center font-medium text-[var(--bbf-lime)] underline underline-offset-2 hover:text-[var(--bbf-wit)]"
           >
             {copy.privacyLabel}
           </Link>
@@ -81,7 +81,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
             type="button"
             size="sm"
             variant="outline"
-            className="min-w-0 rounded-full border-[var(--bbf-wit)] bg-transparent px-4 text-[var(--bbf-wit)] hover:bg-[var(--bbf-wit)] hover:text-[var(--bbf-inkt)]"
+            className="min-h-11 min-w-0 rounded-full border-[var(--bbf-wit)] bg-transparent px-4 text-[var(--bbf-wit)] hover:bg-[var(--bbf-wit)] hover:text-[var(--bbf-inkt)]"
             onClick={() => handleConsent("essential")}
           >
             {copy.essentialLabel}
@@ -89,7 +89,7 @@ export function CookieConsentBanner({ locale }: CookieConsentBannerProps) {
           <Button
             type="button"
             size="sm"
-            className="min-w-0 rounded-full bg-[var(--bbf-lime)] px-4 text-[var(--bbf-inkt)] hover:bg-[var(--bbf-wit)] hover:text-[var(--bbf-inkt)]"
+            className="min-h-11 min-w-0 rounded-full bg-[var(--bbf-lime)] px-4 text-[var(--bbf-inkt)] hover:bg-[var(--bbf-wit)] hover:text-[var(--bbf-inkt)]"
             onClick={() => handleConsent("accepted")}
           >
             {copy.acceptLabel}
