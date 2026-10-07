@@ -125,7 +125,7 @@ Each answer goes into this README under "Decisions" with a date.
 
 | Step | Status | Date | Evidence |
 |---|---|---|---|
-| 01 | open | | |
+| 01 | done, PR open (not merged) | 7 Oct 2026 | `output-01-hardening.md`; all gates green, flags OFF |
 | 02 | open | | |
 | 03 | open | | |
 | 04 | open | | |
