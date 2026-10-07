@@ -8,6 +8,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 import { giftTables } from "./gifts/schema";
+import { billingTransitionRuns } from "./emails/transitionBatchSchema";
 import {
   MARKETING_EVENT_TYPES,
   type MarketingEventType,
@@ -219,6 +220,7 @@ const guideQuickAnswerValidator = v.object({
 });
 
 export default defineSchema({
+  billingTransitionRuns,
   // Auth tables from @convex-dev/auth
   ...authTables,
   ...giftTables,
@@ -2341,6 +2343,24 @@ export default defineSchema({
     .index("by_stripe_price", ["stripePriceId"])
     .index("by_stripe_lookup_key", ["stripeLookupKey"]),
 
+  billingEmailJobs: defineTable({
+    sendKey: v.string(),
+    kind: v.union(v.literal("purchase"), v.literal("welcome"), v.literal("cancellation"), v.literal("renewal"), v.literal("expired"), v.literal("transition_announcement"), v.literal("transition_reminder")),
+    userId: v.id("users"),
+    entitlementId: v.optional(v.id("pricingEntitlements")),
+    launchAt: v.optional(v.number()),
+    transitionOfferId: v.optional(v.id("pricingTransitionOffers")),
+    transitionRunId: v.optional(v.id("billingTransitionRuns")),
+    status: v.union(v.literal("pending"), v.literal("sending"), v.literal("sent"), v.literal("cancelled"), v.literal("failed")),
+    attempts: v.number(),
+    createdAt: v.number(),
+    firstAttemptAt: v.optional(v.number()),
+    leaseUntil: v.optional(v.number()),
+    sentAt: v.optional(v.number()),
+    failureCode: v.optional(v.string()),
+    deliveryPayload: v.optional(v.object({ recipient: v.string(), subject: v.string(), preheader: v.string(), html: v.string(), text: v.string() })),
+  }).index("by_send_key", ["sendKey"]).index("by_user", ["userId"]).index("by_status", ["status"]),
+
   pricingEntitlements: defineTable({
     userId: v.id("users"),
     bikeId: v.optional(v.id("bikes")),
@@ -2376,7 +2396,10 @@ export default defineSchema({
     riderName: v.string(),
     riderEmail: v.string(),
     locale: v.union(v.literal("nl"), v.literal("en")),
-    status: v.literal("pending_integration"),
+    status: v.union(v.literal("pending_integration"), v.literal("pending"), v.literal("sending"),
+      v.literal("sent"), v.literal("cancelled"), v.literal("failed")),
+    attemptedAt: v.optional(v.number()),
+    sentAt: v.optional(v.number()),
     idempotencyKey: v.string(),
     createdAt: v.number(),
   }).index("by_entitlement", ["entitlementId"]).index("by_user", ["userId"]),
@@ -2504,6 +2527,8 @@ export default defineSchema({
     paymentIntentId: v.string(),
     fullyRefunded: v.boolean(),
     amountRefunded: v.number(),
+    cancellationKey: v.optional(v.string()),
+    cancellationAmountRefunded: v.optional(v.number()),
     updatedAt: v.number(),
   }).index("by_payment_intent", ["paymentIntentId"]),
 

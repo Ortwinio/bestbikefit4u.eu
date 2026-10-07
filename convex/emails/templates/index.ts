@@ -71,6 +71,7 @@ export interface PurchaseConfirmationData extends PersonalData {
 }
 export interface SubscriptionWelcomeData extends PersonalData {
   accessEndsAt?: number;
+  appointmentUrl?: string;
   actionUrl: string;
 }
 export interface AccessExpiredData extends PersonalData { bikeName?: string; actionUrl: string; }

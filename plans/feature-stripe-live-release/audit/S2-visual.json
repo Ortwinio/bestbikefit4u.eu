@@ -1,0 +1,733 @@
+{
+  "scope": "Isolated real PricingPage and CheckoutFlow step one; mocked authenticated/eligible props and framework/analytics adapters. No live auth, Stripe, backend, mail, Next build or hydration proof. OFF flags are unset; ON flags are exact true. No axe rules disabled.",
+  "capturedAt": "2026-10-07T20:56:08.385Z",
+  "expectedCaptures": 16,
+  "manualReview": {
+    "method": "Opened and visually inspected all 16 full-page PNG artifacts with view_image after the completed capture.",
+    "reviewedScreenshots": [
+      "S2-checkout-off-nl-1440.png", "S2-checkout-off-nl-390.png",
+      "S2-checkout-on-nl-1440.png", "S2-checkout-on-nl-390.png",
+      "S2-checkout-off-en-1440.png", "S2-checkout-off-en-390.png",
+      "S2-checkout-on-en-1440.png", "S2-checkout-on-en-390.png",
+      "S2-pricing-off-nl-1440.png", "S2-pricing-off-nl-390.png",
+      "S2-pricing-on-nl-1440.png", "S2-pricing-on-nl-390.png",
+      "S2-pricing-off-en-1440.png", "S2-pricing-off-en-390.png",
+      "S2-pricing-on-en-1440.png", "S2-pricing-on-en-390.png"
+    ],
+    "observations": [
+      "OFF: personal pricing cards show Binnenkort beschikbaar / Available soon; both checkout personal products show unavailable selection states. Automated DOM assertions confirm no personal buy links/buttons and disabled personal radios.",
+      "ON: personal pricing purchase links and both checkout personal choices are present. No bracketed appointment placeholders are visible on these captured surfaces.",
+      "Desktop cards, prices, renewal copy and controls remain legible and aligned; mobile cards stack with the annual option first, and long personal product labels wrap within their cards.",
+      "Checkout preserves the focused heading outline. Its fixed mobile Continue bar appears partway down full-page captures at the initial viewport bottom, over the single-fit card; this matches the existing fixed-position CSS and is not classified as a new flag-related defect.",
+      "Mobile pricing comparison captures show the initial columns of the existing overflow-x:auto container. Horizontal table interaction was not separately exercised; document overflow checks pass."
+    ],
+    "newVisualDefectsObserved": [],
+    "limitations": "Isolated fixture review only: no live auth, Stripe, backend, full Next layout/hydration, booking or later checkout steps verified."
+  },
+  "sourceHashes": {
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/stripe-live-s2/entry.jsx": "f836deb18f97b524ec49c64d2fc85df03ae534a9444a4549ee97d66bfad63d2d",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/app/(public)/pricing/page.tsx": "20205e7f21c10c07e5504be1fe0e265ef590262b7f229656647fd2d9e8865989",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/marketing/checkout.ts": "82ac532bb23810aa6ea49e40988fd160422dc0305742a0a19b6af967241258cb",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/config/personalFit.ts": "7fc73b94446a5e2aaf5350132a8ba16dc29abb67efd5d9c777030fa40f6af381",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/checkout/CheckoutFlow.tsx": "276add6dba2953a71f5e272ac1f35ee36aec403a55d34fa06152e56a806ca286",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/checkout/AppointmentBlock.tsx": "74026b0cdca0c52039617c032d5973d204ae3a37d0881189896b75a2c435819d",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/config/brand.ts": "c2753a39dcd5174178da2da45cd59132db6259742562239122fbb2138adf48fb",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/account-batch1/image.jsx": "97b8f7a78e6d23d74698f68157ab1b4053b4f09c41112306b4aea305a697f035",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/account-batch1/link.jsx": "337e9e00b8afd77f9183f0d447023984bbea78b097b1fa98252fdf8953e26705",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/billing/stripeStub.ts": "4b793bc6172d2d1f2712e2acf9c39ecb36768e8e00c9bea658119fadb61bc5ed",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/navigation.ts": "a304259071a5b547346d963d84d564730a709b85059442e7a0dbb79533b64b27",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/checkout/CheckoutFlow.module.css": "96fd353e92034794cf21f3b1edb0955af0585bd69f7464a345ffdc9d8cb6ebd0",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/checkout/checkout-state.ts": "17ade95764c5a613b08bf72e8a28df1fb59e3d3ad7e9d7651d0b46e8d65ccab4",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/pricing-ui/runtime.jsx": "9edc7280fbb715ef4a42d68bc4ab79dbd68d09d17d9d050c884da2599aafdf4c",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/marketing/pricing.ts": "22234129c180c0357361f40914d7defa22b322e141d3191b1bbfb23dfe69b27d",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/seo/jsonLd.ts": "5ab9bd1ce6d6dfa6614003de536412ad9404bb350402ce0ee93f988a8130b51f",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/app/(public)/pricing/pricing.module.css": "5fa9b29efc412fabfd1658f2e5daf1dd45e69c620d51f6adaf1058f4f891f1d4",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/pricing/PricingCard.tsx": "67592c9c593c57ada7273b39904f493de3bc392d85ce1c372330cb3f88c8301c",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/shared/pricing/products.ts": "917eb6d84f6ae4d941b52194756f2bed4917cf0ba23f43e609f6464c2012befa",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/localeRoutes.ts": "d9e77122f77bb5371db1909977ba5f8b6f18e1bc38872c1d4af66bf015bec344",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/config.ts": "479c91695c59b8058e6a0ae4bdc66401d46bdb7dc114394115a9bb39de5287f7",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/shared/brand.ts": "8731d103bce9431eafa5272ff1eb7a54905c12be78eb30d04609d6d9af086568",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/pressureRoutes.ts": "86b2a4c9193660eb609e115d31b388c08a64772310051c6053c98cf957cef428",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/shared/billing/stripeStub.ts": "49c603a8a0381d310bc2f94a3b7085477e1fc07a91f03b149d3197ede86160cc",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/config/authorship.ts": "c47a1f8c837cc66aeaa345c1d33f44b711c3c59ca7e890f1c2db22b7aad0ce12",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/pricing/PricingCard.module.css": "0a1952aa6c4a11b8f9c0e183f1d155831405e97d256c737a0c31e579e64e38a1",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/public-calculators/routes.ts": "1d715f138faf89d17dda4521d653c054025d61f88911c87a344928bf364e0928",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/layout/MarketingTheme.module.css": "8c5a58d1ced070dd952b697e890f0489f2926db51f472aeed6418bb97d99791f",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
+  },
+  "changedSources": [],
+  "results": [
+    {
+      "flag": "off",
+      "surface": "pricing",
+      "locale": "nl",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-off-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no personal purchase links",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "pricing",
+      "locale": "nl",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-off-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no personal purchase links",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "pricing",
+      "locale": "en",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-off-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no personal purchase links",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "pricing",
+      "locale": "en",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-off-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no personal purchase links",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "checkout",
+      "locale": "nl",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-off-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "checkout",
+      "locale": "nl",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-off-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "checkout",
+      "locale": "en",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-off-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "off",
+      "surface": "checkout",
+      "locale": "en",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-off-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone available soon without buy button",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "pricing",
+      "locale": "nl",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-on-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "pricing",
+      "locale": "nl",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-on-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "pricing",
+      "locale": "en",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-on-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "pricing",
+      "locale": "en",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-pricing-on-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal card visible",
+          "passed": true
+        },
+        {
+          "name": "personal card sales state",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "checkout",
+      "locale": "nl",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-on-nl-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "checkout",
+      "locale": "nl",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-on-nl-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "checkout",
+      "locale": "en",
+      "width": 1440,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-on-en-1440.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "viewport": 1440,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    },
+    {
+      "flag": "on",
+      "surface": "checkout",
+      "locale": "en",
+      "width": 390,
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/S2-checkout-on-en-390.png",
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "public flag matches case",
+          "passed": true
+        },
+        {
+          "name": "no bracketed appointment placeholders",
+          "passed": true
+        },
+        {
+          "name": "personal selection state",
+          "passed": true
+        },
+        {
+          "name": "personal_fit_standalone selection state",
+          "passed": true
+        },
+        {
+          "name": "still on checkout step one",
+          "passed": true
+        },
+        {
+          "name": "no auth or payment calls",
+          "passed": true
+        }
+      ],
+      "metrics": {
+        "overflow": false,
+        "scrollWidth": 390,
+        "viewport": 390,
+        "fontsReady": true
+      },
+      "axe": [],
+      "calls": []
+    }
+  ]
+}

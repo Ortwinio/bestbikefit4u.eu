@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 import fs from "node:fs";
-import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { require as tsxRequire } from "tsx/cjs/api";
+const { billingDeploymentChecks } = tsxRequire("../shared/billing/deploymentConfig.ts", import.meta.url);
 
 function stripQuotes(value) {
   if (
@@ -40,18 +42,13 @@ function loadEnvFile(filePath) {
   }
 }
 
-loadEnvFile(path.resolve(process.cwd(), ".env.local"));
-loadEnvFile(path.resolve(process.cwd(), ".env"));
+if (!process.argv.includes("--no-env-files")) {
+  loadEnvFile(fileURLToPath(new URL("../.env.local", import.meta.url)));
+  loadEnvFile(fileURLToPath(new URL("../.env", import.meta.url)));
+}
 
 const requiredEnvVars = ["NEXT_PUBLIC_CONVEX_URL"];
 const requiredUrlEnvVars = new Set(["NEXT_PUBLIC_CONVEX_URL"]);
-
-if (process.env.STRIPE_BILLING_ENABLED === "true" && process.env.NEXT_PUBLIC_STRIPE_BILLING_ENABLED === "true") {
-  requiredEnvVars.push(
-    "STRIPE_SECRET_KEY", "STRIPE_ANNUAL_PRICE_ID", "STRIPE_SINGLE_FIT_PRICE_ID",
-    "STRIPE_PERSONAL_FIT_ADDON_PRICE_ID", "STRIPE_PERSONAL_FIT_STANDALONE_PRICE_ID", "STRIPE_UPGRADE_COUPON_ID",
-  );
-}
 
 const errors = [];
 
@@ -66,16 +63,22 @@ for (const key of requiredEnvVars) {
     try {
       new URL(value);
     } catch {
-      errors.push(`Invalid URL in ${key}: ${value}`);
+      errors.push(`Invalid URL in ${key}`);
     }
   }
 }
 
+for (const [name, valid] of Object.entries(billingDeploymentChecks(process.env))) {
+  if (!valid) errors.push(`Missing or invalid environment configuration: ${name}`);
+}
+
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+let convexHost;
+try { convexHost = new URL(convexUrl).hostname; } catch { /* Invalid URL reported above. */ }
 if (
   process.env.VERCEL === "1" &&
   convexUrl &&
-  (convexUrl.includes("127.0.0.1") || convexUrl.includes("localhost"))
+  ["127.0.0.1", "localhost", "[::1]"].includes(convexHost)
 ) {
   errors.push(
     "NEXT_PUBLIC_CONVEX_URL points to localhost while running on Vercel."

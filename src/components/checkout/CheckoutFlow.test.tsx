@@ -17,8 +17,8 @@ const defaults: CheckoutFlowProps = {
   locale: "nl", authenticated: true, accountEmail: "rider@example.test", bikes: [{ id: "owned-bike", name: "My bike" }], signIn: vi.fn(async () => undefined),
 };
 
-beforeEach(() => { localStorage.clear(); window.history.replaceState(null, "", "/nl/checkout"); vi.clearAllMocks(); });
-afterEach(() => { cleanup(); vi.restoreAllMocks(); });
+beforeEach(() => { vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "true"); localStorage.clear(); window.history.replaceState(null, "", "/nl/checkout"); vi.clearAllMocks(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 async function confirm(locale: "nl" | "en" = "nl") {
   const text = checkoutCopy[locale];

@@ -1,4 +1,6 @@
 import { beforeEach, expect, it, vi } from "vitest";
+const alerts = vi.hoisted(() => ({ report: vi.fn() }));
+vi.mock("./billingAlert", () => ({ reportBillingAlert: alerts.report }));
 const mocks = vi.hoisted(() => ({ subscription: vi.fn(), update: vi.fn(), cancel: vi.fn(),
   refund: vi.fn(), listRefunds: vi.fn(), payment: vi.fn(), invoice: vi.fn(), invoicePayments: vi.fn() }));
 vi.mock("./serverStripe", () => ({ getServerStripe: () => ({ subscriptions: {
@@ -81,4 +83,11 @@ it("never refunds initial year, appointment amounts or an expired renewal", () =
   expect(renewalRefundCents({ ...context, periodPriceCents: 23450 }, 2000)).toBe(0);
   expect(renewalRefundCents(context, 4000)).toBe(0);
   expect(renewalRefundCents(context, 2000)).toBe(1075);
+});
+
+it("reports cancellation failures with only a stable code while preserving retry errors", async () => {
+  const error = new Error("provider private details");
+  mocks.subscription.mockRejectedValueOnce(error);
+  await expect(cancelOwnedSubscription(context)).rejects.toBe(error);
+  expect(alerts.report).toHaveBeenCalledExactlyOnceWith("BILLING_CANCELLATION_FAILED");
 });

@@ -30,6 +30,41 @@ function request(route: string, locale: "nl" | "en") {
   });
 }
 
+it("preserves the flags-OFF checkout response snapshot in NL and EN", async () => {
+  vi.stubEnv("STRIPE_BILLING_ENABLED", "false");
+  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
+  const responses = [];
+  for (const locale of ["nl", "en"] as const) {
+    const response = await checkout(request("checkout", locale));
+    responses.push({ locale, status: response.status, body: await response.json() });
+  }
+  expect(responses).toMatchInlineSnapshot(`
+    [
+      {
+        "body": {
+          "code": "STRIPE_NOT_IMPLEMENTED",
+          "message": "Betalen via Stripe is nog niet geïmplementeerd. Je keuze is bewaard; we laten het je weten zodra afrekenen kan.",
+          "ok": false,
+        },
+        "locale": "nl",
+        "status": 501,
+      },
+      {
+        "body": {
+          "code": "STRIPE_NOT_IMPLEMENTED",
+          "message": "Payment through Stripe has not been implemented yet. Your choice has been saved; we’ll let you know when checkout is available.",
+          "ok": false,
+        },
+        "locale": "en",
+        "status": 501,
+      },
+    ]
+  `);
+  expect(mocks.stripe).not.toHaveBeenCalled();
+  expect(mocks.convex).not.toHaveBeenCalled();
+  expect(fetch).not.toHaveBeenCalled();
+});
+
 describe.each(Object.entries(routes))("%s Stripe stub", (name, post) => {
   it.each(flags)("stays inert with flags %j in both languages", async ({ server, client }) => {
     vi.stubEnv("STRIPE_BILLING_ENABLED", server);
