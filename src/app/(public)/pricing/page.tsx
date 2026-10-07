@@ -6,6 +6,7 @@ import { TrackMarketingEventOnView } from "@/components/analytics/MarketingEvent
 import { TrackedCtaLink } from "@/components/analytics/TrackedCtaLink";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { BRAND } from "@/config/brand";
+import { isPersonalFitSalesVisible } from "@/config/personalFit";
 import { buildLocaleAlternates } from "@/i18n/metadata";
 import { getRequestLocale } from "@/i18n/request";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -40,7 +41,7 @@ export default async function PricingPage() {
     description: page.metadata.description,
     url: `${BRAND.siteUrl}${pagePath}`,
     provider: { "@id": `${BRAND.siteUrl}/#organization` },
-    offers: productOrder.map((productId) => ({
+    offers: productOrder.filter((productId) => productId !== "annual_personal" || isPersonalFitSalesVisible()).map((productId) => ({
       "@type": "Offer",
       name: page.products[productId].name,
       description: [page.products[productId].description, page.products[productId].period, page.products[productId].renewal].filter(Boolean).join(" "),

@@ -9,7 +9,7 @@ const script = path.resolve("scripts/check-vercel-env.mjs");
 afterAll(() => rmSync(directory, { recursive: true, force: true }));
 
 function run(env: Record<string, string>) {
-  return spawnSync(process.execPath, [script], {
+  return spawnSync(process.execPath, [script, "--no-env-files"], {
     cwd: directory,
     encoding: "utf8",
     env: { VERCEL: "1", NODE_ENV: "production", NEXT_PUBLIC_CONVEX_URL: "https://test.convex.cloud", ...env },
@@ -50,7 +50,7 @@ describe("Vercel environment preflight", () => {
     const enabled = { STRIPE_BILLING_ENABLED: "true", NEXT_PUBLIC_STRIPE_BILLING_ENABLED: "true" };
     expect(run(enabled).status).toBe(1);
     expect(run(enabled).stderr).toContain("STRIPE_ANNUAL_PRICE_ID");
-    expect(run({ ...enabled, STRIPE_SECRET_KEY: "rk_test_mock", STRIPE_ANNUAL_PRICE_ID: "price_annual",
+    expect(run({ ...enabled, STRIPE_MODE: "test", STRIPE_SECRET_KEY: "rk_test_mock", STRIPE_ANNUAL_PRICE_ID: "price_annual",
       STRIPE_SINGLE_FIT_PRICE_ID: "price_single", STRIPE_PERSONAL_FIT_ADDON_PRICE_ID: "price_addon",
       STRIPE_PERSONAL_FIT_STANDALONE_PRICE_ID: "price_standalone", STRIPE_UPGRADE_COUPON_ID: "coupon_upgrade",
     }).status).toBe(0);
@@ -68,4 +68,33 @@ describe("Vercel environment preflight", () => {
       expect(run({ VERCEL_ENV: "production", [flag]: "false" }).status).toBe(0);
     }
   );
+});
+
+const configured = {
+  STRIPE_BILLING_ENABLED: "true", NEXT_PUBLIC_STRIPE_BILLING_ENABLED: "true",
+  STRIPE_ANNUAL_PRICE_ID: "price_annual", STRIPE_SINGLE_FIT_PRICE_ID: "price_single",
+  STRIPE_PERSONAL_FIT_ADDON_PRICE_ID: "price_addon", STRIPE_PERSONAL_FIT_STANDALONE_PRICE_ID: "price_standalone",
+  STRIPE_UPGRADE_COUPON_ID: "coupon_upgrade",
+};
+it.each([
+  ["production", "live", "rk_live_mock", 0],
+  ["production", "test", "rk_test_mock", 1],
+  ["preview", "test", "rk_test_mock", 0],
+  ["preview", "live", "rk_live_mock", 1],
+  ["development", "test", "sk_test_mock", 0],
+  ["preview", "test", "rk_live_mock", 1],
+])("CLI checks deployment/key mode: %s %s", (deployment, mode, key, expected) => {
+  const result = run({ ...configured, VERCEL_ENV: deployment, STRIPE_MODE: mode, STRIPE_SECRET_KEY: key });
+  expect(result.status).toBe(expected);
+  expect(result.stdout + result.stderr).not.toContain(key);
+});
+it("CLI checks personal-fit configuration and never prints private invalid values", () => {
+  const personal = { PERSONAL_FIT_SALES_ENABLED: "true", NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED: "true" };
+  expect(run(personal).status).toBe(1);
+  expect(run({ ...personal, PERSONAL_BIKEFIT_AGENDA_URL: "https://booking.example.test",
+    FITTER_NOTIFICATION_EMAIL: "fitter@example.test" }).status).toBe(0);
+  const result = run({ ...personal, PERSONAL_BIKEFIT_AGENDA_URL: "secret-invalid-value",
+    FITTER_NOTIFICATION_EMAIL: "private-invalid-value", NEXT_PUBLIC_CONVEX_URL: "private-invalid-url" });
+  expect(result.status).toBe(1);
+  expect(result.stdout + result.stderr).not.toMatch(/secret-invalid-value|private-invalid-value|private-invalid-url/);
 });

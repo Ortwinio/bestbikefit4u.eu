@@ -11,10 +11,11 @@ const defaults: CheckoutFlowProps = {
 };
 
 beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "true");
   localStorage.clear();
   window.history.replaceState(null, "", "/nl/checkout");
 });
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 async function confirm() {
   const next = screen.getByRole("button", { name: /^Doorgaan ·/ });

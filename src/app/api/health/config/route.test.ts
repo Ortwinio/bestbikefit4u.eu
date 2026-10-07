@@ -1,18 +1,42 @@
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { GET } from "./route";
 import { STRIPE_REQUIRED_ENV } from "@/lib/billing/serverStripe";
 afterEach(() => vi.unstubAllEnvs());
-it("requires billing configuration only with both affirmative flags and never exposes values", async () => {
+beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_CONVEX_URL", "https://mock.convex.cloud");
   vi.stubEnv("NEXT_PUBLIC_CONVEX_SITE_URL", "https://mock.convex.site");
   vi.stubEnv("STRIPE_BILLING_ENABLED", "false");
-  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
+  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "false");
+  vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", "false");
+  vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "false");
+  vi.stubEnv("VERCEL_ENV", "preview");
+});
+it("requires valid mode and billing configuration only with both affirmative flags", async () => {
   for (const name of STRIPE_REQUIRED_ENV) vi.stubEnv(name, "");
   expect((await GET()).status).toBe(200);
   vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
+  vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
   expect((await GET()).status).toBe(503);
   for (const name of STRIPE_REQUIRED_ENV) vi.stubEnv(name, "configured-private-value");
+  vi.stubEnv("STRIPE_SECRET_KEY", "rk_test_mock");
+  vi.stubEnv("STRIPE_MODE", "test");
   const response = await GET();
   expect(response.status).toBe(200);
-  expect(await response.text()).not.toContain("configured-private-value");
+  const body = await response.json();
+  expect(Object.values(body.checks).every((value) => typeof value === "boolean")).toBe(true);
+  expect(JSON.stringify(body)).not.toMatch(/configured-private-value|rk_test_mock|https:|checkedAt/);
+  vi.stubEnv("VERCEL_ENV", "production");
+  expect((await GET()).status).toBe(503);
+});
+it("validates personal sales mirrors and private booking configuration without exposing values", async () => {
+  vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", "true");
+  expect((await GET()).status).toBe(503);
+  vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "true");
+  vi.stubEnv("PERSONAL_BIKEFIT_AGENDA_URL", "https://booking.example.test/private");
+  vi.stubEnv("FITTER_NOTIFICATION_EMAIL", "fitter@example.test");
+  const response = await GET();
+  expect(response.status).toBe(200);
+  const body = await response.text();
+  expect(body).not.toMatch(/booking.example|fitter@example/);
+  expect(response.headers.get("Cache-Control")).toBe("no-store");
 });

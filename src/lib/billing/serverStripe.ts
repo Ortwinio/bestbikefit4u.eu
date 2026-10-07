@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { assertStripeKeyMode } from "../../../shared/billing/stripeMode";
 import { isStripeBillingEnabled } from "@/config/billing";
 
 export const STRIPE_API_VERSION = "2026-06-24.dahlia" as const;
@@ -13,8 +14,13 @@ export function stripeEnvironment(name: typeof STRIPE_REQUIRED_ENV[number]): str
   return value;
 }
 
+export function assertStripeMode() {
+  return assertStripeKeyMode(process.env.STRIPE_MODE, process.env.STRIPE_SECRET_KEY?.trim());
+}
+
 /** Do not construct a provider client until both billing switches affirmatively permit it. */
 export function getServerStripe(): Stripe {
   if (!isStripeBillingEnabled()) throw new Error("STRIPE_NOT_IMPLEMENTED");
+  assertStripeMode();
   return new Stripe(stripeEnvironment("STRIPE_SECRET_KEY"), { apiVersion: STRIPE_API_VERSION });
 }

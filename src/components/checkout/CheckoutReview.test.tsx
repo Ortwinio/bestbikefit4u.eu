@@ -14,8 +14,8 @@ const defaults: CheckoutFlowProps = {
   signIn: vi.fn(async () => undefined),
 };
 
-beforeEach(() => { localStorage.clear(); window.history.replaceState(null, "", "/nl/checkout"); vi.clearAllMocks(); });
-afterEach(cleanup);
+beforeEach(() => { vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "true"); localStorage.clear(); window.history.replaceState(null, "", "/nl/checkout"); vi.clearAllMocks(); });
+afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 function selectionFromUrl() {
   const params = new URL(window.location.href).searchParams;

@@ -1,3 +1,4 @@
+import { reportBillingAlert } from "./billingAlert";
 import { getServerStripe } from "./serverStripe";
 import { PRODUCTS } from "../../../shared/pricing/products";
 import type Stripe from "stripe";
@@ -47,6 +48,15 @@ export function renewalRefundCents(context: SubscriptionContext, now = Date.now(
 }
 
 export async function cancelOwnedSubscription(context: SubscriptionContext, requireRefund = false) {
+  try {
+    return await cancelSubscription(context, requireRefund);
+  } catch (error) {
+    reportBillingAlert("BILLING_CANCELLATION_FAILED");
+    throw error;
+  }
+}
+
+async function cancelSubscription(context: SubscriptionContext, requireRefund: boolean) {
   if (!context.customerId || !context.subscriptionId) throw new Error("SUBSCRIPTION_NOT_FOUND");
   if (requireRefund && !context.renewed) throw new Error("REFUND_NOT_ELIGIBLE");
   const stripe = getServerStripe();

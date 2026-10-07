@@ -2,6 +2,8 @@ import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { PRODUCTS, type PaidProductId } from "../../shared/pricing/products";
 import { grantPurchasedAccess } from "../pricing/grants";
+import { queueBillingEmail, wakeBillingEmailEvidence } from "../emails/billingQueue";
+import { STRIPE_WEBHOOK_EVENTS } from "../../shared/billing/stripeWebhookEvents";
 
 type ObjectData = Record<string, unknown>;
 const object = (value: unknown): ObjectData => value && typeof value === "object" ? value as ObjectData : {};
@@ -55,6 +57,18 @@ async function fullyRefunded(ctx: MutationCtx, paymentIntentId?: string) {
     .withIndex("by_payment_intent", q => q.eq("paymentIntentId", paymentIntentId)).unique())?.fullyRefunded);
 }
 
+async function queueCancellation(ctx: MutationCtx, checkout: Doc<"stripeCheckouts">, effectiveAt: number) {
+  if (!checkout.subscriptionId) return;
+  const entitlements = await ctx.db.query("pricingEntitlements")
+    .withIndex("by_subscription", query => query.eq("subscriptionId", checkout.subscriptionId!)).collect();
+  const current = entitlements.filter(entitlement => entitlement.userId === checkout.userId
+    && entitlement.startsAt <= effectiveAt && entitlement.cancelled)
+    .sort((first, second) => second.startsAt - first.startsAt)[0];
+  if (!current) return;
+  await queueBillingEmail(ctx, { kind: "cancellation", userId: checkout.userId, entitlementId: current._id,
+    sendKey: `cancellation:${checkout.subscriptionId}:${current.startsAt}` });
+}
+
 async function paid(ctx: MutationCtx, checkout: Doc<"stripeCheckouts">, args: {
   startsAt: number; periodEnd?: number; renewal?: boolean; paymentIntentId?: string; grantKey: string; invoiceId?: string;
 }) {
@@ -65,6 +79,7 @@ async function paid(ctx: MutationCtx, checkout: Doc<"stripeCheckouts">, args: {
       paymentIntentId: args.paymentIntentId, status: "revoked", revokedReason: "refunded",
     });
     if (!args.renewal) await ctx.db.patch(checkout._id, { status: "refunded" });
+    await wakeBillingEmailEvidence(ctx, checkout.userId);
     return;
   }
   const existingGrant = await ctx.db.query("pricingEntitlements")
@@ -102,6 +117,19 @@ async function paid(ctx: MutationCtx, checkout: Doc<"stripeCheckouts">, args: {
   }
   if (!args.renewal) await ctx.db.patch(checkout._id, { status: "paid", entitlementId,
     ...(args.paymentIntentId ? { paymentIntentId: args.paymentIntentId } : {}) });
+  if (!args.renewal) {
+    if (checkout.subscriptionId) {
+      await queueBillingEmail(ctx, { kind: "welcome", userId: checkout.userId, entitlementId,
+        sendKey: `welcome:${checkout.subscriptionId}:${args.startsAt}` });
+    } else if (args.paymentIntentId) {
+      await queueBillingEmail(ctx, { kind: "purchase", userId: checkout.userId, entitlementId,
+        sendKey: `purchase:${args.paymentIntentId}` });
+    }
+  }
+  if (checkout.subscriptionCancelled || checkout.subscriptionEndedAt !== undefined) {
+    await queueCancellation(ctx, checkout, checkout.subscriptionEndedAt ?? Date.now());
+  }
+  await wakeBillingEmailEvidence(ctx, checkout.userId);
 }
 
 async function processCheckout(ctx: MutationCtx, type: string, data: ObjectData, eventTime: number) {
@@ -195,6 +223,7 @@ async function processSubscription(ctx: MutationCtx, type: string, data: ObjectD
       ...(endedAt !== undefined ? { expiresAt: Math.min(entitlement.expiresAt, endedAt),
         ...(endedAt <= Date.now() ? { status: "expired" as const } : {}) } : {}) });
   }
+  if (cancelled) await queueCancellation(ctx, checkout, endedAt ?? eventTime);
 }
 
 async function processRefund(ctx: MutationCtx, data: ObjectData, eventTime: number) {
@@ -210,6 +239,15 @@ async function processRefund(ctx: MutationCtx, data: ObjectData, eventTime: numb
     updatedAt: Math.max(previous.updatedAt, eventTime),
   });
   else await ctx.db.insert("stripePaymentRefunds", { paymentIntentId, fullyRefunded: full, amountRefunded, updatedAt: eventTime });
+  const refunds = object(data.refunds).data;
+  if (Array.isArray(refunds)) {
+    for (const refund of refunds) await processRefundEvidence(ctx, object(refund), eventTime);
+  }
+  const affected = await ctx.db.query("pricingEntitlements")
+    .withIndex("by_payment_intent", query => query.eq("paymentIntentId", paymentIntentId)).collect();
+  for (const userId of new Set(affected.map(entitlement => entitlement.userId))) {
+    await wakeBillingEmailEvidence(ctx, userId);
+  }
   if (!full) return; // A partial refund is not proof that all purchased access should be revoked.
   const customerId = id(data.customer);
   if (!customerId) return;
@@ -223,6 +261,27 @@ async function processRefund(ctx: MutationCtx, data: ObjectData, eventTime: numb
   const checkout = await ctx.db.query("stripeCheckouts")
     .withIndex("by_payment_intent", q => q.eq("paymentIntentId", paymentIntentId)).unique();
   if (checkout) await ctx.db.patch(checkout._id, { status: "refunded" });
+}
+
+async function processRefundEvidence(ctx: MutationCtx, data: ObjectData, eventTime: number) {
+  const paymentIntentId = id(data.payment_intent);
+  const cancellationKey = string(object(data.metadata).cancellationKey);
+  const amount = number(data.amount);
+  if (data.status !== "succeeded" || data.currency !== "eur" || !paymentIntentId || !cancellationKey
+    || !/^refund:[^:]+:\d+$/.test(cancellationKey) || amount === undefined || !Number.isSafeInteger(amount) || amount <= 0) return;
+  const previous = await ctx.db.query("stripePaymentRefunds")
+    .withIndex("by_payment_intent", query => query.eq("paymentIntentId", paymentIntentId)).unique();
+  if (previous?.cancellationKey && (previous.cancellationKey !== cancellationKey
+    || previous.cancellationAmountRefunded !== amount)) throw new Error("CANCELLATION_REFUND_MISMATCH");
+  if (previous) await ctx.db.patch(previous._id, { cancellationKey, cancellationAmountRefunded: amount,
+    updatedAt: Math.max(previous.updatedAt, eventTime) });
+  else await ctx.db.insert("stripePaymentRefunds", { paymentIntentId, fullyRefunded: false, amountRefunded: 0,
+    cancellationKey, cancellationAmountRefunded: amount, updatedAt: eventTime });
+  const affected = await ctx.db.query("pricingEntitlements")
+    .withIndex("by_payment_intent", query => query.eq("paymentIntentId", paymentIntentId)).collect();
+  for (const userId of new Set(affected.map(entitlement => entitlement.userId))) {
+    await wakeBillingEmailEvidence(ctx, userId);
+  }
 }
 
 async function processInvoicePayment(ctx: MutationCtx, data: ObjectData) {
@@ -251,6 +310,7 @@ async function processInvoicePayment(ctx: MutationCtx, data: ObjectData) {
     if (checkout) await ctx.db.patch(checkout._id, { paymentIntentId,
       ...(refunded ? { status: "refunded" as const } : {}) });
   }
+  await wakeBillingEmailEvidence(ctx, period.userId);
 }
 
 /** Called only by the internal mutation after signature verification. Atomic with event deduplication. */
@@ -260,6 +320,7 @@ export async function applyStripeEvent(ctx: MutationCtx, payloadJson: string) {
   const eventType = string(event.type);
   const eventTime = milliseconds(event.created);
   if (!eventId || !eventType || eventTime === undefined) throw new Error("INVALID_STRIPE_EVENT");
+  if (!STRIPE_WEBHOOK_EVENTS.some(handledType => handledType === eventType)) return { duplicate: false, ignored: true };
   const existing = await ctx.db.query("stripe_events").withIndex("by_event_id", q => q.eq("stripeEventId", eventId)).unique();
   if (existing) return { duplicate: true };
   const data = object(object(event.data).object);
@@ -270,6 +331,7 @@ export async function applyStripeEvent(ctx: MutationCtx, payloadJson: string) {
   } else if (["customer.subscription.created", "customer.subscription.updated", "customer.subscription.deleted"].includes(eventType)) {
     await processSubscription(ctx, eventType, data, eventTime);
   } else if (eventType === "charge.refunded") await processRefund(ctx, data, eventTime);
+  else if (eventType === "refund.created" || eventType === "refund.updated") await processRefundEvidence(ctx, data, eventTime);
   else if (eventType === "invoice_payment.paid") await processInvoicePayment(ctx, data);
   await ctx.db.insert("stripe_events", {
     stripeEventId: eventId, eventType, livemode: event.livemode === true, apiVersion: string(event.api_version),

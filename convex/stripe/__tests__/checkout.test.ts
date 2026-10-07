@@ -8,14 +8,53 @@ const call = (fn: unknown, ctx: unknown, args = {}) => (fn as {
   _handler: (ctx: unknown, args: object) => Promise<unknown>;
 })._handler(ctx, args);
 beforeEach(() => {
+  auth.mockReset();
   auth.mockResolvedValue("users:owner");
   vi.spyOn(Date, "now").mockReturnValue(now);
   vi.stubEnv("STRIPE_BILLING_ENABLED", "true");
   vi.stubEnv("NEXT_PUBLIC_STRIPE_BILLING_ENABLED", "true");
+  vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", undefined);
+  vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", undefined);
 });
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 const request = { productId: "single", bikeId: "bikes:bike", locale: "nl", withdrawalAccepted: true };
 describe("authenticated Stripe reservations and read models", () => {
+  describe.each(["annual_personal", "personal_fit_standalone"])("personal sales: %s", (productId) => {
+    it.each([undefined, "false", "TRUE", "1"])("rejects disabled server flag %s even with public sales visible", async (serverValue) => {
+      vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", serverValue);
+      vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", "true");
+      const { ctx, rows } = fixture(productId);
+      await expect(call(reserveCheckout, ctx, { ...request, productId })).rejects.toThrow("PERSONAL_FIT_SALES_DISABLED");
+      expect(rows).toHaveLength(3);
+      expect(ctx.db.insert).not.toHaveBeenCalled();
+      expect(ctx.db.patch).not.toHaveBeenCalled();
+    });
+    it.each([undefined, "false", "true"])("allows enabled server sales independently of public flag %s", async (publicValue) => {
+      vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", "true");
+      vi.stubEnv("NEXT_PUBLIC_PERSONAL_FIT_SALES_ENABLED", publicValue);
+      const { ctx, rows } = fixture();
+      rows.push(row("pricingEntitlements:annual", { userId: "users:owner", productId: "annual", status: "active",
+        source: "purchase", startsAt: now - 1000, expiresAt: now + 1000 }));
+      expect(await call(reserveCheckout, ctx, { ...request, productId })).toMatchObject({ productId });
+      expect(ctx.db.insert).toHaveBeenCalledWith("stripeCheckouts", expect.objectContaining({ productId, status: "pending" }));
+    });
+    it.each(["STRIPE_BILLING_ENABLED", "NEXT_PUBLIC_STRIPE_BILLING_ENABLED"])("keeps %s disabled precedence", async (billingFlag) => {
+      vi.stubEnv(billingFlag, "false");
+      expect(await call(reserveCheckout, {}, { ...request, productId })).toMatchObject({ code: "STRIPE_NOT_IMPLEMENTED" });
+      expect(auth).not.toHaveBeenCalled();
+    });
+  });
+  it("allows annual sales while personal sales are disabled", async () => {
+    const { ctx } = fixture();
+    expect(await call(reserveCheckout, ctx, { ...request, productId: "annual" })).toMatchObject({ productId: "annual" });
+  });
+  it("still requires standalone eligibility when personal sales are enabled", async () => {
+    vi.stubEnv("PERSONAL_FIT_SALES_ENABLED", "true");
+    const { ctx } = fixture();
+    await expect(call(reserveCheckout, ctx, { ...request, productId: "personal_fit_standalone" }))
+      .rejects.toThrow("PERSONAL_FIT_NOT_ELIGIBLE");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+  });
   it("off returns stub before auth or writes", async () => {
     vi.stubEnv("STRIPE_BILLING_ENABLED", "false");
     expect(await call(reserveCheckout, {}, request)).toMatchObject({ code: "STRIPE_NOT_IMPLEMENTED" });

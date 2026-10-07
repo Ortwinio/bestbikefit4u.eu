@@ -105,6 +105,7 @@ export function renderSubscriptionWelcome(data: SubscriptionWelcomeData, locale:
   email.add(items.html, items.text);
   email.paragraph(fill(copy.renewal, { renewal: formatPrice(PRODUCTS.annual.renewalPriceCents / 100, locale) }));
   email.button(data.actionUrl, copy.button);
+  if (data.appointmentUrl) email.button(data.appointmentUrl, locale === "nl" ? "Plan je afspraak" : "Book your appointment");
   email.paragraph(emailCopy[locale].common.reply, true);
   return email.finish();
 }

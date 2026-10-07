@@ -4,6 +4,7 @@ import { mutation } from "../_generated/server";
 import { getUserAccess } from "../pricing/access";
 import { PRODUCTS, type PaidProductId } from "../../shared/pricing/products";
 import { isStripeBillingEnabled } from "../../src/config/billing";
+import { isPersonalFitSalesEnabled } from "../../src/config/personalFit";
 import { stripeNotImplemented } from "../../shared/billing/stripeStub";
 
 /** A reservation authorizes a product only. It can never confirm a payment. */
@@ -21,6 +22,9 @@ export const reserveCheckout = mutation({
     if (!args.withdrawalAccepted) throw new Error("WITHDRAWAL_ACCEPTANCE_REQUIRED");
     if (args.productId === "free" || !Object.hasOwn(PRODUCTS, args.productId)) throw new Error("INVALID_PRODUCT");
     const productId = args.productId as PaidProductId;
+    if ((productId === "annual_personal" || productId === "personal_fit_standalone") && !isPersonalFitSalesEnabled()) {
+      throw new Error("PERSONAL_FIT_SALES_DISABLED");
+    }
     if (productId === "single" && !args.bikeId) throw new Error("BIKE_REQUIRED");
     const access = await getUserAccess(ctx, userId, args.bikeId, true);
     if (productId === "annual_upgrade" && !access.eligibleForUpgrade) throw new Error("UPGRADE_NOT_ELIGIBLE");

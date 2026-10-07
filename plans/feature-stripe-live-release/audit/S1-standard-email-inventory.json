@@ -1,0 +1,194 @@
+[
+  {
+    "file": "purchaseConfirmation-nl.html",
+    "sha256": "076a1bc18618bd8bfd9d301d4cb9666132b9072f9c097ff8495bccb5e96915fc"
+  },
+  {
+    "file": "purchaseConfirmation-nl.txt",
+    "sha256": "2550528b5da13a9051b6226e9d79a66ca9341f13ca3dd6306eb0d1e58c7e0006"
+  },
+  {
+    "file": "purchaseConfirmation-nl-375.png",
+    "sha256": "b59fbc16350c7203933832300fd43e4b8b07dc718da59c600960b391a2ccbcfe"
+  },
+  {
+    "file": "purchaseConfirmation-nl-600.png",
+    "sha256": "8bd5f7b0f7a93a97bf301888eebecc95f6c4569813dd9d00c3555b65c47e1760"
+  },
+  {
+    "file": "purchaseConfirmation-en.html",
+    "sha256": "1af1fa5e441874e3a66aaaa88b853b761a7c8e9b9949fc1c4a97ab265fea4823"
+  },
+  {
+    "file": "purchaseConfirmation-en.txt",
+    "sha256": "f628d0f83f4faa4b695bbbf60d256f36486537c4ca82756ecaab5cb19a2fa94c"
+  },
+  {
+    "file": "purchaseConfirmation-en-375.png",
+    "sha256": "3924d9a5629f568eca28f99ad2563939446abff6d5c46c81628f10fb1a2fa482"
+  },
+  {
+    "file": "purchaseConfirmation-en-600.png",
+    "sha256": "c37fd88ac4c5b97db03003794d6e92f0dc526a698199455e31b9523d3d3fd01e"
+  },
+  {
+    "file": "subscriptionWelcome-nl.html",
+    "sha256": "eaf71c79906d79f9cd4344ef75f1a55aeddbda126d001821e97d5aeed508332d"
+  },
+  {
+    "file": "subscriptionWelcome-nl.txt",
+    "sha256": "ad29dc4e28b589a5bbefdd76bee3eb2622260752d54c089911774c7ea3b82cce"
+  },
+  {
+    "file": "subscriptionWelcome-nl-375.png",
+    "sha256": "2c39173e8303e2df572fc292293baa2fb9aa5211a422ebdc02b9c346a486df8d"
+  },
+  {
+    "file": "subscriptionWelcome-nl-600.png",
+    "sha256": "0c3e3c1a387db4d0a7616060d9166a4c880ec299119f454c44757d01d5cf7ff2"
+  },
+  {
+    "file": "subscriptionWelcome-en.html",
+    "sha256": "04b448a4e8187428e8fc16e2ece97fc316dba489d4f0258db1cf0fa7b30cc455"
+  },
+  {
+    "file": "subscriptionWelcome-en.txt",
+    "sha256": "b7788ff412765d16165a6ce943b5e86a52fb8713f398b413273e6bc91a867410"
+  },
+  {
+    "file": "subscriptionWelcome-en-375.png",
+    "sha256": "052c3968fd4a0975fcd2429dc02cd2e152aa8a737112333a04d243443ef7f3ab"
+  },
+  {
+    "file": "subscriptionWelcome-en-600.png",
+    "sha256": "6249aedafab824e7c367b374e7068947e5741209f2446837376746a626b30cfa"
+  },
+  {
+    "file": "accessExpired-nl.html",
+    "sha256": "12d209678189a0c5e4e11bd641197280e8278925cae0e3f6b31f3c1e3611a2e0"
+  },
+  {
+    "file": "accessExpired-nl.txt",
+    "sha256": "3ccff136db205b14344e1e121f78a001ee662a21d29bfb0fca8b932667b893f1"
+  },
+  {
+    "file": "accessExpired-nl-375.png",
+    "sha256": "831dde4b71fd214c27e91259a7836e7f9a02ef7d9c47cdd7c1bdfe09c489b636"
+  },
+  {
+    "file": "accessExpired-nl-600.png",
+    "sha256": "1965edfbc2fb9e71fa701854c5f70e96f822f93d8c9f400bbe1eca747716bcc0"
+  },
+  {
+    "file": "accessExpired-en.html",
+    "sha256": "dd8e3851eff3bf56a1f403b154ce3049c38fc7671d6d12a17b54a21a0c75995f"
+  },
+  {
+    "file": "accessExpired-en.txt",
+    "sha256": "fcba0c5ba6219e6cbb03ed41fd9677fcce70c5c81ed648d293705b807e7d8e22"
+  },
+  {
+    "file": "accessExpired-en-375.png",
+    "sha256": "2abdfece48b5ea77d1ebda33c5bca6227ec04430fd8a6721a937511dc9b489db"
+  },
+  {
+    "file": "accessExpired-en-600.png",
+    "sha256": "a6b406a5d97f676ac80cbb7caca03f3d6dbfeb5ef35c4ad7d53ee02413a702c5"
+  },
+  {
+    "file": "renewalReminder-nl.html",
+    "sha256": "74835028f37161311e156bbcfa0e6a2ae77df86e7262d38267861dd8dc3a8e05"
+  },
+  {
+    "file": "renewalReminder-nl.txt",
+    "sha256": "4ca3fd62fb6123d76a9aaf8e8383e9a369f46dcd5ce029c49dcc8a21f0260161"
+  },
+  {
+    "file": "renewalReminder-nl-375.png",
+    "sha256": "48a68629062e435e64b631a603037399e1a2d0c45c4704c1808ef8aeee06dead"
+  },
+  {
+    "file": "renewalReminder-nl-600.png",
+    "sha256": "dbc0f4f61d4ec97df6ba8c6e776f0a4c7f7a6c1489766c336863957681a53487"
+  },
+  {
+    "file": "renewalReminder-en.html",
+    "sha256": "90c1fe4b16ffed6ecfb75d94eef1592919d162a750ece9282d2f74e87e4b0d4c"
+  },
+  {
+    "file": "renewalReminder-en.txt",
+    "sha256": "54165fbbeb37b8ae6cb182e46b0686f399b517a0f69a8f412a54b6413e95b970"
+  },
+  {
+    "file": "renewalReminder-en-375.png",
+    "sha256": "47e04827ca9365006a943b3c319d86fbe313194fcdf65bddef7c232c844b7d02"
+  },
+  {
+    "file": "renewalReminder-en-600.png",
+    "sha256": "e50595454fa98a54e721c7c4df82210068cabc52174198e733965305f92abbbc"
+  },
+  {
+    "file": "cancellationConfirmation-nl.html",
+    "sha256": "c8821d759aa92b852d7f2ac9442b75ec24c9f43b50d243f3a3baf7cba4819ec8"
+  },
+  {
+    "file": "cancellationConfirmation-nl.txt",
+    "sha256": "450303dbc39fa1ce38dc61d1a0359e936b156634912595117fb3ffcde1bb7d53"
+  },
+  {
+    "file": "cancellationConfirmation-nl-375.png",
+    "sha256": "0510a179a87c020bd78fd39110d321701876dc0f757c24ca41e5c9222fa50e74"
+  },
+  {
+    "file": "cancellationConfirmation-nl-600.png",
+    "sha256": "1acdbc2dced7c9ca24b873493921fd845cbce795e4bef469b6720442fc5aec84"
+  },
+  {
+    "file": "cancellationConfirmation-en.html",
+    "sha256": "149cef72fd3a55db391f0b62e110ca60654d3c7c6215c52860fc33d948d4ebc1"
+  },
+  {
+    "file": "cancellationConfirmation-en.txt",
+    "sha256": "279a26ed844783091ef3d788e708ccc7659d412feefd591374521e100a5cf807"
+  },
+  {
+    "file": "cancellationConfirmation-en-375.png",
+    "sha256": "af8af6aa8c5e25135261cf738a767678473e8e415627489383b14b6dfda38349"
+  },
+  {
+    "file": "cancellationConfirmation-en-600.png",
+    "sha256": "04a718c759cc0f16ca27e8c1310196e163042ec3f8e0cc438e8ab279f1c8ed62"
+  },
+  {
+    "file": "transitionAnnouncement-nl.html",
+    "sha256": "6e5ba8007e221aa72ed9b94748df42bada6f781e0a0699c1ad39ec19bcb84b4e"
+  },
+  {
+    "file": "transitionAnnouncement-nl.txt",
+    "sha256": "48e57a23092bde8dd4a5ddbe3497a52678051578a8346e410bc91da9ec59c701"
+  },
+  {
+    "file": "transitionAnnouncement-nl-375.png",
+    "sha256": "ae2b549e390ad20ac085b917ad5a3a7fa19a74d9006867071bcc02f23bd883bb"
+  },
+  {
+    "file": "transitionAnnouncement-nl-600.png",
+    "sha256": "9a435d59d48aafad07306f9d52baabdf9b0af490683c8570e7e9d1a4cb898c61"
+  },
+  {
+    "file": "transitionAnnouncement-en.html",
+    "sha256": "60f829edde37ee223cdb9c823f139734e20fbd54c6ea5142a9f4ca7ef1b8863b"
+  },
+  {
+    "file": "transitionAnnouncement-en.txt",
+    "sha256": "b3874cb4f3f612f7a1eeee60380203d45cc912c4bc4a8dd8e5beeee78f290ca8"
+  },
+  {
+    "file": "transitionAnnouncement-en-375.png",
+    "sha256": "56211064e4214689e3e3bd7aea8eb19ded31d1b565eef4d1da38b882faea183d"
+  },
+  {
+    "file": "transitionAnnouncement-en-600.png",
+    "sha256": "16d2cc2aaf4c5643c731ddb72fae154175320d37279dc30894ea0017623e9644"
+  }
+]

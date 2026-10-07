@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BRAND } from "@/config/brand";
+import { isPersonalFitSalesVisible } from "@/config/personalFit";
 import { ArrowLeft, Check, LockKeyhole } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { withLocalePrefix } from "@/i18n/navigation";
@@ -53,6 +54,8 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
   const product = result === "appointment" ? "personal_fit_standalone" : result && paymentReceipt ? parseCheckoutProduct(paymentReceipt.productId) : selection.product;
   const isStandalone = product === "personal_fit_standalone";
   const hasAppointment = product === "personal" || isStandalone;
+  const personalSalesVisible = isPersonalFitSalesVisible();
+  const salesUnavailable = hasAppointment && !personalSalesVisible;
   const canBuyStandalone = authenticated && standaloneEligible;
   const eligible = authenticated && (result && paymentReceipt ? paymentReceipt.productId === "annual_upgrade" : upgradeEligible);
   const confirmationKey = JSON.stringify([authenticated, accountId, accountEmail, checkoutProductId(product, eligible), checkoutPrice(product, eligible), selection.bikeId, canBuyStandalone]);
@@ -105,6 +108,7 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
   }
 
   function advance() {
+    if (salesUnavailable) return;
     if (!persist()) return;
     setConsent(false);
     setStep(activeStep === 0 ? 1 : 2);
@@ -112,6 +116,7 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
 
   async function authenticate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (salesUnavailable) return;
     if (codeSent && !/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{7}$/.test(code)) {
       setError(text.authError);
       return;
@@ -137,6 +142,7 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
 
   async function pay(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (salesUnavailable) return;
     if (busy || !authenticated || authLoading || !consent || (isStandalone && !canBuyStandalone) || (product === "single" && !bike) || !persist()) return;
     if (!startCheckout) {
       setMessage(stripeNotImplemented(locale).message);
@@ -193,18 +199,18 @@ export function CheckoutFlow({ locale, initialSelection, authenticated, authLoad
         <fieldset className={styles.plans}><legend className={styles.srOnly}>{text.choice}</legend>
           {choices.map(plan => <label key={plan} className={`${styles.plan} ${plan === "annual" ? styles.featured : ""}`} data-selected={product === plan}>
             {plan === "annual" && <span className={styles.badge}>{text.favorite}</span>}
-            <div className={styles.planTop}><h2>{text[plan]}</h2><input type="radio" name="product" value={plan} checked={product === plan} disabled={busy} onChange={() => choose({ ...selection, product: plan })} /></div>
+            <div className={styles.planTop}><h2>{text[plan]}</h2><input type="radio" name="product" value={plan} checked={product === plan} disabled={busy || (!personalSalesVisible && (plan === "personal" || plan === "personal_fit_standalone"))} onChange={() => choose({ ...selection, product: plan })} /></div>
             <div className={styles.price}>{priceFor(plan)}<small>{priceNote(plan)}</small></div>
             <p className={styles.meta}>{plan === "single" ? text.singleMeta : plan === "annual" ? text.annualMeta : plan === "personal" ? text.personalMeta : text.standaloneMeta}</p>
             {benefitList(plan)}
             {plan === "annual" && eligible && <p className={styles.small}>{text.intro}</p>}
             {plan === "personal_fit_standalone" && !canBuyStandalone && <p className={styles.small}>{text.standaloneEligibility}</p>}
             {renews(plan) && <p className={styles.small}>{plan === "personal" ? text.personalRenewal : text.renewal}</p>}
-            <span className={styles.pick}>{product === plan ? text.selected : `${text.select} ${text[plan]}`}</span>
+            <span className={styles.pick}>{!personalSalesVisible && (plan === "personal" || plan === "personal_fit_standalone") ? text.availableSoon : product === plan ? text.selected : `${text.select} ${text[plan]}`}</span>
           </label>)}
         </fieldset>
-        <div className={styles.actions}><button className={styles.primary} type="button" disabled={!ready || authLoading} onClick={advance}>{text.continue} · {price}</button><p className={styles.small}>{text.free}</p></div>
-      </> : <div className={styles.columns}>
+        <div className={styles.actions}>{salesUnavailable ? <p role="status">{text.availableSoon}</p> : <button className={styles.primary} type="button" disabled={!ready || authLoading} onClick={advance}>{text.continue} · {price}</button>}<p className={styles.small}>{text.free}</p></div>
+      </> : salesUnavailable ? <section className={styles.panel}><h1 ref={heading} tabIndex={-1}>{text[product]}</h1><p role="status">{text.availableSoon}</p><Link href={link("/pricing")}>{text.back}</Link></section> : <div className={styles.columns}>
         <section>
           <h1 ref={heading} tabIndex={-1}>{activeStep === 1 ? text.accountTitle : text.confirmTitle}</h1>
           {activeStep === 1 ? <>

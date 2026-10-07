@@ -3,6 +3,13 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
+crons.daily(
+  "billing renewal and access expiry emails",
+  { hourUTC: 0, minuteUTC: 30 },
+  makeFunctionReference<"mutation">("emails/billingBatches:runDaily"),
+  {}
+);
+
 crons.hourly(
   "expire gift invitations and remove recipient details",
   { minuteUTC: 20 },
