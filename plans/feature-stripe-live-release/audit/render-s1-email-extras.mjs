@@ -52,7 +52,7 @@ try {
         await page.evaluate(() => document.fonts.ready);
         const result = await page.evaluate(() => ({ lang: document.documentElement.lang, scrollWidth: document.documentElement.scrollWidth, failedImages: [...document.images].filter(image => !image.complete || !image.naturalWidth).length, placeholders: /\[(LOCATIE|DUUR AFSPRAAK|VOORWAARDEN AFSPRAAK|AGENDALINK)/.test(document.body.textContent), links: [...document.querySelectorAll("a")].map(link => link.href) }));
         if (result.lang !== locale || result.scrollWidth > width || result.failedImages || result.placeholders) throw new Error(`Layout/content failure ${name} ${width}`);
-        if (["annualPersonalWelcome", "standalonePurchase"].includes(kind) && !result.links.includes(agenda)) throw new Error(`Agenda missing ${name}`);
+        if (["annualPersonalWelcome", "standalonePurchase"].includes(kind) && !result.links.some(link => link === agenda)) throw new Error(`Agenda missing ${name}`);
         if (kind === "datedTransitionAnnouncement" && /\[(DATE|DATUM)\]/.test(email.text)) throw new Error(`Launch date missing ${name}`);
         if (kind === "senderSinglePurchase" && /attached|factuur zit als PDF/.test(email.text)) throw new Error(`Incorrect attachment claim ${name}`);
         checks.push({ kind, locale, width, ...result });
