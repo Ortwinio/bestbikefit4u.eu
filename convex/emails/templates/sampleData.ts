@@ -35,6 +35,10 @@ export function sampleData(locale: EmailLocale) {
     giftsGiven: 2, giftsIncluded: true, cancellationUrl: `${BRAND.siteUrl}/${locale}/settings`,
   };
   return {
+    transitionReminder: {
+      redeemBy: Date.UTC(2026, 11, 7),
+      actionUrl: `${BRAND.siteUrl}/${locale}/dashboard#transition-offer`,
+    },
     kneeAngleEvaluation: { ...personal, ...preferences, angleDegrees: 31, targetSaddleHeightMm: 787,
       actionUrl: `${BRAND.siteUrl}/${locale}/tools/knee-angle` },
     giftMeasurement: {

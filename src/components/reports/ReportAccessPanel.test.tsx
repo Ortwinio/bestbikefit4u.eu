@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ReportAccessPanel, ReportSafetyNote } from "./ReportAccessPanel";
 import { getUsabilityPaidCopy } from "@/i18n/account/usabilityPaid";
 import { reportAccessCopy } from "@/i18n/account/reportAccess";
 
 afterEach(cleanup);
+vi.mock("@/components/billing/TransitionOffer", () => ({ TransitionOffer: () => null }));
 
 describe.each(["nl", "en"] as const)("report access invitation in %s", (locale) => {
   it("carries only the selected bike to single-fit checkout and keeps safety visible", () => {

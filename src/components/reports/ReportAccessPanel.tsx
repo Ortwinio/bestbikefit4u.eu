@@ -1,9 +1,13 @@
 import type { Locale } from "@/i18n/config";
 import { PaidBoundary } from "@/components/billing/PaidBoundary";
 import { reportAccessCopy } from "@/i18n/account/reportAccess";
+import { TransitionOffer } from "@/components/billing/TransitionOffer";
 
 export function ReportAccessPanel({ locale, bikeId }: { locale: Locale; bikeId?: string }) {
-  return <PaidBoundary locale={locale} boundary="report" bikeId={bikeId} />;
+  return <div className="space-y-4">
+    {bikeId && <TransitionOffer locale={locale} bikeId={bikeId} />}
+    <PaidBoundary locale={locale} boundary="report" bikeId={bikeId} />
+  </div>;
 }
 
 export function ReportSafetyNote({ locale }: { locale: Locale }) {

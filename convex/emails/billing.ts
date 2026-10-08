@@ -53,7 +53,7 @@ export const sendBillingEmail = internalAction({
                 : job.kind === "transition_announcement" && job.launchAt
                   ? renderTransitionAnnouncement({ ...common, launchAt: job.launchAt, eligibleTransitionOffer: Boolean(offer && offer.goLiveAt === job.launchAt && !offer.redeemedAt && offer.redeemBy > Date.now()), daysUntilLaunch: Math.ceil((job.launchAt - Date.now()) / 86400000), actionUrl: emailActionUrl(locale, "/pricing") }, locale)
                   : job.kind === "transition_reminder" && offer
-                    ? renderTransitionReminder({ redeemBy: offer.redeemBy, actionUrl: emailActionUrl(locale, "/fit") }, locale) : null);
+                    ? renderTransitionReminder({ redeemBy: offer.redeemBy, actionUrl: emailActionUrl(locale, "/dashboard#transition-offer") }, locale) : null);
       if (!email) { failureCode = "invalid_job"; return; }
       const payload = await ctx.runMutation(freezeReference, { jobId, attempts, payload: { recipient: user.email!, subject: email.subject, preheader: email.preheader, html: email.html, text: email.text } });
       if (!payload) { failureCode = "recipient_unavailable"; return; }

@@ -1,0 +1,26 @@
+export const transitionOfferCopy = {
+  nl: {
+    title: "Je gratis losse meting", available: "Te gebruiken tot", upcoming: "Te gebruiken vanaf",
+    choose: "Kies een fiets", use: "Gebruik voor deze fiets", useHere: "Gebruik je gratis meting",
+    confirm: "Bevestig je keuze", cancel: "Terug", saving: "Je meting wordt geactiveerd…",
+    explanation: "Deze gratis meting geeft alleen voor de gekozen fiets 3 maanden volledige toegang. Je betaalt niets.",
+    confirmation: "Je gebruikt je eenmalige gratis meting voor", success: "Je gratis meting is geactiveerd voor deze fiets.",
+    noBikes: "Voeg eerst een fiets toe om je gratis meting te gebruiken.", addBike: "Voeg een fiets toe",
+    unavailable: "Je kunt deze meting nu niet gebruiken. Controleer de beschikbaarheidsdatum op je dashboard.",
+    redeemed: "Je gratis meting is al voor een fiets gebruikt. Bekijk je fietsen voor de actieve toegang.",
+    missing: "Er staat geen gratis overgangsmeting klaar voor je account.",
+    error: "Activeren is niet gelukt. Controleer je verbinding en probeer opnieuw.",
+  },
+  en: {
+    title: "Your free single fit", available: "Use before", upcoming: "Available from",
+    choose: "Choose a bike", use: "Use for this bike", useHere: "Use your free fit",
+    confirm: "Confirm your choice", cancel: "Back", saving: "Activating your fit…",
+    explanation: "This free fit gives full access for the selected bike only, for 3 months. You pay nothing.",
+    confirmation: "You are using your one-time free fit for", success: "Your free fit is activated for this bike.",
+    noBikes: "Add a bike first to use your free fit.", addBike: "Add a bike",
+    unavailable: "You cannot use this fit right now. Check the availability date on your dashboard.",
+    redeemed: "Your free fit has already been used for a bike. Check your bikes for active access.",
+    missing: "There is no free transition fit available for your account.",
+    error: "Activation failed. Check your connection and try again.",
+  },
+} as const;

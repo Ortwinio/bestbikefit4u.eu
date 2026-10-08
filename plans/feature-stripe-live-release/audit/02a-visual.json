@@ -1,0 +1,841 @@
+{
+  "scope": "Isolated production components, offline fixtures; billing OFF, paid access enforced. No full-route/build/real-redemption proof.",
+  "capturedAt": "2026-10-08T00:36:19.575Z",
+  "expectedCaptures": 24,
+  "sourceHashes": {
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/transition-offer/entry.jsx": "ad606b98fd345aa8cf222a6ca329e876c357ab388da702efe3f7610ac3aa5f0f",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/account/transitionOffer.ts": "2d5b5941fa15565956a795c8825bacc63523bdddb1769c68ae9ba44a62ebbae9",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/billing/TransitionOffer.tsx": "a32c5e572c0c660e23d4e75adb1bd7bf1cf7df1b516123c07c5b038440dfb366",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/components/billing/PaidBoundary.tsx": "33a6bab2028460e22b55a1cc99949605e5776b2cd0e6ad405c351c79df4aea37",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/account/usabilityPaid.ts": "563e73dac914379102118bc6f5e66dbd66c246ba4f2321541f166427da140fae",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/transition-offer/runtime.jsx": "2887576b65057b673d33c3546fac8711f9c3094de8a9ce3cca79ab61eda0beba",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/navigation.ts": "a304259071a5b547346d963d84d564730a709b85059442e7a0dbb79533b64b27",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/convex/_generated/api.js": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/tests/visual/account-batch1/link.jsx": "337e9e00b8afd77f9183f0d447023984bbea78b097b1fa98252fdf8953e26705",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/shared/pricing/products.ts": "917eb6d84f6ae4d941b52194756f2bed4917cf0ba23f43e609f6464c2012befa",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/localeRoutes.ts": "d9e77122f77bb5371db1909977ba5f8b6f18e1bc38872c1d4af66bf015bec344",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/pressureRoutes.ts": "86b2a4c9193660eb609e115d31b388c08a64772310051c6053c98cf957cef428",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/i18n/config.ts": "479c91695c59b8058e6a0ae4bdc66401d46bdb7dc114394115a9bb39de5287f7",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/lib/public-calculators/routes.ts": "1d715f138faf89d17dda4521d653c054025d61f88911c87a344928bf364e0928",
+    "/Users/ortwinverreck/Developer/bikefitboost-stripe/src/app/globals.css": "934a50dd4b656bcf488c41f83e28057d7c75af43508c283a266d36b39e1b0293"
+  },
+  "changedSources": [],
+  "results": [
+    {
+      "surface": "dashboard",
+      "state": "available",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-available-nl-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "available",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-available-nl-1440.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "available",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-available-en-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "available",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-available-en-1440.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "upcoming",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-upcoming-nl-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "upcoming",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-upcoming-nl-1440.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "upcoming",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-upcoming-en-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "upcoming",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-upcoming-en-1440.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "redeemed",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-redeemed-nl-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "redeemed",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-redeemed-nl-1440.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "redeemed",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-redeemed-en-390.png"
+    },
+    {
+      "surface": "dashboard",
+      "state": "redeemed",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-dashboard-redeemed-en-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "available",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-available-nl-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "available",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-available-nl-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "available",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-available-en-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "available",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-available-en-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "upcoming",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-upcoming-nl-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "upcoming",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-upcoming-nl-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "upcoming",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-upcoming-en-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "upcoming",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-upcoming-en-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "redeemed",
+      "locale": "nl",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-redeemed-nl-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "redeemed",
+      "locale": "nl",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "nl"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-redeemed-nl-1440.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "redeemed",
+      "locale": "en",
+      "width": 390,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-redeemed-en-390.png"
+    },
+    {
+      "surface": "paid-limit",
+      "state": "redeemed",
+      "locale": "en",
+      "width": 1440,
+      "errors": [],
+      "blockedRequests": [],
+      "assertions": [
+        {
+          "name": "offer visibility",
+          "passed": true
+        },
+        {
+          "name": "no dialogs",
+          "passed": true
+        },
+        {
+          "name": "price information preserved",
+          "passed": true
+        },
+        {
+          "name": "no mutation called",
+          "passed": true
+        }
+      ],
+      "calls": [],
+      "metrics": {
+        "overflow": false,
+        "fontsReady": true,
+        "locale": "en"
+      },
+      "axe": [],
+      "screenshot": "/Users/ortwinverreck/Developer/bikefitboost-stripe/plans/feature-stripe-live-release/renders/02a-paid-limit-redeemed-en-1440.png"
+    }
+  ]
+}

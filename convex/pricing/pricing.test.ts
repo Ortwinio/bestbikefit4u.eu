@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getFunctionName } from "convex/server";
 import { beginTransition, continueTransition, expireEntitlements } from "./internal";
 import { redeemTransitionOffer } from "./mutations";
-import { getAccess, getSubscription } from "./queries";
+import { getAccess, getSubscription, getTransitionOffer } from "./queries";
 import { grantPurchasedAccess } from "./grants";
 import { grantGiftEntitlement } from "./gifts";
 import type { MutationCtx } from "../_generated/server";
@@ -35,7 +35,14 @@ function context(rows: Row[]) {
           };
           callback(index); return chain;
         },
-        filter: () => { selected = selected.filter((entry) => Number(entry.createdAt) < cutoff && entry._creationTime < cutoff); return chain; },
+        filter: (callback: (query: { field: (name: string) => string; lt: (field: string, value: number) => (entry: Row) => boolean; and: (...conditions: Array<(entry: Row) => boolean>) => (entry: Row) => boolean }) => (entry: Row) => boolean) => {
+          selected = selected.filter(callback({
+            field: (name) => name,
+            lt: (field, value) => (entry) => Number(entry[field]) < value,
+            and: (...conditions) => (entry) => conditions.every((condition) => condition(entry)),
+          }));
+          return chain;
+        },
         collect: async () => selected,
         unique: async () => selected[0] ?? null,
         first: async () => selected[0] ?? null,
@@ -53,7 +60,57 @@ function context(rows: Row[]) {
 beforeEach(() => { auth.mockResolvedValue("users:owner"); vi.spyOn(Date, "now").mockReturnValue(now); vi.stubEnv("PAID_ACCESS_ENFORCED", "true"); });
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
+describe("transition offer status", () => {
+  it("requires authentication and scopes absence to the current user", async () => {
+    const ctx = context([row("pricingTransitionOffers:other", { userId: "users:other" })]);
+    auth.mockResolvedValue(null);
+    await expect(call(getTransitionOffer, ctx)).rejects.toThrow("Not authenticated");
+    auth.mockResolvedValue("users:owner");
+    expect(await call(getTransitionOffer, ctx)).toEqual({ status: "none" });
+  });
+  it.each([
+    [now + 1, now + 1000, { status: "upcoming", goLiveAt: now + 1 }],
+    [now, now + 1000, { status: "available", redeemBy: now + 1000 }],
+    [cutoff, now, { status: "expired" }],
+    [cutoff, now - 1, { status: "expired" }],
+  ])("returns only the status contract for %s / %s", async (goLiveAt, redeemBy, expected) => {
+    const ctx = context([row("pricingTransitionOffers:1", { userId: "users:owner", goLiveAt, redeemBy })]);
+    expect(await call(getTransitionOffer, ctx)).toEqual(expected);
+  });
+  it("retains redemption history after the offer and measurement expire", async () => {
+    const redeemedAt = Date.UTC(2026, 0, 31);
+    const ctx = context([row("pricingTransitionOffers:1", { userId: "users:owner", goLiveAt: redeemedAt,
+      redeemBy: cutoff, redeemedAt, bikeId: "bikes:1", entitlementId: "pricingEntitlements:1" })]);
+    expect(await call(getTransitionOffer, ctx)).toEqual({ status: "redeemed", bikeId: "bikes:1", expiresAt: Date.UTC(2026, 3, 30) });
+  });
+});
+
 describe("pricing ownership and redemption", () => {
+  it("rejects missing offers, foreign bikes, and unauthenticated redemption without writes", async () => {
+    const ctx = context([row("bikes:1", { userId: "users:owner" }), row("bikes:other", { userId: "users:other" })]);
+    await expect(call(redeemTransitionOffer, ctx, { bikeId: "bikes:1" })).rejects.toThrow("TRANSITION_OFFER_NOT_FOUND");
+    await expect(call(redeemTransitionOffer, ctx, { bikeId: "bikes:other" })).rejects.toThrow("Bike not found");
+    auth.mockResolvedValue(null);
+    await expect(call(redeemTransitionOffer, ctx, { bikeId: "bikes:1" })).rejects.toThrow("Not authenticated");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+    expect(ctx.db.patch).not.toHaveBeenCalled();
+  });
+  it("rejects before go-live and redeems exactly at go-live with all flags OFF", async () => {
+    for (const flag of ["PAID_ACCESS_ENFORCED", "NEXT_PUBLIC_PAID_ACCESS_ENFORCED", "STRIPE_BILLING_ENABLED", "NEXT_PUBLIC_STRIPE_BILLING_ENABLED"]) vi.stubEnv(flag, "false");
+    const offer = row("pricingTransitionOffers:1", { userId: "users:owner", goLiveAt: now + 1, redeemBy: now + 1000 });
+    const ctx = context([row("bikes:1", { userId: "users:owner" }), row("bikes:2", { userId: "users:owner" }), offer]);
+    await expect(call(redeemTransitionOffer, ctx, { bikeId: "bikes:1" })).rejects.toThrow("TRANSITION_OFFER_UNAVAILABLE");
+    expect(ctx.db.insert).not.toHaveBeenCalled();
+    vi.mocked(Date.now).mockReturnValue(now + 1);
+    expect(await call(getTransitionOffer, ctx)).toEqual({ status: "available", redeemBy: now + 1000 });
+    const entitlementId = await call(redeemTransitionOffer, ctx, { bikeId: "bikes:1" });
+    vi.mocked(Date.now).mockReturnValue(now + 2000);
+    expect(await call(redeemTransitionOffer, ctx, { bikeId: "bikes:1" })).toBe(entitlementId);
+    await expect(call(redeemTransitionOffer, ctx, { bikeId: "bikes:2" })).rejects.toThrow("TRANSITION_OFFER_ALREADY_REDEEMED");
+    expect(await call(getTransitionOffer, ctx)).toEqual({ status: "redeemed", bikeId: "bikes:1", expiresAt: Date.UTC(2027, 0, 3) + 1 });
+    expect(ctx.db.insert).toHaveBeenCalledTimes(1);
+    expect(ctx.scheduler.runAfter).not.toHaveBeenCalled();
+  });
   it("returns null logged out and rejects another owner's bike", async () => {
     const ctx = context([row("bikes:1", { userId: "users:other" })]);
     auth.mockResolvedValue(null);
@@ -70,6 +127,7 @@ describe("pricing ownership and redemption", () => {
     expect(ctx.db.insert).toHaveBeenCalledTimes(1);
     expect(rows.find((entry) => entry._id === id)).toMatchObject({ productId: "single", source: "transition",
       expiresAt: Date.UTC(2027, 0, 3), periodPriceCents: 0, renewed: false, cancelled: false });
+    expect(await call(getAccess, ctx, { bikeId: "bikes:1" })).toMatchObject({ fullReport: true });
   });
   it("rejects expired offers and changing the redemption bike", async () => {
     const offer = row("pricingTransitionOffers:1", { userId: "users:owner", goLiveAt: cutoff, redeemBy: now });
@@ -114,10 +172,10 @@ describe("admin dry-run-first transition", () => {
     await expect(call(beginTransition, context([row("users:owner")]), { goLiveAt: cutoff })).rejects.toThrow("Not authorized");
     await expect(call(beginTransition, context(fixtures()), { goLiveAt: cutoff, dryRun: false })).rejects.toThrow("COMPLETED_DRY_RUN_REQUIRED");
   });
-  it("allows future preview but not writes, incomplete or foreign dry-run evidence", async () => {
+  it("rejects future writes without evidence, incomplete or foreign dry-run evidence", async () => {
     const rows = fixtures(); const ctx = context(rows);
     expect(await call(beginTransition, ctx, { goLiveAt: now + 1000 })).toBeTypeOf("string");
-    await expect(call(beginTransition, ctx, { goLiveAt: now + 1000, dryRun: false })).rejects.toThrow("GO_LIVE_NOT_REACHED");
+    await expect(call(beginTransition, ctx, { goLiveAt: now + 1000, dryRun: false })).rejects.toThrow("COMPLETED_DRY_RUN_REQUIRED");
     const runId = await call(beginTransition, ctx, { goLiveAt: cutoff });
     await expect(call(beginTransition, ctx, { goLiveAt: cutoff, dryRun: false, dryRunId: runId })).rejects.toThrow("COMPLETED_DRY_RUN_REQUIRED");
     await call(continueTransition, ctx, { runId }); await call(continueTransition, ctx, { runId });
@@ -133,6 +191,45 @@ describe("admin dry-run-first transition", () => {
     expect(await call(continueTransition, ctx, { runId })).toMatchObject({ phase: "reports", cursor: "50" });
     expect(await call(continueTransition, ctx, { runId })).toMatchObject({ phase: "users", reportCount: 52 });
     expect(await call(continueTransition, ctx, { runId })).toMatchObject({ phase: "complete", offerCount: 1 });
+  });
+  it("precreates offers 14 days ahead without migrating access, including runs crossing go-live", async () => {
+    const goLiveAt = now + 14 * 24 * 60 * 60 * 1000;
+    const rows = fixtures();
+    Object.assign(rows.find((entry) => entry._id === "subscriptions:1")!, { currentPeriodEnd: goLiveAt + 9999 });
+    const ctx = context(rows);
+    const dryRunId = await call(beginTransition, ctx, { goLiveAt });
+    await call(continueTransition, ctx, { runId: dryRunId });
+    await call(continueTransition, ctx, { runId: dryRunId });
+    expect(rows.some((entry) => entry._id.startsWith("pricingTransitionOffers:"))).toBe(false);
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const runId = await call(beginTransition, ctx, { goLiveAt, dryRun: false, dryRunId });
+      if (attempt === 1) vi.mocked(Date.now).mockReturnValue(goLiveAt);
+      await call(continueTransition, ctx, { runId });
+      await call(continueTransition, ctx, { runId });
+      expect(await call(continueTransition, ctx, { runId })).toMatchObject({ phase: "complete" });
+      expect(rows.some((entry) => entry.legacyFullAccess)).toBe(false);
+      expect(rows.some((entry) => entry._id.startsWith("pricingEntitlements:"))).toBe(false);
+    }
+    expect(rows.filter((entry) => entry._id.startsWith("pricingTransitionOffers:"))).toEqual([
+      expect.objectContaining({ userId: "users:rider", goLiveAt, redeemBy: Date.UTC(2026, 11, 17) }),
+    ]);
+    rows.push(row("users:late", { _creationTime: goLiveAt - 1 }),
+      row("recommendations:late", { userId: "users:late", _creationTime: goLiveAt - 1, createdAt: goLiveAt - 1 }),
+      row("users:post", { _creationTime: goLiveAt }),
+      row("recommendations:post", { userId: "users:post", _creationTime: goLiveAt, createdAt: goLiveAt }));
+    const launchPreview = await call(beginTransition, ctx, { goLiveAt });
+    await call(continueTransition, ctx, { runId: launchPreview });
+    await call(continueTransition, ctx, { runId: launchPreview });
+    const launchRun = await call(beginTransition, ctx, { goLiveAt, dryRun: false, dryRunId: launchPreview });
+    await call(continueTransition, ctx, { runId: launchRun });
+    await call(continueTransition, ctx, { runId: launchRun });
+    expect(rows.find((entry) => entry._id === "recommendations:old")?.legacyFullAccess).toBe(true);
+    expect(rows.find((entry) => entry._id === "recommendations:late")?.legacyFullAccess).toBe(true);
+    expect(rows.find((entry) => entry._id === "recommendations:post")?.legacyFullAccess).toBeUndefined();
+    expect(rows.filter((entry) => entry._id.startsWith("pricingTransitionOffers:"))).toHaveLength(2);
+    expect(rows.filter((entry) => entry._id.startsWith("pricingEntitlements:"))).toEqual([
+      expect.objectContaining({ source: "legacy_pro", startsAt: goLiveAt, expiresAt: goLiveAt + 9999 }),
+    ]);
   });
   it.each([{ status: "canceled" }, { cancelAtPeriodEnd: true }])("maps real legacy cancellation metadata %j", async (patch) => {
     const rows = fixtures(); Object.assign(rows.find((entry) => entry._id === "subscriptions:1")!, patch);

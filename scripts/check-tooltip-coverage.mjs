@@ -21,6 +21,7 @@ const PRIMITIVE_FILES = new Set([
 const EXEMPT_FILES = new Set([
   "src/components/gifts/GiftGive.tsx",
   "src/components/gifts/GiftRedeem.tsx",
+  "src/components/billing/TransitionOffer.tsx",
   "src/components/checkout/CheckoutFlow.tsx",
   // Handoff review uses permanent labels and inline measurement-point guidance.
   "src/app/welcome/WelcomeClient.tsx",

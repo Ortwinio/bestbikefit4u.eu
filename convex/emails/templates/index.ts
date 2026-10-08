@@ -104,6 +104,7 @@ export {
   renderRenewalReminder, renderCancellationConfirmation, renderTransitionAnnouncement,
 } from "./pricing";
 export { renderGiftMeasurement } from "./giftMeasurement";
+export { renderTransitionReminder } from "./transitionReminder";
 export type { GiftMeasurementData } from "./giftMeasurement";
 
 export { renderKneeAngleEvaluation } from "./reliability";

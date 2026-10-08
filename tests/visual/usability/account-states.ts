@@ -40,6 +40,7 @@ export function readUsabilityAccountState(name: string, { profile, bike, values,
         method: "single_measurement", recordedAt: now, repeatCount: 1, withinTolerance: false,
         unit: field === "weightKg" ? "kg" : "cm", source: "profile_edit", status: "current" }] : [];
     });
+  if (name === "pricing/queries:getTransitionOffer") return result({ status: "none" });
   if (name === "pricing/queries:getAccess") return { handled: true, value: access };
   if (name === "pricing/queries:getSubscription") return result({ access, transitionOffer: null,
     entitlements: mode === "paid" ? [{ _id: "visual-entitlement", productId: "annual", status: "active",

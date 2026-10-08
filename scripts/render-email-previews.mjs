@@ -27,7 +27,7 @@ const kinds = [
   "caseStudyConfirmation", "fitReminder", "upgradeNudge", "winback", "proExplainer", "day1Tips",
   "day7CheckIn", "day14Evaluation",
   "purchaseConfirmation", "subscriptionWelcome", "accessExpired", "renewalReminder",
-  "cancellationConfirmation", "transitionAnnouncement", "giftMeasurement", "kneeAngleEvaluation",
+  "cancellationConfirmation", "transitionAnnouncement", "transitionReminder", "giftMeasurement", "kneeAngleEvaluation",
 ];
 const browser = await chromium.launch({ headless: true });
 const checks = [];
