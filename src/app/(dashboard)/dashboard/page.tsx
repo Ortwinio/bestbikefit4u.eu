@@ -37,6 +37,7 @@ import {
 import { ArrowRight, Plus, User, Bike } from "lucide-react";
 import { isPaidAccessEnforced } from "../../../../shared/pricing/flags";
 import { BikeAccessNotice } from "@/components/bikes/BikeAccessNotice";
+import { TransitionOffer } from "@/components/billing/TransitionOffer";
 
 export default function DashboardPage() {
   const { locale, messages } = useDashboardMessages();
@@ -106,6 +107,7 @@ export default function DashboardPage() {
       </header>
 
       <DashboardProfileStrength locale={locale} />
+      <TransitionOffer locale={locale} />
       {access?.enforced && access.maxBikes === 1 && <BikeAccessNotice locale={locale} />}
       <DashboardProfilePrompts locale={locale} />
       <DashboardCalculatorQuickLinks locale={locale} />

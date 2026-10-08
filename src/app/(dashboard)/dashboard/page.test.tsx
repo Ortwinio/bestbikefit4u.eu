@@ -15,6 +15,7 @@ const state = vi.hoisted(() => ({
 }));
 
 vi.mock("convex/react", () => ({
+  useMutation: () => () => { throw new Error("Unexpected redemption in dashboard presentation fixture"); },
   useQuery: state.query,
   useConvexAuth: () => ({ isAuthenticated: true, isLoading: false }),
 }));
@@ -184,7 +185,9 @@ describe("dashboard home presentation", () => {
     expect(html).toContain(messages.dashboardHome.noBikeTitle);
     for (const route of ["profile", "fit", "bikes", "bikes/new"]) expect(html).toContain(`href="/${locale}/${route}"`);
     expect(html).not.toMatch(/Voorbeeldgegevens|Ontwerpstaat|Canyon|Lisa/);
-    expect(state.query).toHaveBeenCalledTimes(6);
+    expect(state.query).toHaveBeenCalledTimes(9);
+    expect(state.query.mock.calls.some(([reference]) =>
+      getFunctionName(reference) === "pricing/queries:getTransitionOffer")).toBe(true);
     expect(state.query.mock.calls.some(([reference, args]) =>
       getFunctionName(reference) === "reliability/queries:getSaddleState" && Object.keys(args).length === 0)).toBe(true);
   });

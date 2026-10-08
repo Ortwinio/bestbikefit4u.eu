@@ -47,6 +47,11 @@ describe("billing mail delivery", () => {
     await state.run(); await state.run();
     expect(send).toHaveBeenCalledTimes(1);
     expect(send.mock.calls[0][0].html).toContain(`lang="${locale}"`);
+    if (kind === "transition_reminder") {
+      expect(send.mock.calls[0][0].html).toContain(`/${locale}/dashboard#transition-offer`);
+      expect(send.mock.calls[0][0].text).toContain(`/${locale}/dashboard#transition-offer`);
+      expect(send.mock.calls[0][0].text).not.toContain(`/${locale}/fit`);
+    }
     expect(send.mock.calls[0][1]).toEqual({ idempotencyKey: "billing/billingEmailJobs:job" });
     expect(state.job.status).toBe("sent");
   });

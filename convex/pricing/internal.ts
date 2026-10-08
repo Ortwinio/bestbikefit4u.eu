@@ -28,7 +28,6 @@ export const beginTransition = internalMutation({
     }
     const dryRun = args.dryRun ?? true;
     if (!dryRun) {
-      if (args.goLiveAt > Date.now()) throw new Error("GO_LIVE_NOT_REACHED");
       const evidence = args.dryRunId ? await ctx.db.get(args.dryRunId) : null;
       if (!evidence?.dryRun || evidence.phase !== "complete" || evidence.goLiveAt !== args.goLiveAt
         || evidence.adminUserId !== adminUserId) throw new Error("COMPLETED_DRY_RUN_REQUIRED");
@@ -48,6 +47,7 @@ export const continueTransition = internalMutation({
     if (!run || run.adminUserId !== adminUserId) throw new Error("TRANSITION_NOT_FOUND");
     if (run.phase === "complete") return run;
     const now = Date.now();
+    const offersOnly = run.createdAt < run.goLiveAt;
     if (run.phase === "reports") {
       const page = await ctx.db.query("recommendations").paginate({ cursor: run.cursor ?? null, numItems: 50 });
       let reportCount = run.reportCount;
@@ -56,7 +56,7 @@ export const continueTransition = internalMutation({
         const owner = await ctx.db.get(report.userId);
         if (!owner || owner._creationTime >= run.goLiveAt) continue;
         reportCount += 1;
-        if (!run.dryRun && !report.legacyFullAccess) await ctx.db.patch(report._id, { legacyFullAccess: true });
+        if (!run.dryRun && !offersOnly && !report.legacyFullAccess) await ctx.db.patch(report._id, { legacyFullAccess: true });
       }
       await ctx.db.patch(runId, {
         reportCount, phase: page.isDone ? "users" : "reports", cursor: page.isDone ? undefined : page.continueCursor,
@@ -85,7 +85,7 @@ export const continueTransition = internalMutation({
           legacyProCount += 1;
           const grantKey = `legacy:${subscription._id}`;
           const existing = await ctx.db.query("pricingEntitlements").withIndex("by_grant_key", (query) => query.eq("grantKey", grantKey)).unique();
-          if (!run.dryRun && !existing) await ctx.db.insert("pricingEntitlements", {
+          if (!run.dryRun && !offersOnly && !existing) await ctx.db.insert("pricingEntitlements", {
             userId: user._id, productId: "annual", status: "active", source: "legacy_pro", grantKey,
             startsAt: now, expiresAt: subscription.currentPeriodEnd, appointmentGranted: false,
             cancelled: subscription.cancelAtPeriodEnd === true || subscription.status === "canceled", createdAt: now,
